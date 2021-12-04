@@ -1,0 +1,4266 @@
+{
+  "openapi": "3.0.2",
+  "info": {
+    "version": "1.1",
+    "title": "Trexity API",
+    "license": {
+      "name": "MIT",
+      "url": "https://raw.githubusercontent.com/trexitycode/openapi/main/license"
+    },
+    "termsOfService": "https://trexity.com/terms-of-service/",
+    "contact": {
+      "email": "support@trexity.com",
+      "url": "http://trexity.com"
+    },
+    "description": "# Introduction\n\nThis OpenAPI Specification describes v1 of the Trexity API.\n\nBefore getting started, please make sure you've acquired Trexity Merchant API Key.\n\nEach endpoint requires an Authorization header with \"Bearer \\<Trexity API Key\\>\"\nin order to be used.\n\nBelow, we describe the available API endpoints in details and provide\nexamples (request/response and curl ones).\n\n## Response Envelope\n\nAll endpoints will return an object and if there is actual data\nto be returned, it is going to be named `data`. Where `data` may\nbe an array or an object.\n\nIf there is `error` field present on the root JSON object, that\nmeans something went wrong and that error message is all we know about it.\nAdditionally, in some cases, you may inspect the HTTP status codes to\ngather more information.\n\nPlease check our payload/response examples in details as well as the\ncurl examples that are a part of each section that documents an operation.\n\nExample of a successful response:\n`{ data: ... }`\n\nExample of a response with an error:\n`{ error: 'Some error message', data: null }`\n\n## Posting a Shipment\n\nIn order for Trexity to start the process of matching drivers for your\nshipment, your shipment must be posted.\n\nThe most common way of doing this is via our\n(post shipment)[/#operation/postShipment] endpoint.\n\nIn order to schedule posting a shipment in the future, please use\n'scheduledPostAt' in our (create shipment)[/#operation/createShipment] endpoint.\n"
+  },
+  "tags": [
+    {
+      "name": "Addresses",
+      "description": "Group of endpoints for handling addresses.\n\n### Address Formatting\n\nIn general wherever an address is expected the format we accept is:\n\n```\nSTREET, CITY PROVINCE, POSTAL_CODE COUNTRY\n```\n\nHowever, we also accept newlines and/or commas delimiting each component.\n\nPostal code and country are optional, however it's better to include them\nto avoid any ambiguity when we attempt to geocode the address.\n\n**Good:**\n```\n123 Fake St, Ottawa ON\n123 Fake St, Toronto, Ontario\n123 Fake St, Toronto, Ontario, B4T 3F5\n```\n\n**Better:**\n```\n123 Fake St, Ottawa ON, K2G 8FT Canada\n123 Fake St, Toronto, Ontario, M4T 5F6 Canada\n123 Fake St, Toronto, Ontario, B4T 3F5, Canada\n```\n"
+    },
+    {
+      "name": "Shipping Rates",
+      "description": "Prior to creating a Shipment, you can calculate the rates based on the pickup address and the number of stops the driver has to do.\nSee our [shipment-rates](/#operation/shipment-rates) endpoint for more information.\n"
+    },
+    {
+      "name": "Shipments",
+      "description": "The most common approach to get a shipment on the road is to:\n  * [Create a Shipment](/#operation/createShipment)\n  * [Posting a Shipment](/#operation/postShipment)\n\nAfter [posting](/#section/Posting-a-shipment), assuming everything went well, Trexity system will keep pinging drivers in the vicinity of the pickup address.\nIn the rare case of not finding an available driver in the vicinity of the pickup address, Trexity will refuse to post the shipment.\n\nAlternatively, Trexity allows for planning in the future via Scheduling.\nYou can schedule the posting of the Shipment in the future.\nTrexity guarantees that the scheduled Shipment will not be posted or broadcasted prior to the time it was scheduled for.\nPlease see the [details](/#operation/createShipment) here.\n"
+    },
+    {
+      "name": "Routing",
+      "description": "Create and get status information for asynchronous routing requests.\n"
+    },
+    {
+      "name": "Storage",
+      "description": "Storage related operations.\n\n> IMPORTANT: These operations have a different server URL.\n"
+    },
+    {
+      "name": "Webhooks",
+      "description": "Retrieve and manage webhooks for a Trexity Merchant.\n\n## Parcel Events\n\nA Shipment is a container of parcels, each with their own delivery address.\nHowever, the Shipment has a single pickup address. As activity occurs on a\nparcel the Shipment's `currentStatus` oscilates between `OUT_FOR_DELIVERY`,\n`ARRIVED_AT_DELIVERY` and `DELIVERED`. However, the Shipment alone doesn't\ninform you of what parcel the status is for.\n\nTo listen to parcel events listen to the following webhooks:\n- `shipment.arrived_at_pickup` The driver has picked up a parcel\n- `shipment.at_delivery` The driver has arrived at a parcel's delivery address\n- `shipment.parcel_delivered` The driver has delivered a parcel\n\nThe request payload of these webhook events indicate the parcel that is currently\nbeing affected.\n\n## Verifying Webhook Requests\n\nAll webhook requests have a header that contains a signature signed with the Trexity Merchant's\nwebhook secret as found in their \"Trexity API\" settings. To verify the signature take the raw\nrequest body as text and create a SHA256 HMAC signed with the merchant's webhook secret and covert to hex.\n\nExample:\n```\n// nodejs\nconst text = await new Promise((resolve, reject) => {\n  const buff = []\n  req.setEncoding('utf8')\n  req.on('data', chunk => (buff.push(chunk)))\n  req.once('end', resolve(buff.join('')))\n  req.once('error', reject)\n})\n\nconst sig = require('crypto')\n  .createHmac('sha256', process.env.TRX_MERCH_WEBHOOK_SECRET)\n  .update(text)\n  .digest('hex')\n\nconst isValid = req.headers['x-trexity-signature'] === sig\n\nif (!isValid) {\n  res.statusCode = 403\n  res.end('Forbidden', 'utf8')\n  return\n}\n\nconst body = JSON.parse(body)\n// ...\n```\n"
+    }
+  ],
+  "servers": [
+    {
+      "description": "production",
+      "url": "https://trexity.app/api/v1_0"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "MerchantApiKeyAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "This authentication strategy uses a Trexity Merchant API KEY. This API KEY is used\nas a bearer token.\n\nIn order to obtain a Trexity Merchant API key, you need to sign-up as Merchant at https://merchant.trexity.com/\nand create an API KEY through your merchant portal.\n\nFeel free to contact support@trexity.com for any questions you may have.\n\nExample:\n```\ncurl -X POST {server-url}/shipment-rates \\\n  -H 'Content-Type: application/json' \\\n  -H 'Authorization: Bearer <Merchant API Key>' \\\n  -d '{\n    \"pickupAddress\": \"9 Slack Road, Ottawa ON, CA\",\n    \"deliveryAddresses\": [\"123 Slater Street, Ottawa ON, CA\"],\n    \"requirements\": {},\n    \"orderValue\": 2500\n  }'\n```\n\nPlease check our [curl examples](/#operation/shipment-rates) for more examples.\n"
+      },
+      "AccessTokenAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "This authentication stratigy requires an access token used as a 'Bearer' token.\n\nCurrently access tokens are only obtained and used by trusted services.\n\nExample:\n```\n// nodejs\nrequire('http').get('{server-url}/{endpoint}', {\n  headers: {\n    accept: 'application/json',\n    authorization: `Bearer ${process.env.ACCESS_TOKEN}`\n  }\n}, (res) => {\n  // ... handle response\n})\n```\n"
+      }
+    },
+    "schemas": {
+      "AddressOrLatLng": {
+        "description": "Latitutde and longitude values separated by comma or an\naddress to be geocoded into latitude and longitude values.\n\nAddresses are in the format \"STREET, CITY PROVINCE, POSTAL_CODE COUNTRY\"\nWhere postal code and country are optional, but it's better to include them to avoid ambiguity.\n\nExamples:\n\n- 44.339565,-78.666433\n- 308 Rideau St, Ottawa ON, K1N 5Y5 Canada\n",
+        "type": "string",
+        "maxLength": 512
+      },
+      "ShipmentRequirements": {
+        "type": "object",
+        "description": "Object representing the requirements that to be met by a driver in order\nfor them to be considered for delivery.\n",
+        "properties": {
+          "vehicleType": {
+            "type": "string",
+            "description": "Describe the type of vehicle that must be used for a shipment.\n\n- small - Sedan, hatchback, etc [example: Honda Civic]\n- medium - SUV, minivan, etc [example: Toyota Sienna]\n- large - Cargo van, pickup truck, etc [example: Ford F150]\n",
+            "enum": [
+              "small",
+              "medium",
+              "large"
+            ]
+          },
+          "legalAgeAlcohol": {
+            "type": "boolean",
+            "description": "Must be delivered by a driver who is of legal age to transport alcohol.\n"
+          },
+          "perishable": {
+            "type": "boolean",
+            "description": "Must be delivered by a driver who is equipped to deliver perishable items.\n"
+          },
+          "returnReusables": {
+            "type": "boolean",
+            "description": "Must be delivered by a driver who will return collected reusables back to pickup.\n"
+          },
+          "custom pricing": {
+            "type": "boolean",
+            "description": "Please contact a Trexity support agent for custom pricing options.\n"
+          }
+        }
+      },
+      "ShipmentRatesPayload": {
+        "description": "A minimal object that describes a shipment",
+        "type": "object",
+        "required": [
+          "pickupAddress",
+          "deliveryAddresses",
+          "requirements"
+        ],
+        "properties": {
+          "pickupAddress": {
+            "$ref": "#/components/schemas/AddressOrLatLng"
+          },
+          "deliveryAddresses": {
+            "type": "array",
+            "maxItems": 19,
+            "minItems": 1,
+            "description": "One or more latitude and longitude values separated by comma or an address to be geocoded into latitude and longitude values.\n\nExamples:\n\n- 44.339565,-78.666433\n- 308 Rideau St, Ottawa, ON K1N 5Y5\n",
+            "items": {
+              "$ref": "#/components/schemas/AddressOrLatLng"
+            }
+          },
+          "requirements": {
+            "$ref": "#/components/schemas/ShipmentRequirements"
+          },
+          "orderValue": {
+            "type": "number",
+            "minimum": 0,
+            "description": "The order value, if any. Specified in cents."
+          }
+        }
+      },
+      "GeoJSONDirectionsResult": {
+        "type": "object",
+        "nullable": true,
+        "description": "GeoJSON object that defines the path of the Shipment, taking into account multiple dropoffs (if any).\n\nGeoJSON is defined at https://tools.ietf.org/html/rfc7946\n\nWe are defining the geometry of the path using an array of LineString, which in plain English means\n\npiecewise linear segments connected on the map.\n"
+      },
+      "ShipmentRatesResponse": {
+        "description": "Returns all rates that apply for this Shipment. Each rate will have the distance (in meters), duration (in seconds) of the trip\nand the fee (in Canadian cents).\n",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Unique rate name"
+                },
+                "total": {
+                  "type": "number",
+                  "description": "The total fee in cents for delivery with taxes."
+                },
+                "totalWithoutTaxes": {
+                  "type": "number",
+                  "description": "The total fee in cents for delivery without taxes."
+                },
+                "taxRates": {
+                  "type": "object",
+                  "description": "**(added in v1.1)** An object whos keys are tax rate codes and value is the tax rate.\n",
+                  "additionalProperties": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1,
+                    "exclusiveMinimum": true,
+                    "exclusiveMaximum": true
+                  }
+                },
+                "directionsResult": {
+                  "$ref": "#/components/schemas/GeoJSONDirectionsResult"
+                },
+                "pickupDeliveryDistance": {
+                  "type": "number",
+                  "description": "Estimated distance (in meters) that the driver would need to drive (starting from the pickup location) in order to finalize this shipment (takes into account multiple dropoffs, if any)."
+                },
+                "pickupDeliveryDuration": {
+                  "type": "number",
+                  "description": "Estimated duration (in seconds) of the entire trip (starting from the pickup location) that the driver would have to make in order to finalize this shipment (takes into account multiple dropoffs, if any).\n"
+                }
+              }
+            }
+          }
+        }
+      },
+      "SimplifiedDateISOString": {
+        "description": "Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+        "type": "string",
+        "nullable": true
+      },
+      "ShipmentStatus": {
+        "type": "string",
+        "enum": [
+          "WAITING_FOR_ACCEPTANCE",
+          "WAITING_TO_START",
+          "EN_ROUTE_TO_PICKUP",
+          "ARRIVED_AT_PICKUP",
+          "OUT_FOR_DELIVERY",
+          "ARRIVED_AT_DELIVERY",
+          "DELIVERED",
+          "RENOUNCED_BY_DRIVER",
+          "CANCELLED",
+          "EXPIRED",
+          "ON_HOLD",
+          ""
+        ],
+        "description": "The status of the queried Shipment.\n\n(empty string) - Shipment is a draft. Shipments are considered a draft if they haven't been posted to the driver network yet and scheduling has been disabled.\n\nWAITING_FOR_ACCEPTANCE - Shipments that have been posted to the driver network, but waiting for a driver to accept them. When a shipment is posted the owning merchant's credit card is pre-authorized for the full shipment rate.\n\nEN_ROUTE_TO_PICKUP - Shipments where a driver has accepted and the driver is driving to the pickup location.\n\nARRIVED_AT_PICKUP - Shipments where a driver has arrived at the pickup location.\n\n---\n\n**A shipment can osciliate between these three statuses while parecels are being deliveried.**\n\nOUT_FOR_DELIVERY - Shipments where a driver is delivering a parcel.\n\nARRIVED_AT_DELIVERY - Shipments where a driver has arrived at a parcel's the delivery location.\n\nDELIVERED - Shipments that where a driver has delivered a parcel.\n\n---\n\nRENOUNCED_BY_DRIVER - Shipments that have been explicitly unaccepted by a driver. Drivers can only renounce shipments before they have picked up any orders.\n\nCANCELLED - Shipments that have been cancelled.\n\nEXPIRED - Shipments that have been posted to drivers and have waited for acceptance longer than 7 days. Similar to being on hold, the shipment rate pre-authorization is reversed on the owning merchant's credit card, and these shipments can be re-posted at a later time.\n\nON_HOLD - Shipments that have been posted but not accepted and have been explicitly removed from the driver network. All shipments that are on hold will have the shipment rate pre-authorization reversed on the owning merchant's credit card. Additionally, shipments on hold can be re-posted at a later time.\n"
+      },
+      "Location": {
+        "description": "A location described by latitude and longitude",
+        "type": "object",
+        "nullable": true,
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "minimum": -90,
+            "maximum": 90
+          },
+          "longitude": {
+            "type": "number",
+            "minimum": -180,
+            "maximum": 90
+          }
+        }
+      },
+      "ParcelResponse": {
+        "description": "A parcel to be devlivered in a shipment",
+        "type": "object",
+        "properties": {
+          "deliveryAddress": {
+            "type": "string",
+            "description": "The destination address this parcel will be delivered to"
+          },
+          "deliveryAddressNotes": {
+            "type": "string",
+            "description": "Extra notes relating to the delivery address, such as apartment/unit number, reference, description of the location, etc."
+          },
+          "deliveryName": {
+            "type": "string",
+            "description": "The name of the recipient"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the parcel being delivered"
+          },
+          "orderId": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "The order ID that this parcel belongs to."
+          },
+          "parcelValue": {
+            "type": "number",
+            "minimum": 0,
+            "description": "The dollar value of the parcel in CDN as cents"
+          },
+          "deliveryEmail": {
+            "type": "string",
+            "format": "string",
+            "description": "The email address of the recipient"
+          },
+          "deliveryPhone": {
+            "type": "string",
+            "description": "The cell phone number of the recipient"
+          },
+          "driverDeliveredAt": {
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "deliveryAddressLocation": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "isDelivered": {
+            "type": "boolean",
+            "description": "Whether this Parcel has been delivered.\nIf it has been, we store the timestamp in driverDeliveredAt.\n"
+          },
+          "deliveryAddressProvince": {
+            "type": "string",
+            "nullable": true,
+            "description": "The province of the deliveryAddress. Example: Ontario.\n"
+          },
+          "deliveryAddressCountry": {
+            "type": "string",
+            "nullable": true,
+            "description": "The country of the deliveryAddress. Example: Canada.\n"
+          },
+          "deliveryAddressCity": {
+            "type": "string",
+            "nullable": true,
+            "description": "The city of the pickupAddress. Example: Ottawa.\n"
+          },
+          "deliveryAddressServiceCity": {
+            "type": "string",
+            "nullable": true,
+            "description": "The service city of the pickupAddress. Example: Ottawa, ON.\n"
+          },
+          "requiresPersonHandoff": {
+            "type": "boolean",
+            "description": "Does this parcel require in-person handoff?"
+          },
+          "secondsFromPickupToDelivery": {
+            "type": "number",
+            "description": "If a driver has accpeted, the estimated seconds it will take the driver to arrive at the pickup address."
+          },
+          "metadata": {
+            "type": "object",
+            "description": "**(added in v1.1)** The metadata fields associated to the parcel.\n"
+          }
+        }
+      },
+      "Shipment": {
+        "type": "object",
+        "description": "A shipment object that has a single pickup address and can have several parcels each with their on delivery address.",
+        "properties": {
+          "currentStatus": {
+            "$ref": "#/components/schemas/ShipmentStatus"
+          },
+          "pickupAddress": {
+            "type": "string",
+            "description": "The starting address that the driver must pick up the parcel(s) from."
+          },
+          "pickupAddressNotes": {
+            "type": "string",
+            "description": "Extra notes relating to the pickup address, such as apartment/unit number, reference, description of the location, etc."
+          },
+          "requirements": {
+            "$ref": "#/components/schemas/ShipmentRequirements"
+          },
+          "pickupNotes": {
+            "type": "string",
+            "description": "Special notes or instructions regarding pickup"
+          },
+          "scheduledPostAt": {
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "id": {
+            "type": "string",
+            "description": "Unique identifier of the Shipment in Trexity"
+          },
+          "merchantId": {
+            "type": "string",
+            "description": "User id of the Merchant who is the owner of the Shipment"
+          },
+          "driverId": {
+            "type": "string",
+            "description": "User id of the Driver who has accepted this Shipment",
+            "nullable": true
+          },
+          "directionsResult": {
+            "$ref": "#/components/schemas/GeoJSONDirectionsResult"
+          },
+          "gdprRedacted": {
+            "type": "boolean",
+            "description": "Whether this shipment has been GDPR redacted.\nPlease see https://ec.europa.eu/info/law/law-topic/data-protection/reform/rules-business-and-organisations_en for more details.\n"
+          },
+          "archived": {
+            "type": "boolean",
+            "description": "Whether this Shipment has been archived."
+          },
+          "pickupAddressLocation": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "pickupAddressProvince": {
+            "type": "string",
+            "nullable": true,
+            "description": "The province of the pickupAddress. Example: Ontario.\n"
+          },
+          "pickupAddressCountry": {
+            "type": "string",
+            "nullable": true,
+            "description": "The country of the pickupAddress. Example: Canada.\n"
+          },
+          "pickupAddressCity": {
+            "type": "string",
+            "nullable": true,
+            "description": "The city of the pickupAddress. Example: Ottawa.\n"
+          },
+          "pickupAddressServiceCity": {
+            "type": "string",
+            "nullable": true,
+            "description": "The service city of the pickupAddress. Example: Ottawa, ON.\n"
+          },
+          "cachedDriverName": {
+            "type": "string",
+            "nullable": true,
+            "description": "Name of the driver that is delivering this Shipment."
+          },
+          "cachedTotalRouteDistance": {
+            "type": "number",
+            "nullable": true,
+            "description": "Approximation of the total distance (in meters) of the route, taking into account multiple parcels (if any)."
+          },
+          "cachedTotalRouteDuration": {
+            "type": "number",
+            "nullable": true,
+            "description": "Approximation of the total duration (in seconds) that the driver would have to drive in order to complete the Shipment.\nTakes into account multiple parcels (if any).\n"
+          },
+          "cachedTotalWithoutTaxes": {
+            "type": "number",
+            "nullable": true,
+            "description": "Total Merchant cost without taxes (in Canadian cents)"
+          },
+          "cachedTaxes": {
+            "type": "object",
+            "nullable": true,
+            "description": "Details and percentages of the taxes that apply for this Shipment."
+          },
+          "cachedMerchantAddress": {
+            "type": "string",
+            "description": "Merchant's address. Example: 9 Slack Road, Nepean ON, CA\n"
+          },
+          "merchantPpid": {
+            "type": "string",
+            "nullable": true,
+            "description": "Partner-provided ID of Shipment's merchant."
+          },
+          "merchantName": {
+            "type": "string",
+            "description": "Name of Shipment's merchant."
+          },
+          "merchantEmail": {
+            "type": "string",
+            "description": "Merchant's email address."
+          },
+          "merchantPhone": {
+            "type": "string",
+            "description": "Merchant's phone number. Example: +1 555 123 1234\n"
+          },
+          "createdAt": {
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "driverAcceptedAt": {
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "driverStartedAt": {
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "driverArrivedPickupAt": {
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "driverPickedUpAt": {
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "postedAt": {
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "lastBroadcastedAt": {
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "driverTimeToPickup": {
+            "type": "number",
+            "nullable": true,
+            "description": "Approximate time (in seconds) that the driver must drive from their location (at the moment of accepting) to the pickup address."
+          },
+          "cancellationAcknowledgedByDriver": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Whether or not the driver has acknowledged after cancelling."
+          },
+          "scheduledPostError": {
+            "type": "string",
+            "description": "If anything goes wrong during scheduling, this will contain human-readable description of the error. Typically, it's empty.",
+            "nullable": true
+          },
+          "postErrors": {
+            "type": "array",
+            "description": "If anything goes wrong during posting, this will contain details of the errors. Typically, it's an empty array.",
+            "nullable": true
+          },
+          "currentDriverEstimatedSecondsToPickup": {
+            "type": "number",
+            "nullable": true,
+            "description": "Approximate time (in seconds) that the driver must drive from their current location to the pickup address.\nThis data may be delayed or stale.\nNote the difference between this and driverTimeToPickup - driverTimeToPickup is constant.\nThis will periodically be updated.\n"
+          },
+          "parcels": {
+            "type": "array",
+            "description": "The parcels that will be delivered in this shipment",
+            "minItems": 1,
+            "maxItems": 10,
+            "items": {
+              "$ref": "#/components/schemas/ParcelResponse"
+            }
+          }
+        }
+      },
+      "Parcel": {
+        "description": "A parcel to be devlivered in a shipment",
+        "type": "object",
+        "properties": {
+          "deliveryAddress": {
+            "type": "string",
+            "description": "The destination address this parcel will be delivered to in the format \"STREET, CITY PROVINCE, POSTAL_CODE COUNTRY\" (postal code and country are optional, but it's better to include them to avoid ambiguity).",
+            "example": "123 Fake St, Ottawa Ontario, K2G 6FT Canada"
+          },
+          "deliveryAddressNotes": {
+            "type": "string",
+            "description": "Extra notes relating to the delivery address, such as apartment/unit number, reference, description of the location, etc."
+          },
+          "deliveryName": {
+            "type": "string",
+            "description": "The name of the recipient"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the parcel being delivered"
+          },
+          "orderId": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "The order ID that this parcel belongs to."
+          },
+          "parcelValue": {
+            "type": "number",
+            "minimum": 0,
+            "description": "The dollar value of the parcel in CDN as cents"
+          },
+          "deliveryEmail": {
+            "type": "string",
+            "format": "email",
+            "description": "The email address of the recipient"
+          },
+          "deliveryPhone": {
+            "type": "string",
+            "description": "The cell phone number of the recipient"
+          },
+          "requiresPersonHandoff": {
+            "type": "boolean",
+            "description": "Does this parcel require in-person handoff?"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "**(added in v1.1)** Object with metadata fields. If the intent is to\nlist shipments with this metadata field, then ensure the value is\nsaved as a string and not say a number.\n"
+          }
+        }
+      },
+      "CreateShipmentPayload": {
+        "description": "Payload object used to create a shipment",
+        "type": "object",
+        "required": [
+          "pickupAddress",
+          "requirements",
+          "parcels"
+        ],
+        "properties": {
+          "pickupAddress": {
+            "$ref": "#/components/schemas/AddressOrLatLng"
+          },
+          "pickupAddressNotes": {
+            "type": "string",
+            "description": "Extra information relating to the pickup address ONLY, like the apartment/unit number."
+          },
+          "requirements": {
+            "$ref": "#/components/schemas/ShipmentRequirements"
+          },
+          "pickupNotes": {
+            "type": "string",
+            "description": "Special notes or instructions regarding pickup like the description of the location, what door to use, etc."
+          },
+          "merchantPpid": {
+            "type": "string",
+            "description": "Partner-provided ID of the merchant. This ID can be used when querying for shipments. Only used by Partner accounts."
+          },
+          "merchantName": {
+            "type": "string",
+            "description": "Partner-provided name of the merchant. This will be displayed in place of the merchant name defined in the merchant profile. Only used by Partner accounts."
+          },
+          "merchantPhone": {
+            "type": "string",
+            "description": "Partner-provided phone of the merchant. This will be displayed in place of the merchant phone defined in the merchant profile. Only used by Partner accounts."
+          },
+          "merchantEmail": {
+            "type": "string",
+            "description": "Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts."
+          },
+          "parcels": {
+            "type": "array",
+            "description": "The parcels that will be delivered in this shipment",
+            "minItems": 1,
+            "maxItems": 10,
+            "items": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/Parcel"
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "deliveryAddress",
+                    "deliveryName",
+                    "description",
+                    "orderId",
+                    "parcelValue"
+                  ]
+                }
+              ]
+            }
+          },
+          "scheduledPostAt": {
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "ignoreTargetDeliveryDuration": {
+            "type": "boolean",
+            "description": "Ignore the target delivery duration for this shipment only"
+          }
+        }
+      },
+      "UpdateShipmentPayload": {
+        "description": "Payload object describing the changes of a shipment",
+        "type": "object",
+        "properties": {
+          "pickupAddress": {
+            "$ref": "#/components/schemas/AddressOrLatLng"
+          },
+          "pickupAddressNotes": {
+            "type": "string",
+            "description": "Extra notes relating to the pickup address, such as apartment/unit number, reference, description of the location, etc."
+          },
+          "requirements": {
+            "$ref": "#/components/schemas/ShipmentRequirements"
+          },
+          "pickupNotes": {
+            "type": "string",
+            "description": "Special notes or instructions regarding pickup"
+          },
+          "ignoreTargetDeliveryDuration": {
+            "type": "boolean",
+            "description": "Ignore the target delivery duration for this shipment only"
+          },
+          "merchantPpid": {
+            "type": "string",
+            "description": "Partner-provided ID of the merchant. This ID can be used when querying for shipments. Only used by Partner accounts."
+          },
+          "merchantName": {
+            "type": "string",
+            "description": "Partner-provided name of the merchant. This will be displayed in place of the merchant name defined in the merchant profile. Only used by Partner accounts."
+          },
+          "merchantPhone": {
+            "type": "string",
+            "description": "Partner-provided phone of the merchant. This will be displayed in place of the merchant phone defined in the merchant profile. Only used by Partner accounts."
+          },
+          "merchantEmail": {
+            "type": "string",
+            "description": "Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts."
+          }
+        }
+      },
+      "TrackingUrlResponse": {
+        "description": "Tracking URL Response",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "trackingUrl": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ShippingLabelJSONResponse": {
+        "description": "The shipment label response objec",
+        "type": "object",
+        "properties": {
+          "data": {
+            "type": "object",
+            "properties": {
+              "base64image": {
+                "description": "base64 contents of the shipping label (png image).",
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "ParcelPayload": {
+        "description": "Payload object used to identify a parcel",
+        "type": "object",
+        "required": [
+          "pickupAddress",
+          "scheduledPostAt",
+          "deliveryAddress",
+          "deliveryName",
+          "description",
+          "orderId",
+          "parcelValue"
+        ],
+        "properties": {
+          "pickupAddress": {
+            "$ref": "#/components/schemas/AddressOrLatLng"
+          },
+          "pickupAddressNotes": {
+            "type": "string",
+            "description": "Extra information relating to the pickup address ONLY, like the apartment/unit number."
+          },
+          "requirements": {
+            "$ref": "#/components/schemas/ShipmentRequirements"
+          },
+          "pickupNotes": {
+            "type": "string",
+            "description": "Special notes or instructions regarding pickup like the description of the location, what door to use, etc."
+          },
+          "scheduledPostAt": {
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "ignoreTargetDeliveryDuration": {
+            "type": "boolean",
+            "description": "Ignore the target delivery duration for this shipment only"
+          },
+          "deliveryAddress": {
+            "type": "string",
+            "description": "The destination address this parcel will be delivered to in the format \"STREET, CITY PROVINCE, POSTAL_CODE COUNTRY\" (postal code and country are optional, but it's better to include them to avoid ambiguity).",
+            "example": "123 Fake St, Ottawa Ontario, K2G 6FT Canada"
+          },
+          "deliveryAddressNotes": {
+            "type": "string",
+            "description": "Extra notes relating to the delivery address, such as apartment/unit number, reference, description of the location, etc."
+          },
+          "deliveryName": {
+            "type": "string",
+            "description": "The name of the recipient"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the parcel being delivered"
+          },
+          "orderId": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "The order ID that this parcel belongs to."
+          },
+          "parcelValue": {
+            "type": "number",
+            "minimum": 0,
+            "description": "The dollar value of the parcel in CDN as cents"
+          },
+          "deliveryEmail": {
+            "type": "string",
+            "format": "email",
+            "description": "The email address of the recipient"
+          },
+          "deliveryPhone": {
+            "type": "string",
+            "description": "The cell phone number of the recipient"
+          },
+          "requiresPersonHandoff": {
+            "type": "boolean",
+            "description": "Does this parcel require in-person handoff?"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "**(added in v1.1)**\nThe metadata fields associated to the parcel. If the intent is to\nlist shipments with this metadata field, then ensure the value is\nsaved as a string and not say a number.\n"
+          }
+        }
+      },
+      "RoutingRequest": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "description": "A unique identifier for the asynchronous request. This can be used to retrieve the results\nof a request when it has completed.\n"
+          },
+          "callbackInSeconds": {
+            "type": "integer",
+            "description": "An estimated number of seconds to complete the request.\nWait this long before checking the status again.\n"
+          },
+          "isAccepted": {
+            "type": "boolean",
+            "description": "Specifies if the request is accepted. A request will not be accepted\nif it is not valid.\n"
+          },
+          "isCompleted": {
+            "type": "boolean",
+            "description": "Specifies if the request has completed."
+          }
+        }
+      },
+      "RoutingResult": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "error": {
+                  "type": "string",
+                  "description": "The message of the error"
+                },
+                "code": {
+                  "type": "string",
+                  "enum": [
+                    "DELIVERY_TOO_FAR",
+                    "PICKUP_OUTSIDE_SERVICE_AREA",
+                    "DELIVERY_NO_GEOCODE",
+                    "PICKUP_NO_GEOCODE",
+                    "SYSTEM_ERROR"
+                  ],
+                  "description": "The error code that identifies the error"
+                },
+                "orderId": {
+                  "type": "string",
+                  "description": "The \"orderId\" of the parcel this error relates to"
+                },
+                "params": {
+                  "type": "object",
+                  "description": "An object that contains extra information related to the error (i.e. address, etc. )\n"
+                }
+              }
+            }
+          },
+          "result": {
+            "type": "object",
+            "properties": {
+              "shipments": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/Shipment"
+                }
+              },
+              "unassignedOrders": {
+                "type": "array",
+                "description": "Array of order IDs that could not be assigned to a shipment due to\ndelivery contraints or an error occurred when validating the parcel\n",
+                "items": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      },
+      "WebhookEventName": {
+        "type": "string",
+        "enum": [
+          "shipment.created",
+          "shipment.updated",
+          "shipment.deleted",
+          "shipment.posted",
+          "shipment.driver_accepted",
+          "shipment.arrived_at_pickup",
+          "shipment.picked_up",
+          "shipment.arrived_at_delivery",
+          "shipment.parcel_delivered",
+          "shipment.completed",
+          "shipment.cancelled",
+          "shipment.driver_renounced",
+          "shipment.on_hold"
+        ]
+      },
+      "Webhook": {
+        "description": "A registered webhook",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "merchantId": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "merchant-webhook"
+            ]
+          },
+          "eventName": {
+            "$ref": "#/components/schemas/WebhookEventName"
+          },
+          "url": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      },
+      "ShipmentWebhookPayload": {
+        "description": "Webhook payload during a shipment event.",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "$ref": "#/components/schemas/Shipment"
+          }
+        }
+      },
+      "ParcelWebhookPayload": {
+        "description": "Webhook payload during a parcel event.",
+        "required": [
+          "data"
+        ],
+        "properties": {
+          "data": {
+            "properties": {
+              "shipmentId": {
+                "type": "string",
+                "description": "The ID of the shipment containing the parcel affected."
+              },
+              "deliveryIndex": {
+                "type": "integer",
+                "description": "The index of the parcel affected within the shipment."
+              },
+              "orderUuid": {
+                "type": "string",
+                "description": "The Trexity generated unique identifier for the parcel/order."
+              },
+              "parcel": {
+                "$ref": "#/components/schemas/ParcelResponse"
+              }
+            }
+          }
+        }
+      }
+    },
+    "responses": {
+      "FileResponse": {
+        "description": "Returns the binary content of the file in question.\n\nPlease note that our storage endpoints provide [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) header for caching purposes.\n",
+        "content": {
+          "application/octet-stream": {
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "x-trexity-signature": {
+        "name": "x-trexity-signature",
+        "in": "header",
+        "description": "The SHA256 HMAC signature for the request.",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "x-trexity-event-name": {
+        "name": "x-trexity-event-name",
+        "in": "header",
+        "description": "Webhook event name.",
+        "schema": {
+          "$ref": "#/components/schemas/WebhookEventName"
+        }
+      },
+      "x-trexity-webhook-order-id": {
+        "name": "x-trexity-webhook-order-id",
+        "in": "header",
+        "description": "The webhook processing sort order. Webhooks may not be delivered in order, but this value can be used to determine processing order.",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    }
+  },
+  "security": [
+    {
+      "MerchantApiKeyAuth": []
+    },
+    {
+      "AccessTokenAuth": []
+    }
+  ],
+  "paths": {
+    "/addresses/check": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "address",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The address to check, where the postal code/zip code is optional.",
+            "example": "123 Fake St, Ottawa ON, CA"
+          }
+        ],
+        "tags": [
+          "Addresses"
+        ],
+        "summary": "Check an address",
+        "operationId": "checkAddress",
+        "description": "**(added in v1.1)**\n\nChecks an address and returns a result that identifies if the address can be\nused as a pickup address/business address, and what delivery classification it\nfalls under.\n\n### Postal Code/Zip Code\n\nThe postal code (or zip code) is optional in the address, but specifiying it could\nresult in a more accurate address check.\n\n### Rate Limiting\n\nThis operation can be requested without authentication, however it will have a\nstrict rate limit of 3 requests every 10 seconds.\n\nHowever, authenticated requests can request 12 times every 10 seconds.\n",
+        "security": [
+          {},
+          {
+            "MerchantApiKeyAuth": []
+          },
+          {
+            "AccessTokenAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "pickup": {
+                          "type": "boolean",
+                          "description": "If `true` then the address can be used as a pickup address (or business address)."
+                        },
+                        "delivery": {
+                          "type": "string",
+                          "enum": [
+                            "none",
+                            "normal",
+                            "extended"
+                          ],
+                          "description": "The delivery classification of the address.\n\n`none` = The address is outside a known delivery zone and is unserviceable.\n\n`normal` = The address is serviceable and normal delivery rates apply.\n\n`extended` = The address is serviceable and surcharges may apply.\n"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Address could not be recognized as a valid address. Review address and ensure all address components are present and follow formatting guide."
+          },
+          "429": {
+            "description": "The request has been rate limited. Try making the request again after the rate limit window."
+          },
+          "500": {
+            "description": "Server error. Try making the request again."
+          }
+        }
+      }
+    },
+    "/shipment-rates": {
+      "post": {
+        "tags": [
+          "Shipping Rates"
+        ],
+        "summary": "Calculates the rate for a proposed shipment",
+        "description": "Returns the distance (in meters), travel duration (in seconds), and fee from a pickup address\nto the completion of the shipment (takes into account multiple parcel dropoffs, if any).\nSupports specifying an order value parameter, which will check against API Preferences\nconfigured in the merchant portal.\n",
+        "operationId": "shipment-rates",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X POST {server-url}/shipment-rates\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\\\n  -d '{\n    \"pickupAddress\": \"9 Slack Road, Ottawa ON, CA\",\n    \"deliveryAddresses\": [\"123 Slater Street, Ottawa ON, CA\"],\n    \"requirements\": {},\n    \"orderValue\": 2500\n  }'\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShipmentRatesResponse"
+                },
+                "examples": {
+                  "Can Deliver": {
+                    "value": {
+                      "data": [
+                        {
+                          "totalWithoutTaxes": 1688,
+                          "name": "Trexity Local Delivery",
+                          "taxRates": {
+                            "HST": 0.13
+                          },
+                          "pickupDeliveryDuration": 2121,
+                          "pickupDeliveryDistance": 17172,
+                          "directionsResult": {
+                            "features": [
+                              {
+                                "geometry": {
+                                  "type": "LineString",
+                                  "coordinates": [
+                                    [
+                                      -75.72048,
+                                      45.32606
+                                    ],
+                                    [
+                                      -75.72022,
+                                      45.32575
+                                    ],
+                                    [
+                                      -75.72007,
+                                      45.32555
+                                    ],
+                                    [
+                                      -75.72038,
+                                      45.32544
+                                    ],
+                                    [
+                                      -75.72209,
+                                      45.32479
+                                    ],
+                                    [
+                                      -75.72319,
+                                      45.32436
+                                    ],
+                                    [
+                                      -75.72502,
+                                      45.32366
+                                    ],
+                                    [
+                                      -75.72764,
+                                      45.32266
+                                    ],
+                                    [
+                                      -75.7343,
+                                      45.32012
+                                    ],
+                                    [
+                                      -75.73699,
+                                      45.31907
+                                    ],
+                                    [
+                                      -75.73815,
+                                      45.31863
+                                    ],
+                                    [
+                                      -75.73974,
+                                      45.31802
+                                    ],
+                                    [
+                                      -75.73994,
+                                      45.31801
+                                    ],
+                                    [
+                                      -75.74025,
+                                      45.31792
+                                    ],
+                                    [
+                                      -75.7417,
+                                      45.31735
+                                    ],
+                                    [
+                                      -75.74183,
+                                      45.3173
+                                    ],
+                                    [
+                                      -75.7422,
+                                      45.31788
+                                    ],
+                                    [
+                                      -75.74249,
+                                      45.31834
+                                    ],
+                                    [
+                                      -75.74303,
+                                      45.31918
+                                    ],
+                                    [
+                                      -75.74357,
+                                      45.32011
+                                    ],
+                                    [
+                                      -75.74428,
+                                      45.32132
+                                    ],
+                                    [
+                                      -75.7446,
+                                      45.32186
+                                    ],
+                                    [
+                                      -75.74507,
+                                      45.32262
+                                    ],
+                                    [
+                                      -75.74675,
+                                      45.32537
+                                    ],
+                                    [
+                                      -75.7486,
+                                      45.32835
+                                    ],
+                                    [
+                                      -75.74912,
+                                      45.32923
+                                    ],
+                                    [
+                                      -75.74962,
+                                      45.33001
+                                    ],
+                                    [
+                                      -75.75044,
+                                      45.33134
+                                    ],
+                                    [
+                                      -75.75067,
+                                      45.33167
+                                    ],
+                                    [
+                                      -75.7511,
+                                      45.33242
+                                    ],
+                                    [
+                                      -75.75171,
+                                      45.33339
+                                    ],
+                                    [
+                                      -75.75201,
+                                      45.33394
+                                    ],
+                                    [
+                                      -75.75287,
+                                      45.3355
+                                    ],
+                                    [
+                                      -75.75375,
+                                      45.33713
+                                    ],
+                                    [
+                                      -75.75483,
+                                      45.33911
+                                    ],
+                                    [
+                                      -75.75518,
+                                      45.33977
+                                    ],
+                                    [
+                                      -75.75584,
+                                      45.34089
+                                    ],
+                                    [
+                                      -75.75655,
+                                      45.34206
+                                    ],
+                                    [
+                                      -75.7569,
+                                      45.34268
+                                    ],
+                                    [
+                                      -75.75786,
+                                      45.34434
+                                    ],
+                                    [
+                                      -75.75866,
+                                      45.34572
+                                    ],
+                                    [
+                                      -75.75942,
+                                      45.34698
+                                    ],
+                                    [
+                                      -75.76006,
+                                      45.34809
+                                    ],
+                                    [
+                                      -75.76026,
+                                      45.34836
+                                    ],
+                                    [
+                                      -75.76049,
+                                      45.34861
+                                    ],
+                                    [
+                                      -75.76117,
+                                      45.34926
+                                    ],
+                                    [
+                                      -75.76187,
+                                      45.34995
+                                    ],
+                                    [
+                                      -75.7621,
+                                      45.35022
+                                    ],
+                                    [
+                                      -75.76231,
+                                      45.3505
+                                    ],
+                                    [
+                                      -75.76283,
+                                      45.35145
+                                    ],
+                                    [
+                                      -75.76295,
+                                      45.35166
+                                    ],
+                                    [
+                                      -75.76363,
+                                      45.35288
+                                    ],
+                                    [
+                                      -75.76475,
+                                      45.35486
+                                    ],
+                                    [
+                                      -75.76566,
+                                      45.3565
+                                    ],
+                                    [
+                                      -75.76625,
+                                      45.35759
+                                    ],
+                                    [
+                                      -75.76727,
+                                      45.35935
+                                    ],
+                                    [
+                                      -75.76763,
+                                      45.36002
+                                    ],
+                                    [
+                                      -75.76761,
+                                      45.36012
+                                    ],
+                                    [
+                                      -75.76766,
+                                      45.36027
+                                    ],
+                                    [
+                                      -75.76769,
+                                      45.36053
+                                    ],
+                                    [
+                                      -75.76768,
+                                      45.36066
+                                    ],
+                                    [
+                                      -75.76764,
+                                      45.3608
+                                    ],
+                                    [
+                                      -75.76757,
+                                      45.36094
+                                    ],
+                                    [
+                                      -75.76747,
+                                      45.36107
+                                    ],
+                                    [
+                                      -75.76727,
+                                      45.36126
+                                    ],
+                                    [
+                                      -75.766,
+                                      45.36212
+                                    ],
+                                    [
+                                      -75.76479,
+                                      45.36289
+                                    ],
+                                    [
+                                      -75.76477,
+                                      45.36291
+                                    ],
+                                    [
+                                      -75.76474,
+                                      45.36299
+                                    ],
+                                    [
+                                      -75.76451,
+                                      45.36312
+                                    ],
+                                    [
+                                      -75.76389,
+                                      45.36345
+                                    ],
+                                    [
+                                      -75.76335,
+                                      45.36374
+                                    ],
+                                    [
+                                      -75.76238,
+                                      45.36425
+                                    ],
+                                    [
+                                      -75.76147,
+                                      45.36474
+                                    ],
+                                    [
+                                      -75.75969,
+                                      45.3657
+                                    ],
+                                    [
+                                      -75.75897,
+                                      45.36618
+                                    ],
+                                    [
+                                      -75.75838,
+                                      45.36665
+                                    ],
+                                    [
+                                      -75.75665,
+                                      45.36833
+                                    ],
+                                    [
+                                      -75.75444,
+                                      45.37044
+                                    ],
+                                    [
+                                      -75.74848,
+                                      45.37595
+                                    ],
+                                    [
+                                      -75.74274,
+                                      45.3812
+                                    ],
+                                    [
+                                      -75.73835,
+                                      45.38522
+                                    ],
+                                    [
+                                      -75.73816,
+                                      45.3854
+                                    ],
+                                    [
+                                      -75.73737,
+                                      45.38611
+                                    ],
+                                    [
+                                      -75.73613,
+                                      45.38726
+                                    ],
+                                    [
+                                      -75.73556,
+                                      45.38785
+                                    ],
+                                    [
+                                      -75.73516,
+                                      45.38828
+                                    ],
+                                    [
+                                      -75.73463,
+                                      45.38892
+                                    ],
+                                    [
+                                      -75.73369,
+                                      45.39013
+                                    ],
+                                    [
+                                      -75.73317,
+                                      45.39084
+                                    ],
+                                    [
+                                      -75.73228,
+                                      45.39198
+                                    ],
+                                    [
+                                      -75.7309,
+                                      45.39371
+                                    ],
+                                    [
+                                      -75.72964,
+                                      45.39524
+                                    ],
+                                    [
+                                      -75.72912,
+                                      45.39574
+                                    ],
+                                    [
+                                      -75.72856,
+                                      45.39622
+                                    ],
+                                    [
+                                      -75.7281,
+                                      45.39654
+                                    ],
+                                    [
+                                      -75.72744,
+                                      45.39691
+                                    ],
+                                    [
+                                      -75.72456,
+                                      45.39828
+                                    ],
+                                    [
+                                      -75.72286,
+                                      45.39906
+                                    ],
+                                    [
+                                      -75.72178,
+                                      45.39954
+                                    ],
+                                    [
+                                      -75.72093,
+                                      45.39989
+                                    ],
+                                    [
+                                      -75.71979,
+                                      45.40034
+                                    ],
+                                    [
+                                      -75.71849,
+                                      45.4008
+                                    ],
+                                    [
+                                      -75.71714,
+                                      45.40125
+                                    ],
+                                    [
+                                      -75.71549,
+                                      45.40175
+                                    ],
+                                    [
+                                      -75.71453,
+                                      45.40201
+                                    ],
+                                    [
+                                      -75.71334,
+                                      45.40231
+                                    ],
+                                    [
+                                      -75.7124,
+                                      45.40253
+                                    ],
+                                    [
+                                      -75.71094,
+                                      45.40285
+                                    ],
+                                    [
+                                      -75.70871,
+                                      45.40328
+                                    ],
+                                    [
+                                      -75.70661,
+                                      45.4037
+                                    ],
+                                    [
+                                      -75.70437,
+                                      45.40419
+                                    ],
+                                    [
+                                      -75.70303,
+                                      45.40453
+                                    ],
+                                    [
+                                      -75.70176,
+                                      45.40488
+                                    ],
+                                    [
+                                      -75.70002,
+                                      45.4054
+                                    ],
+                                    [
+                                      -75.69832,
+                                      45.40596
+                                    ],
+                                    [
+                                      -75.69703,
+                                      45.40644
+                                    ],
+                                    [
+                                      -75.69667,
+                                      45.4065
+                                    ],
+                                    [
+                                      -75.69615,
+                                      45.40668
+                                    ],
+                                    [
+                                      -75.69523,
+                                      45.40701
+                                    ],
+                                    [
+                                      -75.69409,
+                                      45.40741
+                                    ],
+                                    [
+                                      -75.69383,
+                                      45.40752
+                                    ],
+                                    [
+                                      -75.69363,
+                                      45.40763
+                                    ],
+                                    [
+                                      -75.69346,
+                                      45.40781
+                                    ],
+                                    [
+                                      -75.69341,
+                                      45.40792
+                                    ],
+                                    [
+                                      -75.69339,
+                                      45.40803
+                                    ],
+                                    [
+                                      -75.69339,
+                                      45.40817
+                                    ],
+                                    [
+                                      -75.69344,
+                                      45.40831
+                                    ],
+                                    [
+                                      -75.69363,
+                                      45.40857
+                                    ],
+                                    [
+                                      -75.69383,
+                                      45.40879
+                                    ],
+                                    [
+                                      -75.69389,
+                                      45.40895
+                                    ],
+                                    [
+                                      -75.6941,
+                                      45.40922
+                                    ],
+                                    [
+                                      -75.69476,
+                                      45.41006
+                                    ],
+                                    [
+                                      -75.69579,
+                                      45.41129
+                                    ],
+                                    [
+                                      -75.69797,
+                                      45.41383
+                                    ],
+                                    [
+                                      -75.69912,
+                                      45.41515
+                                    ],
+                                    [
+                                      -75.70019,
+                                      45.41642
+                                    ],
+                                    [
+                                      -75.70101,
+                                      45.41743
+                                    ],
+                                    [
+                                      -75.7019,
+                                      45.41845
+                                    ],
+                                    [
+                                      -75.70106,
+                                      45.4188
+                                    ],
+                                    [
+                                      -75.69873,
+                                      45.4198
+                                    ],
+                                    [
+                                      -75.69724,
+                                      45.42044
+                                    ],
+                                    [
+                                      -75.69662,
+                                      45.4207
+                                    ]
+                                  ]
+                                },
+                                "type": "Feature",
+                                "properties": {
+                                  "bounds": {
+                                    "northeast": {
+                                      "lat": 45.4207038,
+                                      "lng": -75.6933862
+                                    },
+                                    "southwest": {
+                                      "lat": 45.3172975,
+                                      "lng": -75.7676887
+                                    }
+                                  }
+                                }
+                              }
+                            ],
+                            "type": "FeatureCollection"
+                          },
+                          "total": 1908
+                        }
+                      ]
+                    }
+                  },
+                  "Cannot Deliver": {
+                    "value": {
+                      "data": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden"
+          }
+        },
+        "requestBody": {
+          "description": "Payload that minimally describes a shipment.",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ShipmentRatesPayload"
+              },
+              "example": {
+                "pickupAddress": "456 Elgin Street, Ottawa, ON",
+                "deliveryAddresses": [
+                  "45.4132789,-75.6885815",
+                  "225 Preston St, Ottawa, ON K1R 7R1"
+                ],
+                "requirements": {
+                  "vehicleType": "small"
+                },
+                "orderValue": 2500
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shipments": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "fromDate",
+            "schema": {
+              "$ref": "#/components/schemas/SimplifiedDateISOString"
+            }
+          },
+          {
+            "in": "query",
+            "name": "toDate",
+            "schema": {
+              "$ref": "#/components/schemas/SimplifiedDateISOString"
+            }
+          },
+          {
+            "in": "query",
+            "name": "merchantPpid",
+            "deprecated": true,
+            "description": "**(deprecated in v1.1)**\n",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "tags": [
+          "Shipments"
+        ],
+        "summary": "Gets an array of shipments.",
+        "operationId": "getShipments",
+        "description": "Gets all Merchant shipments created between the two specified dates.\n\n## Filtering By Dates\n\nWhen filtering by a date range both the `fromDate` and `toDate` query parameters must be provided.\n\n## Filtering By Parcel Metadata\n\nParcel metadata fields can be filtered on by using query parameters with the following pattern `meta_{fieldName}`.\n\nAdditionally, the metadata field must have been saved as a string, and not a number for example. This is required since\nthe query parameter value is not converted to a number.\n\nExample: `https://{server-url}/shipments?meta_partnerShipmentId=someid`\n",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X GET {server-url}/shipments\n  -H 'Content-Type: application/json'\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Shipment"
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Success": {
+                    "value": {
+                      "data": [
+                        {
+                          "id": "TRX904577741-T88",
+                          "requirements": {},
+                          "merchantId": "owr4aM8QVqV90MjgyvQT8dWlLeA3",
+                          "driverId": null,
+                          "directionsResult": null,
+                          "gdprRedacted": false,
+                          "archived": false,
+                          "currentStatus": "",
+                          "pickupAddress": "60 McLeod Street, Ottawa ON, CA",
+                          "pickupNotes": "Please be careful since it's fragile!",
+                          "pickupAddressLocation": null,
+                          "pickupAddressProvince": "",
+                          "pickupAddressCountry": "",
+                          "pickupAddressCity": "",
+                          "pickupAddressServiceCity": "",
+                          "cachedDriverName": null,
+                          "cachedTotalRouteDistance": null,
+                          "cachedTotalRouteDuration": null,
+                          "cachedTotalWithoutTaxes": null,
+                          "cachedTaxes": null,
+                          "cachedMerchantAddress": "9 Slack Road, Nepean ON, CA",
+                          "merchantPpid": null,
+                          "merchantName": "TOP KEK Clearing House",
+                          "merchantPhone": "+1 555 123 1234",
+                          "merchantEmail": "testemail@testing.com",
+                          "createdAt": "2020-07-26T13:50:07.368Z",
+                          "driverAcceptedAt": null,
+                          "driverStartedAt": null,
+                          "driverArrivedPickupAt": null,
+                          "driverPickedUpAt": null,
+                          "scheduledPostAt": null,
+                          "postedAt": null,
+                          "lastBroadcastedAt": null,
+                          "driverTimeToPickup": null,
+                          "cancellationAcknowledgedByDriver": false,
+                          "scheduledPostError": "",
+                          "postErrors": [],
+                          "currentDriverEstimatedSecondsToPickup": null,
+                          "parcels": [
+                            {
+                              "driverDeliveredAt": null,
+                              "deliveryAddressLocation": null,
+                              "deliveryAddress": "9 Slack Road, Nepean ON, CA",
+                              "deliveryEmail": "new_email@bestemail.org",
+                              "deliveryPhone": "",
+                              "deliveryName": "Felix Hausdorff",
+                              "description": "Glasses, bifocals",
+                              "parcelValue": 12300,
+                              "orderId": "API-0573",
+                              "isDelivered": false
+                            },
+                            {
+                              "driverDeliveredAt": null,
+                              "deliveryAddressLocation": null,
+                              "deliveryAddress": "150 Albert St, Ottawa, ON K1P 5G2, Canada",
+                              "deliveryEmail": "",
+                              "deliveryPhone": "",
+                              "deliveryName": "Srinivasa Ramanujan",
+                              "description": "Convergence theorems, 12 pack",
+                              "parcelValue": 10500,
+                              "orderId": "API-1010",
+                              "isDelivered": false
+                            },
+                            {
+                              "driverDeliveredAt": null,
+                              "deliveryAddressLocation": null,
+                              "deliveryAddress": "20 Colonnade Rd, Nepean, ON K2E 7M6, Canada",
+                              "deliveryEmail": "",
+                              "deliveryPhone": "",
+                              "deliveryName": "Carl Friedrich Gauss",
+                              "description": "FTOA x 4",
+                              "parcelValue": 19900,
+                              "orderId": "API-1020",
+                              "isDelivered": false
+                            }
+                          ]
+                        },
+                        {
+                          "id": "TRX478723613-XRK",
+                          "requirements": {},
+                          "merchantId": "owr4aM8QVqV90MjgyvQT8dWlLeA3",
+                          "driverId": null,
+                          "directionsResult": {
+                            "type": "FeatureCollection",
+                            "features": [
+                              {
+                                "type": "Feature",
+                                "properties": {
+                                  "bounds": {
+                                    "southwest": {
+                                      "lng": -75.7562437,
+                                      "lat": 45.3255523
+                                    },
+                                    "northeast": {
+                                      "lng": -75.6894101,
+                                      "lat": 45.4115087
+                                    }
+                                  }
+                                },
+                                "geometry": {
+                                  "type": "LineString",
+                                  "coordinates": [
+                                    [
+                                      -75.69324,
+                                      45.41151
+                                    ],
+                                    [
+                                      -75.6928,
+                                      45.41075
+                                    ],
+                                    [
+                                      -75.69262,
+                                      45.41045
+                                    ],
+                                    [
+                                      -75.69251,
+                                      45.41048
+                                    ],
+                                    [
+                                      -75.69018,
+                                      45.41146
+                                    ],
+                                    [
+                                      -75.68944,
+                                      45.41062
+                                    ],
+                                    [
+                                      -75.68941,
+                                      45.41058
+                                    ],
+                                    [
+                                      -75.68949,
+                                      45.41047
+                                    ],
+                                    [
+                                      -75.68956,
+                                      45.41034
+                                    ],
+                                    [
+                                      -75.68963,
+                                      45.41024
+                                    ],
+                                    [
+                                      -75.68986,
+                                      45.41004
+                                    ],
+                                    [
+                                      -75.69054,
+                                      45.40964
+                                    ],
+                                    [
+                                      -75.69113,
+                                      45.40933
+                                    ],
+                                    [
+                                      -75.69132,
+                                      45.40915
+                                    ],
+                                    [
+                                      -75.69173,
+                                      45.40896
+                                    ],
+                                    [
+                                      -75.69313,
+                                      45.40829
+                                    ],
+                                    [
+                                      -75.69328,
+                                      45.40821
+                                    ],
+                                    [
+                                      -75.69437,
+                                      45.40771
+                                    ],
+                                    [
+                                      -75.69552,
+                                      45.40722
+                                    ],
+                                    [
+                                      -75.69694,
+                                      45.40665
+                                    ],
+                                    [
+                                      -75.69845,
+                                      45.40609
+                                    ],
+                                    [
+                                      -75.69919,
+                                      45.40583
+                                    ],
+                                    [
+                                      -75.70049,
+                                      45.40542
+                                    ],
+                                    [
+                                      -75.70143,
+                                      45.40514
+                                    ],
+                                    [
+                                      -75.70293,
+                                      45.40472
+                                    ],
+                                    [
+                                      -75.70484,
+                                      45.40426
+                                    ],
+                                    [
+                                      -75.70631,
+                                      45.40392
+                                    ],
+                                    [
+                                      -75.70725,
+                                      45.40372
+                                    ],
+                                    [
+                                      -75.70865,
+                                      45.40344
+                                    ],
+                                    [
+                                      -75.71113,
+                                      45.40297
+                                    ],
+                                    [
+                                      -75.71298,
+                                      45.40255
+                                    ],
+                                    [
+                                      -75.71487,
+                                      45.40209
+                                    ],
+                                    [
+                                      -75.7153,
+                                      45.40195
+                                    ],
+                                    [
+                                      -75.71627,
+                                      45.40168
+                                    ],
+                                    [
+                                      -75.71736,
+                                      45.40135
+                                    ],
+                                    [
+                                      -75.71837,
+                                      45.40101
+                                    ],
+                                    [
+                                      -75.71948,
+                                      45.40062
+                                    ],
+                                    [
+                                      -75.72064,
+                                      45.40017
+                                    ],
+                                    [
+                                      -75.72133,
+                                      45.3999
+                                    ],
+                                    [
+                                      -75.72379,
+                                      45.39881
+                                    ],
+                                    [
+                                      -75.72428,
+                                      45.39859
+                                    ],
+                                    [
+                                      -75.72658,
+                                      45.3975
+                                    ],
+                                    [
+                                      -75.72728,
+                                      45.39716
+                                    ],
+                                    [
+                                      -75.72777,
+                                      45.39691
+                                    ],
+                                    [
+                                      -75.72832,
+                                      45.39657
+                                    ],
+                                    [
+                                      -75.729,
+                                      45.39608
+                                    ],
+                                    [
+                                      -75.72952,
+                                      45.39564
+                                    ],
+                                    [
+                                      -75.72987,
+                                      45.39525
+                                    ],
+                                    [
+                                      -75.73081,
+                                      45.39412
+                                    ],
+                                    [
+                                      -75.73233,
+                                      45.39221
+                                    ],
+                                    [
+                                      -75.73354,
+                                      45.39065
+                                    ],
+                                    [
+                                      -75.73407,
+                                      45.38994
+                                    ],
+                                    [
+                                      -75.73481,
+                                      45.38899
+                                    ],
+                                    [
+                                      -75.73548,
+                                      45.38823
+                                    ],
+                                    [
+                                      -75.73614,
+                                      45.38752
+                                    ],
+                                    [
+                                      -75.73656,
+                                      45.38707
+                                    ],
+                                    [
+                                      -75.73749,
+                                      45.38621
+                                    ],
+                                    [
+                                      -75.73832,
+                                      45.38544
+                                    ],
+                                    [
+                                      -75.73996,
+                                      45.38395
+                                    ],
+                                    [
+                                      -75.74472,
+                                      45.37959
+                                    ],
+                                    [
+                                      -75.75079,
+                                      45.37402
+                                    ],
+                                    [
+                                      -75.75336,
+                                      45.37166
+                                    ],
+                                    [
+                                      -75.75376,
+                                      45.3713
+                                    ],
+                                    [
+                                      -75.7539,
+                                      45.37128
+                                    ],
+                                    [
+                                      -75.75392,
+                                      45.37128
+                                    ],
+                                    [
+                                      -75.75394,
+                                      45.37127
+                                    ],
+                                    [
+                                      -75.75397,
+                                      45.37125
+                                    ],
+                                    [
+                                      -75.75491,
+                                      45.37041
+                                    ],
+                                    [
+                                      -75.75509,
+                                      45.37027
+                                    ],
+                                    [
+                                      -75.75523,
+                                      45.3702
+                                    ],
+                                    [
+                                      -75.75546,
+                                      45.37014
+                                    ],
+                                    [
+                                      -75.75567,
+                                      45.37015
+                                    ],
+                                    [
+                                      -75.75585,
+                                      45.3702
+                                    ],
+                                    [
+                                      -75.75608,
+                                      45.37031
+                                    ],
+                                    [
+                                      -75.75619,
+                                      45.37044
+                                    ],
+                                    [
+                                      -75.75624,
+                                      45.37058
+                                    ],
+                                    [
+                                      -75.75624,
+                                      45.37073
+                                    ],
+                                    [
+                                      -75.75615,
+                                      45.37089
+                                    ],
+                                    [
+                                      -75.75604,
+                                      45.37099
+                                    ],
+                                    [
+                                      -75.75592,
+                                      45.37107
+                                    ],
+                                    [
+                                      -75.75572,
+                                      45.37117
+                                    ],
+                                    [
+                                      -75.75511,
+                                      45.37134
+                                    ],
+                                    [
+                                      -75.7544,
+                                      45.37011
+                                    ],
+                                    [
+                                      -75.75403,
+                                      45.36946
+                                    ],
+                                    [
+                                      -75.75364,
+                                      45.36876
+                                    ],
+                                    [
+                                      -75.7536,
+                                      45.36867
+                                    ],
+                                    [
+                                      -75.75355,
+                                      45.36846
+                                    ],
+                                    [
+                                      -75.75335,
+                                      45.3681
+                                    ],
+                                    [
+                                      -75.75327,
+                                      45.36802
+                                    ],
+                                    [
+                                      -75.75314,
+                                      45.36787
+                                    ],
+                                    [
+                                      -75.75296,
+                                      45.36772
+                                    ],
+                                    [
+                                      -75.75206,
+                                      45.36708
+                                    ],
+                                    [
+                                      -75.75156,
+                                      45.3667
+                                    ],
+                                    [
+                                      -75.75121,
+                                      45.36641
+                                    ],
+                                    [
+                                      -75.75109,
+                                      45.36633
+                                    ],
+                                    [
+                                      -75.75074,
+                                      45.36599
+                                    ],
+                                    [
+                                      -75.75033,
+                                      45.36566
+                                    ],
+                                    [
+                                      -75.74997,
+                                      45.36539
+                                    ],
+                                    [
+                                      -75.74948,
+                                      45.36506
+                                    ],
+                                    [
+                                      -75.74847,
+                                      45.36453
+                                    ],
+                                    [
+                                      -75.74751,
+                                      45.36416
+                                    ],
+                                    [
+                                      -75.74695,
+                                      45.36399
+                                    ],
+                                    [
+                                      -75.74648,
+                                      45.36388
+                                    ],
+                                    [
+                                      -75.74588,
+                                      45.36377
+                                    ],
+                                    [
+                                      -75.74525,
+                                      45.3637
+                                    ],
+                                    [
+                                      -75.74443,
+                                      45.36364
+                                    ],
+                                    [
+                                      -75.74316,
+                                      45.36366
+                                    ],
+                                    [
+                                      -75.74229,
+                                      45.36372
+                                    ],
+                                    [
+                                      -75.74167,
+                                      45.36379
+                                    ],
+                                    [
+                                      -75.74148,
+                                      45.36379
+                                    ],
+                                    [
+                                      -75.74136,
+                                      45.36376
+                                    ],
+                                    [
+                                      -75.74123,
+                                      45.36369
+                                    ],
+                                    [
+                                      -75.74113,
+                                      45.36359
+                                    ],
+                                    [
+                                      -75.74081,
+                                      45.36307
+                                    ],
+                                    [
+                                      -75.74017,
+                                      45.36197
+                                    ],
+                                    [
+                                      -75.7396,
+                                      45.36098
+                                    ],
+                                    [
+                                      -75.73948,
+                                      45.36075
+                                    ],
+                                    [
+                                      -75.73923,
+                                      45.3604
+                                    ],
+                                    [
+                                      -75.73897,
+                                      45.3601
+                                    ],
+                                    [
+                                      -75.73889,
+                                      45.35996
+                                    ],
+                                    [
+                                      -75.73845,
+                                      45.35922
+                                    ],
+                                    [
+                                      -75.73783,
+                                      45.35803
+                                    ],
+                                    [
+                                      -75.73694,
+                                      45.35652
+                                    ],
+                                    [
+                                      -75.73631,
+                                      45.35542
+                                    ],
+                                    [
+                                      -75.73561,
+                                      45.35425
+                                    ],
+                                    [
+                                      -75.73474,
+                                      45.35283
+                                    ],
+                                    [
+                                      -75.73459,
+                                      45.35257
+                                    ],
+                                    [
+                                      -75.73449,
+                                      45.35234
+                                    ],
+                                    [
+                                      -75.73431,
+                                      45.35203
+                                    ],
+                                    [
+                                      -75.73339,
+                                      45.35053
+                                    ],
+                                    [
+                                      -75.73302,
+                                      45.34994
+                                    ],
+                                    [
+                                      -75.73239,
+                                      45.34887
+                                    ],
+                                    [
+                                      -75.73178,
+                                      45.34782
+                                    ],
+                                    [
+                                      -75.73112,
+                                      45.34676
+                                    ],
+                                    [
+                                      -75.73002,
+                                      45.34489
+                                    ],
+                                    [
+                                      -75.72905,
+                                      45.34325
+                                    ],
+                                    [
+                                      -75.72894,
+                                      45.34316
+                                    ],
+                                    [
+                                      -75.72801,
+                                      45.34164
+                                    ],
+                                    [
+                                      -75.72782,
+                                      45.34131
+                                    ],
+                                    [
+                                      -75.72718,
+                                      45.34021
+                                    ],
+                                    [
+                                      -75.72663,
+                                      45.33922
+                                    ],
+                                    [
+                                      -75.72641,
+                                      45.33882
+                                    ],
+                                    [
+                                      -75.72639,
+                                      45.33869
+                                    ],
+                                    [
+                                      -75.72632,
+                                      45.33851
+                                    ],
+                                    [
+                                      -75.72569,
+                                      45.3374
+                                    ],
+                                    [
+                                      -75.72496,
+                                      45.33614
+                                    ],
+                                    [
+                                      -75.72418,
+                                      45.33479
+                                    ],
+                                    [
+                                      -75.72401,
+                                      45.33444
+                                    ],
+                                    [
+                                      -75.72372,
+                                      45.33396
+                                    ],
+                                    [
+                                      -75.72345,
+                                      45.33354
+                                    ],
+                                    [
+                                      -75.72281,
+                                      45.33246
+                                    ],
+                                    [
+                                      -75.72267,
+                                      45.33217
+                                    ],
+                                    [
+                                      -75.72239,
+                                      45.33172
+                                    ],
+                                    [
+                                      -75.72209,
+                                      45.33111
+                                    ],
+                                    [
+                                      -75.72193,
+                                      45.33081
+                                    ],
+                                    [
+                                      -75.7217,
+                                      45.33046
+                                    ],
+                                    [
+                                      -75.72132,
+                                      45.32977
+                                    ],
+                                    [
+                                      -75.72109,
+                                      45.32935
+                                    ],
+                                    [
+                                      -75.72028,
+                                      45.32789
+                                    ],
+                                    [
+                                      -75.71961,
+                                      45.32672
+                                    ],
+                                    [
+                                      -75.71944,
+                                      45.32644
+                                    ],
+                                    [
+                                      -75.71925,
+                                      45.32611
+                                    ],
+                                    [
+                                      -75.71932,
+                                      45.32595
+                                    ],
+                                    [
+                                      -75.71943,
+                                      45.32582
+                                    ],
+                                    [
+                                      -75.71998,
+                                      45.32563
+                                    ],
+                                    [
+                                      -75.72007,
+                                      45.32555
+                                    ],
+                                    [
+                                      -75.72048,
+                                      45.32606
+                                    ]
+                                  ]
+                                }
+                              }
+                            ]
+                          },
+                          "gdprRedacted": false,
+                          "archived": false,
+                          "currentStatus": "WAITING_FOR_ACCEPTANCE",
+                          "pickupAddress": "60 McLeod Street, Ottawa ON, CA",
+                          "pickupNotes": "Please be careful since it's fragile!",
+                          "pickupAddressLocation": {
+                            "latitude": 45.4115087,
+                            "longitude": -75.69323659999999
+                          },
+                          "pickupAddressProvince": "ON",
+                          "pickupAddressCountry": "CA",
+                          "pickupAddressCity": "Ottawa",
+                          "pickupAddressServiceCity": "Ottawa, ON",
+                          "cachedDriverName": null,
+                          "cachedTotalRouteDistance": 13989,
+                          "cachedTotalRouteDuration": 1969,
+                          "cachedTotalWithoutTaxes": 1486,
+                          "cachedTaxes": {
+                            "HST": 193
+                          },
+                          "cachedMerchantAddress": "9 Slack Road, Nepean ON, CA",
+                          "merchantPpid": null,
+                          "merchantName": "TOP KEK Clearing House",
+                          "merchantPhone": "+1 555 123 1234",
+                          "merchantEmail": "testemail@testing.com",
+                          "createdAt": "2020-07-26T13:50:07.051Z",
+                          "driverAcceptedAt": null,
+                          "driverStartedAt": null,
+                          "driverArrivedPickupAt": null,
+                          "driverPickedUpAt": null,
+                          "scheduledPostAt": null,
+                          "postedAt": "2020-07-26T13:50:09.681Z",
+                          "lastBroadcastedAt": null,
+                          "driverTimeToPickup": null,
+                          "cancellationAcknowledgedByDriver": false,
+                          "scheduledPostError": "",
+                          "postErrors": [],
+                          "currentDriverEstimatedSecondsToPickup": null,
+                          "parcels": [
+                            {
+                              "driverDeliveredAt": null,
+                              "deliveryAddressLocation": {
+                                "latitude": 45.326237,
+                                "longitude": -75.7205628
+                              },
+                              "deliveryAddress": "9 Slack Road, Nepean ON, CA",
+                              "deliveryEmail": "",
+                              "deliveryPhone": "",
+                              "deliveryName": "Felix Hausdorff",
+                              "description": "Glasses, bifocals",
+                              "parcelValue": 12300,
+                              "orderId": "API-0573",
+                              "deliveryAddressProvince": "ON",
+                              "deliveryAddressCountry": "CA",
+                              "deliveryAddressCity": "Ottawa",
+                              "deliveryAddressServiceCity": "Ottawa, ON",
+                              "isDelivered": false
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  },
+                  "Fail": {
+                    "value": {
+                      "data": []
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Shipments"
+        ],
+        "summary": "Create a new Shipment",
+        "description": "Creates a new shipment\n",
+        "operationId": "createShipment",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X POST {server-url}/shipments\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\\\n  -d '{\n    \"pickupAddress\": \"9 Slack Road, Ottawa ON, CA\",\n    \"pickupAddressNotes\": \"Unit 1, ring the buzzer.\",\n    \"requirements\": {},\n    \"pickupNotes\": \"Please be careful, since it may contain fragile things!\",\n    \"parcels\": [\n      {\n        \"deliveryAddress\": \"123 Slater Street, Ottawa ON, CA\",\n        \"deliveryName\": \"Srinivasa Ramanujan\",\n        \"description\": \"Glasses, bifocals\",\n        \"orderId\": \"BFG10K\",\n        \"parcelValue\": 10000\n      }\n    ]\n  }'\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "shipmentId": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Success": {
+                    "value": {
+                      "data": {
+                        "shipmentId": "TRX1132313511829"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid payload or permission denied."
+          },
+          "500": {
+            "description": "Unknown server problem"
+          }
+        },
+        "requestBody": {
+          "description": "Payload describing your shipment",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateShipmentPayload"
+              },
+              "examples": {
+                "ImmediateInit": {
+                  "value": {
+                    "pickupAddress": "9 Slack Road, Ottawa ON, CA",
+                    "requirements": {},
+                    "pickupNotes": "Please be careful, since it may contain fragile things!",
+                    "parcels": [
+                      {
+                        "deliveryAddress": "123 Slater Street, Ottawa ON, CA",
+                        "deliveryName": "Srinivasa Ramanujan",
+                        "description": "Glasses, bifocals",
+                        "orderId": "BFG10K",
+                        "parcelValue": 10000
+                      }
+                    ]
+                  }
+                },
+                "ScheduledInit": {
+                  "value": {
+                    "pickupAddress": "123 Slater Street, Ottawa ON, CA",
+                    "requirements": {},
+                    "pickupNotes": "Please be careful, since it may contain fragile things!",
+                    "scheduledPostAt": "2020-07-25T10:16:11.048Z",
+                    "parcels": [
+                      {
+                        "deliveryAddress": "100 McLeod St, Ottawa ON, CA",
+                        "deliveryName": "Lagrange",
+                        "description": "Copy of Newtons Principia Mathematica",
+                        "orderId": "NWTNRULZ",
+                        "parcelValue": 15000
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shipments/{shipmentId}": {
+      "delete": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "shipmentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the shipment to delete"
+          }
+        ],
+        "tags": [
+          "Shipments"
+        ],
+        "summary": "Delete a shipment",
+        "operationId": "deleteShipment",
+        "description": "Attempt to delete a shipment. Only draft shipments can be deleted.\n",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X DELETE {server-url}/shipments/TRX904577741-T88\n  -H 'Content-Type: application/json'\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted shipment"
+          },
+          "400": {
+            "description": "Invalid shipment ID in path or don't have permission to delete shipment"
+          },
+          "404": {
+            "description": "Shipment not found"
+          },
+          "422": {
+            "description": "Shipment cannot be deleted due to the shipment not being in deletable state"
+          }
+        }
+      },
+      "patch": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "shipmentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the shipment that needs to be updated"
+          }
+        ],
+        "tags": [
+          "Shipments"
+        ],
+        "summary": "Update shipment's data",
+        "operationId": "updateShipment",
+        "description": "Updates shipment's data\n",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X PATCH {server-url}/shipments/TRX1132313511829\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\\\n  -d '{\n    \"pickupNotes\": \"Needs to go out ASAP!\"\n  }'\n"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        },
+        "requestBody": {
+          "description": "Payload describing the changes that need to be updated in your shipment",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateShipmentPayload"
+              },
+              "example": {
+                "pickupNotes": "Needs to go out ASAP!"
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "shipmentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the shipment"
+          }
+        ],
+        "tags": [
+          "Shipments"
+        ],
+        "summary": "Get a single shipment",
+        "operationId": "getShipment",
+        "description": "Gets the details about a single shipment\n",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X GET {server-url}/shipments/TRX904577741-T88\n  -H 'Content-Type: application/json'\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/Shipment"
+                    }
+                  }
+                },
+                "examples": {
+                  "Success": {
+                    "value": {
+                      "data": {
+                        "id": "TRX904577741-T88",
+                        "requirements": {},
+                        "merchantId": "owr4aM8QVqV90MjgyvQT8dWlLeA3",
+                        "driverId": null,
+                        "directionsResult": null,
+                        "gdprRedacted": false,
+                        "archived": false,
+                        "currentStatus": "",
+                        "pickupAddress": "60 McLeod Street, Ottawa ON, CA",
+                        "pickupNotes": "Please be careful since it's fragile!",
+                        "pickupAddressLocation": null,
+                        "pickupAddressProvince": "",
+                        "pickupAddressCountry": "",
+                        "pickupAddressCity": "",
+                        "pickupAddressServiceCity": "",
+                        "cachedDriverName": null,
+                        "cachedTotalRouteDistance": null,
+                        "cachedTotalRouteDuration": null,
+                        "cachedTotalWithoutTaxes": null,
+                        "cachedTaxes": null,
+                        "cachedMerchantAddress": "9 Slack Road, Nepean ON, CA",
+                        "merchantPpid": null,
+                        "merchantName": "TOP KEK Clearing House",
+                        "merchantPhone": "+1 555 123 1234",
+                        "merchantEmail": "testemail@testing.com",
+                        "createdAt": "2020-07-26T13:50:07.368Z",
+                        "driverAcceptedAt": null,
+                        "driverStartedAt": null,
+                        "driverArrivedPickupAt": null,
+                        "driverPickedUpAt": null,
+                        "scheduledPostAt": null,
+                        "postedAt": null,
+                        "lastBroadcastedAt": null,
+                        "driverTimeToPickup": null,
+                        "cancellationAcknowledgedByDriver": false,
+                        "scheduledPostError": "",
+                        "postErrors": [],
+                        "currentDriverEstimatedSecondsToPickup": null,
+                        "parcels": [
+                          {
+                            "driverDeliveredAt": null,
+                            "deliveryAddressLocation": null,
+                            "deliveryAddress": "9 Slack Road, Nepean ON, CA",
+                            "deliveryEmail": "new_email@bestemail.org",
+                            "deliveryPhone": "",
+                            "deliveryName": "Felix Hausdorff",
+                            "description": "Glasses, bifocals",
+                            "parcelValue": 12300,
+                            "orderId": "API-0573",
+                            "isDelivered": false
+                          },
+                          {
+                            "driverDeliveredAt": null,
+                            "deliveryAddressLocation": null,
+                            "deliveryAddress": "150 Albert St, Ottawa, ON K1P 5G2, Canada",
+                            "deliveryEmail": "",
+                            "deliveryPhone": "",
+                            "deliveryName": "Srinivasa Ramanujan",
+                            "description": "Convergence theorems, 12 pack",
+                            "parcelValue": 10500,
+                            "orderId": "API-1010",
+                            "isDelivered": false
+                          },
+                          {
+                            "driverDeliveredAt": null,
+                            "deliveryAddressLocation": null,
+                            "deliveryAddress": "20 Colonnade Rd, Nepean, ON K2E 7M6, Canada",
+                            "deliveryEmail": "",
+                            "deliveryPhone": "",
+                            "deliveryName": "Carl Friedrich Gauss",
+                            "description": "FTOA x 4",
+                            "parcelValue": 19900,
+                            "orderId": "API-1020",
+                            "isDelivered": false
+                          }
+                        ]
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid payload or permission denied."
+          },
+          "500": {
+            "description": "Unknown server problem"
+          }
+        }
+      }
+    },
+    "/shipments/{shipmentId}/post": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "shipmentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the shipment that needs to be updated"
+          }
+        ],
+        "tags": [
+          "Shipments"
+        ],
+        "summary": "Posts a Shipment for broadcasting",
+        "operationId": "postShipment",
+        "description": "Posts a shipment for broadcasting\n",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X POST {server-url}/shipments/TRX1132313511829/post\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          }
+        }
+      }
+    },
+    "/shipments/{shipmentId}/cancel": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "shipmentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the shipment that needs to be cancelled"
+          }
+        ],
+        "tags": [
+          "Shipments"
+        ],
+        "summary": "Cancel a Shipment",
+        "operationId": "cancelShipment",
+        "description": "Cancels a shipment. A cancelled shipment will no longer be able to be posted to drivers.  Additionally, the merchant will be charged a cancellation fee if a driver has already accepted the shipment.\nCan only cancel shipments that have a `currentStatus` of WAITING_FOR_ACCEPTANCE, EN_ROUTE_TO_PICKUP, OUT_FOR_DELIVERY, RENOUNCED_BY_DRIVER, or ON_HOLD.\n",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X POST {server-url}/shipments/TRX1132313511829/cancel\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Invalid shipment ID in path or don't have permission to delete shipment"
+          },
+          "404": {
+            "description": "Shipment not found"
+          },
+          "422": {
+            "description": "Shipment cannot be cancelled due to the shipment not being in cancellable state"
+          }
+        }
+      }
+    },
+    "/shipments/{shipmentId}/parcels/{deliveryIndex}": {
+      "patch": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "shipmentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the shipment that needs to be updated"
+          },
+          {
+            "in": "path",
+            "name": "deliveryIndex",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The delivery index of the parcel to be updated"
+          }
+        ],
+        "tags": [
+          "Shipments"
+        ],
+        "summary": "Update a parcel in an existing shipment",
+        "description": "Updates parcel's information in an existing shipment.\n\n**(added in v1.1)**\nWhen updating metadata fields the fields will be merged into the parcel's existing\nmetadata. Any metadata fields set to `null` or `undefined` will be deleted.\n",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X PATCH {server-url}/shipments/TRX1132313511829/parcels/0\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\\\n  -d '{\n    \"deliveryAddress\": \"45.4132789,-75.6885815\"\n    \"deliveryAddressNotes\": \"Apartment 103, call them as the buzzer doesn't work\"\n    \"deliveryName\": \"John Doe\",\n    \"description\": \"Grocery order with 3 bags\",\n    \"orderId\": \"3453FR-REF\"\n  }'\n"
+          }
+        ],
+        "operationId": "updateShipmentParcel",
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Invalid payload or permission denied."
+          },
+          "500": {
+            "description": "Unknown server problem"
+          }
+        },
+        "requestBody": {
+          "description": "Payload containing the parcel's data that needs to be updated",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Parcel"
+              },
+              "example": {
+                "deliveryAddress": "45.4132789,-75.6885815",
+                "deliveryName": "John Doe",
+                "description": "Grocery order with 3 bags",
+                "orderId": "3453FR-REF"
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shipments/{shipmentId}/tracking/{deliveryIndex}": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "shipmentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the shipment that needs to be updated"
+          },
+          {
+            "in": "path",
+            "name": "deliveryIndex",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "The delivery index that we should be tracking"
+          }
+        ],
+        "tags": [
+          "Shipments"
+        ],
+        "summary": "Creates a tracking URL for a specific delivery index",
+        "operationId": "createTrackingUrlDeliveryIndex",
+        "description": "Creates a tracking URL for a specific delivery index\n",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X POST {server-url}/shipments/TRX1132313511829/tracking/0\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+          }
+        ],
+        "requestBody": {
+          "description": "Optional request parameters",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "lifetime": {
+                    "description": "Lifetime of the tracking URL in seconds. Default is 24 hours and maximum is 31 days. After the lifetime the tracking page will respond with 404.",
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 2678400,
+                    "default": 86400
+                  }
+                }
+              },
+              "examples": {
+                "lifetime": {
+                  "summary": "lifetime of 7 days",
+                  "value": {
+                    "lifetime": 604800
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrackingUrlResponse"
+                },
+                "examples": {
+                  "Valid Tracking Url": {
+                    "value": {
+                      "data": {
+                        "trackingUrl": "{tracking-server-url}?token=<jwt token goes here>"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shipments/{shipmentId}/create-shipping-label": {
+      "post": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "shipmentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the shipment that needs to be updated"
+          },
+          {
+            "in": "query",
+            "name": "deliveryIndex",
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "The delivery index that we will create a label for (defaults to zero if none provided)"
+          },
+          {
+            "in": "query",
+            "name": "imageHeight",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Height of the label image"
+          },
+          {
+            "in": "query",
+            "name": "imageWidth",
+            "schema": {
+              "type": "number"
+            },
+            "description": "Width of the label image"
+          }
+        ],
+        "tags": [
+          "Shipments"
+        ],
+        "summary": "Creates a shipping label for a specific delivery index",
+        "operationId": "createShippingLabel",
+        "description": "Creates a shipping label for a specific delivery index (or zero if not provided).\nPlease note that we will serve binary image as a response if your Accept headers accepts 'image/png' or 'png'. Otherwise, we will serve a JSON object with base64 encoded image (of a png file).\nPlease see our responses examples for further information.\n",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X POST {server-url}/shipments/TRX1132313511829/create-shipping-label?deliveryIndex=1\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ShippingLabelJSONResponse"
+                },
+                "examples": {
+                  "Valid Tracking Url (JSON response)": {
+                    "value": {
+                      "data": {
+                        "base64image": "data:image/png;base64,base64content"
+                      }
+                    }
+                  }
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/shipments/{shipmentId}/parcels/{deliveryIndex}/photo": {
+      "patch": {
+        "parameters": [
+          {
+            "in": "path",
+            "name": "shipmentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the shipment that needs to be updated"
+          },
+          {
+            "in": "path",
+            "name": "deliveryIndex",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The delivery index of the parcel to be updated"
+          }
+        ],
+        "tags": [
+          "Shipments"
+        ],
+        "summary": "Updates the initial photo of a parcel in an existing shipment",
+        "description": "Updates the initial photo of the specified parcel.\n",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X PATCH {server-url}/shipments/TRX1132313511829/parcels/0\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\\\n  -d '{\n    \"base64image\": \"(base64 encoded image here, truncated)\"\n  }'\n"
+          }
+        ],
+        "operationId": "updateShipmentParcelPhoto",
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "Invalid payload or permission denied."
+          },
+          "500": {
+            "description": "Unknown server problem"
+          }
+        },
+        "requestBody": {
+          "description": "Payload containing the parcel's photo (JPG) base64 encoded",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "base64image": {
+                    "type": "string",
+                    "description": "The JPG data must be base64 encoded."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/routing": {
+      "post": {
+        "tags": [
+          "Routing"
+        ],
+        "operationId": "createRoutingRequest",
+        "summary": "Start an asynchronous routing request",
+        "description": "Queue a list of parcels to be routed and added to optimized shipments.\n\nThe typical use case of this API is to select all your parcels and\nprovide in bulk to this endpoint, wich responds with an asynchronous routing\nrequest ID. Then use this asynchronous routing request ID to obtain the\nstatus of the routing request and later the result.\n\n**Order ID**\n\nFor each parcel provided to this endpoint, the `orderId` must be unique among\nall parcels. This allows us to refer back to the parcel by `orderId` in the\nresult `errors` array.\n\n**Scheduled Post At**\n\nValues for `scheduledPostAt` must be a date at least 4 hours from the time of the request.\nThis helps to ensure that there is enough time for routes to be created before\nthe driver network is notified of the deliveries.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "parcels"
+                ],
+                "properties": {
+                  "parcels": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 400,
+                    "items": {
+                      "$ref": "#/components/schemas/ParcelPayload"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully queued an asynchronous routing request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/RoutingRequest"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input provided such as invalid address, etc. No routing request\nis scheduled when input errors are detected.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/routing/{id}": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The asynchronous routing request ID"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Routing"
+        ],
+        "operationId": "getRoutingStatus",
+        "summary": "Get routing request status",
+        "description": "Get the status of an asynchronous routing request",
+        "responses": {
+          "200": {
+            "description": "The status of an asynchronous routing request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/RoutingRequest"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No asynchronous routing request found"
+          }
+        }
+      }
+    },
+    "/routing/{id}/result": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "id",
+          "required": true,
+          "schema": {
+            "type": "string"
+          },
+          "description": "The asynchronous routing request ID"
+        }
+      ],
+      "get": {
+        "tags": [
+          "Routing"
+        ],
+        "operationId": "getRoutingRequestResult",
+        "summary": "Get routing request result",
+        "description": "Get the result of a completed asynchronous routing request",
+        "responses": {
+          "200": {
+            "description": "The result of a completed asynchronous routing request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/RoutingResult"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No asynchronous routing request found"
+          },
+          "422": {
+            "description": "Asynchronous routing request is not complete yet"
+          }
+        }
+      }
+    },
+    "/storage/get/shipment/images/initial": {
+      "get": {
+        "servers": [
+          {
+            "description": "production",
+            "url": "https://trexity.app/storage"
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "shipmentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the Shipment that this parcel belongs to"
+          },
+          {
+            "in": "query",
+            "name": "index",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The (delivery) index of the parcel"
+          }
+        ],
+        "tags": [
+          "Storage"
+        ],
+        "summary": "Gets the actual image data of the specified shipment's parcel",
+        "operationId": "getShipmentParcelInitialImage",
+        "description": "Gets the actual image data of the specified shipment's parcel\n",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X GET \"{server-url}/get/shipment/images/initial?shipmentId=TRX1132313511829&index=0\"\\\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FileResponse"
+          },
+          "304": {
+            "description": "File contents haven't changed"
+          },
+          "404": {
+            "description": "File not found"
+          }
+        }
+      }
+    },
+    "/storage/get/shipment/images/pickup": {
+      "get": {
+        "servers": [
+          {
+            "description": "production",
+            "url": "https://trexity.app/storage"
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "shipmentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the Shipment that this parcel belongs to"
+          }
+        ],
+        "tags": [
+          "Storage"
+        ],
+        "summary": "Gets the actual JPG image data of the driver's pickup",
+        "operationId": "getShipmentPickupImage",
+        "description": "Gets the actual JPG image data of the driver's pickup.\n\nThis is used as a confirmation that the driver has picked up the parcel,\nand ideally should be on the way to delivery.\n\nYou may assume this photo exists if the Status of the Shipment is at least 'Out for delivery'.\n\nPlease see [shipments](/#operation/getShipment) for the possible statuses a Shipment may have.\n",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X GET \"{server-url}/get/shipment/images/pickup?shipmentId=TRX1132313511829&index=0\"\\\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FileResponse"
+          },
+          "304": {
+            "description": "File contents haven't changed"
+          },
+          "404": {
+            "description": "File not found"
+          }
+        }
+      }
+    },
+    "/storage/get/shipment/images/delivery": {
+      "get": {
+        "servers": [
+          {
+            "description": "production",
+            "url": "https://trexity.app/storage"
+          }
+        ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "shipmentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the Shipment that this parcel belongs to"
+          },
+          {
+            "in": "query",
+            "name": "index",
+            "required": true,
+            "schema": {
+              "type": "number"
+            },
+            "description": "The index of the parcel as specified in the Shipment's definition.\n\nSee [here](/#operation/getShipment) and check the \"parcels\" array inside the Shipment's data for reference.\n"
+          }
+        ],
+        "tags": [
+          "Storage"
+        ],
+        "summary": "Gets the actual JPG image data of the driver's delivery image for this Parcel.",
+        "operationId": "getShipmentDeliveryImage",
+        "description": "Gets the actual JPG image data of the driver's delivery image for this parcel.\n\nThis is used as a confirmation that the driver has delivered the parcel.\n",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X GET \"{server-url}/get/shipment/images/delivery?shipmentId=TRX1132313511829&index=0\"\\\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+          }
+        ],
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/FileResponse"
+          },
+          "304": {
+            "description": "File contents haven't changed"
+          },
+          "404": {
+            "description": "File not found"
+          }
+        }
+      }
+    },
+    "/webhooks": {
+      "get": {
+        "parameters": [
+          {
+            "in": "query",
+            "name": "eventName",
+            "schema": {
+              "$ref": "#/components/schemas/WebhookEventName"
+            }
+          }
+        ],
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "List webhooks",
+        "operationId": "getWebhooks",
+        "description": "Gets all registered webhooks or registered webhooks for an event.\n",
+        "responses": {
+          "200": {
+            "description": "List registered webhooks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Webhook"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parameters or payload is invalid. Correct the parameters and try again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "error"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An internal error has occurred and the request cannot be completed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "error"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Register webhook",
+        "operationId": "createWebhook",
+        "description": "Register a new webhook for the specified event.\n",
+        "tags": [
+          "Webhooks"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "eventName",
+                  "url"
+                ],
+                "properties": {
+                  "eventName": {
+                    "$ref": "#/components/schemas/WebhookEventName"
+                  },
+                  "url": {
+                    "type": "string",
+                    "format": "uri",
+                    "description": "Secure (https://...) URL to send the webhook request to.",
+                    "example": "https://example.com/trexity/webhook-handler"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successfully register a webhook.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "required": [
+                        "webhookId"
+                      ],
+                      "properties": {
+                        "webhookId": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Parameters or payload is invalid. Correct the parameters and try again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "error"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An internal error has occurred and the request cannot be completed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "error"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "callbacks": {
+          "shipment.created": {
+            "{$request.body#/url}": {
+              "post": {
+                "summary": "shipment.created",
+                "description": "Occurs when a shipment has been created.",
+                "parameters": [
+                  {
+                    "$ref": "#/components/parameters/x-trexity-signature"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-event-name"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-webhook-order-id"
+                  }
+                ],
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ShipmentWebhookPayload"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Request successfully processed"
+                  }
+                }
+              }
+            }
+          },
+          "shipment.updated": {
+            "{$request.body#/url}": {
+              "post": {
+                "summary": "shipment.updated",
+                "description": "Occurs when a shipment has had address or parcel information updated.",
+                "parameters": [
+                  {
+                    "$ref": "#/components/parameters/x-trexity-signature"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-event-name"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-webhook-order-id"
+                  }
+                ],
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ShipmentWebhookPayload"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Request successfully processed"
+                  }
+                }
+              }
+            }
+          },
+          "shipment.deleted": {
+            "{$request.body#/url}": {
+              "post": {
+                "summary": "shipment.deleted",
+                "description": "Occurs when a shipment has been deleted.",
+                "parameters": [
+                  {
+                    "$ref": "#/components/parameters/x-trexity-signature"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-event-name"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-webhook-order-id"
+                  }
+                ],
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ShipmentWebhookPayload"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Request successfully processed"
+                  }
+                }
+              }
+            }
+          },
+          "shipment.posted": {
+            "{$request.body#/url}": {
+              "post": {
+                "summary": "shipment.posted",
+                "description": "Occurs when a shipment has been posted to our driver community. This can occur as a result of an explicit \"post\" action\nfrom a user or from the platform posting a shipment based on the shipment's `scheduledPostAt` setting.\n",
+                "parameters": [
+                  {
+                    "$ref": "#/components/parameters/x-trexity-signature"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-event-name"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-webhook-order-id"
+                  }
+                ],
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ShipmentWebhookPayload"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Request successfully processed"
+                  }
+                }
+              }
+            }
+          },
+          "shipment.driver_accepted": {
+            "{$request.body#/url}": {
+              "post": {
+                "summary": "shipment.accepted",
+                "description": "Occurs when a shipment has been accepted for delivery by a driver from our driver community.",
+                "parameters": [
+                  {
+                    "$ref": "#/components/parameters/x-trexity-signature"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-event-name"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-webhook-order-id"
+                  }
+                ],
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ShipmentWebhookPayload"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Request successfully processed"
+                  }
+                }
+              }
+            }
+          },
+          "shipment.arrived_at_pickup": {
+            "{$request.body#/url}": {
+              "post": {
+                "summary": "shipment.arrived_at_pickup",
+                "description": "Occurs when a driver has arrived at the pickup address for a parcel within a shipment.",
+                "parameters": [
+                  {
+                    "$ref": "#/components/parameters/x-trexity-signature"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-event-name"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-webhook-order-id"
+                  }
+                ],
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ParcelWebhookPayload"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Request successfully processed"
+                  }
+                }
+              }
+            }
+          },
+          "shipment.picked_up": {
+            "{$request.body#/url}": {
+              "post": {
+                "summary": "shipment.picked_up",
+                "description": "Occurs when a driver has picked up (e.g. has posession) a parcel within a shipment.",
+                "parameters": [
+                  {
+                    "$ref": "#/components/parameters/x-trexity-signature"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-event-name"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-webhook-order-id"
+                  }
+                ],
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ShipmentWebhookPayload"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Request successfully processed"
+                  }
+                }
+              }
+            }
+          },
+          "shipment.arrived_at_delivery": {
+            "{$request.body#/url}": {
+              "post": {
+                "summary": "shipment.arrived_at_delivery",
+                "description": "Occurs when a driver arrived at a parcel's delivery address.",
+                "parameters": [
+                  {
+                    "$ref": "#/components/parameters/x-trexity-signature"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-event-name"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-webhook-order-id"
+                  }
+                ],
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ParcelWebhookPayload"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Request successfully processed"
+                  }
+                }
+              }
+            }
+          },
+          "shipment.parcel_delivered": {
+            "{$request.body#/url}": {
+              "post": {
+                "summary": "shipment.parcel_delivered",
+                "description": "Occurs when a driver has delivered a parcel within a shipment.",
+                "parameters": [
+                  {
+                    "$ref": "#/components/parameters/x-trexity-signature"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-event-name"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-webhook-order-id"
+                  }
+                ],
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ParcelWebhookPayload"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Request successfully processed"
+                  }
+                }
+              }
+            }
+          },
+          "shipment.completed": {
+            "{$request.body#/url}": {
+              "post": {
+                "summary": "shipment.completed",
+                "description": "Occurs when a shipment has all deliverable parcels delivered and has been successfully paid.",
+                "parameters": [
+                  {
+                    "$ref": "#/components/parameters/x-trexity-signature"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-event-name"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-webhook-order-id"
+                  }
+                ],
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ShipmentWebhookPayload"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Request successfully processed"
+                  }
+                }
+              }
+            }
+          },
+          "shipment.cancelled": {
+            "{$request.body#/url}": {
+              "post": {
+                "summary": "shipment.cancelled",
+                "description": "Occurs when a shipment has been cancelled.",
+                "parameters": [
+                  {
+                    "$ref": "#/components/parameters/x-trexity-signature"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-event-name"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-webhook-order-id"
+                  }
+                ],
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ShipmentWebhookPayload"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Request successfully processed"
+                  }
+                }
+              }
+            }
+          },
+          "shipment.driver_renounced": {
+            "{$request.body#/url}": {
+              "post": {
+                "summary": "shipment.driver_renounced",
+                "description": "Occurs when a shipment has been renounced by a driver after they accepted.",
+                "parameters": [
+                  {
+                    "$ref": "#/components/parameters/x-trexity-signature"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-event-name"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-webhook-order-id"
+                  }
+                ],
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ShipmentWebhookPayload"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Request successfully processed"
+                  }
+                }
+              }
+            }
+          },
+          "shipment.on_hold": {
+            "{$request.body#/url}": {
+              "post": {
+                "summary": "shipment.on_hold",
+                "description": "Occurs when a shipment has been put on hold.\n\nA shipment on hold will be immediately removed from our driver network and not be automatically posted to our driver community.\n\nAdditionally, shipments on hold must be re-posted.\n",
+                "parameters": [
+                  {
+                    "$ref": "#/components/parameters/x-trexity-signature"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-event-name"
+                  },
+                  {
+                    "$ref": "#/components/parameters/x-trexity-webhook-order-id"
+                  }
+                ],
+                "requestBody": {
+                  "required": true,
+                  "content": {
+                    "application/json": {
+                      "schema": {
+                        "$ref": "#/components/schemas/ShipmentWebhookPayload"
+                      }
+                    }
+                  }
+                },
+                "responses": {
+                  "200": {
+                    "description": "Request successfully processed"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/webhooks/{webhookId}": {
+      "delete": {
+        "parameters": [
+          {
+            "in": "path",
+            "required": true,
+            "name": "webhookId",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "summary": "Delete a registered webhook",
+        "operationId": "deleteWebhook",
+        "description": "Delete a registered webhook.\n",
+        "tags": [
+          "Webhooks"
+        ],
+        "responses": {
+          "204": {
+            "description": "Successfully deleted a webhook or if the webhook ID does not exist."
+          },
+          "400": {
+            "description": "Parameters or payload is invalid. Correct the parameters and try again.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "error"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An internal error has occurred and the request cannot be completed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "error"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

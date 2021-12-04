@@ -1,0 +1,317 @@
+get:
+  parameters:
+    - in: query
+      name: eventName
+      schema:
+        $ref: ../../components/schemas/WebhookEventName.yaml
+  tags:
+    - Webhooks
+  summary: List webhooks
+  operationId: getWebhooks
+  description: |
+    Gets all registered webhooks or registered webhooks for an event.
+  responses:
+    '200':
+      description: List registered webhooks
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: ../../components/schemas/Webhook.yaml
+    '400':
+      description: Parameters or payload is invalid. Correct the parameters and try again.
+      content:
+        application/json:
+          schema:
+            required: [error]
+            properties:
+              error:
+                type:
+                  string
+    '500':
+      description: An internal error has occurred and the request cannot be completed.
+      content:
+        application/json:
+          schema:
+            required: [error]
+            properties:
+              error:
+                type:
+                  string
+
+post:
+  summary: Register webhook
+  operationId: createWebhook
+  description: |
+    Register a new webhook for the specified event.
+  tags:
+    - Webhooks
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [eventName, url]
+          properties:
+            eventName:
+              $ref: ../../components/schemas/WebhookEventName.yaml
+            url:
+              type: string
+              format: uri
+              description: Secure (https://...) URL to send the webhook request to.
+              example: https://example.com/trexity/webhook-handler
+  responses:
+    '200':
+      description: Successfully register a webhook.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [data]
+            properties:
+              data:
+                required: [webhookId]
+                properties:
+                  webhookId:
+                    type: string
+    '400':
+      description: Parameters or payload is invalid. Correct the parameters and try again.
+      content:
+        application/json:
+          schema:
+            required: [error]
+            properties:
+              error:
+                type:
+                  string
+    '500':
+      description: An internal error has occurred and the request cannot be completed.
+      content:
+        application/json:
+          schema:
+            required: [error]
+            properties:
+              error:
+                type:
+                  string
+  callbacks:
+    'shipment.created':
+      '{$request.body#/url}':
+        post:
+          summary: shipment.created
+          description: Occurs when a shipment has been created.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    shipment.updated:
+      '{$request.body#/url}':
+        post:
+          summary: shipment.updated
+          description: Occurs when a shipment has had address or parcel information updated.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    shipment.deleted:
+      '{$request.body#/url}':
+        post:
+          summary: shipment.deleted
+          description: Occurs when a shipment has been deleted.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    shipment.posted:
+      '{$request.body#/url}':
+        post:
+          summary: shipment.posted
+          description: |
+            Occurs when a shipment has been posted to our driver community. This can occur as a result of an explicit "post" action
+            from a user or from the platform posting a shipment based on the shipment's `scheduledPostAt` setting.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    shipment.driver_accepted:
+      '{$request.body#/url}':
+        post:
+          summary: shipment.accepted
+          description: Occurs when a shipment has been accepted for delivery by a driver from our driver community.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    shipment.arrived_at_pickup:
+      '{$request.body#/url}':
+        post:
+          summary: shipment.arrived_at_pickup
+          description: Occurs when a driver has arrived at the pickup address for a parcel within a shipment.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/ParcelWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    shipment.picked_up:
+      '{$request.body#/url}':
+        post:
+          summary: shipment.picked_up
+          description: Occurs when a driver has picked up (e.g. has posession) a parcel within a shipment.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    shipment.arrived_at_delivery:
+      '{$request.body#/url}':
+        post:
+          summary: shipment.arrived_at_delivery
+          description: Occurs when a driver arrived at a parcel's delivery address.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/ParcelWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    shipment.parcel_delivered:
+      '{$request.body#/url}':
+        post:
+          summary: shipment.parcel_delivered
+          description: Occurs when a driver has delivered a parcel within a shipment.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/ParcelWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    shipment.completed:
+      '{$request.body#/url}':
+        post:
+          summary: shipment.completed
+          description: Occurs when a shipment has all deliverable parcels delivered and has been successfully paid.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    shipment.cancelled:
+      '{$request.body#/url}':
+        post:
+          summary: shipment.cancelled
+          description: Occurs when a shipment has been cancelled.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    shipment.driver_renounced:
+      '{$request.body#/url}':
+        post:
+          summary: shipment.driver_renounced
+          description: Occurs when a shipment has been renounced by a driver after they accepted.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    shipment.on_hold:
+      '{$request.body#/url}':
+        post:
+          summary: shipment.on_hold
+          description: |
+            Occurs when a shipment has been put on hold.
+
+            A shipment on hold will be immediately removed from our driver network and not be automatically posted to our driver community.
+
+            Additionally, shipments on hold must be re-posted.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }

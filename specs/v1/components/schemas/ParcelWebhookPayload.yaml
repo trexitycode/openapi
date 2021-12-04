@@ -1,0 +1,16 @@
+description: Webhook payload during a parcel event.
+required: [data]
+properties:
+  data:
+    properties:
+      shipmentId:
+        type: string
+        description: The ID of the shipment containing the parcel affected.
+      deliveryIndex:
+        type: integer
+        description: The index of the parcel affected within the shipment.
+      orderUuid:
+        type: string
+        description: The Trexity generated unique identifier for the parcel/order.
+      parcel:
+        $ref: ./ParcelResponse.yaml

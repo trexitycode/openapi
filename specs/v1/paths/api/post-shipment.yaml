@@ -1,0 +1,21 @@
+post:
+  parameters:
+    - in: path
+      name: shipmentId
+      required: true
+      schema:
+        type: string
+      description: The id of the shipment that needs to be updated
+
+  tags:
+    - Shipments
+  summary: Posts a Shipment for broadcasting
+  operationId: postShipment
+  description: >
+    Posts a shipment for broadcasting
+
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/post-shipment.yaml
+  responses:
+    '204':
+      description: Success

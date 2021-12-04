@@ -1,0 +1,216 @@
+openapi: 3.0.2
+info:
+  version: '1.1'
+  title: Trexity API
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/trexitycode/openapi/main/license
+  termsOfService: 'https://trexity.com/terms-of-service/'
+  contact:
+    email: support@trexity.com
+    url: 'http://trexity.com'
+  description: |
+    # Introduction
+
+    This OpenAPI Specification describes v1 of the Trexity API.
+
+    Before getting started, please make sure you've acquired Trexity Merchant API Key.
+
+    Each endpoint requires an Authorization header with "Bearer \<Trexity API Key\>"
+    in order to be used.
+
+    Below, we describe the available API endpoints in details and provide
+    examples (request/response and curl ones).
+
+    ## Response Envelope
+
+    All endpoints will return an object and if there is actual data
+    to be returned, it is going to be named `data`. Where `data` may
+    be an array or an object.
+
+    If there is `error` field present on the root JSON object, that
+    means something went wrong and that error message is all we know about it.
+    Additionally, in some cases, you may inspect the HTTP status codes to
+    gather more information.
+
+    Please check our payload/response examples in details as well as the
+    curl examples that are a part of each section that documents an operation.
+
+    Example of a successful response:
+    `{ data: ... }`
+
+    Example of a response with an error:
+    `{ error: 'Some error message', data: null }`
+
+    ## Posting a Shipment
+
+    In order for Trexity to start the process of matching drivers for your
+    shipment, your shipment must be posted.
+
+    The most common way of doing this is via our
+    (post shipment)[/#operation/postShipment] endpoint.
+
+    In order to schedule posting a shipment in the future, please use
+    'scheduledPostAt' in our (create shipment)[/#operation/createShipment] endpoint.
+
+tags:
+  - name: Addresses
+    description: |
+      Group of endpoints for handling addresses.
+
+      ### Address Formatting
+
+      In general wherever an address is expected the format we accept is:
+
+      ```
+      STREET, CITY PROVINCE, POSTAL_CODE COUNTRY
+      ```
+
+      However, we also accept newlines and/or commas delimiting each component.
+
+      Postal code and country are optional, however it's better to include them
+      to avoid any ambiguity when we attempt to geocode the address.
+
+      **Good:**
+      ```
+      123 Fake St, Ottawa ON
+      123 Fake St, Toronto, Ontario
+      123 Fake St, Toronto, Ontario, B4T 3F5
+      ```
+
+      **Better:**
+      ```
+      123 Fake St, Ottawa ON, K2G 8FT Canada
+      123 Fake St, Toronto, Ontario, M4T 5F6 Canada
+      123 Fake St, Toronto, Ontario, B4T 3F5, Canada
+      ```
+  - name: Shipping Rates
+    description: |
+      Prior to creating a Shipment, you can calculate the rates based on the pickup address and the number of stops the driver has to do.
+      See our [shipment-rates](/#operation/shipment-rates) endpoint for more information.
+  - name: Shipments
+    description: |
+      The most common approach to get a shipment on the road is to:
+        * [Create a Shipment](/#operation/createShipment)
+        * [Posting a Shipment](/#operation/postShipment)
+
+      After [posting](/#section/Posting-a-shipment), assuming everything went well, Trexity system will keep pinging drivers in the vicinity of the pickup address.
+      In the rare case of not finding an available driver in the vicinity of the pickup address, Trexity will refuse to post the shipment.
+
+      Alternatively, Trexity allows for planning in the future via Scheduling.
+      You can schedule the posting of the Shipment in the future.
+      Trexity guarantees that the scheduled Shipment will not be posted or broadcasted prior to the time it was scheduled for.
+      Please see the [details](/#operation/createShipment) here.
+
+  - name: Routing
+    description: |
+      Create and get status information for asynchronous routing requests.
+  
+  - name: Storage
+    description: |
+      Storage related operations.
+
+      > IMPORTANT: These operations have a different server URL.
+
+  - name: Webhooks
+    description: |
+      Retrieve and manage webhooks for a Trexity Merchant.
+
+      ## Parcel Events
+
+      A Shipment is a container of parcels, each with their own delivery address.
+      However, the Shipment has a single pickup address. As activity occurs on a
+      parcel the Shipment's `currentStatus` oscilates between `OUT_FOR_DELIVERY`,
+      `ARRIVED_AT_DELIVERY` and `DELIVERED`. However, the Shipment alone doesn't
+      inform you of what parcel the status is for.
+
+      To listen to parcel events listen to the following webhooks:
+      - `shipment.arrived_at_pickup` The driver has picked up a parcel
+      - `shipment.at_delivery` The driver has arrived at a parcel's delivery address
+      - `shipment.parcel_delivered` The driver has delivered a parcel
+
+      The request payload of these webhook events indicate the parcel that is currently
+      being affected.
+
+      ## Verifying Webhook Requests
+
+      All webhook requests have a header that contains a signature signed with the Trexity Merchant's
+      webhook secret as found in their "Trexity API" settings. To verify the signature take the raw
+      request body as text and create a SHA256 HMAC signed with the merchant's webhook secret and covert to hex.
+
+      Example:
+      ```
+      // nodejs
+      const text = await new Promise((resolve, reject) => {
+        const buff = []
+        req.setEncoding('utf8')
+        req.on('data', chunk => (buff.push(chunk)))
+        req.once('end', resolve(buff.join('')))
+        req.once('error', reject)
+      })
+
+      const sig = require('crypto')
+        .createHmac('sha256', process.env.TRX_MERCH_WEBHOOK_SECRET)
+        .update(text)
+        .digest('hex')
+
+      const isValid = req.headers['x-trexity-signature'] === sig
+
+      if (!isValid) {
+        res.statusCode = 403
+        res.end('Forbidden', 'utf8')
+        return
+      }
+
+      const body = JSON.parse(body)
+      // ...
+      ```
+servers:
+  - description: production
+    url: 'https://trexity.app/api/v1_0'
+components:
+  securitySchemes:
+    MerchantApiKeyAuth:
+      $ref: components/securitySchemes/MerchantApiKeyAuth.yaml
+    AccessTokenAuth:
+      $ref: components/securitySchemes/AccessTokenAuth.yaml
+security:
+  - MerchantApiKeyAuth: []
+  - AccessTokenAuth: []
+paths:
+  /addresses/check:
+    $ref: ./paths/api/check-address.yaml
+  /shipment-rates:
+    $ref: ./paths/api/shipment-rates.yaml
+  /shipments:
+    $ref: ./paths/api/shipments.yaml
+  /shipments/{shipmentId}:
+    $ref: ./paths/api/shipment.yaml
+  /shipments/{shipmentId}/post:
+    $ref: ./paths/api/post-shipment.yaml
+  /shipments/{shipmentId}/cancel:
+    $ref: ./paths/api/cancel-shipment.yaml
+  /shipments/{shipmentId}/parcels/{deliveryIndex}:
+    $ref: ./paths/api/update-shipment-parcel.yaml
+  /shipments/{shipmentId}/tracking/{deliveryIndex}:
+    $ref: ./paths/api/create-tracking-url-deliveryIndex.yaml
+  /shipments/{shipmentId}/create-shipping-label:
+    $ref: ./paths/api/create-shipping-label.yaml
+  /shipments/{shipmentId}/parcels/{deliveryIndex}/photo:
+    $ref: ./paths/api/update-shipment-parcel-photo.yaml
+  /routing:
+    $ref: ./paths/api/routing-request.yaml
+  /routing/{id}:
+    $ref: ./paths/api/routing-status.yaml
+  /routing/{id}/result:
+    $ref: ./paths/api/routing-result.yaml
+  /storage/get/shipment/images/initial:
+    $ref: ./paths/storage/get-shipment-initial-image.yaml
+  /storage/get/shipment/images/pickup:
+    $ref: ./paths/storage/get-shipment-pickup-image.yaml
+  /storage/get/shipment/images/delivery:
+    $ref: ./paths/storage/get-shipment-delivery-image.yaml
+  /webhooks:
+    $ref: ./paths/api/webhooks.yaml
+  /webhooks/{webhookId}:
+    $ref: ./paths/api/delete-webhook.yaml

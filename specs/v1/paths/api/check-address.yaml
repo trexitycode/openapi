@@ -1,0 +1,67 @@
+get:
+  parameters:
+    - in: query
+      name: address
+      required: true
+      schema:
+        type: string
+      description: The address to check, where the postal code/zip code is optional.
+      example: 123 Fake St, Ottawa ON, CA
+
+  tags:
+    - Addresses
+  summary: Check an address
+  operationId: checkAddress
+  description: |
+    **(added in v1.1)**
+
+    Checks an address and returns a result that identifies if the address can be
+    used as a pickup address/business address, and what delivery classification it
+    falls under.
+
+    ### Postal Code/Zip Code
+
+    The postal code (or zip code) is optional in the address, but specifiying it could
+    result in a more accurate address check.
+
+    ### Rate Limiting
+
+    This operation can be requested without authentication, however it will have a
+    strict rate limit of 3 requests every 10 seconds.
+
+    However, authenticated requests can request 12 times every 10 seconds.
+  security:
+    - {}
+    - MerchantApiKeyAuth: []
+    - AccessTokenAuth: []
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  pickup:
+                    type: boolean
+                    description: If `true` then the address can be used as a pickup address (or business address).
+                  delivery:
+                    type: string
+                    enum: [none, normal, extended]
+                    description: |
+                      The delivery classification of the address.
+
+                      `none` = The address is outside a known delivery zone and is unserviceable.
+
+                      `normal` = The address is serviceable and normal delivery rates apply.
+
+                      `extended` = The address is serviceable and surcharges may apply.
+    '400':
+      description: Address could not be recognized as a valid address. Review address and ensure all address components are present and follow formatting guide.
+    '429':
+      description: The request has been rate limited. Try making the request again after the rate limit window.
+    '500':
+      description: Server error. Try making the request again.

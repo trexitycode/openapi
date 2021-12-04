@@ -1,0 +1,20 @@
+lang: Shell
+source: |
+  curl -X POST {server-url}/shipments\
+    -H 'Content-Type: application/json'\
+    -H 'Authorization: Bearer <Trexity API Key>'\
+    -d '{
+      "pickupAddress": "9 Slack Road, Ottawa ON, CA",
+      "pickupAddressNotes": "Unit 1, ring the buzzer.",
+      "requirements": {},
+      "pickupNotes": "Please be careful, since it may contain fragile things!",
+      "parcels": [
+        {
+          "deliveryAddress": "123 Slater Street, Ottawa ON, CA",
+          "deliveryName": "Srinivasa Ramanujan",
+          "description": "Glasses, bifocals",
+          "orderId": "BFG10K",
+          "parcelValue": 10000
+        }
+      ]
+    }'

@@ -1,0 +1,33 @@
+type: object
+description: |
+  Object representing the requirements that to be met by a driver in order
+  for them to be considered for delivery.
+properties:
+  vehicleType:
+    type: string
+    description: |
+      Describe the type of vehicle that must be used for a shipment.
+
+      - small - Sedan, hatchback, etc [example: Honda Civic]
+      - medium - SUV, minivan, etc [example: Toyota Sienna]
+      - large - Cargo van, pickup truck, etc [example: Ford F150]
+    enum:
+      - small
+      - medium
+      - large
+  legalAgeAlcohol:
+    type: boolean
+    description: |
+      Must be delivered by a driver who is of legal age to transport alcohol.
+  perishable:
+    type: boolean
+    description: |
+      Must be delivered by a driver who is equipped to deliver perishable items.
+  returnReusables:
+    type: boolean
+    description: |
+      Must be delivered by a driver who will return collected reusables back to pickup.
+  "custom pricing":
+    type: boolean
+    description: |
+      Please contact a Trexity support agent for custom pricing options.

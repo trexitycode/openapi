@@ -1,0 +1,174 @@
+type: object
+description: A shipment object that has a single pickup address and can have several parcels each with their on delivery address.
+properties:
+  currentStatus:
+    $ref: ./ShipmentStatus.yaml
+
+  pickupAddress:
+    type: string
+    description: The starting address that the driver must pick up the parcel(s) from.
+  pickupAddressNotes:
+    type: string
+    description: Extra notes relating to the pickup address, such as apartment/unit number, reference, description of the location, etc.
+
+  requirements:
+    $ref: ./ShipmentRequirements.yaml
+  pickupNotes:
+    type: string
+    description: Special notes or instructions regarding pickup
+  scheduledPostAt:
+    $ref: ./SimplifiedDateISOString.yaml
+
+  id:
+    type: string
+    description: Unique identifier of the Shipment in Trexity
+  merchantId:
+    type: string
+    description: User id of the Merchant who is the owner of the Shipment
+  driverId:
+    type: string
+    description: User id of the Driver who has accepted this Shipment
+    nullable: true
+
+  directionsResult:
+    $ref: ./GeoJSONDirectionsResult.yaml
+
+  gdprRedacted:
+    type: boolean
+    description: |
+      Whether this shipment has been GDPR redacted.
+      Please see https://ec.europa.eu/info/law/law-topic/data-protection/reform/rules-business-and-organisations_en for more details.
+
+  archived:
+    type: boolean
+    description: Whether this Shipment has been archived.
+
+  pickupAddressLocation:
+    $ref: ./Location.yaml
+
+  pickupAddressProvince:
+    type: string
+    nullable: true
+    description: |
+      The province of the pickupAddress. Example: Ontario.
+
+  pickupAddressCountry:
+    type: string
+    nullable: true
+    description: |
+      The country of the pickupAddress. Example: Canada.
+
+  pickupAddressCity:
+    type: string
+    nullable: true
+    description: |
+      The city of the pickupAddress. Example: Ottawa.
+
+  pickupAddressServiceCity:
+    type: string
+    nullable: true
+    description: |
+      The service city of the pickupAddress. Example: Ottawa, ON.
+
+  cachedDriverName:
+    type: string
+    nullable: true
+    description: Name of the driver that is delivering this Shipment.
+
+  cachedTotalRouteDistance:
+    type: number
+    nullable: true
+    description: Approximation of the total distance (in meters) of the route, taking into account multiple parcels (if any).
+
+  cachedTotalRouteDuration:
+    type: number
+    nullable: true
+    description: |
+      Approximation of the total duration (in seconds) that the driver would have to drive in order to complete the Shipment.
+      Takes into account multiple parcels (if any).
+
+  cachedTotalWithoutTaxes:
+    type: number
+    nullable: true
+    description: Total Merchant cost without taxes (in Canadian cents)
+
+  cachedTaxes:
+    type: object
+    nullable: true
+    description: Details and percentages of the taxes that apply for this Shipment.
+
+  cachedMerchantAddress:
+    type: string
+    description: |
+      Merchant's address. Example: 9 Slack Road, Nepean ON, CA
+
+  merchantPpid:
+    type: string
+    nullable: true
+    description: Partner-provided ID of Shipment's merchant.
+
+  merchantName:
+    type: string
+    description: Name of Shipment's merchant.
+
+  merchantEmail:
+    type: string
+    description: Merchant's email address.
+
+  merchantPhone:
+    type: string
+    description: |
+      Merchant's phone number. Example: +1 555 123 1234
+
+  createdAt:
+    $ref: ./SimplifiedDateISOString.yaml
+
+  driverAcceptedAt:
+    $ref: ./SimplifiedDateISOString.yaml
+  driverStartedAt:
+    $ref: ./SimplifiedDateISOString.yaml
+  driverArrivedPickupAt:
+    $ref: ./SimplifiedDateISOString.yaml
+  driverPickedUpAt:
+    $ref: ./SimplifiedDateISOString.yaml
+  postedAt:
+    $ref: ./SimplifiedDateISOString.yaml
+  lastBroadcastedAt:
+    $ref: ./SimplifiedDateISOString.yaml
+
+  driverTimeToPickup:
+    type: number
+    nullable: true
+    description: Approximate time (in seconds) that the driver must drive from their location (at the moment of accepting) to the pickup address.
+
+  cancellationAcknowledgedByDriver:
+    type: boolean
+    nullable: true
+    description: Whether or not the driver has acknowledged after cancelling.
+
+  scheduledPostError:
+    type: string
+    description: If anything goes wrong during scheduling, this will contain human-readable description of the error. Typically, it's empty.
+    nullable: true
+
+  postErrors:
+    type: array
+    description: If anything goes wrong during posting, this will contain details of the errors. Typically, it's an empty array.
+    nullable: true
+
+  currentDriverEstimatedSecondsToPickup:
+    type: number
+    nullable: true
+    description: |
+      Approximate time (in seconds) that the driver must drive from their current location to the pickup address.
+      This data may be delayed or stale.
+      Note the difference between this and driverTimeToPickup - driverTimeToPickup is constant.
+      This will periodically be updated.
+
+  parcels:
+    type: array
+    description: The parcels that will be delivered in this shipment
+    minItems: 1
+    maxItems: 10
+    items:
+        $ref: ./ParcelResponse.yaml

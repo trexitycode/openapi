@@ -1,0 +1,15 @@
+type: string
+enum:
+  - shipment.created
+  - shipment.updated
+  - shipment.deleted
+  - shipment.posted
+  - shipment.driver_accepted
+  - shipment.arrived_at_pickup
+  - shipment.picked_up
+  - shipment.arrived_at_delivery
+  - shipment.parcel_delivered
+  - shipment.completed
+  - shipment.cancelled
+  - shipment.driver_renounced
+  - shipment.on_hold

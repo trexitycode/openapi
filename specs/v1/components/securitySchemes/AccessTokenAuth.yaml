@@ -1,0 +1,20 @@
+type: http
+scheme: bearer
+description: |
+  This authentication stratigy requires an access token used as a 'Bearer' token.
+
+  Currently access tokens are only obtained and used by trusted services.
+
+  Example:
+  ```
+  // nodejs
+  require('http').get('{server-url}/{endpoint}', {
+    headers: {
+      accept: 'application/json',
+      authorization: `Bearer ${process.env.ACCESS_TOKEN}`
+    }
+  }, (res) => {
+    // ... handle response
+  })
+  ```
+

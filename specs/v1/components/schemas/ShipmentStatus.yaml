@@ -1,0 +1,46 @@
+type: string
+enum: [
+  WAITING_FOR_ACCEPTANCE,
+  WAITING_TO_START,
+  EN_ROUTE_TO_PICKUP,
+  ARRIVED_AT_PICKUP,
+  OUT_FOR_DELIVERY,
+  ARRIVED_AT_DELIVERY,
+  DELIVERED,
+  RENOUNCED_BY_DRIVER,
+  CANCELLED,
+  EXPIRED,
+  ON_HOLD,
+  ''
+]
+description: |
+  The status of the queried Shipment.
+
+  (empty string) - Shipment is a draft. Shipments are considered a draft if they haven't been posted to the driver network yet and scheduling has been disabled.
+
+  WAITING_FOR_ACCEPTANCE - Shipments that have been posted to the driver network, but waiting for a driver to accept them. When a shipment is posted the owning merchant's credit card is pre-authorized for the full shipment rate.
+
+  EN_ROUTE_TO_PICKUP - Shipments where a driver has accepted and the driver is driving to the pickup location.
+
+  ARRIVED_AT_PICKUP - Shipments where a driver has arrived at the pickup location.
+
+  ---
+
+  **A shipment can osciliate between these three statuses while parecels are being deliveried.**
+
+  OUT_FOR_DELIVERY - Shipments where a driver is delivering a parcel.
+
+  ARRIVED_AT_DELIVERY - Shipments where a driver has arrived at a parcel's the delivery location.
+
+  DELIVERED - Shipments that where a driver has delivered a parcel.
+
+  ---
+
+  RENOUNCED_BY_DRIVER - Shipments that have been explicitly unaccepted by a driver. Drivers can only renounce shipments before they have picked up any orders.
+
+  CANCELLED - Shipments that have been cancelled.
+
+  EXPIRED - Shipments that have been posted to drivers and have waited for acceptance longer than 7 days. Similar to being on hold, the shipment rate pre-authorization is reversed on the owning merchant's credit card, and these shipments can be re-posted at a later time.
+
+  ON_HOLD - Shipments that have been posted but not accepted and have been explicitly removed from the driver network. All shipments that are on hold will have the shipment rate pre-authorization reversed on the owning merchant's credit card. Additionally, shipments on hold can be re-posted at a later time.
+

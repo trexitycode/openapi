@@ -1,0 +1,17 @@
+description: A registered webhook
+properties:
+  id:
+    type: string
+  createdAt:
+    type: string
+    format: date-time
+  merchantId:
+    type: string
+  type:
+    type: string
+    enum: [merchant-webhook]
+  eventName:
+    $ref: ./WebhookEventName.yaml
+  url:
+    type: string
+    format: uri

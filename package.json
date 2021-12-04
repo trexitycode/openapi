@@ -1,0 +1,15 @@
+{
+  "name": "trexity-openapi",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "start": "echo 'Please read the docs/COMMANDS.md'",
+    "test": "echo 'Please read the docs/COMMANDS.md'"
+  },
+  "devDependencies": {
+    "@redocly/openapi-cli": "^1.0.0-beta.62"
+  },
+  "engines": {
+    "node": "14"
+  }
+}

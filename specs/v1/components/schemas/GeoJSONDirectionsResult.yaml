@@ -1,0 +1,11 @@
+type: object
+nullable: true
+description: |
+  GeoJSON object that defines the path of the Shipment, taking into account multiple dropoffs (if any).
+
+  GeoJSON is defined at https://tools.ietf.org/html/rfc7946
+
+  We are defining the geometry of the path using an array of LineString, which in plain English means
+
+  piecewise linear segments connected on the map.
+

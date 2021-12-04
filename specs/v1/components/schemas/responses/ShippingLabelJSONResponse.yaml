@@ -1,0 +1,9 @@
+description: The shipment label response objec
+type: object
+properties:
+  data:
+    type: object
+    properties:
+      base64image:
+        description: base64 contents of the shipping label (png image).
+        type: string

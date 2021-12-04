@@ -1,0 +1,67 @@
+# NOTE (dschnare): Can't use the 'allOf' here to re-use Parcel.yaml
+# No idea why, but our examples always fail validation
+description: Payload object used to identify a parcel
+type: object
+required:
+  - pickupAddress
+  - scheduledPostAt
+  - deliveryAddress
+  - deliveryName
+  - description
+  - orderId
+  - parcelValue
+properties:
+  pickupAddress:
+    $ref: ../AddressOrLatLng.yaml
+  pickupAddressNotes:
+    type: string
+    description: Extra information relating to the pickup address ONLY, like the apartment/unit number.
+  requirements:
+    $ref: ../ShipmentRequirements.yaml
+  pickupNotes:
+    type: string
+    description: Special notes or instructions regarding pickup like the description of the location, what door to use, etc.
+  scheduledPostAt:
+    $ref: ../SimplifiedDateISOString.yaml
+  ignoreTargetDeliveryDuration:
+    type: boolean
+    description: Ignore the target delivery duration for this shipment only
+# Parcel properties
+  deliveryAddress:
+    type: string
+    description: The destination address this parcel will be delivered to in the format "STREET, CITY PROVINCE, POSTAL_CODE COUNTRY" (postal code and country are optional, but it's better to include them to avoid ambiguity).
+    example: '123 Fake St, Ottawa Ontario, K2G 6FT Canada'
+  deliveryAddressNotes:
+    type: string
+    description: Extra notes relating to the delivery address, such as apartment/unit number, reference, description of the location, etc.
+  deliveryName:
+    type: string
+    description: The name of the recipient
+  description:
+    type: string
+    description: Description of the parcel being delivered
+  orderId:
+    type: string
+    maxLength: 20
+    description: The order ID that this parcel belongs to.
+  parcelValue:
+    type: number
+    minimum: 0
+    description: The dollar value of the parcel in CDN as cents
+  deliveryEmail:
+    type: string
+    format: email
+    description: The email address of the recipient
+  deliveryPhone:
+    type: string
+    description: The cell phone number of the recipient
+  requiresPersonHandoff:
+    type: boolean
+    description: Does this parcel require in-person handoff?
+  metadata:
+    type: object
+    description: |
+      **(added in v1.1)**
+      The metadata fields associated to the parcel. If the intent is to
+      list shipments with this metadata field, then ensure the value is
+      saved as a string and not say a number.

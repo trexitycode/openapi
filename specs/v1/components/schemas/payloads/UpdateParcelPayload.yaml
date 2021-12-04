@@ -1,0 +1,13 @@
+description: Payload object used to update a shipment's parcel
+allOf:
+  - type: object
+    required:
+      - shipmentId
+      - deliveryIndex
+    properties:
+      shipmentId:
+        type: string
+      deliveryIndex:
+        type: number
+        description: The index of the parcel within the shipment to update
+  - $ref: ../Parcel.yaml

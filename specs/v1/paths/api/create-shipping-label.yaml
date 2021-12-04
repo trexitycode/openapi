@@ -1,0 +1,53 @@
+post:
+  parameters:
+    - in: path
+      name: shipmentId
+      required: true
+      schema:
+        type: string
+      description: The id of the shipment that needs to be updated
+    - in: query
+      name: deliveryIndex
+      schema:
+        type: boolean
+      description: The delivery index that we will create a label for (defaults to zero if none provided)
+    - in: query
+      name: imageHeight
+      schema:
+        type: number
+      description: Height of the label image
+    - in: query
+      name: imageWidth
+      schema:
+        type: number
+      description: Width of the label image
+
+  tags:
+    - Shipments
+  summary: Creates a shipping label for a specific delivery index
+  operationId: createShippingLabel
+  description: >
+    Creates a shipping label for a specific delivery index (or zero if not provided).
+
+    Please note that we will serve binary image as a response if your Accept headers accepts 'image/png' or 'png'.
+    Otherwise, we will serve a JSON object with base64 encoded image (of a png file).
+
+    Please see our responses examples for further information.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/create-shipping-label.yaml
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/responses/ShippingLabelJSONResponse.yaml
+          examples:
+            Valid Tracking Url (JSON response):
+              value:
+                data:
+                  base64image: "data:image/png;base64,base64content"
+        image/png:
+          schema:
+            type: string
+            format: binary

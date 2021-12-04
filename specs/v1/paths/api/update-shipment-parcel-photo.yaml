@@ -1,0 +1,42 @@
+patch:
+  parameters:
+    - in: path
+      name: shipmentId
+      required: true
+      schema:
+        type: string
+      description: The id of the shipment that needs to be updated
+    - in: path
+      name: deliveryIndex
+      required: true
+      schema:
+        type: integer
+      description: The delivery index of the parcel to be updated
+  tags:
+    - Shipments
+  summary: Updates the initial photo of a parcel in an existing shipment
+  description: |
+    Updates the initial photo of the specified parcel.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/update-shipment-parcel-photo.yaml
+
+  operationId: updateShipmentParcelPhoto
+  responses:
+    '500':
+      description: Unknown server problem
+    '400':
+      description: Invalid payload or permission denied.
+    '204':
+      description: Success
+  requestBody:
+    description: Payload containing the parcel's photo (JPG) base64 encoded
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            base64image:
+              type: string
+              description: The JPG data must be base64 encoded.
+            

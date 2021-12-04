@@ -1,0 +1,9 @@
+description: The shipments reponse object
+type: object
+properties:
+  success:
+    type: boolean
+  shipments:
+    type: array
+    items:
+      $ref: ../Shipment.yaml

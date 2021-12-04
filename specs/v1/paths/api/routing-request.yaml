@@ -1,0 +1,58 @@
+post:
+  tags: [Routing]
+  operationId: createRoutingRequest
+  summary: Start an asynchronous routing request
+  description: |
+    Queue a list of parcels to be routed and added to optimized shipments.
+
+    The typical use case of this API is to select all your parcels and
+    provide in bulk to this endpoint, wich responds with an asynchronous routing
+    request ID. Then use this asynchronous routing request ID to obtain the
+    status of the routing request and later the result.
+
+    **Order ID**
+
+    For each parcel provided to this endpoint, the `orderId` must be unique among
+    all parcels. This allows us to refer back to the parcel by `orderId` in the
+    result `errors` array.
+
+    **Scheduled Post At**
+
+    Values for `scheduledPostAt` must be a date at least 4 hours from the time of the request.
+    This helps to ensure that there is enough time for routes to be created before
+    the driver network is notified of the deliveries.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          type: object
+          required: [parcels]
+          properties:
+            parcels:
+              type: array
+              minItems: 1
+              maxItems: 400
+              items:
+                $ref: ../../components/schemas/payloads/ParcelPayload.yaml
+  responses:
+    '200':
+      description: Successfully queued an asynchronous routing request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: ../../components/schemas/RoutingRequest.yaml
+    '400':
+      description: |
+        Invalid input provided such as invalid address, etc. No routing request
+        is scheduled when input errors are detected.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error]
+            properties:
+              error: { type: string }

@@ -1,0 +1,22 @@
+# See https://docs.redoc.ly/cli/configuration/
+
+lint:
+  extends:
+    - recommended
+  rules:
+    no-unused-components: error
+
+referenceDocs:
+  htmlTemplate: ./templates/reference-doc.hbs
+  theme:
+    colors:
+      primary:
+        main: "#32329f"
+    typography:
+      fontFamily: "canada-type-gibson, sans-serif"
+      headings:
+        "fontFamily": "canada-type-gibson, sans-serif"
+      links:
+        color: "#4076BA"
+    logo:
+      gutter: "20px"

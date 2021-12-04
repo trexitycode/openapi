@@ -1,0 +1,5 @@
+lang: Shell
+source: |
+  curl -X POST {server-url}/shipments/TRX1132313511829/tracking/0\
+    -H 'Content-Type: application/json'\
+    -H 'Authorization: Bearer <Trexity API Key>'

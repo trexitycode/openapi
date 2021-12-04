@@ -1,0 +1,28 @@
+description: Payload object describing the changes of a shipment
+type: object
+properties:
+  pickupAddress:
+    $ref: ../AddressOrLatLng.yaml
+  pickupAddressNotes:
+    type: string
+    description: Extra notes relating to the pickup address, such as apartment/unit number, reference, description of the location, etc.
+  requirements:
+    $ref: ../ShipmentRequirements.yaml
+  pickupNotes:
+    type: string
+    description: Special notes or instructions regarding pickup
+  ignoreTargetDeliveryDuration:
+    type: boolean
+    description: Ignore the target delivery duration for this shipment only
+  merchantPpid:
+    type: string
+    description: Partner-provided ID of the merchant. This ID can be used when querying for shipments. Only used by Partner accounts.
+  merchantName:
+    type: string
+    description: Partner-provided name of the merchant. This will be displayed in place of the merchant name defined in the merchant profile. Only used by Partner accounts.
+  merchantPhone:
+    type: string
+    description: Partner-provided phone of the merchant. This will be displayed in place of the merchant phone defined in the merchant profile. Only used by Partner accounts.
+  merchantEmail:
+    type: string
+    description: Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts.

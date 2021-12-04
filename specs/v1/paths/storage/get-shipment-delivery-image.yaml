@@ -1,0 +1,39 @@
+get:
+  servers:
+    - description: production
+      url: 'https://trexity.app/storage'
+  parameters:
+    - in: query
+      name: shipmentId
+      required: true
+
+      schema:
+        type: string
+      description:
+        The id of the Shipment that this parcel belongs to
+    - in: query
+      name: index
+      required: true
+      schema:
+        type: number
+      description: |
+        The index of the parcel as specified in the Shipment's definition.
+        
+        See [here](/#operation/getShipment) and check the "parcels" array inside the Shipment's data for reference.
+  tags:
+    - Storage
+  summary: Gets the actual JPG image data of the driver's delivery image for this Parcel.
+  operationId: getShipmentDeliveryImage
+  description: |
+    Gets the actual JPG image data of the driver's delivery image for this parcel.
+
+    This is used as a confirmation that the driver has delivered the parcel.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/storage/get-shipment-delivery-photo.yaml
+  responses:
+    '304':
+      description: File contents haven't changed
+    '404':
+      description: File not found
+    '200':
+      $ref: ../../components/schemas/responses/FileResponse.yaml

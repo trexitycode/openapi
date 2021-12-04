@@ -1,0 +1,38 @@
+get:
+  servers:
+    - description: production
+      url: 'https://trexity.app/storage'
+  parameters:
+    - in: query
+      name: driverId
+      required: true
+      schema:
+        type: string
+      description: |
+        The driver user id as seen in shipment.driverId.
+  
+        See details about shipment [here](/#operation/getShipment).
+  tags:
+    - Storage
+  summary: Gets the actual JPG image data of the driver's profile photo.
+  operationId: getDriverProfileImage
+  description: |
+    Gets the actual JPG image data of the driver's profile photo.
+
+    N.B. You are allowed to see the driver's profile photo only when that driver is delivering a Shipment for you (as a Merchant).
+
+    Our recommendation is that you cache the image once you have it available. Please note we provide [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) header for caching purposes.
+
+    You may assume you are allowed to retrieve a specific driver's photo if there's a Shipment  that belongs to you and is in progress and shipment.driverId matches the user id of that driver.
+
+    For more information, please see [here](/#operation/getShipment).
+
+  x-codeSamples:
+    - $ref: ../../../code_samples/Shell/storage/get-driver-profile-photo.yaml
+  responses:
+    '304':
+      description: File contents haven't changed
+    '404':
+      description: File not found
+    '200':
+      $ref: ../../../components/schemas/responses/FileResponse.yaml

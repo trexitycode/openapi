@@ -1,0 +1,25 @@
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+    description: The asynchronous routing request ID
+get:
+  tags: [Routing]
+  operationId: getRoutingStatus
+  summary: Get routing request status
+  description: Get the status of an asynchronous routing request
+  responses:
+    '200':
+      description: The status of an asynchronous routing request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: ../../components/schemas/RoutingRequest.yaml
+    '404':
+      description: No asynchronous routing request found
+

@@ -1,0 +1,9 @@
+description: The shipment ID response object
+type: object
+properties:
+  data:
+    type: object
+    description: Envelope
+    properties:
+      shipmentId:
+        type: string

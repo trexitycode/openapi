@@ -1,0 +1,28 @@
+description: A minimal object that describes a shipment
+type: object
+required:
+  - pickupAddress
+  - deliveryAddresses
+  - requirements
+properties:
+  pickupAddress:
+    $ref: ../AddressOrLatLng.yaml
+  deliveryAddresses:
+    type: array
+    maxItems: 19
+    minItems: 1
+    description: |
+      One or more latitude and longitude values separated by comma or an address to be geocoded into latitude and longitude values.
+
+      Examples:
+
+      - 44.339565,-78.666433
+      - 308 Rideau St, Ottawa, ON K1N 5Y5
+    items:
+      $ref: ../AddressOrLatLng.yaml
+  requirements:
+    $ref: ../ShipmentRequirements.yaml
+  orderValue:
+    type: number
+    minimum: 0
+    description: The order value, if any. Specified in cents.
