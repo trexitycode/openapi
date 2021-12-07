@@ -24,6 +24,8 @@ delete:
               error:
                 type:
                   string
+    '404':
+      description: Webhook is not found.
     '500':
       description: An internal error has occurred and the request cannot be completed.
       content:
