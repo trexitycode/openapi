@@ -74,6 +74,12 @@ properties:
     type: number
     description: If a driver has accpeted, the estimated seconds it will take the driver to arrive at the pickup address.
 
+  externalId:
+    type: string
+    maxLength: 256
+    description: |
+      **(added in v1.2)**  The ID of the external entity that is associated to this parcel (e.g. the external order or shipment ID).
+
   metadata:
     type: object
     description: |

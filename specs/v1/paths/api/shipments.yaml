@@ -9,6 +9,13 @@ get:
       schema:
         $ref: ../../components/schemas/SimplifiedDateISOString.yaml
     - in: query
+      name: externalId
+      schema:
+        type: string
+        maxLength: 256
+        description: |
+          **(added in v1.2)** The ID of the external entity that is associated to this parcel (e.g. the external order or shipment ID).
+    - in: query
       name: merchantPpid
       deprecated: true
       description: |
@@ -27,14 +34,15 @@ get:
 
     When filtering by a date range both the `fromDate` and `toDate` query parameters must be provided.
 
-    ## Filtering By Parcel Metadata
+    ## ~~Filtering By Parcel Metadata~~
 
-    Parcel metadata fields can be filtered on by using query parameters with the following pattern `meta_{fieldName}`.
+    ~~Parcel metadata fields can be filtered on by using query parameters with the following pattern `meta_{fieldName}`.~~
 
-    Additionally, the metadata field must have been saved as a string, and not a number for example. This is required since
-    the query parameter value is not converted to a number.
+    ~~Additionally, the metadata field must have been saved as a string, and not a number for example. This is required since
+    the query parameter value is not converted to a number.~~
 
-    Example: `https://{server-url}/shipments?meta_partnerShipmentId=someid`
+    ~~Example: `https://{server-url}/shipments?meta_partnerShipmentId=someid`~~
+    **(deprecated in v1.2)**
   x-codeSamples:
     - $ref: ../../code_samples/Shell/shipments/get-shipments.yaml
   responses:

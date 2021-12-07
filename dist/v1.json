@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.1",
+    "version": "1.2",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -297,6 +297,11 @@
             "type": "number",
             "description": "If a driver has accpeted, the estimated seconds it will take the driver to arrive at the pickup address."
           },
+          "externalId": {
+            "type": "string",
+            "maxLength": 256,
+            "description": "**(added in v1.2)**  The ID of the external entity that is associated to this parcel (e.g. the external order or shipment ID).\n"
+          },
           "metadata": {
             "type": "object",
             "description": "**(added in v1.1)** The metadata fields associated to the parcel.\n"
@@ -521,6 +526,11 @@
           "requiresPersonHandoff": {
             "type": "boolean",
             "description": "Does this parcel require in-person handoff?"
+          },
+          "externalId": {
+            "type": "string",
+            "maxLength": 256,
+            "description": "**(added in v1.2)** The ID of the external entity that is associated to this parcel (e.g. the external order or shipment ID).\n"
           },
           "metadata": {
             "type": "object",
@@ -1721,6 +1731,15 @@
           },
           {
             "in": "query",
+            "name": "externalId",
+            "schema": {
+              "type": "string",
+              "maxLength": 256,
+              "description": "**(added in v1.2)** The ID of the external entity that is associated to this parcel (e.g. the external order or shipment ID).\n"
+            }
+          },
+          {
+            "in": "query",
             "name": "merchantPpid",
             "deprecated": true,
             "description": "**(deprecated in v1.1)**\n",
@@ -1734,7 +1753,7 @@
         ],
         "summary": "Gets an array of shipments.",
         "operationId": "getShipments",
-        "description": "Gets all Merchant shipments created between the two specified dates.\n\n## Filtering By Dates\n\nWhen filtering by a date range both the `fromDate` and `toDate` query parameters must be provided.\n\n## Filtering By Parcel Metadata\n\nParcel metadata fields can be filtered on by using query parameters with the following pattern `meta_{fieldName}`.\n\nAdditionally, the metadata field must have been saved as a string, and not a number for example. This is required since\nthe query parameter value is not converted to a number.\n\nExample: `https://{server-url}/shipments?meta_partnerShipmentId=someid`\n",
+        "description": "Gets all Merchant shipments created between the two specified dates.\n\n## Filtering By Dates\n\nWhen filtering by a date range both the `fromDate` and `toDate` query parameters must be provided.\n\n## ~~Filtering By Parcel Metadata~~\n\n~~Parcel metadata fields can be filtered on by using query parameters with the following pattern `meta_{fieldName}`.~~\n\n~~Additionally, the metadata field must have been saved as a string, and not a number for example. This is required since\nthe query parameter value is not converted to a number.~~\n\n~~Example: `https://{server-url}/shipments?meta_partnerShipmentId=someid`~~\n**(deprecated in v1.2)**\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
