@@ -7,6 +7,8 @@ post:
     to the completion of the shipment (takes into account multiple parcel dropoffs, if any).
     Supports specifying an order value parameter, which will check against API Preferences
     configured in the merchant portal.
+
+    If no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.
   operationId: shipment-rates
   x-codeSamples:
     - $ref: ../../code_samples/Shell/shipment-rates/post.yaml

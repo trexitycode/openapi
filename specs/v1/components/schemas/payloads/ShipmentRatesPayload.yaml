@@ -1,7 +1,6 @@
 description: A minimal object that describes a shipment
 type: object
 required:
-  - pickupAddress
   - deliveryAddresses
   - requirements
 properties:

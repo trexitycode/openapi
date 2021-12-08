@@ -100,7 +100,6 @@
         "description": "A minimal object that describes a shipment",
         "type": "object",
         "required": [
-          "pickupAddress",
           "deliveryAddresses",
           "requirements"
         ],
@@ -542,7 +541,6 @@
         "description": "Payload object used to create a shipment",
         "type": "object",
         "required": [
-          "pickupAddress",
           "requirements",
           "parcels"
         ],
@@ -1045,7 +1043,7 @@
           "Shipping Rates"
         ],
         "summary": "Calculates the rate for a proposed shipment",
-        "description": "Returns the distance (in meters), travel duration (in seconds), and fee from a pickup address\nto the completion of the shipment (takes into account multiple parcel dropoffs, if any).\nSupports specifying an order value parameter, which will check against API Preferences\nconfigured in the merchant portal.\n",
+        "description": "Returns the distance (in meters), travel duration (in seconds), and fee from a pickup address\nto the completion of the shipment (takes into account multiple parcel dropoffs, if any).\nSupports specifying an order value parameter, which will check against API Preferences\nconfigured in the merchant portal.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n",
         "operationId": "shipment-rates",
         "x-codeSamples": [
           {
@@ -2635,7 +2633,7 @@
           "Shipments"
         ],
         "summary": "Create a new Shipment",
-        "description": "Creates a new shipment\n",
+        "description": "Creates a new shipment.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n",
         "operationId": "createShipment",
         "x-codeSamples": [
           {

@@ -546,7 +546,9 @@ post:
     - Shipments
   summary: Create a new Shipment
   description: |
-    Creates a new shipment
+    Creates a new shipment.
+
+    If no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.
   operationId: createShipment
   x-codeSamples:
     - $ref: ../../code_samples/Shell/shipments/create-shipment.yaml

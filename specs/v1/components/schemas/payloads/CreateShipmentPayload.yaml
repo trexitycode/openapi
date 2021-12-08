@@ -1,7 +1,6 @@
 description: Payload object used to create a shipment
 type: object
 required:
-  - pickupAddress
   - requirements
   - parcels
 properties:
