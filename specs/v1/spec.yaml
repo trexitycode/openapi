@@ -10,19 +10,39 @@ info:
     email: support@trexity.com
     url: 'http://trexity.com'
   description: |
-    # Introduction
+    # Concepts & Workflows
 
-    This OpenAPI Specification describes v1 of the Trexity API.
+    **Parcels** represent an order, customer information and a delivery address.
 
-    Before getting started, please make sure you've acquired Trexity Merchant API Key.
+    **Shipments** represent a route, has one or more parcels, requirements, and a pickup address.
 
-    Each endpoint requires an Authorization header with "Bearer \<Trexity API Key\>"
-    in order to be used.
+    **Posting shipments** means the shipment will be sent to our driver community for pickup and delivery.
 
-    Below, we describe the available API endpoints in details and provide
-    examples (request/response and curl ones).
+    ### Simple Workflow
 
-    ## Response Envelope
+    Create a simple shipment without worrying about optimizing the route.
+
+    1. [Create a shipment](#operation/createShipment) and specify the parcels, customer information and delivery address
+    2. [Get shipping labels](#operation/createShippingLabel) for the shipment, download, print, and affix to the parcel packaging
+    3. [Post the shipment](#operation/postShipment) to our drivers for pickup and delivery
+
+    > Optionally, when creating a shipment a future date can be specified for `scheduledPostAt`. This date will be when the
+    > system will automatically post the shipment to our drivers. Before this date ensure the labels are printed and affixed
+    > to the parcel packages.
+
+    ### "Bundling" Workflow
+
+    Create many shipments each with an optimal route that reduces time on the road and total cost.
+
+    1. [Make a routing request](#operation/createRoutingRequest) with a batch of parcels each with a `scheduledPostAt` set to a future date
+    2. [Monitor the routing request status](#operation/getRoutingStatus) by polling the status of the routing request
+    3. [Get the routing result](#operation/getRoutingRequestResult) when routing is complete or errored 
+    4. [Get shipping labels](#operation/createShippingLabel) for each shipment created during the routing request, download, print, and affix to all packages
+
+    > The date specified in `scheduledPostAt` will be when the system will automatically post the shipment to our drivers.
+    > Before this date ensure the labels are printed and affixed to the parcel packages.
+
+    # Responses
 
     All endpoints will return an object and if there is actual data
     to be returned, it is going to be named `data`. Where `data` may
@@ -41,17 +61,6 @@ info:
 
     Example of a response with an error:
     `{ error: 'Some error message', data: null }`
-
-    ## Posting a Shipment
-
-    In order for Trexity to start the process of matching drivers for your
-    shipment, your shipment must be posted.
-
-    The most common way of doing this is via our
-    (post shipment)[/#operation/postShipment] endpoint.
-
-    In order to schedule posting a shipment in the future, please use
-    'scheduledPostAt' in our (create shipment)[/#operation/createShipment] endpoint.
 
 tags:
   - name: Addresses
