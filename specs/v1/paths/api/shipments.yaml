@@ -34,6 +34,11 @@ get:
 
     When filtering by a date range both the `fromDate` and `toDate` query parameters must be provided.
 
+    ## Filtering By External ID
+
+    When filtering by a parcel's external ID you **cannot filter by dates**. Filtering by dates and external ID are mutually exclusive filters. If `externalId` is specified it will take precendence.
+    **(added in v1.2)**
+
     ## ~~Filtering By Parcel Metadata~~
 
     ~~Parcel metadata fields can be filtered on by using query parameters with the following pattern `meta_{fieldName}`.~~

@@ -1751,7 +1751,7 @@
         ],
         "summary": "Gets an array of shipments.",
         "operationId": "getShipments",
-        "description": "Gets all Merchant shipments created between the two specified dates.\n\n## Filtering By Dates\n\nWhen filtering by a date range both the `fromDate` and `toDate` query parameters must be provided.\n\n## ~~Filtering By Parcel Metadata~~\n\n~~Parcel metadata fields can be filtered on by using query parameters with the following pattern `meta_{fieldName}`.~~\n\n~~Additionally, the metadata field must have been saved as a string, and not a number for example. This is required since\nthe query parameter value is not converted to a number.~~\n\n~~Example: `https://{server-url}/shipments?meta_partnerShipmentId=someid`~~\n**(deprecated in v1.2)**\n",
+        "description": "Gets all Merchant shipments created between the two specified dates.\n\n## Filtering By Dates\n\nWhen filtering by a date range both the `fromDate` and `toDate` query parameters must be provided.\n\n## Filtering By External ID\n\nWhen filtering by a parcel's external ID you **cannot filter by dates**. Filtering by dates and external ID are mutually exclusive filters. If `externalId` is specified it will take precendence.\n**(added in v1.2)**\n\n## ~~Filtering By Parcel Metadata~~\n\n~~Parcel metadata fields can be filtered on by using query parameters with the following pattern `meta_{fieldName}`.~~\n\n~~Additionally, the metadata field must have been saved as a string, and not a number for example. This is required since\nthe query parameter value is not converted to a number.~~\n\n~~Example: `https://{server-url}/shipments?meta_partnerShipmentId=someid`~~\n**(deprecated in v1.2)**\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
