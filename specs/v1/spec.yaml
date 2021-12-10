@@ -42,6 +42,10 @@ info:
     > The date specified in `scheduledPostAt` will be when the system will automatically post the shipment to our drivers.
     > Before this date ensure the labels are printed and affixed to the parcel packages.
 
+    ### Parcel Status
+
+    Follow the [Webhooks](#tag/webhooks) guide to understand what webhooks you will need to listen to.
+
     # Responses
 
     All endpoints will return an object and if there is actual data
@@ -134,7 +138,7 @@ tags:
       inform you of what parcel the status is for.
 
       To listen to parcel events listen to the following webhooks:
-      - `shipment.arrived_at_pickup` The driver has picked up a parcel
+      - `shipment.picked_up` The driver has picked all parcels in the shipment
       - `shipment.at_delivery` The driver has arrived at a parcel's delivery address
       - `shipment.parcel_delivered` The driver has delivered a parcel
 

@@ -196,7 +196,7 @@ post:
             content:
               application/json:
                 schema:
-                  $ref: ../../components/schemas/ParcelWebhookPayload.yaml
+                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
           responses: { '200': { description: Request successfully processed } }
     shipment.picked_up:
       '{$request.body#/url}':
