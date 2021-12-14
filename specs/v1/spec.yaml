@@ -44,7 +44,7 @@ info:
 
     ### Parcel Status
 
-    Follow the [Webhooks](#tag/Webhooks) guide to understand what webhooks you will need to listen to.
+    Follow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.
 
     # Responses
 
