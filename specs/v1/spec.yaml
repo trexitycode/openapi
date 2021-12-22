@@ -138,9 +138,9 @@ tags:
       inform you of what parcel the status is for.
 
       To listen to parcel events listen to the following webhooks:
-      - `shipment.picked_up` The driver has picked all parcels in the shipment
-      - `shipment.at_delivery` The driver has arrived at a parcel's delivery address
-      - `shipment.parcel_delivered` The driver has delivered a parcel
+      - `shipment.driver.picked_up` The driver has picked all parcels in the shipment
+      - `shipment.driver.arrived_at_delivery` The driver has arrived at a parcel's delivery address
+      - `shipment.driver.parcel_delivered` The driver has delivered a parcel
 
       The request payload of these webhook events indicate the parcel that is currently
       being affected.
