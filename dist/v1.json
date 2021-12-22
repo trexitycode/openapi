@@ -3911,10 +3911,10 @@
               }
             }
           },
-          "shipment.driver_accepted": {
+          "shipment.driver.accepted": {
             "{$request.body#/url}": {
               "post": {
-                "summary": "shipment.accepted",
+                "summary": "shipment.driver.accepted",
                 "description": "Occurs when a shipment has been accepted for delivery by a driver from our driver community.",
                 "parameters": [
                   {
@@ -3945,10 +3945,10 @@
               }
             }
           },
-          "shipment.arrived_at_pickup": {
+          "shipment.driver.arrived_at_pickup": {
             "{$request.body#/url}": {
               "post": {
-                "summary": "shipment.arrived_at_pickup",
+                "summary": "shipment.driver.arrived_at_pickup",
                 "description": "Occurs when a driver has arrived at the pickup address for a parcel within a shipment.",
                 "parameters": [
                   {
@@ -3979,10 +3979,10 @@
               }
             }
           },
-          "shipment.picked_up": {
+          "shipment.driver.picked_up": {
             "{$request.body#/url}": {
               "post": {
-                "summary": "shipment.picked_up",
+                "summary": "shipment.driver.picked_up",
                 "description": "Occurs when a driver has picked up (e.g. has posession) a parcel within a shipment.",
                 "parameters": [
                   {
@@ -4013,10 +4013,10 @@
               }
             }
           },
-          "shipment.arrived_at_delivery": {
+          "shipment.driver.arrived_at_delivery": {
             "{$request.body#/url}": {
               "post": {
-                "summary": "shipment.arrived_at_delivery",
+                "summary": "shipment.driver.arrived_at_delivery",
                 "description": "Occurs when a driver arrived at a parcel's delivery address.",
                 "parameters": [
                   {
@@ -4047,10 +4047,10 @@
               }
             }
           },
-          "shipment.parcel_delivered": {
+          "shipment.driver.parcel_delivered": {
             "{$request.body#/url}": {
               "post": {
-                "summary": "shipment.parcel_delivered",
+                "summary": "shipment.driver.parcel_delivered",
                 "description": "Occurs when a driver has delivered a parcel within a shipment.",
                 "parameters": [
                   {
@@ -4149,10 +4149,10 @@
               }
             }
           },
-          "shipment.driver_renounced": {
+          "shipment.driver.renounced": {
             "{$request.body#/url}": {
               "post": {
-                "summary": "shipment.driver_renounced",
+                "summary": "shipment.driver.renounced",
                 "description": "Occurs when a shipment has been renounced by a driver after they accepted.",
                 "parameters": [
                   {
