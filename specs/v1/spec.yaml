@@ -108,6 +108,7 @@ tags:
       123 Fake St Apartment 4, Ottawa ON, K2G 8FT Canada
       123 Fake St Unit 4, Ottawa ON, K2G 8FT Canada
       123 Fake St Suite 4, Ottawa ON, K2G 8FT Canada
+      123 Fake St #4, Ottawa ON, K2G 8FT Canada
       ```
   - name: Shipping Rates
     description: |
