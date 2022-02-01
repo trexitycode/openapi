@@ -61,7 +61,7 @@
     },
     "schemas": {
       "AddressOrLatLng": {
-        "description": "Latitutde and longitude values separated by comma or an\naddress to be geocoded into latitude and longitude values.\n\nAddresses are in the format \"STREET, CITY PROVINCE, POSTAL_CODE COUNTRY\"\nWhere postal code and country are optional, but it's better to include them to avoid ambiguity.\n\nExamples:\n\n- 44.339565,-78.666433\n- 308 Rideau St, Ottawa ON, K1N 5Y5 Canada\n",
+        "description": "Latitude and longitude values separated by comma or an\naddress to be geocoded into latitude and longitude values.\n\nAddresses are in the format \"STREET, CITY PROVINCE, POSTAL_CODE COUNTRY\"\nWhere postal code and country are optional, but it's better to include them to avoid ambiguity.\n\nExamples:\n\n- 44.339565,-78.666433\n- 308 Rideau St, Ottawa ON, K1N 5Y5 Canada\n",
         "type": "string",
         "maxLength": 512
       },
@@ -1017,6 +1017,23 @@
                             "extended"
                           ],
                           "description": "The delivery classification of the address.\n\n`none` = The address is outside a known delivery zone and is unserviceable.\n\n`normal` = The address is serviceable and normal delivery rates apply.\n\n`extended` = The address is serviceable and surcharges may apply.\n"
+                        },
+                        "lngLat": {
+                          "type": "object",
+                          "properties": {
+                            "longitude": {
+                              "type": "number",
+                              "description": "Longitude of the address"
+                            },
+                            "latitude": {
+                              "type": "number",
+                              "description": "Latitude of the address"
+                            }
+                          }
+                        },
+                        "serviceCity": {
+                          "type": "string",
+                          "description": "Service city that the address is located. Provided in the format: \"(city name), (2 letter abbreviation of province)\" (may or may not be supported by Trexity)\n"
                         }
                       }
                     }
@@ -3313,7 +3330,7 @@
         ],
         "operationId": "createRoutingRequest",
         "summary": "Start an asynchronous routing request",
-        "description": "Queue a list of parcels to be routed and added to optimized shipments.\n\nThe typical use case of this API is to select all your parcels and\nprovide in bulk to this endpoint, wich responds with an asynchronous routing\nrequest ID. Then use this asynchronous routing request ID to obtain the\nstatus of the routing request and later the result.\n\n**Order ID**\n\nFor each parcel provided to this endpoint, the `orderId` must be unique among\nall parcels. This allows us to refer back to the parcel by `orderId` in the\nresult `errors` array.\n\n**Scheduled Post At**\n\nValues for `scheduledPostAt` must be a date at least 4 hours from the time of the request.\nThis helps to ensure that there is enough time for routes to be created before\nthe driver network is notified of the deliveries.\n",
+        "description": "Queue a list of parcels to be routed and added to optimized shipments.\n\nThe typical use case of this API is to select all your parcels and\nprovide in bulk to this endpoint, wich responds with an asynchronous routing\nrequest ID. Then use this asynchronous routing request ID to obtain the\nstatus of the routing request and later the result.\n\n**Order ID**\n\nFor each parcel provided to this endpoint, the `orderId` must be unique among\nall parcels. This allows us to refer back to the parcel by `orderId` in the\nresult `errors` array.\n\n**Scheduled Post At**\n\nValues for `scheduledPostAt` must be a date at least 1 hour from the time of the request.\nThis helps to ensure that there is enough time for routes to be created before\nthe driver network is notified of the deliveries.\n",
         "requestBody": {
           "required": true,
           "content": {
