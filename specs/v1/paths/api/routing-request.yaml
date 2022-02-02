@@ -18,7 +18,7 @@ post:
 
     **Scheduled Post At**
 
-    Values for `scheduledPostAt` must be a date at least 4 hours from the time of the request.
+    Values for `scheduledPostAt` must be a date at least 1 hour from the time of the request.
     This helps to ensure that there is enough time for routes to be created before
     the driver network is notified of the deliveries.
   requestBody:

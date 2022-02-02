@@ -1,5 +1,5 @@
 description: |
-  Latitutde and longitude values separated by comma or an
+  Latitude and longitude values separated by comma or an
   address to be geocoded into latitude and longitude values.
 
   Addresses are in the format "STREET, CITY PROVINCE, POSTAL_CODE COUNTRY"
