@@ -61,6 +61,10 @@ get:
                       `extended` = The address is serviceable and surcharges may apply.
                   lngLat:
                     type: object
+                    description: |
+                      **(added in v1.3)**
+
+                      The latitude and logitude of the checked address.
                     properties:
                       longitude:
                         type: number
@@ -71,6 +75,8 @@ get:
                   serviceCity:
                     type: string
                     description: |
+                      **(added in v1.3)**
+
                       Service city that the address is located. Provided in the format: "(city name), (2 letter abbreviation of province)" (may or may not be supported by Trexity)
     '400':
       description: Address could not be recognized as a valid address. Review address and ensure all address components are present and follow formatting guide.
