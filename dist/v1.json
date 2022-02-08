@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.2",
+    "version": "1.3",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -1020,6 +1020,7 @@
                         },
                         "lngLat": {
                           "type": "object",
+                          "description": "**(added in v1.3)**\n\nThe latitude and logitude of the checked address.\n",
                           "properties": {
                             "longitude": {
                               "type": "number",
@@ -1033,7 +1034,7 @@
                         },
                         "serviceCity": {
                           "type": "string",
-                          "description": "Service city that the address is located. Provided in the format: \"(city name), (2 letter abbreviation of province)\" (may or may not be supported by Trexity)\n"
+                          "description": "**(added in v1.3)**\n\nService city that the address is located. Provided in the format: \"(city name), (2 letter abbreviation of province)\" (may or may not be supported by Trexity)\n"
                         }
                       }
                     }
