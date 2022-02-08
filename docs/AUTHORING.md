@@ -12,6 +12,10 @@ we like using.
 > IMPORTANT: After you make changes to any OpenAPI document it's important to run `make` before you commit and push.
 > The bundled spec file is created in the `dist` folder and it could be useful for other tools.
 
+> IMPORTANT: After making a minor version bump like "v1.2" be sure add text to each new area,
+> or field description that starts with the text `**(added in vX.X)**`. If you are removing
+> functionality in a minor version then strike it out.
+
 > GUIDELINE: No matter how an API is authored try to keep the model specifications in separate files at a minimum.
 > This will help in the future for contract testing. Save your models in a `specs/{version}/models` folder.
 

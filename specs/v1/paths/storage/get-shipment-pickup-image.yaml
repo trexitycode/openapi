@@ -12,7 +12,7 @@ get:
         The id of the Shipment that this parcel belongs to
   tags:
     - Storage
-  summary: Gets the actual JPG image data of the driver's pickup
+  summary: Pickup photo
   operationId: getShipmentPickupImage
   description: |
     Gets the actual JPG image data of the driver's pickup.

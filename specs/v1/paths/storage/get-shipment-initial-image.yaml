@@ -19,10 +19,10 @@ get:
         The (delivery) index of the parcel
   tags:
     - Storage
-  summary: Gets the actual image data of the specified shipment's parcel
+  summary: Parcel photo
   operationId: getShipmentParcelInitialImage
   description: >
-    Gets the actual image data of the specified shipment's parcel
+    Gets the actual image data of the specified shipment's parcel.
   x-codeSamples:
     - $ref: ../../code_samples/Shell/storage/get-shipment-parcel-initial-photo.yaml
   responses:

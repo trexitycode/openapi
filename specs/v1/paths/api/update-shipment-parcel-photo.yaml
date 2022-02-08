@@ -5,18 +5,17 @@ patch:
       required: true
       schema:
         type: string
-      description: The id of the shipment that needs to be updated
+      description: The id of the shipment
     - in: path
       name: deliveryIndex
       required: true
       schema:
         type: integer
-      description: The delivery index of the parcel to be updated
+      description: The index of the parcel to be updated
   tags:
     - Shipments
-  summary: Updates the initial photo of a parcel in an existing shipment
-  description: |
-    Updates the initial photo of the specified parcel.
+  summary: Update parcel photo
+  description: Updates the photo for a parcel.
   x-codeSamples:
     - $ref: ../../code_samples/Shell/shipments/update-shipment-parcel-photo.yaml
 

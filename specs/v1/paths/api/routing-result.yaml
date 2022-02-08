@@ -8,7 +8,7 @@ parameters:
 get:
   tags: [Routing]
   operationId: getRoutingRequestResult
-  summary: 'Get routing request result'
+  summary: Get routing request result
   description: Get the result of a completed asynchronous routing request
   responses:
     '200':

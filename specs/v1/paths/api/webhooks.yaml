@@ -44,10 +44,10 @@ get:
                   string
 
 post:
-  summary: Register webhook
+  summary: Create webhook
   operationId: createWebhook
   description: |
-    Register a new webhook for the specified event.
+    Create a new webhook for the specified event.
   tags:
     - Webhooks
   requestBody:

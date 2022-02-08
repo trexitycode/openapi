@@ -1,4 +1,4 @@
-description: The shipment label response objec
+description: Response if `deliveryIndex` is not specified and `Accept` header is `application/json`.
 type: object
 properties:
   data:

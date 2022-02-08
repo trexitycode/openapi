@@ -5,34 +5,36 @@ post:
       required: true
       schema:
         type: string
-      description: The id of the shipment that needs to be updated
+      description: The id of the shipment
     - in: query
       name: deliveryIndex
       schema:
         type: boolean
-      description: The delivery index that we will create a label for (defaults to zero if none provided)
+      description: |
+        The index of the parcel to get the shipping label for
+
+        **(changed in v1.4)**
+
+        If not specified then get labels for all parcels in the shipment.
     - in: query
       name: imageHeight
       schema:
         type: number
-      description: Height of the label image
+      description: Height of the label image. **Ignored if `deliveryIndex` is not provided.**
     - in: query
       name: imageWidth
       schema:
         type: number
-      description: Width of the label image
-
+      description: Width of the label image. **Ignored if `deliveryIndex` is not provided.**
   tags:
     - Shipments
-  summary: Creates a shipping label for a specific delivery index
+  summary: Get shipping labels
   operationId: createShippingLabel
-  description: >
-    Creates a shipping label for a specific delivery index (or zero if not provided).
+  description: |
+    Get a shipping label for a specific parcel by index, or if `deliveryIndex` is not provided then get shipping labels for all parcels in the shipment.
 
-    Please note that we will serve binary image as a response if your Accept headers accepts 'image/png' or 'png'.
-    Otherwise, we will serve a JSON object with base64 encoded image (of a png file).
-
-    Please see our responses examples for further information.
+    If `Accept` header is `application/json` and `deliveryIndex` is specified then
+    responds with `application/json`.
   x-codeSamples:
     - $ref: ../../code_samples/Shell/shipments/create-shipping-label.yaml
   responses:
@@ -51,3 +53,9 @@ post:
           schema:
             type: string
             format: binary
+            description: Response if `deliveryIndex` is specified and `Accept` is not `application/json`.
+        application/pdf:
+          schema:
+            type: string
+            format: binary
+            description: Response if `deliveryIndex` is not specified.

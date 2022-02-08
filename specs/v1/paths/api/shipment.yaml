@@ -37,10 +37,10 @@ patch:
 
   tags:
     - Shipments
-  summary: Update shipment's data
+  summary: Update a shipment
   operationId: updateShipment
   description: >
-    Updates shipment's data
+    Updates the details of a shipment.
 
   x-codeSamples:
     - $ref: ../../code_samples/Shell/shipments/update-shipment.yaml
@@ -69,10 +69,10 @@ get:
 
   tags:
     - Shipments
-  summary: Get a single shipment
+  summary: Get a shipment
   operationId: getShipment
   description: >
-    Gets the details about a single shipment
+    Gets the details of a shipment
 
   x-codeSamples:
     - $ref: ../../code_samples/Shell/shipments/get-shipment.yaml

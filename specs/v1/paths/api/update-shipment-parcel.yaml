@@ -14,9 +14,9 @@ patch:
       description: The delivery index of the parcel to be updated
   tags:
     - Shipments
-  summary: Update a parcel in an existing shipment
+  summary: Update a parcel
   description: |
-    Updates parcel's information in an existing shipment.
+    Updates the details of a parcel.
 
     **(added in v1.1)**
     When updating metadata fields the fields will be merged into the parcel's existing

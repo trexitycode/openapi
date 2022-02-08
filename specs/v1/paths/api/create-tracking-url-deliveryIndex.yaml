@@ -5,20 +5,20 @@ post:
       required: true
       schema:
         type: string
-      description: The id of the shipment that needs to be updated
+      description: The ID of the shipment
     - in: path
       name: deliveryIndex
       required: true
       schema:
         type: number
-      description: The delivery index that we should be tracking
+      description: The index of the parcel to retrieve a tracking URL for
 
   tags:
     - Shipments
-  summary: Creates a tracking URL for a specific delivery index
+  summary: Parcel tracking URL
   operationId: createTrackingUrlDeliveryIndex
   description: >
-    Creates a tracking URL for a specific delivery index
+    Creates a tracking URL for a specific parcel by index
 
   x-codeSamples:
     - $ref: ../../code_samples/Shell/shipments/create-tracking-url-deliveryIndex.yaml
