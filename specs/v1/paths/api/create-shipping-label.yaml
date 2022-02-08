@@ -45,7 +45,7 @@ post:
           schema:
             $ref: ../../components/schemas/responses/ShippingLabelJSONResponse.yaml
           examples:
-            Valid Tracking Url (JSON response):
+            json:
               value:
                 data:
                   base64image: "data:image/png;base64,base64content"

@@ -3240,7 +3240,7 @@
                   "$ref": "#/components/schemas/ShippingLabelJSONResponse"
                 },
                 "examples": {
-                  "Valid Tracking Url (JSON response)": {
+                  "json": {
                     "value": {
                       "data": {
                         "base64image": "data:image/png;base64,base64content"
