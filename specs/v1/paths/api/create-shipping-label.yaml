@@ -35,6 +35,10 @@ post:
 
     If `Accept` header is `application/json` and `deliveryIndex` is specified then
     responds with `application/json`.
+
+    If no `deliveryIndex` is provided then responds with `application/pdf`.
+
+    Otherwise responds with `image/png`.
   x-codeSamples:
     - $ref: ../../code_samples/Shell/shipments/create-shipping-label.yaml
   responses:

@@ -3224,7 +3224,7 @@
         ],
         "summary": "Get shipping labels",
         "operationId": "createShippingLabel",
-        "description": "Get a shipping label for a specific parcel by index, or if `deliveryIndex` is not provided then get shipping labels for all parcels in the shipment.\n\nIf `Accept` header is `application/json` and `deliveryIndex` is specified then\nresponds with `application/json`.\n",
+        "description": "Get a shipping label for a specific parcel by index, or if `deliveryIndex` is not provided then get shipping labels for all parcels in the shipment.\n\nIf `Accept` header is `application/json` and `deliveryIndex` is specified then\nresponds with `application/json`.\n\nIf no `deliveryIndex` is provided then responds with `application/pdf`.\n\nOtherwise responds with `image/png`.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
