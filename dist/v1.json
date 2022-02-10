@@ -233,7 +233,7 @@
           },
           "deliveryInstructions": {
             "type": "string",
-            "description": "Delivery instructions for drop off"
+            "description": "**(added in 1.4)** Delivery instructions for drop off\n"
           },
           "deliveryName": {
             "type": "string",
@@ -501,7 +501,7 @@
           },
           "deliveryInstructions": {
             "type": "string",
-            "description": "Delivery instructions for drop off"
+            "description": "**(added in 1.4)** Delivery instructions for drop off\n"
           },
           "deliveryName": {
             "type": "string",
@@ -730,7 +730,7 @@
           },
           "deliveryInstructions": {
             "type": "string",
-            "description": "Delivery instructions for drop off"
+            "description": "**(added in 1.4)** Delivery instructions for drop off\n"
           },
           "deliveryName": {
             "type": "string",
