@@ -22,7 +22,13 @@ properties:
     type: string
     description: Special notes or instructions regarding pickup like the description of the location, what door to use, etc.
   scheduledPostAt:
-    $ref: ../SimplifiedDateISOString.yaml
+    description: |
+      Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+
+      Note that ISO date strings are always in UTC time.
+
+      An example: 2020-07-25T10:48:08.987Z
+    type: string
   ignoreTargetDeliveryDuration:
     type: boolean
     description: Ignore the target delivery duration for this shipment only
@@ -34,6 +40,9 @@ properties:
   deliveryAddressNotes:
     type: string
     description: Extra notes relating to the delivery address, such as apartment/unit number, reference, description of the location, etc.
+  deliveryInstructions:
+    type: string
+    description: Delivery instructions for drop off
   deliveryName:
     type: string
     description: The name of the recipient

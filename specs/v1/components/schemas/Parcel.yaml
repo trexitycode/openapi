@@ -8,6 +8,9 @@ properties:
   deliveryAddressNotes:
     type: string
     description: Extra notes relating to the delivery address, such as apartment/unit number, reference, description of the location, etc.
+  deliveryInstructions:
+    type: string
+    description: Delivery instructions for drop off
   deliveryName:
     type: string
     description: The name of the recipient
