@@ -5,10 +5,8 @@ delete:
       name: webhookId
       schema:
         type: string
-  summary: Delete a registered webhook
+  summary: Delete a webhook
   operationId: deleteWebhook
-  description: |
-    Delete a registered webhook.
   tags:
     - Webhooks
   responses:

@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.3",
+    "version": "1.4",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -230,6 +230,10 @@
           "deliveryAddressNotes": {
             "type": "string",
             "description": "Extra notes relating to the delivery address, such as apartment/unit number, reference, description of the location, etc."
+          },
+          "deliveryInstructions": {
+            "type": "string",
+            "description": "**(added in 1.4)** Delivery instructions for drop off\n"
           },
           "deliveryName": {
             "type": "string",
@@ -495,6 +499,10 @@
             "type": "string",
             "description": "Extra notes relating to the delivery address, such as apartment/unit number, reference, description of the location, etc."
           },
+          "deliveryInstructions": {
+            "type": "string",
+            "description": "**(added in 1.4)** Delivery instructions for drop off\n"
+          },
           "deliveryName": {
             "type": "string",
             "description": "The name of the recipient"
@@ -662,7 +670,7 @@
         }
       },
       "ShippingLabelJSONResponse": {
-        "description": "The shipment label response objec",
+        "description": "Response if `deliveryIndex` is not specified and `Accept` header is `application/json`.",
         "type": "object",
         "properties": {
           "data": {
@@ -704,7 +712,8 @@
             "description": "Special notes or instructions regarding pickup like the description of the location, what door to use, etc."
           },
           "scheduledPostAt": {
-            "$ref": "#/components/schemas/SimplifiedDateISOString"
+            "description": "Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "type": "string"
           },
           "ignoreTargetDeliveryDuration": {
             "type": "boolean",
@@ -718,6 +727,10 @@
           "deliveryAddressNotes": {
             "type": "string",
             "description": "Extra notes relating to the delivery address, such as apartment/unit number, reference, description of the location, etc."
+          },
+          "deliveryInstructions": {
+            "type": "string",
+            "description": "**(added in 1.4)** Delivery instructions for drop off\n"
           },
           "deliveryName": {
             "type": "string",
@@ -1060,8 +1073,8 @@
         "tags": [
           "Shipping Rates"
         ],
-        "summary": "Calculates the rate for a proposed shipment",
-        "description": "Returns the distance (in meters), travel duration (in seconds), and fee from a pickup address\nto the completion of the shipment (takes into account multiple parcel dropoffs, if any).\nSupports specifying an order value parameter, which will check against API Preferences\nconfigured in the merchant portal.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n",
+        "summary": "Simple rate",
+        "description": "Calculate the rate for a simple shipment without route optimization.\n\nReturns the distance (in meters), travel duration (in seconds), and fee from a pickup address\nto the completion of the shipment (takes into account multiple parcel dropoffs, if any).\nSupports specifying an order value parameter, which will check against API Preferences\nconfigured in the merchant portal.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n",
         "operationId": "shipment-rates",
         "x-codeSamples": [
           {
@@ -1767,9 +1780,9 @@
         "tags": [
           "Shipments"
         ],
-        "summary": "Gets an array of shipments.",
+        "summary": "List shipments",
         "operationId": "getShipments",
-        "description": "Gets all Merchant shipments created between the two specified dates.\n\n## Filtering By Dates\n\nWhen filtering by a date range both the `fromDate` and `toDate` query parameters must be provided.\n\n## Filtering By External ID\n\nWhen filtering by a parcel's external ID you **cannot filter by dates**. Filtering by dates and external ID are mutually exclusive filters. If `externalId` is specified it will take precendence.\n**(added in v1.2)**\n\n## ~~Filtering By Parcel Metadata~~\n\n~~Parcel metadata fields can be filtered on by using query parameters with the following pattern `meta_{fieldName}`.~~\n\n~~Additionally, the metadata field must have been saved as a string, and not a number for example. This is required since\nthe query parameter value is not converted to a number.~~\n\n~~Example: `https://{server-url}/shipments?meta_partnerShipmentId=someid`~~\n**(deprecated in v1.2)**\n",
+        "description": "List shipments that match the specified filters.\n\n## Filtering By Dates\n\nWhen filtering by a date range both the `fromDate` and `toDate` query parameters must be provided.\n\n## Filtering By External ID\n\nWhen filtering by a parcel's external ID you **cannot filter by dates**. Filtering by dates and external ID are mutually exclusive filters. If `externalId` is specified it will take precendence.\n**(added in v1.2)**\n\n## ~~Filtering By Parcel Metadata~~\n\n~~Parcel metadata fields can be filtered on by using query parameters with the following pattern `meta_{fieldName}`.~~\n\n~~Additionally, the metadata field must have been saved as a string, and not a number for example. This is required since\nthe query parameter value is not converted to a number.~~\n\n~~Example: `https://{server-url}/shipments?meta_partnerShipmentId=someid`~~\n**(deprecated in v1.2)**\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -2650,8 +2663,8 @@
         "tags": [
           "Shipments"
         ],
-        "summary": "Create a new Shipment",
-        "description": "Creates a new shipment.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n",
+        "summary": "Create a shipment",
+        "description": "Create a new shipment.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n",
         "operationId": "createShipment",
         "x-codeSamples": [
           {
@@ -2799,9 +2812,9 @@
         "tags": [
           "Shipments"
         ],
-        "summary": "Update shipment's data",
+        "summary": "Update a shipment",
         "operationId": "updateShipment",
-        "description": "Updates shipment's data\n",
+        "description": "Updates the details of a shipment.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -2843,9 +2856,9 @@
         "tags": [
           "Shipments"
         ],
-        "summary": "Get a single shipment",
+        "summary": "Get a shipment",
         "operationId": "getShipment",
-        "description": "Gets the details about a single shipment\n",
+        "description": "Gets the details of a shipment\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -2977,9 +2990,9 @@
         "tags": [
           "Shipments"
         ],
-        "summary": "Posts a Shipment for broadcasting",
+        "summary": "Post a shipment",
         "operationId": "postShipment",
-        "description": "Posts a shipment for broadcasting\n",
+        "description": "Post a shipment to our driver community for pickup.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -3059,8 +3072,8 @@
         "tags": [
           "Shipments"
         ],
-        "summary": "Update a parcel in an existing shipment",
-        "description": "Updates parcel's information in an existing shipment.\n\n**(added in v1.1)**\nWhen updating metadata fields the fields will be merged into the parcel's existing\nmetadata. Any metadata fields set to `null` or `undefined` will be deleted.\n",
+        "summary": "Update a parcel",
+        "description": "Updates the details of a parcel.\n\n**(added in v1.1)**\nWhen updating metadata fields the fields will be merged into the parcel's existing\nmetadata. Any metadata fields set to `null` or `undefined` will be deleted.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -3108,7 +3121,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The id of the shipment that needs to be updated"
+            "description": "The ID of the shipment"
           },
           {
             "in": "path",
@@ -3117,15 +3130,15 @@
             "schema": {
               "type": "number"
             },
-            "description": "The delivery index that we should be tracking"
+            "description": "The index of the parcel to retrieve a tracking URL for"
           }
         ],
         "tags": [
           "Shipments"
         ],
-        "summary": "Creates a tracking URL for a specific delivery index",
+        "summary": "Parcel tracking URL",
         "operationId": "createTrackingUrlDeliveryIndex",
-        "description": "Creates a tracking URL for a specific delivery index\n",
+        "description": "Creates a tracking URL for a specific parcel by index\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -3192,7 +3205,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The id of the shipment that needs to be updated"
+            "description": "The id of the shipment"
           },
           {
             "in": "query",
@@ -3200,7 +3213,7 @@
             "schema": {
               "type": "boolean"
             },
-            "description": "The delivery index that we will create a label for (defaults to zero if none provided)"
+            "description": "The index of the parcel to get the shipping label for\n\n**(changed in v1.4)**\n\nIf not specified then get labels for all parcels in the shipment.\n"
           },
           {
             "in": "query",
@@ -3208,7 +3221,7 @@
             "schema": {
               "type": "number"
             },
-            "description": "Height of the label image"
+            "description": "Height of the label image. **Ignored if `deliveryIndex` is not provided.**"
           },
           {
             "in": "query",
@@ -3216,15 +3229,15 @@
             "schema": {
               "type": "number"
             },
-            "description": "Width of the label image"
+            "description": "Width of the label image. **Ignored if `deliveryIndex` is not provided.**"
           }
         ],
         "tags": [
           "Shipments"
         ],
-        "summary": "Creates a shipping label for a specific delivery index",
+        "summary": "Get shipping labels",
         "operationId": "createShippingLabel",
-        "description": "Creates a shipping label for a specific delivery index (or zero if not provided).\nPlease note that we will serve binary image as a response if your Accept headers accepts 'image/png' or 'png'. Otherwise, we will serve a JSON object with base64 encoded image (of a png file).\nPlease see our responses examples for further information.\n",
+        "description": "Get a shipping label for a specific parcel by index, or if `deliveryIndex` is not provided then get shipping labels for all parcels in the shipment.\n\nIf `Accept` header is `application/json` and `deliveryIndex` is specified then\nresponds with `application/json`.\n\nIf no `deliveryIndex` is provided then responds with `application/pdf`.\n\nOtherwise responds with `image/png`.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -3240,7 +3253,7 @@
                   "$ref": "#/components/schemas/ShippingLabelJSONResponse"
                 },
                 "examples": {
-                  "Valid Tracking Url (JSON response)": {
+                  "json": {
                     "value": {
                       "data": {
                         "base64image": "data:image/png;base64,base64content"
@@ -3252,7 +3265,15 @@
               "image/png": {
                 "schema": {
                   "type": "string",
-                  "format": "binary"
+                  "format": "binary",
+                  "description": "Response if `deliveryIndex` is specified and `Accept` is not `application/json`."
+                }
+              },
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "Response if `deliveryIndex` is not specified."
                 }
               }
             }
@@ -3270,7 +3291,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The id of the shipment that needs to be updated"
+            "description": "The id of the shipment"
           },
           {
             "in": "path",
@@ -3279,14 +3300,14 @@
             "schema": {
               "type": "integer"
             },
-            "description": "The delivery index of the parcel to be updated"
+            "description": "The index of the parcel to be updated"
           }
         ],
         "tags": [
           "Shipments"
         ],
-        "summary": "Updates the initial photo of a parcel in an existing shipment",
-        "description": "Updates the initial photo of the specified parcel.\n",
+        "summary": "Update parcel photo",
+        "description": "Updates the photo for a parcel.",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -3330,7 +3351,7 @@
           "Routing"
         ],
         "operationId": "createRoutingRequest",
-        "summary": "Start an asynchronous routing request",
+        "summary": "Create routing request",
         "description": "Queue a list of parcels to be routed and added to optimized shipments.\n\nThe typical use case of this API is to select all your parcels and\nprovide in bulk to this endpoint, wich responds with an asynchronous routing\nrequest ID. Then use this asynchronous routing request ID to obtain the\nstatus of the routing request and later the result.\n\n**Order ID**\n\nFor each parcel provided to this endpoint, the `orderId` must be unique among\nall parcels. This allows us to refer back to the parcel by `orderId` in the\nresult `errors` array.\n\n**Scheduled Post At**\n\nValues for `scheduledPostAt` must be a date at least 1 hour from the time of the request.\nThis helps to ensure that there is enough time for routes to be created before\nthe driver network is notified of the deliveries.\n",
         "requestBody": {
           "required": true,
@@ -3508,9 +3529,9 @@
         "tags": [
           "Storage"
         ],
-        "summary": "Gets the actual image data of the specified shipment's parcel",
+        "summary": "Parcel photo",
         "operationId": "getShipmentParcelInitialImage",
-        "description": "Gets the actual image data of the specified shipment's parcel\n",
+        "description": "Gets the actual image data of the specified shipment's parcel.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -3552,7 +3573,7 @@
         "tags": [
           "Storage"
         ],
-        "summary": "Gets the actual JPG image data of the driver's pickup",
+        "summary": "Pickup photo",
         "operationId": "getShipmentPickupImage",
         "description": "Gets the actual JPG image data of the driver's pickup.\n\nThis is used as a confirmation that the driver has picked up the parcel,\nand ideally should be on the way to delivery.\n\nYou may assume this photo exists if the Status of the Shipment is at least 'Out for delivery'.\n\nPlease see [shipments](/#operation/getShipment) for the possible statuses a Shipment may have.\n",
         "x-codeSamples": [
@@ -3605,7 +3626,7 @@
         "tags": [
           "Storage"
         ],
-        "summary": "Gets the actual JPG image data of the driver's delivery image for this Parcel.",
+        "summary": "Drop-off photo",
         "operationId": "getShipmentDeliveryImage",
         "description": "Gets the actual JPG image data of the driver's delivery image for this parcel.\n\nThis is used as a confirmation that the driver has delivered the parcel.\n",
         "x-codeSamples": [
@@ -3700,9 +3721,9 @@
         }
       },
       "post": {
-        "summary": "Register webhook",
+        "summary": "Create webhook",
         "operationId": "createWebhook",
-        "description": "Register a new webhook for the specified event.\n",
+        "description": "Create a new webhook for the specified event.\n",
         "tags": [
           "Webhooks"
         ],
@@ -4250,9 +4271,8 @@
             }
           }
         ],
-        "summary": "Delete a registered webhook",
+        "summary": "Delete a webhook",
         "operationId": "deleteWebhook",
-        "description": "Delete a registered webhook.\n",
         "tags": [
           "Webhooks"
         ],

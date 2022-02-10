@@ -9,10 +9,10 @@ post:
 
   tags:
     - Shipments
-  summary: Posts a Shipment for broadcasting
+  summary: Post a shipment
   operationId: postShipment
   description: >
-    Posts a shipment for broadcasting
+    Post a shipment to our driver community for pickup.
 
   x-codeSamples:
     - $ref: ../../code_samples/Shell/shipments/post-shipment.yaml

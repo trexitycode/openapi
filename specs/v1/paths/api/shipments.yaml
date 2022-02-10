@@ -25,10 +25,10 @@ get:
 
   tags:
     - Shipments
-  summary: Gets an array of shipments.
+  summary: List shipments
   operationId: getShipments
   description: |
-    Gets all Merchant shipments created between the two specified dates.
+    List shipments that match the specified filters.
 
     ## Filtering By Dates
 
@@ -549,9 +549,9 @@ get:
 post:
   tags:
     - Shipments
-  summary: Create a new Shipment
+  summary: Create a shipment
   description: |
-    Creates a new shipment.
+    Create a new shipment.
 
     If no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.
   operationId: createShipment

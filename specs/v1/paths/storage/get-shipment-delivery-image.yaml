@@ -22,7 +22,7 @@ get:
         See [here](/#operation/getShipment) and check the "parcels" array inside the Shipment's data for reference.
   tags:
     - Storage
-  summary: Gets the actual JPG image data of the driver's delivery image for this Parcel.
+  summary: Drop-off photo
   operationId: getShipmentDeliveryImage
   description: |
     Gets the actual JPG image data of the driver's delivery image for this parcel.

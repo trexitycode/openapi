@@ -1,8 +1,10 @@
 post:
   tags:
     - Shipping Rates
-  summary: Calculates the rate for a proposed shipment
+  summary: Simple rate
   description: |
+    Calculate the rate for a simple shipment without route optimization.
+
     Returns the distance (in meters), travel duration (in seconds), and fee from a pickup address
     to the completion of the shipment (takes into account multiple parcel dropoffs, if any).
     Supports specifying an order value parameter, which will check against API Preferences

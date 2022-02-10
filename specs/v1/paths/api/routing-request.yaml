@@ -1,7 +1,7 @@
 post:
   tags: [Routing]
   operationId: createRoutingRequest
-  summary: Start an asynchronous routing request
+  summary: Create routing request
   description: |
     Queue a list of parcels to be routed and added to optimized shipments.
 
