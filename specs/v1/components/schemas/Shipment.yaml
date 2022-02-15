@@ -165,6 +165,33 @@ properties:
       Note the difference between this and driverTimeToPickup - driverTimeToPickup is constant.
       This will periodically be updated.
 
+  linkedParentShipment:
+    type: object
+    description: |
+      **(added in v1.5)**
+
+      If this shipment has a parent shipment then this will contain meta information
+      about its parent shipment ID and the type of the relationship. Otherwise will be null.
+    properties:
+      shipmentId:
+        type: string
+      type:
+        type: string
+        description: |
+          return_to_sender - this shipment was created as a return
+
+          return_reusables - this shipment was created as return for reusable containers
+
+          clone - this shipment was created as a clone
+
+          moved_orders - this shipment was created by moving to a different shipment
+        enum: [
+          return_to_sender,
+          return_reusables,
+          clone,
+          moved_orders
+        ]
+
   parcels:
     type: array
     description: The parcels that will be delivered in this shipment
