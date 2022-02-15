@@ -477,6 +477,7 @@
           },
           "linkedParentShipment": {
             "type": "object",
+            "nullable": true,
             "description": "**(added in v1.5)**\n\nIf this shipment has a parent shipment then this will contain meta information\nabout its parent shipment ID and the type of the relationship. Otherwise will be null.\n",
             "properties": {
               "shipmentId": {

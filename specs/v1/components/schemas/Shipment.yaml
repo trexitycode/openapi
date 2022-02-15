@@ -167,6 +167,7 @@ properties:
 
   linkedParentShipment:
     type: object
+    nullable: true
     description: |
       **(added in v1.5)**
 
