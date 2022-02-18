@@ -60,8 +60,8 @@
       }
     },
     "schemas": {
-      "AddressOrLatLng": {
-        "description": "Latitude and longitude values separated by comma or an\naddress to be geocoded into latitude and longitude values.\n\nAddresses are in the format \"STREET, CITY PROVINCE, POSTAL_CODE COUNTRY\"\nWhere postal code and country are optional, but it's better to include them to avoid ambiguity.\n\nExamples:\n\n- 44.339565,-78.666433\n- 308 Rideau St, Ottawa ON, K1N 5Y5 Canada\n",
+      "Address": {
+        "description": "Address in the format \"STREET, CITY PROVINCE, POSTAL_CODE COUNTRY\".\n\nSee [Addresses](#tag/Addresses)\n",
         "type": "string",
         "maxLength": 512
       },
@@ -105,15 +105,15 @@
         ],
         "properties": {
           "pickupAddress": {
-            "$ref": "#/components/schemas/AddressOrLatLng"
+            "$ref": "#/components/schemas/Address"
           },
           "deliveryAddresses": {
             "type": "array",
             "maxItems": 19,
             "minItems": 1,
-            "description": "One or more latitude and longitude values separated by comma or an address to be geocoded into latitude and longitude values.\n\nExamples:\n\n- 44.339565,-78.666433\n- 308 Rideau St, Ottawa, ON K1N 5Y5\n",
+            "description": "One or more addresses.",
             "items": {
-              "$ref": "#/components/schemas/AddressOrLatLng"
+              "$ref": "#/components/schemas/Address"
             }
           },
           "requirements": {
@@ -511,9 +511,7 @@
         "type": "object",
         "properties": {
           "deliveryAddress": {
-            "type": "string",
-            "description": "The destination address this parcel will be delivered to in the format \"STREET, CITY PROVINCE, POSTAL_CODE COUNTRY\" (postal code and country are optional, but it's better to include them to avoid ambiguity).",
-            "example": "123 Fake St, Ottawa Ontario, K2G 6FT Canada"
+            "$ref": "#/components/schemas/Address"
           },
           "deliveryAddressNotes": {
             "type": "string",
@@ -574,7 +572,7 @@
         ],
         "properties": {
           "pickupAddress": {
-            "$ref": "#/components/schemas/AddressOrLatLng"
+            "$ref": "#/components/schemas/Address"
           },
           "pickupAddressNotes": {
             "type": "string",
@@ -640,7 +638,7 @@
         "type": "object",
         "properties": {
           "pickupAddress": {
-            "$ref": "#/components/schemas/AddressOrLatLng"
+            "$ref": "#/components/schemas/Address"
           },
           "pickupAddressNotes": {
             "type": "string",
@@ -718,7 +716,7 @@
         ],
         "properties": {
           "pickupAddress": {
-            "$ref": "#/components/schemas/AddressOrLatLng"
+            "$ref": "#/components/schemas/Address"
           },
           "pickupAddressNotes": {
             "type": "string",
@@ -740,9 +738,7 @@
             "description": "Ignore the target delivery duration for this shipment only"
           },
           "deliveryAddress": {
-            "type": "string",
-            "description": "The destination address this parcel will be delivered to in the format \"STREET, CITY PROVINCE, POSTAL_CODE COUNTRY\" (postal code and country are optional, but it's better to include them to avoid ambiguity).",
-            "example": "123 Fake St, Ottawa Ontario, K2G 6FT Canada"
+            "$ref": "#/components/schemas/Address"
           },
           "deliveryAddressNotes": {
             "type": "string",
