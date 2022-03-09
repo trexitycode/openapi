@@ -2,7 +2,7 @@ get:
   tags:
     - Regions
   summary: Retrieve service city zones
-  operationId: serviceCityGeographic areas
+  operationId: serviceCityZones
   description: |
     **(added in v1.6)**
 
