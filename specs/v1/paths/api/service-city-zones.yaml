@@ -34,7 +34,7 @@ get:
                   properties:
                     id:
                       type: string
-                      description: Id of service city
+                      description: Id of service city zone
                     geometry:
                       type: object
                       description: Geometry geoJSON
@@ -63,7 +63,7 @@ get:
                   properties:
                     id:
                       type: string
-                      description: Id of service city
+                      description: Id of service city zone
                     geometry:
                       type: object
                       description: Geometry geoJSON
@@ -93,7 +93,7 @@ get:
                   properties:
                     id:
                       type: string
-                      description: Id of service city
+                      description: Id of service city zone
                     geometry:
                       type: object
                       description: Geometry geoJSON
