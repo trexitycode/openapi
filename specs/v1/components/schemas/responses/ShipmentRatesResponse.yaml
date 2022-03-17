@@ -10,7 +10,11 @@ properties:
       properties:
         name:
           type: string
-          description: Unique rate name
+          description: The name of the rate to show to the customer
+        description:
+          type: string
+          description: |
+            **(added in v1.7)** The description of the rate to show to the customer
         total:
           type: number
           description: The total fee in cents for delivery with taxes.
