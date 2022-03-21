@@ -21,11 +21,12 @@ info:
     **Combining**
 
     In the event that `description` cannot be shown on its own, then it is acceptable to combine the `name` and `description` as as single field like `${name} (${description})`.
+    For example:
 
     ```
-    name = 'Local Delivery'
-    description = 'by Trexity'
-    combined = 'Local Delivery (by Trexity)'
+    name = 'Local Delivery' // example name
+    description = 'by Trexity' // example description
+    combined = 'Local Delivery (by Trexity)' // then example combined
     ```
 
     ## Suspension & Termination
