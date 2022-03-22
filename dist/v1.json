@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.6",
+    "version": "1.7",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -12,7 +12,7 @@
       "email": "support@trexity.com",
       "url": "http://trexity.com"
     },
-    "description": "# Concepts & Workflows\n\n**Parcels** represent an order, customer information and a delivery address.\n\n**Shipments** represent a route, has one or more parcels, requirements, and a pickup address.\n\n**Posting shipments** means the shipment will be sent to our driver community for pickup and delivery.\n\n### Simple Workflow\n\nCreate a simple shipment without worrying about optimizing the route.\n\n1. [Create a shipment](#operation/createShipment) and specify the parcels, customer information and delivery address\n2. [Get shipping labels](#operation/createShippingLabel) for the shipment, download, print, and affix to the parcel packaging\n3. [Post the shipment](#operation/postShipment) to our drivers for pickup and delivery\n\n> Optionally, when creating a shipment a future date can be specified for `scheduledPostAt`. This date will be when the\n> system will automatically post the shipment to our drivers. Before this date ensure the labels are printed and affixed\n> to the parcel packages.\n\n### \"Bundling\" Workflow\n\nCreate many shipments each with an optimal route that reduces time on the road and total cost.\n\n1. [Make a routing request](#operation/createRoutingRequest) with a batch of parcels each with a `scheduledPostAt` set to a future date\n2. [Monitor the routing request status](#operation/getRoutingStatus) by polling the status of the routing request\n3. [Get the routing result](#operation/getRoutingRequestResult) when routing is complete or errored \n4. [Get shipping labels](#operation/createShippingLabel) for each shipment created during the routing request, download, print, and affix to all packages\n\n> The date specified in `scheduledPostAt` will be when the system will automatically post the shipment to our drivers.\n> Before this date ensure the labels are printed and affixed to the parcel packages.\n\n### Parcel Status\n\nFollow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.\n\n# Responses\n\nAll endpoints will return an object and if there is actual data\nto be returned, it is going to be named `data`. Where `data` may\nbe an array or an object.\n\nIf there is `error` field present on the root JSON object, that\nmeans something went wrong and that error message is all we know about it.\nAdditionally, in some cases, you may inspect the HTTP status codes to\ngather more information.\n\nPlease check our payload/response examples in details as well as the\ncurl examples that are a part of each section that documents an operation.\n\nExample of a successful response:\n`{ data: ... }`\n\nExample of a response with an error:\n`{ error: 'Some error message', data: null }`\n"
+    "description": "# Usage Policy\n\n**(added in v1.7)**\n\nBy using this API to provide delivery rates to your users you agree to display the [ShipmentRate](#operation/shipment-rates) `name` and [ShipmentRate](#operation/shipment-rates) `description` without modification.\n\nThis allows Trexity to ensure consistent messaging wherever Trexity devliery rates are shown.\n\n**Combining**\n\nIn the event that `description` cannot be shown on its own, then it is acceptable to combine the `name` and `description` as as single field like `${name} (${description})`.\nFor example:\n\n```\nname = 'Local Delivery' // example name\ndescription = 'by Trexity' // example description\ncombined = 'Local Delivery (by Trexity)' // then example combined\n```\n\n## Suspension & Termination\n\nFailure to comply with this Usage Policy may result in suspension of your Trexity merchant account and/or API Keys. Continued failure to comply may result in the termination of your Trexity merchant account.\n\n# Concepts & Workflows\n\n**Parcels** represent an order, customer information and a delivery address.\n\n**Shipments** represent a route, has one or more parcels, requirements, and a pickup address.\n\n**Posting shipments** means the shipment will be sent to our driver community for pickup and delivery.\n\n### Simple Workflow\n\nCreate a simple shipment without worrying about optimizing the route.\n\n1. [Create a shipment](#operation/createShipment) and specify the parcels, customer information and delivery address\n2. [Get shipping labels](#operation/createShippingLabel) for the shipment, download, print, and affix to the parcel packaging\n3. [Post the shipment](#operation/postShipment) to our drivers for pickup and delivery\n\n> Optionally, when creating a shipment a future date can be specified for `scheduledPostAt`. This date will be when the\n> system will automatically post the shipment to our drivers. Before this date ensure the labels are printed and affixed\n> to the parcel packages.\n\n### \"Bundling\" Workflow\n\nCreate many shipments each with an optimal route that reduces time on the road and total cost.\n\n1. [Make a routing request](#operation/createRoutingRequest) with a batch of parcels each with a `scheduledPostAt` set to a future date\n2. [Monitor the routing request status](#operation/getRoutingStatus) by polling the status of the routing request\n3. [Get the routing result](#operation/getRoutingRequestResult) when routing is complete or errored \n4. [Get shipping labels](#operation/createShippingLabel) for each shipment created during the routing request, download, print, and affix to all packages\n\n> The date specified in `scheduledPostAt` will be when the system will automatically post the shipment to our drivers.\n> Before this date ensure the labels are printed and affixed to the parcel packages.\n\n### Parcel Status\n\nFollow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.\n\n# Responses\n\nAll endpoints will return an object and if there is actual data\nto be returned, it is going to be named `data`. Where `data` may\nbe an array or an object.\n\nIf there is `error` field present on the root JSON object, that\nmeans something went wrong and that error message is all we know about it.\nAdditionally, in some cases, you may inspect the HTTP status codes to\ngather more information.\n\nPlease check our payload/response examples in details as well as the\ncurl examples that are a part of each section that documents an operation.\n\nExample of a successful response:\n`{ data: ... }`\n\nExample of a response with an error:\n`{ error: 'Some error message', data: null }`\n"
   },
   "tags": [
     {
@@ -146,7 +146,11 @@
               "properties": {
                 "name": {
                   "type": "string",
-                  "description": "Unique rate name"
+                  "description": "The name of the rate to show to the customer"
+                },
+                "description": {
+                  "type": "string",
+                  "description": "**(added in v1.7)** The description of the rate to show to the customer\n"
                 },
                 "total": {
                   "type": "number",
@@ -1094,7 +1098,7 @@
           "Shipping Rates"
         ],
         "summary": "Simple rate",
-        "description": "Calculate the rate for a simple shipment without route optimization.\n\nReturns the distance (in meters), travel duration (in seconds), and fee from a pickup address\nto the completion of the shipment (takes into account multiple parcel dropoffs, if any).\nSupports specifying an order value parameter, which will check against API Preferences\nconfigured in the merchant portal.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n",
+        "description": "Calculate the rate for a simple shipment without route optimization.\n\nReturns the distance (in meters), travel duration (in seconds), and fee from a pickup address\nto the completion of the shipment (takes into account multiple parcel dropoffs, if any).\nSupports specifying an order value parameter, which will check against API Preferences\nconfigured in the merchant portal.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n\n**(new in v1.7)** Review the [Usage Policy](/#section/Usage-Policy).\n",
         "operationId": "shipment-rates",
         "x-codeSamples": [
           {
@@ -1116,7 +1120,8 @@
                       "data": [
                         {
                           "totalWithoutTaxes": 1688,
-                          "name": "Trexity Local Delivery",
+                          "name": "Local Delivery",
+                          "description": "by Trexity",
                           "taxRates": {
                             "HST": 0.13
                           },

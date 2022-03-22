@@ -11,6 +11,8 @@ post:
     configured in the merchant portal.
 
     If no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.
+
+    **(new in v1.7)** Review the [Usage Policy](/#section/Usage-Policy).
   operationId: shipment-rates
   x-codeSamples:
     - $ref: ../../code_samples/Shell/shipment-rates/post.yaml
@@ -26,7 +28,8 @@ post:
               value:
                 data:
                 - totalWithoutTaxes: 1688
-                  name: Trexity Local Delivery
+                  name: Local Delivery
+                  description: by Trexity
                   taxRates:
                     HST: 0.13
                   pickupDeliveryDuration: 2121

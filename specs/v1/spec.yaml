@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: '1.6'
+  version: '1.7'
   title: Trexity API
   license:
     name: MIT
@@ -10,6 +10,29 @@ info:
     email: support@trexity.com
     url: 'http://trexity.com'
   description: |
+    # Usage Policy
+
+    **(added in v1.7)**
+
+    By using this API to provide delivery rates to your users you agree to display the [ShipmentRate](#operation/shipment-rates) `name` and [ShipmentRate](#operation/shipment-rates) `description` without modification.
+
+    This allows Trexity to ensure consistent messaging wherever Trexity devliery rates are shown.
+
+    **Combining**
+
+    In the event that `description` cannot be shown on its own, then it is acceptable to combine the `name` and `description` as as single field like `${name} (${description})`.
+    For example:
+
+    ```
+    name = 'Local Delivery' // example name
+    description = 'by Trexity' // example description
+    combined = 'Local Delivery (by Trexity)' // then example combined
+    ```
+
+    ## Suspension & Termination
+
+    Failure to comply with this Usage Policy may result in suspension of your Trexity merchant account and/or API Keys. Continued failure to comply may result in the termination of your Trexity merchant account.
+
     # Concepts & Workflows
 
     **Parcels** represent an order, customer information and a delivery address.
