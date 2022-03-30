@@ -6,12 +6,10 @@ required:
 properties:
   pickupAddress:
     $ref: ../AddressOrLatLng.yaml
-  deliveryAddresses:
-    type: array
-    maxItems: 19
-    minItems: 1
+  deliveryAddress:
+    type: string
     description: |
-      One or more latitude and longitude values separated by comma or an address to be geocoded into latitude and longitude values.
+      A set of latitude and longitude values separated by comma or an address to be geocoded into latitude and longitude values.
 
       Examples:
 

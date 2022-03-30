@@ -100,7 +100,7 @@ tags:
   - name: Shipping Rates
     description: |
       Prior to creating a Shipment, you can calculate the rates based on the pickup address and the number of stops the driver has to do.
-      See our [shipment-rates](/#operation/shipment-rates) endpoint for more information.
+      See our [rates](/#operation/rates-simple) endpoint for more information.
   - name: Shipments
     description: |
       The most common approach to get a shipment on the road is to:
@@ -118,7 +118,7 @@ tags:
   - name: Routing
     description: |
       Create and get status information for asynchronous routing requests.
-  
+
   - name: Storage
     description: |
       Storage related operations.
@@ -193,8 +193,8 @@ security:
 paths:
   /addresses/check:
     $ref: ./paths/api/check-address.yaml
-  /shipment-rates:
-    $ref: ./paths/api/shipment-rates.yaml
+  /rates/simple:
+    $ref: ./paths/api/rates-simple.yaml
   /shipments:
     $ref: ./paths/api/shipments.yaml
   /shipments/{shipmentId}:

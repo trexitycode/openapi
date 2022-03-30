@@ -3,24 +3,24 @@ post:
     - Shipping Rates
   summary: Simple rate
   description: |
-    Calculate the rate for a simple shipment without route optimization.
+    Calculate the rate for a simple shipment from a single pickup address to a single delivery address.
 
     Returns the distance (in meters), travel duration (in seconds), and fee from a pickup address
-    to the completion of the shipment (takes into account multiple parcel dropoffs, if any).
+    to the completion of the shipment.
     Supports specifying an order value parameter, which will check against API Preferences
     configured in the merchant portal.
 
     If no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.
-  operationId: shipment-rates
+  operationId: rates-simple
   x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipment-rates/post.yaml
+    - $ref: ../../code_samples/Shell/rates-simple/post.yaml
   responses:
     '200':
       description: Success
       content:
         application/json:
           schema:
-            $ref: ../../components/schemas/responses/ShipmentRatesResponse.yaml
+            $ref: ../../components/schemas/responses/ShipmentRateSimpleResponse.yaml
           examples:
             Can Deliver:
               value:
@@ -341,17 +341,15 @@ post:
     '403':
       description: Forbidden
   requestBody:
-    description: Payload that minimally describes a shipment. 
+    description: Payload that minimally describes a shipment.
     required: true
     content:
       application/json:
         schema:
-          $ref: ../../components/schemas/payloads/ShipmentRatesPayload.yaml
+          $ref: ../../components/schemas/payloads/ShipmentRateSimplePayload.yaml
         example:
-          pickupAddress: '456 Elgin Street, Ottawa, ON'
-          deliveryAddresses:
-            - '45.4132789,-75.6885815'
-            - '225 Preston St, Ottawa, ON K1R 7R1'
+          pickupAddress: '456 Elgin Street, Ottawa ON K2P 1N5, CA'
+          deliveryAddress: '225 Preston St, Ottawa ON K1R 7R1, CA'
           requirements:
             vehicleType: 'small'
           orderValue: 2500
