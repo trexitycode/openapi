@@ -20,7 +20,7 @@ get:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/RateComplexResult.yaml
+                $ref: ../../components/schemas/responses/RateComplexResultResponse.yaml
     '404':
       description: No asynchronous rate request found
     '422':

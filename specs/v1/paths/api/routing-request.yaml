@@ -24,7 +24,10 @@ post:
 
     **Note on Optimization**
     This endpoint does not use our most up-to-date routing optimization technology. We
-    recommend using the [complex rates](/#operation/rates-complex) endpoint instead.
+    recommend using the [Complex Rates](/#operation/createComplexRateRequest) endpoint instead.
+
+    **(deprecated in v1.8)** Use the new [Complex Rates](/#operation/createComplexRateRequest)
+    endpoint, combined with the [Create Shipments](/#operation/createShipments) endpoint.
   requestBody:
     required: true
     content:
@@ -48,7 +51,7 @@ post:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/RoutingRequest.yaml
+                $ref: ../../components/schemas/responses/RoutingStatusResponse.yaml
     '400':
       description: |
         Invalid input provided such as invalid address, etc. No routing request

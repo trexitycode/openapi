@@ -19,7 +19,7 @@ get:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/RoutingRequest.yaml
+                $ref: ../../components/schemas/responses/RoutingStatusResponse.yaml
     '404':
       description: No asynchronous routing request found
 

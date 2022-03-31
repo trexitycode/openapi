@@ -8,7 +8,7 @@ parameters:
 get:
   tags:
     - Shipping Rates
-  operationId: getComplexRateRequestStatus
+  operationId: getComplexRateStatus
   summary: Get complex rate request status
   description: Get the status of an asynchronous rate request
   responses:
@@ -20,7 +20,6 @@ get:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/RateComplexRequest.yaml
+                $ref: ../../components/schemas/responses/RateComplexStatusResponse.yaml
     '404':
       description: No asynchronous rate request found
-
