@@ -25,8 +25,9 @@ post:
 
     Values for `scheduledPostAt` must be a date at least 1 hour from the time of
     the request. This helps to ensure that there is enough time for the optional
-    bulk shipment creation request to be performed and fully completed before
-    the driver network is notified of the deliveries.
+    [bulk shipment creation](/#operation/createShipments) request to be
+    performed and fully completed before the driver network is notified of the
+    deliveries.
   requestBody:
     required: true
     content:
