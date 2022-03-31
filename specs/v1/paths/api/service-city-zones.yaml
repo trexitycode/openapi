@@ -1,0 +1,119 @@
+get:
+  tags:
+    - Regions
+  summary: Retrieve service city zones
+  operationId: serviceCityZones
+  description: |
+    **(added in v1.6)**
+
+    Returns all the service city zones that includes (for each city) their geoJSON geometry (polygons/multipolygons)
+
+    ### Rate Limiting
+
+    This operation can be requested without authentication, however it will have a
+    strict rate limit of 6 requests every 10 seconds.
+
+    However, authenticated requests can request 12 times every 10 seconds.
+  security:
+    - {}
+    - MerchantApiKeyAuth: []
+    - AccessTokenAuth: []
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              pickup:
+                type: array
+                description: Geographic areas that merchants can create deliveries for pickup from
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Id of service city zone
+                    geometry:
+                      type: object
+                      description: Geometry geoJSON
+                      properties:
+                        type:
+                          type: string
+                          enum: [Polygon,Multipolygon]
+                        coordinates:
+                          type: array
+                          description: Array of arrays containing longitude and latitude coordinates (in that order)
+                    metadata:
+                      type: object
+                      description: Object that can contain miscellaneous props, but will always contain "layer"
+                    serviceCity:
+                      type: string
+                      description: Service city name
+                    type:
+                      type: string
+                      description: Reference to the zone type ("pickup")
+              delivery:
+                type: array
+                description: |
+                  Geographic areas that merchants can deliver to according to the standard delivery fees
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Id of service city zone
+                    geometry:
+                      type: object
+                      description: Geometry geoJSON
+                      properties:
+                        type:
+                          type: string
+                          enum: [Polygon,Multipolygon]
+                        coordinates:
+                          type: array
+                          description: Array of arrays containing longitude and latitude coordinates (in that order)
+                    metadata:
+                      type: object
+                      description: Object that can contain miscellaneous props, but will always contain "layer"
+                    serviceCity:
+                      type: string
+                      description: Service city name
+                    type:
+                      type: string
+                      description: Reference to the zone type ("delivery")
+              surcharge:
+                type: array
+                description: |
+                  Geographic areas that are considered outside the standard delivery zone and could include a
+                  surcharge fee in addition to the standard delivery fee
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Id of service city zone
+                    geometry:
+                      type: object
+                      description: Geometry geoJSON
+                      properties:
+                        type:
+                          type: string
+                          enum: [Polygon,Multipolygon]
+                        coordinates:
+                          type: array
+                          description: Array of arrays containing longitude and latitude coordinates (in that order)
+                    metadata:
+                      type: object
+                      description: Object that can contain miscellaneous props, but will always contain "layer"
+                    serviceCity:
+                      type: string
+                      description: Service city name
+                    type:
+                      type: string
+                      description: Reference to the zone type ("surcharge")
+    '429':
+      description: The request has been rate limited. Try making the request again after the rate limit window.
+    '500':
+      description: Server error. Try making the request again.

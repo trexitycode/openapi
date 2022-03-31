@@ -5,18 +5,12 @@ required:
   - requirements
 properties:
   pickupAddress:
-    $ref: ../AddressOrLatLng.yaml
+    $ref: ../Address.yaml
   deliveryAddress:
     type: string
-    description: |
-      A set of latitude and longitude values separated by comma or an address to be geocoded into latitude and longitude values.
-
-      Examples:
-
-      - 44.339565,-78.666433
-      - 308 Rideau St, Ottawa, ON K1N 5Y5
+    description: An address
     items:
-      $ref: ../AddressOrLatLng.yaml
+      $ref: ../Address.yaml
   requirements:
     $ref: ../ShipmentRequirements.yaml
   orderValue:

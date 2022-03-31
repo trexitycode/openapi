@@ -1,0 +1,6 @@
+description: |
+  Address in the format "STREET, CITY PROVINCE POSTAL_CODE, COUNTRY".
+
+  See [Addresses](#tag/Addresses)
+type: string
+maxLength: 512

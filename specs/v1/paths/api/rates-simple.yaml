@@ -9,11 +9,10 @@ post:
     Returns the distance (in meters), travel duration (in seconds), and fee from
     a pickup address to the completion of the shipment.
 
-    Supports specifying an order value parameter, which will check against API
-    Preferences configured in the merchant portal.
-
     If no `pickupAddress` is specified then the merchant's business address will
     be used as the pickup address.
+
+    **(new in v1.7)** Review the [Usage Policy](/#section/Usage-Policy).
   operationId: rates-simple
   x-codeSamples:
     - $ref: ../../code_samples/Shell/rates-simple/post.yaml
@@ -42,7 +41,8 @@ post:
               value:
                 data:
                 - totalWithoutTaxes: 1688
-                  name: Trexity Local Delivery
+                  name: Local Delivery
+                  description: by Trexity
                   taxRates:
                     HST: 0.13
                   pickupDeliveryDuration: 2121

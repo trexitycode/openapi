@@ -5,7 +5,7 @@ required:
   - parcels
 properties:
   pickupAddress:
-    $ref: ../AddressOrLatLng.yaml
+    $ref: ../Address.yaml
   pickupAddressNotes:
     type: string
     description: Extra information relating to the pickup address ONLY, like the apartment/unit number.

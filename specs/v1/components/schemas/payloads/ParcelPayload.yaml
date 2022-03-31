@@ -12,7 +12,7 @@ required:
   - parcelValue
 properties:
   pickupAddress:
-    $ref: ../AddressOrLatLng.yaml
+    $ref: ../Address.yaml
   pickupAddressNotes:
     type: string
     description: Extra information relating to the pickup address ONLY, like the apartment/unit number.
@@ -34,9 +34,7 @@ properties:
     description: Ignore the target delivery duration for this shipment only
 # Parcel properties
   deliveryAddress:
-    type: string
-    description: The destination address this parcel will be delivered to in the format "STREET, CITY PROVINCE POSTAL_CODE, COUNTRY".
-    example: '123 Fake St, Ottawa ON K2G 6F2, CA'
+    $ref: ../Address.yaml
   deliveryAddressNotes:
     type: string
     description: Extra notes relating to the delivery address, such as apartment/unit number, reference, description of the location, etc.
