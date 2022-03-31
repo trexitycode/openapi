@@ -5,8 +5,8 @@ get:
       required: true
       schema:
         type: string
-      description: The address to check, where the postal code/zip code is optional.
-      example: 123 Fake St, Ottawa ON, CA
+      description: The address to check.
+      example: 123 Fake St, Ottawa ON K2G 6F2, CA
 
   tags:
     - Addresses
@@ -18,11 +18,6 @@ get:
     Checks an address and returns a result that identifies if the address can be
     used as a pickup address/business address, and what delivery classification it
     falls under.
-
-    ### Postal Code/Zip Code
-
-    The postal code (or zip code) is optional in the address, but specifiying it could
-    result in a more accurate address check.
 
     ### Rate Limiting
 

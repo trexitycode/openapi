@@ -6,7 +6,7 @@ post:
     Queue a list of parcels to be routed and added to optimized shipments.
 
     The typical use case of this API is to select all your parcels and
-    provide in bulk to this endpoint, wich responds with an asynchronous routing
+    provide in bulk to this endpoint, which responds with an asynchronous routing
     request ID. Then use this asynchronous routing request ID to obtain the
     status of the routing request and later the result.
 
@@ -21,6 +21,10 @@ post:
     Values for `scheduledPostAt` must be a date at least 1 hour from the time of the request.
     This helps to ensure that there is enough time for routes to be created before
     the driver network is notified of the deliveries.
+
+    **Note on Optimization**
+    This endpoint does not use our most up-to-date routing optimization technology. We
+    recommend using the [complex rates](/#operation/rates-complex) endpoint instead.
   requestBody:
     required: true
     content:

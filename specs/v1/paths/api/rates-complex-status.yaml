@@ -1,0 +1,26 @@
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+    description: The asynchronous rate request ID
+get:
+  tags:
+    - Shipping Rates
+  operationId: getComplexRateRequestStatus
+  summary: Get complex rate request status
+  description: Get the status of an asynchronous rate request
+  responses:
+    '200':
+      description: The status of an asynchronous rate request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: ../../components/schemas/RateComplexRequest.yaml
+    '404':
+      description: No asynchronous rate request found
+

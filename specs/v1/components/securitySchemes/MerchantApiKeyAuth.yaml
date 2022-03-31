@@ -15,8 +15,8 @@ description: |
     -H 'Content-Type: application/json' \
     -H 'Authorization: Bearer <Merchant API Key>' \
     -d '{
-      "pickupAddress": "9 Slack Road, Ottawa ON, CA",
-      "deliveryAddress": "123 Slater Street, Ottawa ON, CA",
+      "pickupAddress": "9 Slack Rd, Nepean ON K2G 0B7, CA",
+      "deliveryAddress": "207 Queen St, Ottawa ON K1P 6E5, CA",
       "requirements": {},
       "orderValue": 2500
     }'

@@ -74,7 +74,7 @@ get:
                     gdprRedacted: false
                     archived: false
                     currentStatus: ''
-                    pickupAddress: '60 McLeod Street, Ottawa ON, CA'
+                    pickupAddress: '456 Elgin St, Ottawa ON K2P 1N5, CA'
                     pickupNotes: Please be careful since it's fragile!
                     pickupAddressLocation: null
                     pickupAddressProvince: ''
@@ -86,7 +86,7 @@ get:
                     cachedTotalRouteDuration: null
                     cachedTotalWithoutTaxes: null
                     cachedTaxes: null
-                    cachedMerchantAddress: '9 Slack Road, Nepean ON, CA'
+                    cachedMerchantAddress: '9 Slack Rd, Nepean ON K2G 0B7, CA'
                     merchantPpid: null
                     merchantName: TOP KEK Clearing House
                     merchantPhone: +1 555 123 1234
@@ -107,7 +107,7 @@ get:
                     parcels:
                       - driverDeliveredAt: null
                         deliveryAddressLocation: null
-                        deliveryAddress: '9 Slack Road, Nepean ON, CA'
+                        deliveryAddress: '9 Slack Rd, Nepean ON K2G 0B7, CA'
                         deliveryEmail: new_email@bestemail.org
                         deliveryPhone: ''
                         deliveryName: Felix Hausdorff
@@ -491,7 +491,7 @@ get:
                     gdprRedacted: false
                     archived: false
                     currentStatus: WAITING_FOR_ACCEPTANCE
-                    pickupAddress: '60 McLeod Street, Ottawa ON, CA'
+                    pickupAddress: '456 Elgin St, Ottawa ON K2P 1N5, CA'
                     pickupNotes: Please be careful since it's fragile!
                     pickupAddressLocation:
                       latitude: 45.4115087
@@ -506,7 +506,7 @@ get:
                     cachedTotalWithoutTaxes: 1486
                     cachedTaxes:
                       HST: 193
-                    cachedMerchantAddress: '9 Slack Road, Nepean ON, CA'
+                    cachedMerchantAddress: '9 Slack Rd, Nepean ON K2G 0B7, CA'
                     merchantPpid: null
                     merchantName: TOP KEK Clearing House
                     merchantPhone: +1 555 123 1234
@@ -529,7 +529,7 @@ get:
                         deliveryAddressLocation:
                           latitude: 45.326237
                           longitude: -75.7205628
-                        deliveryAddress: '9 Slack Road, Nepean ON, CA'
+                        deliveryAddress: '9 Slack Rd, Nepean ON K2G 0B7, CA'
                         deliveryEmail: ''
                         deliveryPhone: ''
                         deliveryName: Felix Hausdorff
@@ -589,23 +589,23 @@ post:
         examples:
           ImmediateInit:
             value:
-              pickupAddress: '9 Slack Road, Ottawa ON, CA'
+              pickupAddress: '9 Slack Rd, Nepean ON K2G 0B7, CA'
               requirements: {}
               pickupNotes: 'Please be careful, since it may contain fragile things!'
               parcels:
-                - deliveryAddress: '123 Slater Street, Ottawa ON, CA'
+                - deliveryAddress: '207 Queen St, Ottawa ON K1P 6E5, CA'
                   deliveryName: 'Srinivasa Ramanujan'
                   description: 'Glasses, bifocals'
                   orderId: 'BFG10K'
                   parcelValue: 10000
           ScheduledInit:
             value:
-              pickupAddress: '123 Slater Street, Ottawa ON, CA'
+              pickupAddress: '207 Queen St, Ottawa ON K1P 6E5, CA'
               requirements: {}
               pickupNotes: 'Please be careful, since it may contain fragile things!'
               scheduledPostAt: '2020-07-25T10:16:11.048Z'
               parcels:
-                - deliveryAddress: '100 McLeod St, Ottawa ON, CA'
+                - deliveryAddress: '343 Booth St, Ottawa ON K1R 7K1, CA'
                   deliveryName: 'Lagrange'
                   description: 'Copy of Newtons Principia Mathematica'
                   orderId: 'NWTNRULZ'

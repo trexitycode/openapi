@@ -103,7 +103,7 @@ get:
                   gdprRedacted: false
                   archived: false
                   currentStatus: ''
-                  pickupAddress: '60 McLeod Street, Ottawa ON, CA'
+                  pickupAddress: '456 Elgin St, Ottawa ON K2P 1N5, CA'
                   pickupNotes: Please be careful since it's fragile!
                   pickupAddressLocation: null
                   pickupAddressProvince: ''
@@ -115,7 +115,7 @@ get:
                   cachedTotalRouteDuration: null
                   cachedTotalWithoutTaxes: null
                   cachedTaxes: null
-                  cachedMerchantAddress: '9 Slack Road, Nepean ON, CA'
+                  cachedMerchantAddress: '9 Slack Rd, Nepean ON K2G 0B7, CA'
                   merchantPpid: null
                   merchantName: TOP KEK Clearing House
                   merchantPhone: +1 555 123 1234
@@ -136,7 +136,7 @@ get:
                   parcels:
                     - driverDeliveredAt: null
                       deliveryAddressLocation: null
-                      deliveryAddress: '9 Slack Road, Nepean ON, CA'
+                      deliveryAddress: '9 Slack Rd, Nepean ON K2G 0B7, CA'
                       deliveryEmail: new_email@bestemail.org
                       deliveryPhone: ''
                       deliveryName: Felix Hausdorff

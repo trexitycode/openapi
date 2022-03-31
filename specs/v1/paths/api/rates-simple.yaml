@@ -3,24 +3,40 @@ post:
     - Shipping Rates
   summary: Simple rate
   description: |
-    Calculate the rate for a simple shipment from a single pickup address to a single delivery address.
+    Calculate the rate for a direct shipment from a single pickup address to a
+    single delivery address.
 
-    Returns the distance (in meters), travel duration (in seconds), and fee from a pickup address
-    to the completion of the shipment.
-    Supports specifying an order value parameter, which will check against API Preferences
-    configured in the merchant portal.
+    Returns the distance (in meters), travel duration (in seconds), and fee from
+    a pickup address to the completion of the shipment.
 
-    If no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.
+    Supports specifying an order value parameter, which will check against API
+    Preferences configured in the merchant portal.
+
+    If no `pickupAddress` is specified then the merchant's business address will
+    be used as the pickup address.
   operationId: rates-simple
   x-codeSamples:
     - $ref: ../../code_samples/Shell/rates-simple/post.yaml
+  requestBody:
+    description: Payload that minimally describes a direct shipment.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/payloads/RateSimplePayload.yaml
+        example:
+          pickupAddress: '456 Elgin Street, Ottawa ON K2P 1N5, CA'
+          deliveryAddress: '225 Preston St, Ottawa ON K1R 7R1, CA'
+          requirements:
+            legalAgeAlcohol: true
+          orderValue: 2500
   responses:
     '200':
       description: Success
       content:
         application/json:
           schema:
-            $ref: ../../components/schemas/responses/ShipmentRateSimpleResponse.yaml
+            $ref: ../../components/schemas/responses/RateSimpleResponse.yaml
           examples:
             Can Deliver:
               value:
@@ -340,16 +356,3 @@ post:
 
     '403':
       description: Forbidden
-  requestBody:
-    description: Payload that minimally describes a shipment.
-    required: true
-    content:
-      application/json:
-        schema:
-          $ref: ../../components/schemas/payloads/ShipmentRateSimplePayload.yaml
-        example:
-          pickupAddress: '456 Elgin Street, Ottawa ON K2P 1N5, CA'
-          deliveryAddress: '225 Preston St, Ottawa ON K1R 7R1, CA'
-          requirements:
-            vehicleType: 'small'
-          orderValue: 2500

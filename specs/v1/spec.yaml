@@ -49,15 +49,15 @@ info:
     # Responses
 
     All endpoints will return an object and if there is actual data
-    to be returned, it is going to be named `data`. Where `data` may
+    to be returned, it is going to be named `data`, where `data` may
     be an array or an object.
 
-    If there is `error` field present on the root JSON object, that
+    If there is an `error` field present on the root JSON object, that
     means something went wrong and that error message is all we know about it.
     Additionally, in some cases, you may inspect the HTTP status codes to
     gather more information.
 
-    Please check our payload/response examples in details as well as the
+    Please check our payload/response examples in detail as well as the
     curl examples that are a part of each section that documents an operation.
 
     Example of a successful response:
@@ -76,26 +76,23 @@ tags:
       In general wherever an address is expected the format we accept is:
 
       ```
-      STREET, CITY PROVINCE, POSTAL_CODE COUNTRY
+      STREET, CITY PROVINCE POSTAL_CODE, COUNTRY
       ```
 
       However, we also accept newlines and/or commas delimiting each component.
 
-      Postal code and country are optional, however it's better to include them
-      to avoid any ambiguity when we attempt to geocode the address.
-
       **Good:**
       ```
-      123 Fake St, Ottawa ON
-      123 Fake St, Toronto, Ontario
-      123 Fake St, Toronto, Ontario, B4T 3F5
+      123 Fake St, Ottawa ON, Canada
+      123 Fake St, Toronto, Ontario, Canada
+      123 Fake St, Toronto, Ontario, B4T 3F5, Canada
       ```
 
       **Better:**
       ```
-      123 Fake St, Ottawa ON, K2G 8FT Canada
-      123 Fake St, Toronto, Ontario, M4T 5F6 Canada
-      123 Fake St, Toronto, Ontario, B4T 3F5, Canada
+      123 Fake St, Ottawa ON K2G 8FT, CA
+      123 Fake St, Toronto ON M4T 5F6, CA
+      123 Fake St, Toronto ON B4T 3F5, CA
       ```
   - name: Shipping Rates
     description: |
@@ -195,6 +192,12 @@ paths:
     $ref: ./paths/api/check-address.yaml
   /rates/simple:
     $ref: ./paths/api/rates-simple.yaml
+  /rates/complex:
+    $ref: ./paths/api/rates-complex-request.yaml
+  /rates/complex/{id}:
+    $ref: ./paths/api/rates-complex-status.yaml
+  /rates/complex/{id}/result:
+    $ref: ./paths/api/rates-complex-result.yaml
   /shipments:
     $ref: ./paths/api/shipments.yaml
   /shipments/{shipmentId}:

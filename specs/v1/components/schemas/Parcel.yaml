@@ -3,8 +3,8 @@ type: object
 properties:
   deliveryAddress:
     type: string
-    description: The destination address this parcel will be delivered to in the format "STREET, CITY PROVINCE, POSTAL_CODE COUNTRY" (postal code and country are optional, but it's better to include them to avoid ambiguity).
-    example: '123 Fake St, Ottawa Ontario, K2G 6FT Canada'
+    description: The destination address this parcel will be delivered to in the format "STREET, CITY PROVINCE POSTAL_CODE, COUNTRY".
+    example: '123 Fake St, Ottawa ON K2G 6F2, CA'
   deliveryAddressNotes:
     type: string
     description: Extra notes relating to the delivery address, such as apartment/unit number, reference, description of the location, etc.

@@ -100,7 +100,7 @@ properties:
   cachedMerchantAddress:
     type: string
     description: |
-      Merchant's address. Example: 9 Slack Road, Nepean ON, CA
+      Merchant's address. Example: 9 Slack Rd, Nepean ON K2G 0B7, CA
 
   merchantPpid:
     type: string

@@ -1,0 +1,27 @@
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+    description: The asynchronous complex rate request ID
+get:
+  tags:
+    - Shipping Rates
+  operationId: getComplexRateResult
+  summary: Get complex rate result
+  description: Get the result of a completed asynchronous rate request
+  responses:
+    '200':
+      description: The result of a completed asynchronous rate request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: ../../components/schemas/RateComplexResult.yaml
+    '404':
+      description: No asynchronous rate request found
+    '422':
+      description: Asynchronous rate request is not complete yet
