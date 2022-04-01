@@ -1,6 +1,6 @@
 type: object
 description: |
-  Object representing the requirements that to be met by a driver in order
+  Object representing the requirements that must be met by a driver in order
   for them to be considered for delivery.
 properties:
   # vehicleType:

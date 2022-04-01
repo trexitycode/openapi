@@ -1,6 +1,10 @@
 type: object
-description: A shipment object that has a single pickup address and can have several parcels each with their on delivery address.
+description: A shipment object that has a pickup address and can have several parcels each with their on delivery address.
 properties:
+  id:
+    type: string
+    description: Unique identifier of the Shipment in Trexity
+
   currentStatus:
     $ref: ./ShipmentStatus.yaml
 
@@ -19,9 +23,6 @@ properties:
   scheduledPostAt:
     $ref: ./SimplifiedDateISOString.yaml
 
-  id:
-    type: string
-    description: Unique identifier of the Shipment in Trexity
   merchantId:
     type: string
     description: User id of the Merchant who is the owner of the Shipment
@@ -199,4 +200,4 @@ properties:
     minItems: 1
     maxItems: 30
     items:
-        $ref: ./Parcel.yaml
+      $ref: ./Parcel.yaml

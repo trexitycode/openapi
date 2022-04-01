@@ -44,7 +44,7 @@ post:
               minItems: 1
               maxItems: 400
               items:
-                $ref: ../../components/schemas/payloads/ParcelPayload.yaml
+                $ref: ../../components/schemas/payloads/DirectShipmentPayload.yaml
   responses:
     '200':
       description: Successfully queued an asynchronous routing request

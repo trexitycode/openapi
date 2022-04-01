@@ -25,10 +25,6 @@ post:
         type: string
       description: The requestId of the [Create Bulk Shipments request](/#operation/createCreateBulkShipmentsRequest)
   responses:
-    '500':
-      description: Unknown server problem
-    '400':
-      description: Invalid payload or permission denied.
     '200':
       description: Success
       content:
@@ -51,3 +47,16 @@ post:
                     - 'TRX721903883-KT5'
                     - 'TRX345683288-H2X'
                     - 'TRX538722888-415'
+    '400':
+      description: No asynchronous bulk shipment creation request found
+    '422':
+      description: Asynchronous bulk shipment creation request is not complete yet
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: ../../components/schemas/responses/CreateBulkShipmentsStatusResponse.yaml
+    '500':
+      description: Unknown server problem
