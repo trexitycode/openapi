@@ -30,10 +30,10 @@ properties:
     type: array
     description: The parcels that will be delivered in this shipment
     minItems: 1
-    maxItems: 10
+    maxItems: 30
     items:
       allOf:
-        - $ref: ../Parcel.yaml
+        - $ref: ./ParcelPayload.yaml
         - type: object
           required:
             - deliveryAddress

@@ -1,5 +1,3 @@
-# NOTE (dschnare): Can't use the 'allOf' here to re-use Parcel.yaml
-# No idea why, but our examples always fail validation
 description: Payload object used to identify a parcel
 type: object
 required:

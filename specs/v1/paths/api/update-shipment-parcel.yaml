@@ -32,7 +32,7 @@ patch:
     content:
       application/json:
         schema:
-          $ref: ../../components/schemas/Parcel.yaml
+          $ref: ../../components/schemas/payloads/ParcelPayload.yaml
         example:
           deliveryAddress: '207 Queen St, Ottawa ON K1P 6E5, CA'
           deliveryName: John Doe
