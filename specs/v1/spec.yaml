@@ -14,20 +14,10 @@ info:
 
     **(added in v1.7)**
 
-    By using this API to provide delivery rates to your users you agree to display the [ShipmentRate](#operation/shipment-rates) `name` and [ShipmentRate](#operation/shipment-rates) `description` without modification.
+    By using this API to provide delivery rates to your users you agree to display the [ShipmentRate](#operation/shipment-rates) `name` without modification.
+    The [ShipmentRate](#operation/shipment-rates) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the ShipmentRate.
 
     This allows Trexity to ensure consistent messaging wherever Trexity devliery rates are shown.
-
-    **Combining**
-
-    In the event that `description` cannot be shown on its own, then it is acceptable to combine the `name` and `description` as as single field like `${name} (${description})`.
-    For example:
-
-    ```
-    name = 'Local Delivery' // example name
-    description = 'by Trexity' // example description
-    combined = 'Local Delivery (by Trexity)' // then example combined
-    ```
 
     ## Suspension & Termination
 
