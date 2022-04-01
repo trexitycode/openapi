@@ -17,11 +17,6 @@ post:
 
     **Parcels**
 
-    Multiple parcels per shipment are supported, but will be treated as if they
-    were standalone. Generally speaking, there is no difference between
-    multiple shipments with the same root properties (pickup address, etc) with
-    one parcel each, and one shipment with all those same parcels.
-
     We recommend structuring the request so as to have a shipment for each
     parcel, where the parcels property is always an array with a single parcel.
 
