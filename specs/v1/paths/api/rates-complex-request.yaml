@@ -56,7 +56,7 @@ post:
                 $ref: ../../components/schemas/payloads/CreateShipmentPayload.yaml
   responses:
     '200':
-      description: Successfully queued an asynchronous rate request
+      description: Successfully queued an asynchronous complex rate request
       content:
         application/json:
           schema:
