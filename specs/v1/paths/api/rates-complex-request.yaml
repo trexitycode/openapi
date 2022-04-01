@@ -20,6 +20,10 @@ post:
     We recommend structuring the request so as to have a shipment for each
     parcel, where the parcels property is always an array with a single parcel.
 
+    Grouping parcels into the same shipment does not currently maintain
+    affinity. Parcels will be re-arranged as needed by the optimization
+    algorithm.
+
     **Order ID**
 
     For each parcel across all shipments provided to this endpoint, the
