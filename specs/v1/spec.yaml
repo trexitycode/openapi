@@ -219,13 +219,13 @@ paths:
   /addresses/check:
     $ref: ./paths/api/check-address.yaml
   /rates/simple:
-    $ref: ./paths/api/rates-simple.yaml
+    $ref: ./paths/api/simple-rate.yaml
   /rates/complex:
-    $ref: ./paths/api/rates-complex-request.yaml
+    $ref: ./paths/api/complex-rate-request.yaml
   /rates/complex/{requestId}:
-    $ref: ./paths/api/rates-complex-status.yaml
+    $ref: ./paths/api/complex-rate-status.yaml
   /rates/complex/{requestId}/result:
-    $ref: ./paths/api/rates-complex-result.yaml
+    $ref: ./paths/api/complex-rate-result.yaml
   /shipments:
     $ref: ./paths/api/shipments.yaml
   /shipments/bulk/{rateId}:

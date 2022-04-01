@@ -18,7 +18,7 @@ post:
     address and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)
     endpoint for multiple delivery addresses.
   x-codeSamples:
-    - $ref: ../../code_samples/Shell/rates-simple/post.yaml
+    - $ref: ../../code_samples/Shell/simple-rate/post.yaml
 
   ##############################################################################
 
@@ -28,7 +28,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: ../../components/schemas/payloads/RateSimplePayload.yaml
+          $ref: ../../components/schemas/payloads/SimpleRatePayload.yaml
         example:
           pickupAddress: '456 Elgin Street, Ottawa ON K2P 1N5, CA'
           deliveryAddress: '225 Preston St, Ottawa ON K1R 7R1, CA'
@@ -41,7 +41,7 @@ post:
       content:
         application/json:
           schema:
-            $ref: ../../components/schemas/responses/RateSimpleResponse.yaml
+            $ref: ../../components/schemas/responses/SimpleRateResponse.yaml
           examples:
             Can Deliver:
               value:

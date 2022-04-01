@@ -1,8 +1,8 @@
 get:
-  operationId: getComplexRateResult
+  operationId: getComplexRateStatus
   tags: [Shipping Rates]
-  summary: Get complex rate result
-  description: Get the result of a completed asynchronous complex rate request
+  summary: Get complex rate request status
+  description: Get the status of an asynchronous complex rate request
 
   ##############################################################################
 
@@ -15,15 +15,13 @@ get:
       description: The asynchronous complex rate request ID
   responses:
     '200':
-      description: The result of a completed asynchronous complex rate request
+      description: The status of an asynchronous complex rate request
       content:
         application/json:
           schema:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/responses/RateComplexResultResponse.yaml
+                $ref: ../../components/schemas/responses/ComplexRateStatusResponse.yaml
     '404':
       description: No asynchronous complex rate request found
-    '422':
-      description: Asynchronous complex rate request is not complete yet
