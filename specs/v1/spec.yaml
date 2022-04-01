@@ -222,9 +222,9 @@ paths:
     $ref: ./paths/api/rates-simple.yaml
   /rates/complex:
     $ref: ./paths/api/rates-complex-request.yaml
-  /rates/complex/{id}:
+  /rates/complex/{requestId}:
     $ref: ./paths/api/rates-complex-status.yaml
-  /rates/complex/{id}/result:
+  /rates/complex/{requestId}/result:
     $ref: ./paths/api/rates-complex-result.yaml
   /shipments:
     $ref: ./paths/api/shipments.yaml

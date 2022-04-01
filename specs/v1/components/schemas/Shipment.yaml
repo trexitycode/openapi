@@ -199,4 +199,4 @@ properties:
     minItems: 1
     maxItems: 10
     items:
-        $ref: ./ParcelResponse.yaml
+        $ref: ./Parcel.yaml

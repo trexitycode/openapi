@@ -34,7 +34,7 @@ patch:
         schema:
           $ref: ../../components/schemas/Parcel.yaml
         example:
-          deliveryAddress: '45.4132789,-75.6885815'
+          deliveryAddress: '207 Queen St, Ottawa ON K1P 6E5, CA'
           deliveryName: John Doe
           description: Grocery order with 3 bags
           orderId: 3453FR-REF

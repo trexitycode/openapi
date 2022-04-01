@@ -1,0 +1,13 @@
+lang: Shell
+source: |
+  curl -X POST {server-url}/rates/complex\
+    -H 'Content-Type: application/json'\
+    -H 'Authorization: Bearer <Trexity API Key>'\
+    -d '{
+      "pickupAddress": "456 Elgin St, Ottawa ON K2P 1N5, CA",
+      "deliveryAddress": "225 Preston St, Ottawa ON K1R 7R1, CA",
+      "requirements": {
+        "legalAgeAlcohol": true
+      },
+      "orderValue": 2500
+    }'

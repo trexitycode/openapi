@@ -1,8 +1,31 @@
-description: A parcel to be devlivered in a shipment
+description: A parcel to be delivered in a shipment
 type: object
 properties:
   deliveryAddress:
     $ref: ./Address.yaml
+  deliveryAddressLocation:
+    $ref: ./Location.yaml
+  deliveryAddressProvince:
+    type: string
+    nullable: true
+    description: |
+      The province of the deliveryAddress. Example: Ontario.
+  deliveryAddressCountry:
+    type: string
+    nullable: true
+    description: |
+      The country of the deliveryAddress. Example: Canada.
+  deliveryAddressCity:
+    type: string
+    nullable: true
+    description: |
+      The city of the pickupAddress. Example: Ottawa.
+  deliveryAddressServiceCity:
+    type: string
+    nullable: true
+    description: |
+      The service city of the pickupAddress. Example: Ottawa, ON.
+
   deliveryAddressNotes:
     type: string
     description: Extra notes relating to the delivery address, such as apartment/unit number, reference, description of the location, etc.
@@ -13,6 +36,14 @@ properties:
   deliveryName:
     type: string
     description: The name of the recipient
+  deliveryEmail:
+    type: string
+    format: email
+    description: The email address of the recipient
+  deliveryPhone:
+    type: string
+    description: The cell phone number of the recipient
+
   description:
     type: string
     description: Description of the parcel being delivered
@@ -24,24 +55,30 @@ properties:
     type: number
     minimum: 0
     description: The dollar value of the parcel in CDN as cents
-  deliveryEmail:
-    type: string
-    format: email
-    description: The email address of the recipient
-  deliveryPhone:
-    type: string
-    description: The cell phone number of the recipient
   requiresPersonHandoff:
     type: boolean
     description: Does this parcel require in-person handoff?
+
   externalId:
     type: string
     maxLength: 256
     description: |
-      **(added in v1.2)** The ID of the external entity that is associated to this parcel (e.g. the external order or shipment ID).
+      **(added in v1.2)** The ID of the external entity that is associated to
+      this parcel (e.g. the external order or shipment ID).
   metadata:
     type: object
     description: |
       **(added in v1.1)** Object with metadata fields. If the intent is to
       list shipments with this metadata field, then ensure the value is
       saved as a string and not say a number.
+
+  driverDeliveredAt:
+    $ref: ./SimplifiedDateISOString.yaml
+  isDelivered:
+    type: boolean
+    description: |
+      Whether this Parcel has been delivered.
+      If it has been, we store the timestamp in driverDeliveredAt.
+  secondsFromPickupToDelivery:
+    type: number
+    description: If a driver has accpeted, the estimated seconds it will take the driver to arrive at the pickup address.

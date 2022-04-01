@@ -2,4 +2,4 @@ description: Webhook payload during a shipment event.
 required: [data]
 properties:
   data:
-    $ref: ./Shipment.yaml
+    $ref: ../Shipment.yaml
