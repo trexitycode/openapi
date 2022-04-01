@@ -1,0 +1,38 @@
+get:
+  operationId: getCreateBulkShipmentsStatus
+  tags: [Shipments]
+  summary: Get bulk shipment creation request status
+  description: |
+    **(added in v1.8)**
+
+    Get the status of an asynchronous bulk shipment creation request
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/create-bulk-shipments/status.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: rateId
+      required: true
+      schema:
+        type: string
+      description: The rateId of the [Complex Rate result](/#operation/getComplexRateResult)
+    - in: path
+      name: requestId
+      required: true
+      schema:
+        type: string
+      description: The asynchronous bulk shipment creation request ID
+  responses:
+    '200':
+      description: The status of an asynchronous bulk shipment creation request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: ../../components/schemas/responses/CreateBulkShipmentsStatusResponse.yaml
+    '404':
+      description: No asynchronous bulk shipment creation request found

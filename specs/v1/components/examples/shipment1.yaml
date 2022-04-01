@@ -1,0 +1,69 @@
+id: TRX904577741-T88
+requirements: {}
+merchantId: owr4aM8QVqV90MjgyvQT8dWlLeA3
+driverId: null
+directionsResult: null
+gdprRedacted: false
+archived: false
+currentStatus: ''
+pickupAddress: '456 Elgin St, Ottawa ON K2P 1N5, CA'
+pickupNotes: Please be careful since it's fragile!
+pickupAddressLocation: null
+pickupAddressProvince: ''
+pickupAddressCountry: ''
+pickupAddressCity: ''
+pickupAddressServiceCity: ''
+cachedDriverName: null
+cachedTotalRouteDistance: null
+cachedTotalRouteDuration: null
+cachedTotalWithoutTaxes: null
+cachedTaxes: null
+cachedMerchantAddress: '9 Slack Rd, Nepean ON K2G 0B7, CA'
+merchantPpid: null
+merchantName: TOP KEK Clearing House
+merchantPhone: +1 555 123 1234
+merchantEmail: testemail@testing.com
+createdAt: "2020-07-26T13:50:07.368Z"
+driverAcceptedAt: null
+driverStartedAt: null
+driverArrivedPickupAt: null
+driverPickedUpAt: null
+scheduledPostAt: null
+postedAt: null
+lastBroadcastedAt: null
+driverTimeToPickup: null
+cancellationAcknowledgedByDriver: false
+scheduledPostError: ''
+postErrors: []
+currentDriverEstimatedSecondsToPickup: null
+parcels:
+  - driverDeliveredAt: null
+    deliveryAddressLocation: null
+    deliveryAddress: '9 Slack Rd, Nepean ON K2G 0B7, CA'
+    deliveryEmail: new_email@bestemail.org
+    deliveryPhone: ''
+    deliveryName: Felix Hausdorff
+    description: 'Glasses, bifocals'
+    parcelValue: 12300
+    orderId: API-0573
+    isDelivered: false
+  - driverDeliveredAt: null
+    deliveryAddressLocation: null
+    deliveryAddress: '150 Albert St, Ottawa, ON K1P 5G2, Canada'
+    deliveryEmail: ''
+    deliveryPhone: ''
+    deliveryName: Srinivasa Ramanujan
+    description: 'Convergence theorems, 12 pack'
+    parcelValue: 10500
+    orderId: API-1010
+    isDelivered: false
+  - driverDeliveredAt: null
+    deliveryAddressLocation: null
+    deliveryAddress: '20 Colonnade Rd, Nepean, ON K2E 7M6, Canada'
+    deliveryEmail: ''
+    deliveryPhone: ''
+    deliveryName: Carl Friedrich Gauss
+    description: FTOA x 4
+    parcelValue: 19900
+    orderId: API-1020
+    isDelivered: false

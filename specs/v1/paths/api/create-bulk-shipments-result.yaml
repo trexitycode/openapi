@@ -1,0 +1,53 @@
+post:
+  operationId: getCreateBulkShipmentsResult
+  tags: [Shipments]
+  summary: Get bulk shipments creation result
+  description: |
+    **(added in v1.8)**
+
+    Get the result of a completed asynchronous bulk shipments creation request
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/create-bulk-shipments/result.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: rateId
+      required: true
+      schema:
+        type: string
+      description: The rateId of the [Complex Rate result](/#operation/getComplexRateResult)
+    - in: path
+      name: requestId
+      required: true
+      schema:
+        type: string
+      description: The requestId of the [Create Bulk Shipments request](/#operation/createCreateBulkShipmentsRequest)
+  responses:
+    '500':
+      description: Unknown server problem
+    '400':
+      description: Invalid payload or permission denied.
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  shipmentIds:
+                    type: array
+          examples:
+            Success:
+              value:
+                data:
+                  shipmentIds:
+                    - 'TRX973036599-6KL'
+                    - 'TRX440206863-K3C'
+                    - 'TRX721903883-KT5'
+                    - 'TRX345683288-H2X'
+                    - 'TRX538722888-415'

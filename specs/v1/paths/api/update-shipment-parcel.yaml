@@ -1,4 +1,18 @@
 patch:
+  operationId: updateShipmentParcel
+  tags: [Shipments]
+  summary: Update a parcel
+  description: |
+    Updates the details of a parcel.
+
+    **(added in v1.1)**
+    When updating metadata fields the fields will be merged into the parcel's existing
+    metadata. Any metadata fields set to `null` or `undefined` will be deleted.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/update-shipment-parcel.yaml
+
+  ##############################################################################
+
   parameters:
     - in: path
       name: shipmentId
@@ -12,27 +26,6 @@ patch:
       schema:
         type: integer
       description: The delivery index of the parcel to be updated
-  tags:
-    - Shipments
-  summary: Update a parcel
-  description: |
-    Updates the details of a parcel.
-
-    **(added in v1.1)**
-    When updating metadata fields the fields will be merged into the parcel's existing
-    metadata. Any metadata fields set to `null` or `undefined` will be deleted.
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipments/update-shipment-parcel.yaml
-
-  operationId: updateShipmentParcel
-  responses:
-    '500':
-      description: Unknown server problem
-    '400':
-      description: Invalid payload or permission denied.
-    '204':
-      description: Success
-
   requestBody:
     description: Payload containing the parcel's data that needs to be updated
     required: true
@@ -45,3 +38,10 @@ patch:
           deliveryName: John Doe
           description: Grocery order with 3 bags
           orderId: 3453FR-REF
+  responses:
+    '500':
+      description: Unknown server problem
+    '400':
+      description: Invalid payload or permission denied.
+    '204':
+      description: Success

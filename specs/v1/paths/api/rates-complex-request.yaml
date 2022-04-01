@@ -1,33 +1,46 @@
 post:
-  tags:
-    - Shipping Rates
   operationId: createComplexRateRequest
+  tags: [Shipping Rates]
   summary: Create complex rate request
   description: |
-    Queue a list of shipments for optimal routing and pricing.
+    Queue a list of shipments for an optimally routed rate.
 
     The typical use case of this API is to provide multiple shipments (pickup &
     delivery) to this endpoint, which responds with a request ID to be polled
-    asynchronously using the [Complex Rate Status](/#operation/getComplexRateStatus) endpoint, and ultimately
-    retrieving the rate using the [Complex Rate Result](/#operation/getComplexRateResult) endpoint.
+    asynchronously using the [Complex Rate status](/#operation/getComplexRateStatus)
+    endpoint, and ultimately retrieving the rate using the [Complex Rate result](/#operation/getComplexRateResult)
+    endpoint.
 
     Optionally, you can then take the rate ID provided in the rate result and
-    have the shipments created in bulk using the [Create Shipments](/#operation/createShipments)
+    have the shipments created in bulk using the [Create Bulk Shipments](/#operation/createCreateBulkShipmentsRequest)
     endpoint.
+
+    **Parcels**
+
+    Multiple parcels per shipment are supported, but will be treated as if they
+    were standalone. Generally speaking, there is no difference between
+    multiple shipments with the same root properties (pickup address, etc) with
+    one parcel each, and one shipment with all those same parcels.
+
+    We recommend structuring the request so as to have a shipment for each
+    parcel, where the parcels property is always an array with a single parcel.
 
     **Order ID**
 
-    For each parcel in the shipments provided to this endpoint, the `orderId`
-    must be unique. This allows us to refer back to the parcel by `orderId`
-    in the result `errors` array.
+    For each parcel across all shipments provided to this endpoint, the
+    `orderId` must be unique. This allows us to refer back to the parcel by
+    `orderId` in the result `errors` array.
 
     **Scheduled Post At**
 
     Values for `scheduledPostAt` must be a date at least 1 hour from the time of
     the request. This helps to ensure that there is enough time for the optional
-    [bulk shipment creation](/#operation/createShipments) request to be
-    performed and fully completed before the driver network is notified of the
-    deliveries.
+    [Create Bulk Shipments](/#operation/createCreateBulkShipmentsRequestRequest)
+    request to be performed and fully completed before the driver network is
+    notified of the deliveries.
+
+  ##############################################################################
+
   requestBody:
     required: true
     content:

@@ -1,6 +1,6 @@
 lang: Shell
 source: |
-  curl -X PATCH {server-url}/shipments/TRX1132313511829\
+  curl -X PATCH {server-url}/shipments/TRX973036599-6KL\
     -H 'Content-Type: application/json'\
     -H 'Authorization: Bearer <Trexity API Key>'\
     -d '{

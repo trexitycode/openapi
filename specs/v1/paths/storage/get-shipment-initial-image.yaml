@@ -1,7 +1,17 @@
 get:
+  operationId: getShipmentParcelInitialImage
+  tags: [Storage]
+  summary: Parcel photo
+  description: |
+    Gets the actual image data of the specified shipment's parcel.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/storage/get-shipment-parcel-initial-photo.yaml
   servers:
     - description: production
       url: 'https://trexity.app/storage'
+
+  ##############################################################################
+
   parameters:
     - in: query
       name: shipmentId
@@ -17,14 +27,6 @@ get:
         type: integer
       description:
         The (delivery) index of the parcel
-  tags:
-    - Storage
-  summary: Parcel photo
-  operationId: getShipmentParcelInitialImage
-  description: >
-    Gets the actual image data of the specified shipment's parcel.
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/storage/get-shipment-parcel-initial-photo.yaml
   responses:
     '304':
       description: File contents haven't changed

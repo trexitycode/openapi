@@ -1,0 +1,3 @@
+lang: Shell
+source: |
+  curl -X POST {server-url}/shipments/bulk/{rateId} TODO

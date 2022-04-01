@@ -1,6 +1,6 @@
 post:
-  tags: [Routing]
   operationId: createRoutingRequest
+  tags: [Routing]
   summary: Create routing request
   description: |
     Queue a list of parcels to be routed and added to optimized shipments.
@@ -24,10 +24,13 @@ post:
 
     **Note on Optimization**
     This endpoint does not use our most up-to-date routing optimization technology. We
-    recommend using the [Complex Rates](/#operation/createComplexRateRequest) endpoint instead.
+    recommend using the [Complex Rate](/#operation/createComplexRateRequest) endpoint instead.
 
-    **(deprecated in v1.8)** Use the new [Complex Rates](/#operation/createComplexRateRequest)
-    endpoint, combined with the [Create Shipments](/#operation/createShipments) endpoint.
+    **(deprecated in v1.8)** Use the new [Complex Rate](/#operation/createComplexRateRequest)
+    endpoint, combined with the [Create Shipments](/#operation/createCreateBulkShipmentsRequest) endpoint.
+
+  ##############################################################################
+
   requestBody:
     required: true
     content:

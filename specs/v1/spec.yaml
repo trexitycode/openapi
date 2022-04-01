@@ -14,7 +14,7 @@ info:
 
     **(added in v1.7)**
 
-    By using this API to provide delivery rates to your users you agree to display the [ShipmentRate](#operation/shipment-rates) `name` and [ShipmentRate](#operation/shipment-rates) `description` without modification.
+    By using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` and [Rate](#operation/getSimpleRate) `description` without modification.
 
     This allows Trexity to ensure consistent messaging wherever Trexity devliery rates are shown.
 
@@ -120,7 +120,7 @@ tags:
   - name: Shipping Rates
     description: |
       Prior to creating a Shipment, you can calculate the rates based on the pickup address and the number of stops the driver has to do.
-      See our [rates](/#operation/rates-simple) endpoint for more information.
+      See our [rates](/#operation/getSimpleRate) endpoint for more information.
   - name: Shipments
     description: |
       The most common approach to get a shipment on the road is to:
@@ -228,6 +228,12 @@ paths:
     $ref: ./paths/api/rates-complex-result.yaml
   /shipments:
     $ref: ./paths/api/shipments.yaml
+  /shipments/bulk/{rateId}:
+    $ref: ./paths/api/create-bulk-shipments-request.yaml
+  /shipments/bulk/{rateId}/{requestId}:
+    $ref: ./paths/api/create-bulk-shipments-status.yaml
+  /shipments/bulk/{rateId}/{requestId}/result:
+    $ref: ./paths/api/create-bulk-shipments-result.yaml
   /shipments/{shipmentId}:
     $ref: ./paths/api/shipment.yaml
   /shipments/{shipmentId}/post:
@@ -246,9 +252,9 @@ paths:
     $ref: ./paths/api/service-city-zones.yaml
   /routing:
     $ref: ./paths/api/routing-request.yaml
-  /routing/{id}:
+  /routing/{requestId}:
     $ref: ./paths/api/routing-status.yaml
-  /routing/{id}/result:
+  /routing/{requestId}/result:
     $ref: ./paths/api/routing-result.yaml
   /storage/get/shipment/images/initial:
     $ref: ./paths/storage/get-shipment-initial-image.yaml

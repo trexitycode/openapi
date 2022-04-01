@@ -1,14 +1,16 @@
 delete:
+  operationId: deleteWebhook
+  tags: [Webhooks]
+  summary: Delete a webhook
+
+  ##############################################################################
+
   parameters:
     - in: path
       required: true
       name: webhookId
       schema:
         type: string
-  summary: Delete a webhook
-  operationId: deleteWebhook
-  tags:
-    - Webhooks
   responses:
     '204':
       description: Successfully deleted a webhook or if the webhook ID does not exist.

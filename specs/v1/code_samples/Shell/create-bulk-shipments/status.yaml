@@ -1,0 +1,3 @@
+lang: Shell
+source: |
+  curl -X GET {server-url}/shipments/bulk/{rateId}/{requestId} TODO

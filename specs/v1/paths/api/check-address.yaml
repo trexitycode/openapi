@@ -1,17 +1,7 @@
 get:
-  parameters:
-    - in: query
-      name: address
-      required: true
-      schema:
-        type: string
-      description: The address to check.
-      example: 123 Fake St, Ottawa ON K2G 6F2, CA
-
-  tags:
-    - Addresses
-  summary: Check an address
   operationId: checkAddress
+  tags: [Addresses]
+  summary: Check an address
   description: |
     **(added in v1.1)**
 
@@ -29,6 +19,17 @@ get:
     - {}
     - MerchantApiKeyAuth: []
     - AccessTokenAuth: []
+
+  ##############################################################################
+
+  parameters:
+    - in: query
+      name: address
+      required: true
+      schema:
+        type: string
+      description: The address to check.
+      example: 123 Fake St, Ottawa ON K2G 6F2, CA
   responses:
     '200':
       description: Success

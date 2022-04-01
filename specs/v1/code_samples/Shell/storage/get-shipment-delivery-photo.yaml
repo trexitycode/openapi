@@ -1,4 +1,4 @@
 lang: Shell
 source: |
-  curl -X GET "{server-url}/get/shipment/images/delivery?shipmentId=TRX1132313511829&index=0"\
+  curl -X GET "{server-url}/get/shipment/images/delivery?shipmentId=TRX973036599-6KL&index=0"\
     -H 'Authorization: Bearer <Trexity API Key>'

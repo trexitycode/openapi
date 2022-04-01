@@ -1,5 +1,5 @@
 lang: Shell
 source: |
-  curl -X POST {server-url}/shipments/TRX1132313511829/post\
+  curl -X POST {server-url}/shipments/TRX973036599-6KL/post\
     -H 'Content-Type: application/json'\
     -H 'Authorization: Bearer <Trexity API Key>'

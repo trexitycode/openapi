@@ -1,16 +1,18 @@
-parameters:
-  - in: path
-    name: id
-    required: true
-    schema:
-      type: string
-    description: The asynchronous rate request ID
 get:
-  tags:
-    - Shipping Rates
   operationId: getComplexRateStatus
+  tags: [Shipping Rates]
   summary: Get complex rate request status
   description: Get the status of an asynchronous rate request
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: requestId
+      required: true
+      schema:
+        type: string
+      description: The asynchronous rate request ID
   responses:
     '200':
       description: The status of an asynchronous rate request

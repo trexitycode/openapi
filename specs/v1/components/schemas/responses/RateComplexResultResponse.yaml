@@ -15,7 +15,7 @@ properties:
             "PICKUP_OUTSIDE_SERVICE_AREA",
             "DELIVERY_NO_GEOCODE",
             "PICKUP_NO_GEOCODE",
-            "SYSTEM_ERROR",
+            "SYSTEM_ERROR"
           ]
           description: The error code that identifies the error
         orderId:
@@ -24,14 +24,23 @@ properties:
         params:
           type: object
           description: |
-            An object that contains extra information related to the error (i.e. address, etc. )
+            An object that contains extra information related to the error (i.e.
+            address, etc.)
   result:
     type: object
     properties:
-      shipments:
+      rateId:
+        type: string
+        description: |
+          This rate response is persisted for 7 days, and can be converted to
+          shipments using the [Create Bulk Shipments](/#operation/createCreateBulkShipmentsRequest)
+          endpoint, and this rateId. Please note that pricing may differ
+          between this rate response and the creation process, where the
+          likelihood of drift increases with time.
+      rates:
         type: array
         items:
-          $ref: ../Shipment.yaml
+          $ref: ../Rate.yaml
       unassignedOrders:
         type: array
         description: |

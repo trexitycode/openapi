@@ -1,15 +1,18 @@
-parameters:
-  - in: path
-    name: id
-    required: true
-    schema:
-      type: string
-    description: The asynchronous routing request ID
 get:
-  tags: [Routing]
   operationId: getRoutingRequestResult
+  tags: [Routing]
   summary: Get routing request result
   description: Get the result of a completed asynchronous routing request
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: requestId
+      required: true
+      schema:
+        type: string
+      description: The asynchronous routing request ID
   responses:
     '200':
       description: The result of a completed asynchronous routing request

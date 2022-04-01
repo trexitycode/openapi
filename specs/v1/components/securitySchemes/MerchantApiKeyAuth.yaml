@@ -22,5 +22,5 @@ description: |
     }'
   ```
 
-  Please check our [curl examples](/#operation/rates-simple) for more examples.
+  Please check our [curl examples](/#operation/getSimpleRate) for more examples.
 

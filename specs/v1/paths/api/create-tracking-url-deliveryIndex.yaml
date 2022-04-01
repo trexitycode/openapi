@@ -1,4 +1,14 @@
 post:
+  operationId: createTrackingUrlDeliveryIndex
+  tags: [Shipments]
+  summary: Parcel tracking URL
+  description: |
+    Creates a tracking URL for a specific parcel by index
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/create-tracking-url-deliveryIndex.yaml
+
+  ##############################################################################
+
   parameters:
     - in: path
       name: shipmentId
@@ -12,17 +22,6 @@ post:
       schema:
         type: number
       description: The index of the parcel to retrieve a tracking URL for
-
-  tags:
-    - Shipments
-  summary: Parcel tracking URL
-  operationId: createTrackingUrlDeliveryIndex
-  description: >
-    Creates a tracking URL for a specific parcel by index
-
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipments/create-tracking-url-deliveryIndex.yaml
-
   requestBody:
     description: 'Optional request parameters'
     content:
@@ -40,7 +39,6 @@ post:
           lifetime:
             summary: 'lifetime of 7 days'
             value: { lifetime: 604800 }
-
   responses:
     '200':
       description: Success
