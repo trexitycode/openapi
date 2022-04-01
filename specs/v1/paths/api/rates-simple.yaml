@@ -1,7 +1,7 @@
 post:
   operationId: getSimpleRate
   tags: [Shipping Rates]
-  summary: Get simple rate
+  summary: Simple rate
   description: |
     Calculate the rate for a direct shipment from a single pickup address to a
     single delivery address.

@@ -127,7 +127,7 @@ tags:
         * [Create a Shipment](/#operation/createShipment)
         * [Posting a Shipment](/#operation/postShipment)
 
-      After [posting](/#section/Posting-a-shipment), assuming everything went well, Trexity system will keep pinging drivers in the vicinity of the pickup address.
+      After [posting](/#section/Posting-a-shipment), assuming everything went well, the Trexity system will keep pinging drivers in the vicinity of the pickup address.
       In the rare case of not finding an available driver in the vicinity of the pickup address, Trexity will refuse to post the shipment.
 
       Alternatively, Trexity allows for planning in the future via Scheduling.
