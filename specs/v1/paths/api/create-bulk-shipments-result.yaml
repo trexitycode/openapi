@@ -48,15 +48,8 @@ post:
                     - 'TRX345683288-H2X'
                     - 'TRX538722888-415'
     '400':
-      description: No asynchronous bulk shipment creation request found
+      description: No asynchronous bulk shipments creation request found
     '422':
-      description: Asynchronous bulk shipment creation request is not complete yet
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              data:
-                $ref: ../../components/schemas/responses/CreateBulkShipmentsStatusResponse.yaml
+      description: Asynchronous bulk shipments creation request is not complete yet
     '500':
       description: Unknown server problem

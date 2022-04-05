@@ -22,7 +22,7 @@ post:
       description: The rateId from a [Complex Rate result](/#operation/getComplexRateResult)
   responses:
     '200':
-      description: Successfully queued an asynchronous bulk shipment creation request
+      description: Successfully queued an asynchronous bulk shipments creation request
       content:
         application/json:
           schema:

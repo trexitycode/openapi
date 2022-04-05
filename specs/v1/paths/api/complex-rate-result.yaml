@@ -27,12 +27,5 @@ get:
       description: No asynchronous complex rate request found
     '422':
       description: Asynchronous complex rate request is not complete yet
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              data:
-                $ref: ../../components/schemas/responses/ComplexRateStatusResponse.yaml
     '500':
       description: Unknown server problem
