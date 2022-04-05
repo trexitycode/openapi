@@ -15,11 +15,11 @@ properties:
   pickupAddressNotes:
     type: string
     description: Extra information relating to the pickup address ONLY, like the apartment/unit number.
-  requirements:
-    $ref: ../ShipmentRequirements.yaml
   pickupNotes:
     type: string
     description: Special notes or instructions regarding pickup like the description of the location, what door to use, etc.
+  requirements:
+    $ref: ../ShipmentRequirements.yaml
   scheduledPostAt:
     description: |
       Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
@@ -65,7 +65,18 @@ properties:
     description: The cell phone number of the recipient
   requiresPersonHandoff:
     type: boolean
-    description: Does this parcel require in-person handoff?
+    description: Does this parcel require delivery PIN verification?
+  containsAlcohol:
+    type: boolean
+    description: |
+      **(added in v1.8)** Does this parcel contain alcoholic products?
+  externalId:
+    type: string
+    maxLength: 256
+    description: |
+      **(added in v1.8)**
+      The ID of the external entity that is associated to this delivery (e.g.
+      the external order or shipment ID).
   metadata:
     type: object
     description: |

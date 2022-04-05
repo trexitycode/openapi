@@ -33,7 +33,11 @@ properties:
     description: The cell phone number of the recipient
   requiresPersonHandoff:
     type: boolean
-    description: Does this parcel require in-person handoff?
+    description: Does this parcel require delivery PIN verification?
+  containsAlcohol:
+    type: boolean
+    description: |
+      **(added in v1.8)** Does this parcel contain alcoholic products?
   externalId:
     type: string
     maxLength: 256

@@ -57,8 +57,11 @@ properties:
     description: The dollar value of the parcel in CDN as cents
   requiresPersonHandoff:
     type: boolean
-    description: Does this parcel require in-person handoff?
-
+    description: Does this parcel require delivery PIN verification?
+  containsAlcohol:
+    type: boolean
+    description: |
+      **(added in v1.8)** Does this parcel contain alcoholic products?
   externalId:
     type: string
     maxLength: 256
