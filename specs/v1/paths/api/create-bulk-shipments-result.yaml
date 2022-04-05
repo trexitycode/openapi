@@ -1,11 +1,11 @@
 post:
   operationId: getCreateBulkShipmentsResult
   tags: [Shipments]
-  summary: Get bulk shipments creation result
+  summary: Get bulk shipment creation result
   description: |
     **(added in v1.8)**
 
-    Get the result of a completed asynchronous bulk shipments creation request
+    Get the result of a completed asynchronous bulk shipment creation request
   x-codeSamples:
     - $ref: ../../code_samples/Shell/create-bulk-shipments/result.yaml
 
@@ -23,7 +23,7 @@ post:
       required: true
       schema:
         type: string
-      description: The requestId of the [Create Bulk Shipments request](/#operation/createCreateBulkShipmentsRequest)
+      description: The requestId of the [Bulk Shipment Creation request](/#operation/createCreateBulkShipmentsRequest)
   responses:
     '200':
       description: Success
@@ -48,8 +48,8 @@ post:
                     - 'TRX345683288-H2X'
                     - 'TRX538722888-415'
     '400':
-      description: No asynchronous bulk shipments creation request found
+      description: No asynchronous bulk shipment creation request found
     '422':
-      description: Asynchronous bulk shipments creation request is not complete yet
+      description: Asynchronous bulk shipment creation request is not complete yet
     '500':
       description: Unknown server problem

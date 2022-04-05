@@ -33,7 +33,7 @@ properties:
         type: string
         description: |
           This rate response is persisted for 7 days, and can be converted to
-          shipments using the [Create Bulk Shipments](/#operation/createCreateBulkShipmentsRequest)
+          shipments using the [Bulk Shipment Creation](/#operation/createCreateBulkShipmentsRequest)
           endpoint, and this rateId. Please note that pricing may differ
           between this rate response and the creation process, where the
           likelihood of drift increases with time.

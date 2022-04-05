@@ -1,7 +1,7 @@
 post:
   operationId: createCreateBulkShipmentsRequest
   tags: [Shipments]
-  summary: Create bulk shipments creation request
+  summary: Create bulk shipment creation request
   description: |
     **(added in v1.8)**
 
@@ -22,7 +22,7 @@ post:
       description: The rateId from a [Complex Rate result](/#operation/getComplexRateResult)
   responses:
     '200':
-      description: Successfully queued an asynchronous bulk shipments creation request
+      description: Successfully queued an asynchronous bulk shipment creation request
       content:
         application/json:
           schema:

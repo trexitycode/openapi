@@ -12,7 +12,7 @@ post:
     endpoint.
 
     Optionally, you can then take the rate ID provided in the rate result and
-    have the shipments created in bulk using the [Create Bulk Shipments](/#operation/createCreateBulkShipmentsRequest)
+    have the shipments created in bulk using the [Bulk Shipment Creation](/#operation/createCreateBulkShipmentsRequest)
     endpoint.
 
     **Order ID**
@@ -25,7 +25,7 @@ post:
 
     Values for `scheduledPostAt` must be a date at least 1 hour from the time of
     the request. This helps to ensure that there is enough time for the optional
-    [Create Bulk Shipments](/#operation/createCreateBulkShipmentsRequestRequest)
+    [Bulk Shipment Creation](/#operation/createCreateBulkShipmentsRequestRequest)
     request to be performed and fully completed before the driver network is
     notified of the deliveries.
 
