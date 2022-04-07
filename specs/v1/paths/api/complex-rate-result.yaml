@@ -23,8 +23,6 @@ get:
             properties:
               data:
                 $ref: ../../components/schemas/responses/ComplexRateResultResponse.yaml
-    '404':
-      description: No asynchronous complex rate request found
     '422':
       description: Asynchronous complex rate request is not complete yet
     '500':

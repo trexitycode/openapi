@@ -11,10 +11,12 @@ properties:
         code:
           type: string
           enum: [
-            "DELIVERY_TOO_FAR",
-            "PICKUP_OUTSIDE_SERVICE_AREA",
-            "DELIVERY_NO_GEOCODE",
+            "PICKUP_ADDRESS_INVALID",
             "PICKUP_NO_GEOCODE",
+            "PICKUP_OUTSIDE_SERVICE_AREA",
+            "DELIVERY_ADDRESS_INVALID",
+            "DELIVERY_NO_GEOCODE",
+            "DELIVERY_OUTSIDE_SERVICE_AREA",
             "SYSTEM_ERROR"
           ]
           description: The error code that identifies the error
@@ -41,10 +43,10 @@ properties:
         type: array
         items:
           $ref: ../Rate.yaml
-      unassignedOrders:
+      unservedOrderIds:
         type: array
         description: |
           Array of order IDs that could not be assigned to a shipment due to
-          delivery contraints or an error occurred when validating the parcel
+          delivery constraints
         items:
           type: string
