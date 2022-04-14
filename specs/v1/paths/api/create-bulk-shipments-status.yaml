@@ -34,5 +34,5 @@ get:
             properties:
               data:
                 $ref: ../../components/schemas/responses/CreateBulkShipmentsStatusResponse.yaml
-    '404':
-      description: No asynchronous bulk shipment creation request found
+    '500':
+      description: Unknown server problem

@@ -25,5 +25,3 @@ get:
                 $ref: ../../components/schemas/responses/ComplexRateResultResponse.yaml
     '422':
       description: Asynchronous complex rate request is not complete yet
-    '500':
-      description: Unknown server problem

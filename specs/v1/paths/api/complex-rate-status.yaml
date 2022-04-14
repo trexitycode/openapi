@@ -23,5 +23,5 @@ get:
             properties:
               data:
                 $ref: ../../components/schemas/responses/ComplexRateStatusResponse.yaml
-    '404':
-      description: No asynchronous complex rate request found
+    '500':
+      description: Unknown server problem

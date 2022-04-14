@@ -64,3 +64,5 @@ post:
             required: [error]
             properties:
               error: { type: string }
+    '500':
+      description: Unknown server problem

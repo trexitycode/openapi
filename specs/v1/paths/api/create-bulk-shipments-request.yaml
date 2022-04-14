@@ -31,12 +31,4 @@ post:
               data:
                 $ref: ../../components/schemas/responses/CreateBulkShipmentsStatusResponse.yaml
     '404':
-      description: |
-        The specified rateId could not be found
-      content:
-        application/json:
-          schema:
-            type: object
-            required: [error]
-            properties:
-              error: { type: string }
+      description: The specified rateId could not be found

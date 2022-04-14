@@ -34,7 +34,7 @@ properties:
       rateId:
         type: string
         description: |
-          This rate response is persisted for 7 days, and can be converted to
+          This rate response expires after 8 hours, and can be converted to
           shipments using the [Bulk Shipment Creation](/#operation/createCreateBulkShipmentsRequest)
           endpoint, and this rateId. Please note that pricing may differ
           between this rate response and the creation process, where the
