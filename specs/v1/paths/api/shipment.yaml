@@ -11,6 +11,14 @@ post:
 
   ##############################################################################
 
+  parameters:
+    - in: path
+      name: shipmentId
+      required: true
+      schema:
+        type: string
+      description: The id of the shipment that needs to be updated
+
   requestBody:
     description: Payload describing your shipment
     required: true
@@ -156,9 +164,3 @@ get:
             properties:
               data:
                 $ref: ../../components/schemas/Shipment.yaml
-
-          examples:
-            Success:
-              value:
-                data:
-                  $ref: ../../components/examples/shipment1.yaml

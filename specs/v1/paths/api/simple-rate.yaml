@@ -46,7 +46,7 @@ post:
             Can Deliver:
               value:
                 data:
-                  - $ref: ../../components/examples/examples/rate1.yaml
+                  - $ref: ../../components/examples/rate1.yaml
 
             Cannot Deliver:
               value:
