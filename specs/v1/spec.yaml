@@ -252,6 +252,12 @@ paths:
     $ref: ./paths/storage/get-shipment-pickup-image.yaml
   /storage/get/shipment/images/delivery:
     $ref: ./paths/storage/get-shipment-delivery-image.yaml
+  /parcels/{parcelId}:
+    $ref: ./paths/api/get-parcel.yaml
+  /parcels/{parcelId}/pod:
+    $ref: ./paths/api/get-parcel-pod.yaml
+  /parcels/{parcelId}/label:
+    $ref: ./paths/api/get-parcel-label.yaml
   /webhooks:
     $ref: ./paths/api/webhooks.yaml
   /webhooks/{webhookId}:

@@ -1,0 +1,32 @@
+post:
+  operationId: getParcelLabel
+  tags: [Parcels]
+  summary: Gets Parcel Shipping Label
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/parcels/get-parcel-label.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: parcelId
+      required: true
+      schema:
+        type: string
+      description: The id of the parcel (can be externalId or orderUuid)
+  responses:
+    '200':
+      description: Success
+      content:
+        application/pdf:
+          schema:
+            type: string
+            format: binary
+            description: A label that needs to be scanned at pickup by a Trexity courier.
+    '400':
+      description: |
+        Parcel does not have a label.
+        This means that the Merchant is responsible for creating the labels.
+
+    '404':
+      description: Parcel not found

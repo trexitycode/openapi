@@ -44,6 +44,12 @@ properties:
     description: |
       **(added in v1.2)** The ID of the external entity that is associated to
       this parcel (e.g. the external order or shipment ID).
+  scanId:
+    type: string
+    maxLength: 32
+    description: |
+      **(added in v1.9)** The ID for verification at pickup time by a courier via QR scanning.
+      Used by Merchants with their own labeling system.
   metadata:
     type: object
     description: |
