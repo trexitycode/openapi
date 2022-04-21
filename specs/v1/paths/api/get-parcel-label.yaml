@@ -22,7 +22,7 @@ post:
           schema:
             type: string
             format: binary
-            description: A label that needs to be scanned at pickup by a Trexity courier.
+            description: A label that needs to be scanned at pickup by a Trexity driver.
     '400':
       description: |
         Parcel does not have a label.

@@ -77,6 +77,14 @@ properties:
       **(added in v1.8)**
       The ID of the external entity that is associated to this delivery (e.g.
       the external order or shipment ID).
+  scanId:
+    type: string
+    maxLength: 256
+    description: |
+      **(added in v1.9)** The ID embedded in your custom label’s QR code. If
+      not specified, you will be required to use our built-in labels. If
+      specified, you will not be able to request our built-in label for this
+      parcel.
   metadata:
     type: object
     description: |

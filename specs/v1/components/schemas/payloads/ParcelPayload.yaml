@@ -46,10 +46,12 @@ properties:
       this parcel (e.g. the external order or shipment ID).
   scanId:
     type: string
-    maxLength: 32
+    maxLength: 256
     description: |
-      **(added in v1.9)** The ID for verification at pickup time by a courier via QR scanning.
-      Used by Merchants with their own labeling system.
+      **(added in v1.9)** The ID embedded in your custom label’s QR code. If
+      not specified, you will be required to use our built-in labels. If
+      specified, you will not be able to request our built-in label for this
+      parcel.
   metadata:
     type: object
     description: |

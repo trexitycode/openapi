@@ -20,16 +20,12 @@ post:
       content:
         application/json:
           schema:
-            type: object
-            properties:
-              data:
-                $ref: ../../components/schemas/Parcel.yaml
+            $ref: ../../components/schemas/responses/ParcelResponse.yaml
           examples:
             Success:
               value:
                 data:
-                  - $ref: ../../components/examples/parcel1.yaml
-                  - $ref: ../../components/examples/parcel2.yaml
+                  $ref: ../../components/examples/parcel1.yaml
 
     '404':
       description: Parcel not found
