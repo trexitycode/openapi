@@ -79,19 +79,12 @@ properties:
       the external order or shipment ID).
   scanId:
     type: string
-<<<<<<< HEAD
     maxLength: 256
     description: |
       **(added in v1.9)** The ID embedded in your custom label’s QR code. If
       not specified, you will be required to use our built-in labels. If
       specified, you will not be able to request our built-in label for this
       parcel.
-=======
-    maxLength: 32
-    description: |
-      **(added in v1.9)** The ID for verification at pickup time by a courier via QR scanning.
-      Used by Merchants with their own labeling system.
->>>>>>> 46ee1ebac3869bb603f46fa68cddfa930358a815
   metadata:
     type: object
     description: |
