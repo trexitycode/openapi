@@ -23,9 +23,7 @@ post:
             type: object
             properties:
               data:
-                type: object
-                items:
-                  $ref: ../../components/schemas/Parcel.yaml
+                $ref: ../../components/schemas/Parcel.yaml
           examples:
             Success:
               value:
