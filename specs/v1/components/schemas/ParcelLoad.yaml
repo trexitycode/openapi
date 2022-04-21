@@ -1,0 +1,25 @@
+type: object
+description: |
+  **(added in v1.9)** Optional dimensions and weight of the parcel. This
+  will inform the driver matching algorithm accordingly.
+properties:
+  length:
+    type: integer
+    minimum: 0
+    maximum: 130
+    description: Length (in centimeters)
+  width:
+    type: integer
+    minimum: 0
+    maximum: 80
+    description: Width (in centimeters)
+  height:
+    type: integer
+    minimum: 0
+    maximum: 80
+    description: Height (in centimeters)
+  weight:
+    type: integer
+    minimum: 0
+    maximum: 30000
+    description: Weight (in grams)

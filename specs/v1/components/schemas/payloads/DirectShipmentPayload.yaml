@@ -85,6 +85,8 @@ properties:
       not specified, you will be required to use our built-in labels. If
       specified, you will not be able to request our built-in label for this
       parcel.
+  load:
+    $ref: ../ParcelLoad.yaml
   metadata:
     type: object
     description: |
