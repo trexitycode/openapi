@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.8",
+    "version": "1.9",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
