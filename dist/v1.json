@@ -446,6 +446,10 @@
         "description": "A parcel to be delivered in a shipment",
         "type": "object",
         "properties": {
+          "id": {
+            "type": "string",
+            "description": "**(added in 1.9)** Unique identifier for this parcel.\n"
+          },
           "shipmentId": {
             "type": "string",
             "description": "**(added in 1.9)** Shipment container ID\n"
