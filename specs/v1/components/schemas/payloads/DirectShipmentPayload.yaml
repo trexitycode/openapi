@@ -18,6 +18,22 @@ properties:
   pickupNotes:
     type: string
     description: Special notes or instructions regarding pickup like the description of the location, what door to use, etc.
+  merchantPpid:
+    type: string
+    description: |
+      **(added in 1.9)** Partner-provided ID of the merchant. This ID can be used when querying for shipments. Only used by Partner accounts.
+  merchantName:
+    type: string
+    description: |
+      **(added in 1.9)** Partner-provided name of the merchant. This will be displayed in place of the merchant name defined in the merchant profile. Only used by Partner accounts.
+  merchantPhone:
+    type: string
+    description: |
+      **(added in 1.9)** Partner-provided phone of the merchant. This will be displayed in place of the merchant phone defined in the merchant profile. Only used by Partner accounts.
+  merchantEmail:
+    type: string
+    description: |
+      **(added in 1.9)** Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts.
   requirements:
     $ref: ../ShipmentRequirements.yaml
   scheduledPostAt:
