@@ -63,14 +63,4 @@ get:
                 type: array
                 items:
                   $ref: ../../components/schemas/Shipment.yaml
-          examples:
-            Success:
-              value:
-                data:
-                  - $ref: ../../components/examples/shipment1.yaml
-                  - $ref: ../../components/examples/shipment2.yaml
-
-            Fail:
-              value:
-                data: []
 

@@ -21,11 +21,6 @@ post:
         application/json:
           schema:
             $ref: ../../components/schemas/responses/ParcelResponse.yaml
-          examples:
-            Success:
-              value:
-                data:
-                  $ref: ../../components/examples/parcel1.yaml
 
     '404':
       description: Parcel not found
