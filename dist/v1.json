@@ -1724,7 +1724,10 @@
                     "data": {
                       "type": "object",
                       "properties": {
-                        "shipmentIds": {
+                        "error": {
+                          "type": "array"
+                        },
+                        "result": {
                           "type": "array"
                         }
                       }
@@ -1735,7 +1738,8 @@
                   "Success": {
                     "value": {
                       "data": {
-                        "shipmentIds": [
+                        "errors": null,
+                        "result": [
                           "TRX973036599-6KL",
                           "TRX440206863-K3C",
                           "TRX721903883-KT5",

@@ -35,13 +35,16 @@ post:
               data:
                 type: object
                 properties:
-                  shipmentIds:
+                  error:
+                    type: array
+                  result:
                     type: array
           examples:
             Success:
               value:
                 data:
-                  shipmentIds:
+                  errors:
+                  result:
                     - 'TRX973036599-6KL'
                     - 'TRX440206863-K3C'
                     - 'TRX721903883-KT5'
