@@ -30,4 +30,4 @@ post:
         PIN as a delivery verification mechanism.
 
     '404':
-      description: Parcel not found
+      description: Parcel not found or parcel not delivered yet
