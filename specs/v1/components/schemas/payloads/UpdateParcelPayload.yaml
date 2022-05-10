@@ -10,4 +10,4 @@ allOf:
       deliveryIndex:
         type: number
         description: The index of the parcel within the shipment to update
-  - $ref: ../Parcel.yaml
+  - $ref: ../payloads/ParcelPayload.yaml

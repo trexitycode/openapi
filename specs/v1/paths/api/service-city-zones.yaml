@@ -1,8 +1,7 @@
 get:
-  tags:
-    - Regions
-  summary: Retrieve service city zones
   operationId: serviceCityZones
+  tags: [Regions]
+  summary: Retrieve service city zones
   description: |
     **(added in v1.6)**
 
@@ -18,6 +17,9 @@ get:
     - {}
     - MerchantApiKeyAuth: []
     - AccessTokenAuth: []
+
+  ##############################################################################
+
   responses:
     '200':
       description: Success

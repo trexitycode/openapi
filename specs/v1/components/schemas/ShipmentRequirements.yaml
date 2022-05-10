@@ -1,20 +1,20 @@
 type: object
 description: |
-  Object representing the requirements that to be met by a driver in order
+  Object representing the requirements that must be met by a driver in order
   for them to be considered for delivery.
 properties:
-  vehicleType:
-    type: string
-    description: |
-      Describe the type of vehicle that must be used for a shipment.
+  # vehicleType:
+  #   type: string
+  #   description: |
+  #     Describe the type of vehicle that must be used for a shipment.
 
-      - small - Sedan, hatchback, etc [example: Honda Civic]
-      - medium - SUV, minivan, etc [example: Toyota Sienna]
-      - large - Cargo van, pickup truck, etc [example: Ford F150]
-    enum:
-      - small
-      - medium
-      - large
+  #     - small - Sedan, hatchback, etc [example: Honda Civic]
+  #     - medium - SUV, minivan, etc [example: Toyota Sienna]
+  #     - large - Cargo van, pickup truck, etc [example: Ford F150]
+  #   enum:
+  #     - small
+  #     - medium
+  #     - large
   legalAgeAlcohol:
     type: boolean
     description: |

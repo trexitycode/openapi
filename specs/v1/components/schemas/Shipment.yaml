@@ -1,6 +1,10 @@
 type: object
-description: A shipment object that has a single pickup address and can have several parcels each with their on delivery address.
+description: A shipment object that has a pickup address and can have several parcels each with their on delivery address.
 properties:
+  id:
+    type: string
+    description: Unique identifier of the Shipment in Trexity
+
   currentStatus:
     $ref: ./ShipmentStatus.yaml
 
@@ -10,18 +14,14 @@ properties:
   pickupAddressNotes:
     type: string
     description: Extra notes relating to the pickup address, such as apartment/unit number, reference, description of the location, etc.
-
-  requirements:
-    $ref: ./ShipmentRequirements.yaml
   pickupNotes:
     type: string
     description: Special notes or instructions regarding pickup
+  requirements:
+    $ref: ./ShipmentRequirements.yaml
   scheduledPostAt:
     $ref: ./SimplifiedDateISOString.yaml
 
-  id:
-    type: string
-    description: Unique identifier of the Shipment in Trexity
   merchantId:
     type: string
     description: User id of the Merchant who is the owner of the Shipment
@@ -100,7 +100,7 @@ properties:
   cachedMerchantAddress:
     type: string
     description: |
-      Merchant's address. Example: 9 Slack Road, Nepean ON, CA
+      Merchant's address. Example: 9 Slack Rd, Nepean ON K2G 0B7, CA
 
   merchantPpid:
     type: string
@@ -197,6 +197,6 @@ properties:
     type: array
     description: The parcels that will be delivered in this shipment
     minItems: 1
-    maxItems: 10
+    maxItems: 30
     items:
-        $ref: ./ParcelResponse.yaml
+      $ref: ./Parcel.yaml

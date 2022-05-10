@@ -1,4 +1,89 @@
+post:
+  operationId: createShipment
+  tags: [Shipments]
+  summary: Create a shipment
+  description: |
+    Create a new shipment.
+
+    If no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/create-shipment.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: shipmentId
+      required: true
+      schema:
+        type: string
+      description: The id of the shipment that needs to be updated
+
+  requestBody:
+    description: Payload describing your shipment
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/payloads/CreateShipmentPayload.yaml
+        examples:
+          ImmediateInit:
+            value:
+              pickupAddress: '9 Slack Rd, Nepean ON K2G 0B7, CA'
+              pickupNotes: 'Please be careful, since it may contain fragile things!'
+              requirements: {}
+              parcels:
+                - deliveryAddress: '207 Queen St, Ottawa ON K1P 6E5, CA'
+                  deliveryName: 'Srinivasa Ramanujan'
+                  description: 'Glasses, bifocals'
+                  orderId: 'BFG10K'
+                  parcelValue: 10000
+          ScheduledInit:
+            value:
+              pickupAddress: '207 Queen St, Ottawa ON K1P 6E5, CA'
+              pickupNotes: 'Please be careful, since it may contain fragile things!'
+              requirements: {}
+              scheduledPostAt: '2020-07-25T10:16:11.048Z'
+              parcels:
+                - deliveryAddress: '343 Booth St, Ottawa ON K1R 7K1, CA'
+                  deliveryName: 'Lagrange'
+                  description: 'Copy of Newtons Principia Mathematica'
+                  orderId: 'NWTNRULZ'
+                  parcelValue: 15000
+  responses:
+    '500':
+      description: Unknown server problem
+    '400':
+      description: Invalid payload or permission denied.
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  shipmentId:
+                    type: string
+          examples:
+            Success:
+              value:
+                data:
+                  shipmentId: 'TRX973036599-6KL'
+
 delete:
+  operationId: deleteShipment
+  tags: [Shipments]
+  summary: Delete a shipment
+  description: |
+    Attempt to delete a shipment. Only draft shipments can be deleted.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/delete-shipment.yaml
+
+  ##############################################################################
+
   parameters:
     - in: path
       name: shipmentId
@@ -6,16 +91,6 @@ delete:
       schema:
         type: string
       description: The id of the shipment to delete
-
-  tags:
-    - Shipments
-  summary: Delete a shipment
-  operationId: deleteShipment
-  description: >
-    Attempt to delete a shipment. Only draft shipments can be deleted.
-
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipments/delete-shipment.yaml
   responses:
     '204':
       description: Successfully deleted shipment
@@ -27,6 +102,16 @@ delete:
       description: Shipment cannot be deleted due to the shipment not being in deletable state
 
 patch:
+  operationId: updateShipment
+  tags: [Shipments]
+  summary: Update a shipment
+  description: |
+    Updates the details of a shipment.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/update-shipment.yaml
+
+  ##############################################################################
+
   parameters:
     - in: path
       name: shipmentId
@@ -34,20 +119,6 @@ patch:
       schema:
         type: string
       description: The id of the shipment that needs to be updated
-
-  tags:
-    - Shipments
-  summary: Update a shipment
-  operationId: updateShipment
-  description: >
-    Updates the details of a shipment.
-
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipments/update-shipment.yaml
-  responses:
-    '204':
-      description: Success
-
   requestBody:
     description: Payload describing the changes that need to be updated in your shipment
     required: true
@@ -57,25 +128,28 @@ patch:
           $ref: ../../components/schemas/payloads/UpdateShipmentPayload.yaml
         example:
           pickupNotes: 'Needs to go out ASAP!'
+  responses:
+    '204':
+      description: Success
 
 get:
+  operationId: getShipment
+  tags: [Shipments]
+  summary: Get a shipment
+  description: |
+    Gets the details of a shipment
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/get-shipment.yaml
+
+  ##############################################################################
+
   parameters:
     - in: path
       name: shipmentId
       required: true
       schema:
         type: string
-      description: The id of the shipment 
-
-  tags:
-    - Shipments
-  summary: Get a shipment
-  operationId: getShipment
-  description: >
-    Gets the details of a shipment
-
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipments/get-shipment.yaml
+      description: The id of the shipment
   responses:
     '500':
       description: Unknown server problem
@@ -90,77 +164,3 @@ get:
             properties:
               data:
                 $ref: ../../components/schemas/Shipment.yaml
-
-          examples:
-            Success:
-              value:
-                data:
-                  id: TRX904577741-T88
-                  requirements: {}
-                  merchantId: owr4aM8QVqV90MjgyvQT8dWlLeA3
-                  driverId: null
-                  directionsResult: null
-                  gdprRedacted: false
-                  archived: false
-                  currentStatus: ''
-                  pickupAddress: '60 McLeod Street, Ottawa ON, CA'
-                  pickupNotes: Please be careful since it's fragile!
-                  pickupAddressLocation: null
-                  pickupAddressProvince: ''
-                  pickupAddressCountry: ''
-                  pickupAddressCity: ''
-                  pickupAddressServiceCity: ''
-                  cachedDriverName: null
-                  cachedTotalRouteDistance: null
-                  cachedTotalRouteDuration: null
-                  cachedTotalWithoutTaxes: null
-                  cachedTaxes: null
-                  cachedMerchantAddress: '9 Slack Road, Nepean ON, CA'
-                  merchantPpid: null
-                  merchantName: TOP KEK Clearing House
-                  merchantPhone: +1 555 123 1234
-                  merchantEmail: testemail@testing.com
-                  createdAt: "2020-07-26T13:50:07.368Z"
-                  driverAcceptedAt: null
-                  driverStartedAt: null
-                  driverArrivedPickupAt: null
-                  driverPickedUpAt: null
-                  scheduledPostAt: null
-                  postedAt: null
-                  lastBroadcastedAt: null
-                  driverTimeToPickup: null
-                  cancellationAcknowledgedByDriver: false
-                  scheduledPostError: ''
-                  postErrors: []
-                  currentDriverEstimatedSecondsToPickup: null
-                  parcels:
-                    - driverDeliveredAt: null
-                      deliveryAddressLocation: null
-                      deliveryAddress: '9 Slack Road, Nepean ON, CA'
-                      deliveryEmail: new_email@bestemail.org
-                      deliveryPhone: ''
-                      deliveryName: Felix Hausdorff
-                      description: 'Glasses, bifocals'
-                      parcelValue: 12300
-                      orderId: API-0573
-                      isDelivered: false
-                    - driverDeliveredAt: null
-                      deliveryAddressLocation: null
-                      deliveryAddress: '150 Albert St, Ottawa, ON K1P 5G2, Canada'
-                      deliveryEmail: ''
-                      deliveryPhone: ''
-                      deliveryName: Srinivasa Ramanujan
-                      description: 'Convergence theorems, 12 pack'
-                      parcelValue: 10500
-                      orderId: API-1010
-                      isDelivered: false
-                    - driverDeliveredAt: null
-                      deliveryAddressLocation: null
-                      deliveryAddress: '20 Colonnade Rd, Nepean, ON K2E 7M6, Canada'
-                      deliveryEmail: ''
-                      deliveryPhone: ''
-                      deliveryName: Carl Friedrich Gauss
-                      description: FTOA x 4
-                      parcelValue: 19900
-                      orderId: API-1020
-                      isDelivered: false

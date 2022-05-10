@@ -1,15 +1,17 @@
 get:
+  operationId: getWebhooks
+  tags: [Webhooks]
+  summary: List webhooks
+  description: |
+    Gets all registered webhooks or registered webhooks for an event.
+
+  ##############################################################################
+
   parameters:
     - in: query
       name: eventName
       schema:
         $ref: ../../components/schemas/WebhookEventName.yaml
-  tags:
-    - Webhooks
-  summary: List webhooks
-  operationId: getWebhooks
-  description: |
-    Gets all registered webhooks or registered webhooks for an event.
   responses:
     '200':
       description: List registered webhooks
@@ -44,12 +46,14 @@ get:
                   string
 
 post:
-  summary: Create webhook
   operationId: createWebhook
+  tags: [Webhooks]
+  summary: Create webhook
   description: |
     Create a new webhook for the specified event.
-  tags:
-    - Webhooks
+
+  ##############################################################################
+
   requestBody:
     required: true
     content:
@@ -114,7 +118,7 @@ post:
             content:
               application/json:
                 schema:
-                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+                  $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
           responses: { '200': { description: Request successfully processed } }
     shipment.updated:
       '{$request.body#/url}':
@@ -130,7 +134,7 @@ post:
             content:
               application/json:
                 schema:
-                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+                  $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
           responses: { '200': { description: Request successfully processed } }
     shipment.deleted:
       '{$request.body#/url}':
@@ -146,7 +150,7 @@ post:
             content:
               application/json:
                 schema:
-                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+                  $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
           responses: { '200': { description: Request successfully processed } }
     shipment.posted:
       '{$request.body#/url}':
@@ -164,7 +168,7 @@ post:
             content:
               application/json:
                 schema:
-                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+                  $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
           responses: { '200': { description: Request successfully processed } }
     shipment.driver.accepted:
       '{$request.body#/url}':
@@ -180,7 +184,7 @@ post:
             content:
               application/json:
                 schema:
-                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+                  $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
           responses: { '200': { description: Request successfully processed } }
     shipment.driver.arrived_at_pickup:
       '{$request.body#/url}':
@@ -196,7 +200,7 @@ post:
             content:
               application/json:
                 schema:
-                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+                  $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
           responses: { '200': { description: Request successfully processed } }
     shipment.driver.picked_up:
       '{$request.body#/url}':
@@ -212,7 +216,7 @@ post:
             content:
               application/json:
                 schema:
-                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+                  $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
           responses: { '200': { description: Request successfully processed } }
     shipment.driver.arrived_at_delivery:
       '{$request.body#/url}':
@@ -228,7 +232,7 @@ post:
             content:
               application/json:
                 schema:
-                  $ref: ../../components/schemas/ParcelWebhookPayload.yaml
+                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
           responses: { '200': { description: Request successfully processed } }
     shipment.driver.parcel_delivered:
       '{$request.body#/url}':
@@ -244,7 +248,7 @@ post:
             content:
               application/json:
                 schema:
-                  $ref: ../../components/schemas/ParcelWebhookPayload.yaml
+                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
           responses: { '200': { description: Request successfully processed } }
     shipment.completed:
       '{$request.body#/url}':
@@ -260,7 +264,7 @@ post:
             content:
               application/json:
                 schema:
-                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+                  $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
           responses: { '200': { description: Request successfully processed } }
     shipment.cancelled:
       '{$request.body#/url}':
@@ -276,7 +280,7 @@ post:
             content:
               application/json:
                 schema:
-                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+                  $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
           responses: { '200': { description: Request successfully processed } }
     shipment.driver.renounced:
       '{$request.body#/url}':
@@ -292,7 +296,7 @@ post:
             content:
               application/json:
                 schema:
-                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+                  $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
           responses: { '200': { description: Request successfully processed } }
     shipment.on_hold:
       '{$request.body#/url}':
@@ -313,5 +317,108 @@ post:
             content:
               application/json:
                 schema:
-                  $ref: ../../components/schemas/ShipmentWebhookPayload.yaml
+                  $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+
+
+    parcel.arrived_at_pickup:
+      '{$request.body#/url}':
+        post:
+          summary: parcel.arrived_at_pickup
+          description: Occurs when a driver has arrived at the pickup address for a parcel within a shipment.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    parcel.arrived_at_delivery:
+      '{$request.body#/url}':
+        post:
+          summary: parcel.arrived_at_delivery
+          description: Occurs when a driver arrived at a parcel's delivery address.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    parcel.picked_up:
+      '{$request.body#/url}':
+        post:
+          summary: parcel.picked_up
+          description: |
+            Occurs when a parcel has been scanned and picked up by a driver.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    parcel.delivered:
+      '{$request.body#/url}':
+        post:
+          summary: parcel.delivered
+          description: |
+            Occurs when a parcel has been scanned and delivered to the recipient.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    parcel.returning:
+      '{$request.body#/url}':
+        post:
+          summary: parcel.returning
+          description: |
+            Occurs when a parcel is being returned due to the driver not being able to complete the delivery.
+            This can be due to customer not being home, customer not having the delivery PIN, or customer refusing delivery.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    parcel.returned:
+      '{$request.body#/url}':
+        post:
+          summary: parcel.returned
+          description: |
+            Occurs when a parcel has been returned to merchant.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
           responses: { '200': { description: Request successfully processed } }

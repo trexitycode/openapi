@@ -1,4 +1,13 @@
 patch:
+  operationId: updateShipmentParcelPhoto
+  tags: [Shipments]
+  summary: Update parcel photo
+  description: Updates the photo for a parcel.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/update-shipment-parcel-photo.yaml
+
+  ##############################################################################
+
   parameters:
     - in: path
       name: shipmentId
@@ -12,21 +21,6 @@ patch:
       schema:
         type: integer
       description: The index of the parcel to be updated
-  tags:
-    - Shipments
-  summary: Update parcel photo
-  description: Updates the photo for a parcel.
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipments/update-shipment-parcel-photo.yaml
-
-  operationId: updateShipmentParcelPhoto
-  responses:
-    '500':
-      description: Unknown server problem
-    '400':
-      description: Invalid payload or permission denied.
-    '204':
-      description: Success
   requestBody:
     description: Payload containing the parcel's photo (JPG) base64 encoded
     required: true
@@ -38,4 +32,10 @@ patch:
             base64image:
               type: string
               description: The JPG data must be base64 encoded.
-            
+  responses:
+    '500':
+      description: Unknown server problem
+    '400':
+      description: Invalid payload or permission denied.
+    '204':
+      description: Success

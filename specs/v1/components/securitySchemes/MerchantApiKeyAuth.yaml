@@ -11,16 +11,16 @@ description: |
 
   Example:
   ```
-  curl -X POST {server-url}/shipment-rates \
+  curl -X POST {server-url}/rates/simple \
     -H 'Content-Type: application/json' \
     -H 'Authorization: Bearer <Merchant API Key>' \
     -d '{
-      "pickupAddress": "9 Slack Road, Ottawa ON, CA",
-      "deliveryAddresses": ["123 Slater Street, Ottawa ON, CA"],
+      "pickupAddress": "9 Slack Rd, Nepean ON K2G 0B7, CA",
+      "deliveryAddress": "207 Queen St, Ottawa ON K1P 6E5, CA",
       "requirements": {},
       "orderValue": 2500
     }'
   ```
 
-  Please check our [curl examples](/#operation/shipment-rates) for more examples.
+  Please check our [curl examples](/#operation/getSimpleRate) for more examples.
 

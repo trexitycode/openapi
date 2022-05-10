@@ -1,0 +1,5 @@
+description: The parcel reponse object
+type: object
+properties:
+  data:
+    $ref: ../Parcel.yaml

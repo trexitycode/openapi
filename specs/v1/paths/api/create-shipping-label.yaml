@@ -1,4 +1,21 @@
 post:
+  operationId: createShippingLabel
+  tags: [Shipments]
+  summary: Get shipping labels
+  description: |
+    Get a shipping label for a specific parcel by index, or if `deliveryIndex` is not provided then get shipping labels for all parcels in the shipment.
+
+    If `Accept` header is `application/json` and `deliveryIndex` is specified then
+    responds with `application/json`.
+
+    If no `deliveryIndex` is provided then responds with `application/pdf`.
+
+    Otherwise responds with `image/png`.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/create-shipping-label.yaml
+
+  ##############################################################################
+
   parameters:
     - in: path
       name: shipmentId
@@ -26,21 +43,6 @@ post:
       schema:
         type: number
       description: Width of the label image. **Ignored if `deliveryIndex` is not provided.**
-  tags:
-    - Shipments
-  summary: Get shipping labels
-  operationId: createShippingLabel
-  description: |
-    Get a shipping label for a specific parcel by index, or if `deliveryIndex` is not provided then get shipping labels for all parcels in the shipment.
-
-    If `Accept` header is `application/json` and `deliveryIndex` is specified then
-    responds with `application/json`.
-
-    If no `deliveryIndex` is provided then responds with `application/pdf`.
-
-    Otherwise responds with `image/png`.
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipments/create-shipping-label.yaml
   responses:
     '200':
       description: Success

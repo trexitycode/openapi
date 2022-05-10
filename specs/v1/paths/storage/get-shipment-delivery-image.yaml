@@ -1,7 +1,19 @@
 get:
+  operationId: getShipmentDeliveryImage
+  tags: [Storage]
+  summary: Drop-off photo
+  description: |
+    Gets the actual JPG image data of the driver's delivery image for this parcel.
+
+    This is used as a confirmation that the driver has delivered the parcel.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/storage/get-shipment-delivery-photo.yaml
   servers:
     - description: production
       url: 'https://trexity.app/storage'
+
+  ##############################################################################
+
   parameters:
     - in: query
       name: shipmentId
@@ -18,18 +30,8 @@ get:
         type: number
       description: |
         The index of the parcel as specified in the Shipment's definition.
-        
-        See [here](/#operation/getShipment) and check the "parcels" array inside the Shipment's data for reference.
-  tags:
-    - Storage
-  summary: Drop-off photo
-  operationId: getShipmentDeliveryImage
-  description: |
-    Gets the actual JPG image data of the driver's delivery image for this parcel.
 
-    This is used as a confirmation that the driver has delivered the parcel.
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/storage/get-shipment-delivery-photo.yaml
+        See [here](/#operation/getShipment) and check the "parcels" array inside the Shipment's data for reference.
   responses:
     '304':
       description: File contents haven't changed

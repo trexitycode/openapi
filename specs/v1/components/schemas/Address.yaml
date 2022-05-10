@@ -1,5 +1,5 @@
 description: |
-  Address in the format "STREET, CITY PROVINCE, POSTAL_CODE COUNTRY".
+  Address in the format "STREET, CITY PROVINCE POSTAL_CODE, COUNTRY" (e.g. "456 Elgin St, Ottawa ON K2P 1N5, CA").
 
   See [Addresses](#tag/Addresses)
 type: string

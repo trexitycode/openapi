@@ -1,4 +1,14 @@
 post:
+  operationId: postShipment
+  tags: [Shipments]
+  summary: Post a shipment
+  description: |
+    Post a shipment to our driver community for pickup.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/post-shipment.yaml
+
+  ##############################################################################
+
   parameters:
     - in: path
       name: shipmentId
@@ -6,16 +16,6 @@ post:
       schema:
         type: string
       description: The id of the shipment that needs to be updated
-
-  tags:
-    - Shipments
-  summary: Post a shipment
-  operationId: postShipment
-  description: >
-    Post a shipment to our driver community for pickup.
-
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipments/post-shipment.yaml
   responses:
     '204':
       description: Success

@@ -1,0 +1,26 @@
+post:
+  operationId: getParcel
+  tags: [Parcels]
+  summary: Gets Parcel Information
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/parcels/get-parcel.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: parcelId
+      required: true
+      schema:
+        type: string
+      description: The id of the parcel (can be externalId or orderUuid)
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/responses/ParcelResponse.yaml
+
+    '404':
+      description: Parcel not found

@@ -31,7 +31,7 @@ properties:
       shipments:
         type: array
         items:
-          $ref: ./Shipment.yaml
+          $ref: ../Shipment.yaml
       unassignedOrders:
         type: array
         description: |

@@ -1,16 +1,14 @@
-description: A minimal object that describes a shipment
+description: A minimal object that describes a direct shipment
 type: object
 required:
-  - deliveryAddresses
+  - deliveryAddress
   - requirements
 properties:
   pickupAddress:
     $ref: ../Address.yaml
-  deliveryAddresses:
-    type: array
-    maxItems: 19
-    minItems: 1
-    description: One or more addresses.
+  deliveryAddress:
+    type: string
+    description: An address
     items:
       $ref: ../Address.yaml
   requirements:

@@ -4,13 +4,13 @@ source: |
     -H 'Content-Type: application/json'\
     -H 'Authorization: Bearer <Trexity API Key>'\
     -d '{
-      "pickupAddress": "9 Slack Road, Ottawa ON, CA",
+      "pickupAddress": "9 Slack Rd, Nepean ON K2G 0B7, CA",
       "pickupAddressNotes": "Unit 1, ring the buzzer.",
-      "requirements": {},
       "pickupNotes": "Please be careful, since it may contain fragile things!",
+      "requirements": {},
       "parcels": [
         {
-          "deliveryAddress": "123 Slater Street, Ottawa ON, CA",
+          "deliveryAddress": "207 Queen St, Ottawa ON K1P 6E5, CA",
           "deliveryName": "Srinivasa Ramanujan",
           "description": "Glasses, bifocals",
           "orderId": "BFG10K",

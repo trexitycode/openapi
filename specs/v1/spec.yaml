@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: '1.7'
+  version: '1.9'
   title: Trexity API
   license:
     name: MIT
@@ -14,8 +14,8 @@ info:
 
     **(added in v1.7)**
 
-    By using this API to provide delivery rates to your users you agree to display the [ShipmentRate](#operation/shipment-rates) `name` without modification.
-    The [ShipmentRate](#operation/shipment-rates) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the ShipmentRate.
+    By using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.
+    The [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the Rate.
 
     This allows Trexity to ensure consistent messaging wherever Trexity devliery rates are shown.
 
@@ -62,15 +62,15 @@ info:
     # Responses
 
     All endpoints will return an object and if there is actual data
-    to be returned, it is going to be named `data`. Where `data` may
+    to be returned, it is going to be named `data`, where `data` may
     be an array or an object.
 
-    If there is `error` field present on the root JSON object, that
+    If there is an `error` field present on the root JSON object, that
     means something went wrong and that error message is all we know about it.
     Additionally, in some cases, you may inspect the HTTP status codes to
     gather more information.
 
-    Please check our payload/response examples in details as well as the
+    Please check our payload/response examples in detail as well as the
     curl examples that are a part of each section that documents an operation.
 
     Example of a successful response:
@@ -89,26 +89,23 @@ tags:
       In general wherever an address is expected the format we accept is:
 
       ```
-      STREET, CITY PROVINCE, POSTAL_CODE COUNTRY
+      STREET, CITY PROVINCE POSTAL_CODE, COUNTRY
       ```
 
       However, we also accept newlines and/or commas delimiting each component.
 
-      Postal code and country are optional, however it's better to include them
-      to avoid any ambiguity when we attempt to geocode the address.
-
       **Good:**
       ```
-      123 Fake St, Ottawa ON
-      123 Fake St, Toronto, Ontario
-      123 Fake St, Toronto, Ontario, B4T 3F5
+      123 Fake St, Ottawa ON, Canada
+      123 Fake St, Toronto, Ontario, Canada
+      123 Fake St, Toronto, Ontario, B4T 3F5, Canada
       ```
 
       **Better:**
       ```
-      123 Fake St, Ottawa ON, K2G 8FT Canada
-      123 Fake St, Toronto, Ontario, M4T 5F6 Canada
-      123 Fake St, Toronto, Ontario, B4T 3F5, Canada
+      123 Fake St, Ottawa ON K2G 8F2, CA
+      123 Fake St, Toronto ON M4T 5F6, CA
+      123 Fake St, Toronto ON B4T 3F5, CA
       ```
 
       ## Apartment / Unit / Suite
@@ -126,14 +123,14 @@ tags:
   - name: Shipping Rates
     description: |
       Prior to creating a Shipment, you can calculate the rates based on the pickup address and the number of stops the driver has to do.
-      See our [shipment-rates](/#operation/shipment-rates) endpoint for more information.
+      See our [rates](/#operation/getSimpleRate) endpoint for more information.
   - name: Shipments
     description: |
       The most common approach to get a shipment on the road is to:
         * [Create a Shipment](/#operation/createShipment)
         * [Posting a Shipment](/#operation/postShipment)
 
-      After [posting](/#section/Posting-a-shipment), assuming everything went well, Trexity system will keep pinging drivers in the vicinity of the pickup address.
+      After [posting](/#section/Posting-a-shipment), assuming everything went well, the Trexity system will keep pinging drivers in the vicinity of the pickup address.
       In the rare case of not finding an available driver in the vicinity of the pickup address, Trexity will refuse to post the shipment.
 
       Alternatively, Trexity allows for planning in the future via Scheduling.
@@ -144,7 +141,7 @@ tags:
   - name: Routing
     description: |
       Create and get status information for asynchronous routing requests.
-  
+
   - name: Storage
     description: |
       Storage related operations.
@@ -164,9 +161,12 @@ tags:
       inform you of what parcel the status is for.
 
       To listen to parcel events listen to the following webhooks:
-      - `shipment.driver.picked_up` The driver has picked all parcels in the shipment
-      - `shipment.driver.arrived_at_delivery` The driver has arrived at a parcel's delivery address
-      - `shipment.driver.parcel_delivered` The driver has delivered a parcel
+      - `parcel.arrived_at_pickup` The driver has arrived at a parcel's delivery address
+      - `parcel.picked_up` The driver has scanned and picked up a parcel
+      - `parcel.arrived_at_delivery` The driver has arrived at a parcel's delivery address
+      - `parcel.delivered` The driver has scanned and delivered a parcel
+      - `parcel.returning` The driver is returning a parcel
+      - `parcel.returned` The driver has returned a parcel to pickup address
 
       The request payload of these webhook events indicate the parcel that is currently
       being affected.
@@ -224,10 +224,22 @@ security:
 paths:
   /addresses/check:
     $ref: ./paths/api/check-address.yaml
-  /shipment-rates:
-    $ref: ./paths/api/shipment-rates.yaml
+  /rates/simple:
+    $ref: ./paths/api/simple-rate.yaml
+  /rates/complex:
+    $ref: ./paths/api/complex-rate-request.yaml
+  /rates/complex/{requestId}:
+    $ref: ./paths/api/complex-rate-status.yaml
+  /rates/complex/{requestId}/result:
+    $ref: ./paths/api/complex-rate-result.yaml
   /shipments:
     $ref: ./paths/api/shipments.yaml
+  /shipments/bulk/{rateId}:
+    $ref: ./paths/api/create-bulk-shipments-request.yaml
+  /shipments/bulk/{rateId}/{requestId}:
+    $ref: ./paths/api/create-bulk-shipments-status.yaml
+  /shipments/bulk/{rateId}/{requestId}/result:
+    $ref: ./paths/api/create-bulk-shipments-result.yaml
   /shipments/{shipmentId}:
     $ref: ./paths/api/shipment.yaml
   /shipments/{shipmentId}/post:
@@ -246,9 +258,9 @@ paths:
     $ref: ./paths/api/service-city-zones.yaml
   /routing:
     $ref: ./paths/api/routing-request.yaml
-  /routing/{id}:
+  /routing/{requestId}:
     $ref: ./paths/api/routing-status.yaml
-  /routing/{id}/result:
+  /routing/{requestId}/result:
     $ref: ./paths/api/routing-result.yaml
   /storage/get/shipment/images/initial:
     $ref: ./paths/storage/get-shipment-initial-image.yaml
@@ -256,6 +268,12 @@ paths:
     $ref: ./paths/storage/get-shipment-pickup-image.yaml
   /storage/get/shipment/images/delivery:
     $ref: ./paths/storage/get-shipment-delivery-image.yaml
+  /parcels/{parcelId}:
+    $ref: ./paths/api/get-parcel.yaml
+  /parcels/{parcelId}/pod:
+    $ref: ./paths/api/get-parcel-pod.yaml
+  /parcels/{parcelId}/label:
+    $ref: ./paths/api/get-parcel-label.yaml
   /webhooks:
     $ref: ./paths/api/webhooks.yaml
   /webhooks/{webhookId}:

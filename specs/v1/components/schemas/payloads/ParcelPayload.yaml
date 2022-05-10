@@ -1,38 +1,6 @@
-# NOTE (dschnare): Can't use the 'allOf' here to re-use Parcel.yaml
-# No idea why, but our examples always fail validation
 description: Payload object used to identify a parcel
 type: object
-required:
-  - pickupAddress
-  - scheduledPostAt
-  - deliveryAddress
-  - deliveryName
-  - description
-  - orderId
-  - parcelValue
 properties:
-  pickupAddress:
-    $ref: ../Address.yaml
-  pickupAddressNotes:
-    type: string
-    description: Extra information relating to the pickup address ONLY, like the apartment/unit number.
-  requirements:
-    $ref: ../ShipmentRequirements.yaml
-  pickupNotes:
-    type: string
-    description: Special notes or instructions regarding pickup like the description of the location, what door to use, etc.
-  scheduledPostAt:
-    description: |
-      Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
-
-      Note that ISO date strings are always in UTC time.
-
-      An example: 2020-07-25T10:48:08.987Z
-    type: string
-  ignoreTargetDeliveryDuration:
-    type: boolean
-    description: Ignore the target delivery duration for this shipment only
-# Parcel properties
   deliveryAddress:
     $ref: ../Address.yaml
   deliveryAddressNotes:
@@ -65,7 +33,27 @@ properties:
     description: The cell phone number of the recipient
   requiresPersonHandoff:
     type: boolean
-    description: Does this parcel require in-person handoff?
+    description: Does this parcel require delivery PIN verification?
+  containsAlcohol:
+    type: boolean
+    description: |
+      **(added in v1.8)** Does this parcel contain alcoholic products?
+  externalId:
+    type: string
+    maxLength: 256
+    description: |
+      **(added in v1.2)** The ID of the external entity that is associated to
+      this parcel (e.g. the external order or shipment ID).
+  scanId:
+    type: string
+    maxLength: 256
+    description: |
+      **(added in v1.9)** The ID embedded in your custom label’s QR code. If
+      not specified, you will be required to use our built-in labels. If
+      specified, you will not be able to request our built-in label for this
+      parcel.
+  load:
+    $ref: ../ParcelLoad.yaml
   metadata:
     type: object
     description: |

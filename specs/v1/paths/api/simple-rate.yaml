@@ -1,0 +1,56 @@
+post:
+  operationId: getSimpleRate
+  tags: [Shipping Rates]
+  summary: Simple rate
+  description: |
+    Calculate the rate for a direct shipment from a single pickup address to a
+    single delivery address.
+
+    Returns the estimated distance (in meters), estimated travel duration (in
+    seconds), and fee from the pickup address to the delivery address.
+
+    If no `pickupAddress` is specified then the merchant's business address will
+    be used as the pickup address.
+
+    **(new in v1.7)** Review the [Usage Policy](/#section/Usage-Policy).
+
+    **(new in v1.8)** Use this endpoint for direct shipment rates (single pickup
+    address and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)
+    endpoint for multiple delivery addresses.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/simple-rate/post.yaml
+
+  ##############################################################################
+
+  requestBody:
+    description: Payload that minimally describes a direct shipment.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/payloads/SimpleRatePayload.yaml
+        example:
+          pickupAddress: '456 Elgin Street, Ottawa ON K2P 1N5, CA'
+          deliveryAddress: '225 Preston St, Ottawa ON K1R 7R1, CA'
+          requirements:
+            legalAgeAlcohol: true
+          orderValue: 2500
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/responses/SimpleRateResponse.yaml
+          examples:
+            Can Deliver:
+              value:
+                data:
+                  - $ref: ../../components/examples/rate1.yaml
+
+            Cannot Deliver:
+              value:
+                data: []
+
+    '403':
+      description: Forbidden
