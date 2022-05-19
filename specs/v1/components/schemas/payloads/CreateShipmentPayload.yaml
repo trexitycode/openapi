@@ -1,62 +1,48 @@
 description: Payload object used to create a shipment
 type: object
-allOf:
-  - oneOf:
-    - type: object
-    - type: object
-      required: ['scheduledPostAt']
-      properties:
-        scheduledPostAt:
-          description: |
-            Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
-
-            Note that ISO date strings are always in UTC time.
-
-            An example: 2020-07-25T10:48:08.987Z
-          type: string
-    - $ref: '../DeliveryWindowProps.yaml'
-  - type: object
-    required:
-      - requirements
-      - parcels
-    properties:
-      pickupAddress:
-        $ref: ../Address.yaml
-      pickupAddressNotes:
-        type: string
-        description: Extra information relating to the pickup address ONLY, like the apartment/unit number.
-      requirements:
-        $ref: ../ShipmentRequirements.yaml
-      pickupNotes:
-        type: string
-        description: Special notes or instructions regarding pickup like the description of the location, what door to use, etc.
-      merchantPpid:
-        type: string
-        description: Partner-provided ID of the merchant. This ID can be used when querying for shipments. Only used by Partner accounts.
-      merchantName:
-        type: string
-        description: Partner-provided name of the merchant. This will be displayed in place of the merchant name defined in the merchant profile. Only used by Partner accounts.
-      merchantPhone:
-        type: string
-        description: Partner-provided phone of the merchant. This will be displayed in place of the merchant phone defined in the merchant profile. Only used by Partner accounts.
-      merchantEmail:
-        type: string
-        description: Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts.
-      ignoreTargetDeliveryDuration:
-        type: boolean
-        description: Ignore the target delivery duration for this shipment only
-      parcels:
-        type: array
-        description: The parcels that will be delivered in this shipment
-        minItems: 1
-        maxItems: 30
-        items:
-          allOf:
-            - $ref: ./ParcelPayload.yaml
-            - type: object
-              required:
-                - deliveryAddress
-                - deliveryName
-                - description
-                - orderId
-                - parcelValue
+required:
+  - requirements
+  - parcels
+properties:
+  scheduledPostAt:
+    $ref: '../SimplifiedDateISOString.yaml'
+  pickupAddress:
+    $ref: ../Address.yaml
+  pickupAddressNotes:
+    type: string
+    description: Extra information relating to the pickup address ONLY, like the apartment/unit number.
+  requirements:
+    $ref: ../ShipmentRequirements.yaml
+  pickupNotes:
+    type: string
+    description: Special notes or instructions regarding pickup like the description of the location, what door to use, etc.
+  merchantPpid:
+    type: string
+    description: Partner-provided ID of the merchant. This ID can be used when querying for shipments. Only used by Partner accounts.
+  merchantName:
+    type: string
+    description: Partner-provided name of the merchant. This will be displayed in place of the merchant name defined in the merchant profile. Only used by Partner accounts.
+  merchantPhone:
+    type: string
+    description: Partner-provided phone of the merchant. This will be displayed in place of the merchant phone defined in the merchant profile. Only used by Partner accounts.
+  merchantEmail:
+    type: string
+    description: Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts.
+  ignoreTargetDeliveryDuration:
+    type: boolean
+    description: Ignore the target delivery duration for this shipment only
+  parcels:
+    type: array
+    description: The parcels that will be delivered in this shipment
+    minItems: 1
+    maxItems: 30
+    items:
+      allOf:
+        - $ref: ./ParcelPayload.yaml
+        - type: object
+          required:
+            - deliveryAddress
+            - deliveryName
+            - description
+            - orderId
+            - parcelValue

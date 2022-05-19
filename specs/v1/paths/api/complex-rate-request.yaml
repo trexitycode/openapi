@@ -5,12 +5,6 @@ post:
   description: |
     Queue a list of shipments for an optimally routed rate.
 
-    **NOTE: This request performs a complex route optimization operation. This may take up to
-    several minutes to complete. Keep this in mind when setting values for the timing
-    properties `scheduledPostAt`, `deliverAfter` and `deliverBefore`. After the operation
-    completes the `scheduledPostAt` could be in the past and shipments could be posted
-    immediately after they are created.**
-
     The typical use case of this API is to provide multiple shipments (pickup &
     delivery) to this endpoint, which responds with a request ID to be polled
     asynchronously using the [Complex Rate status](/#operation/getComplexRateStatus)
@@ -29,11 +23,11 @@ post:
 
     **Scheduled Post At**
 
-    If `scheduledPostAt` is not given and `deliverAfter` and `deliverBefore` are provided
-    then a value for `scheduledPostAt` will be estimated and computed for each shipment payload.
-
-    **(new in v1.10)** The new properties `deliverAfter` and `deliverBefore` can be provided that describe a
-    delivery window for delivery. From these values a `scheduledPostAt` will be estimated and used when creating shipments.
+    Values for `scheduledPostAt` must be a date at least 1 hour from the time of
+    the request. This helps to ensure that there is enough time for the optional
+    [Bulk Shipment Creation](/#operation/createCreateBulkShipmentsRequestRequest)
+    request to be performed and fully completed before the driver network is
+    notified of the deliveries.
 
   ##############################################################################
 

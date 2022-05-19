@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.9",
+    "version": "1.10",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -64,6 +64,23 @@
       }
     },
     "schemas": {
+      "DeliveryWindowProps": {
+        "type": "object",
+        "required": [
+          "deliverAfter",
+          "deliverBefore"
+        ],
+        "properties": {
+          "deliverAfter": {
+            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "type": "string"
+          },
+          "deliverBefore": {
+            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "type": "string"
+          }
+        }
+      },
       "Address": {
         "description": "Address in the format \"STREET, CITY PROVINCE POSTAL_CODE, COUNTRY\" (e.g. \"456 Elgin St, Ottawa ON K2P 1N5, CA\").\n\nSee [Addresses](#tag/Addresses)\n",
         "type": "string",
@@ -94,30 +111,45 @@
       "SimpleRatePayload": {
         "description": "A minimal object that describes a direct shipment",
         "type": "object",
-        "required": [
-          "deliveryAddress",
-          "requirements"
-        ],
-        "properties": {
-          "pickupAddress": {
-            "$ref": "#/components/schemas/Address"
+        "allOf": [
+          {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "$ref": "#/components/schemas/DeliveryWindowProps"
+              }
+            ]
           },
-          "deliveryAddress": {
-            "type": "string",
-            "description": "An address",
-            "items": {
-              "$ref": "#/components/schemas/Address"
+          {
+            "type": "object",
+            "required": [
+              "deliveryAddress",
+              "requirements"
+            ],
+            "properties": {
+              "pickupAddress": {
+                "$ref": "#/components/schemas/Address"
+              },
+              "deliveryAddress": {
+                "type": "string",
+                "description": "An address",
+                "items": {
+                  "$ref": "#/components/schemas/Address"
+                }
+              },
+              "requirements": {
+                "$ref": "#/components/schemas/ShipmentRequirements"
+              },
+              "orderValue": {
+                "type": "number",
+                "minimum": 0,
+                "description": "The order value, if any. Specified in cents."
+              }
             }
-          },
-          "requirements": {
-            "$ref": "#/components/schemas/ShipmentRequirements"
-          },
-          "orderValue": {
-            "type": "number",
-            "minimum": 0,
-            "description": "The order value, if any. Specified in cents."
           }
-        }
+        ]
       },
       "GeoJSONDirectionsResult": {
         "type": "object",
@@ -167,6 +199,31 @@
           }
         }
       },
+      "SimpleRate": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Rate"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "estimateScheduledPostAt": {
+                "description": "**(add in 1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+                "type": "string"
+              },
+              "estimatePickupAt": {
+                "description": "**(add in 1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+                "type": "string"
+              },
+              "estimateDeliverAt": {
+                "description": "**(add in 1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
       "SimpleRateResponse": {
         "description": "Returns all rates that apply for this Shipment. Each rate will have the distance (in meters), duration (in seconds) of the trip\nand the fee (in Canadian cents).\n",
         "type": "object",
@@ -174,10 +231,15 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Rate"
+              "$ref": "#/components/schemas/SimpleRate"
             }
           }
         }
+      },
+      "SimplifiedDateISOString": {
+        "description": "Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+        "type": "string",
+        "nullable": true
       },
       "ParcelLoad": {
         "type": "object",
@@ -213,8 +275,8 @@
         "description": "Payload object used to identify a shipment from a pickup address to a delivery address",
         "type": "object",
         "required": [
-          "pickupAddress",
           "scheduledPostAt",
+          "pickupAddress",
           "deliveryAddress",
           "deliveryName",
           "description",
@@ -222,6 +284,9 @@
           "parcelValue"
         ],
         "properties": {
+          "scheduledPostAt": {
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
           "pickupAddress": {
             "$ref": "#/components/schemas/Address"
           },
@@ -251,10 +316,6 @@
           },
           "requirements": {
             "$ref": "#/components/schemas/ShipmentRequirements"
-          },
-          "scheduledPostAt": {
-            "description": "Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
-            "type": "string"
           },
           "ignoreTargetDeliveryDuration": {
             "type": "boolean",
@@ -401,11 +462,6 @@
             }
           }
         }
-      },
-      "SimplifiedDateISOString": {
-        "description": "Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
-        "type": "string",
-        "nullable": true
       },
       "ShipmentStatus": {
         "type": "string",
@@ -842,6 +898,9 @@
           "parcels"
         ],
         "properties": {
+          "scheduledPostAt": {
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
           "pickupAddress": {
             "$ref": "#/components/schemas/Address"
           },
@@ -871,9 +930,6 @@
           "merchantEmail": {
             "type": "string",
             "description": "Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts."
-          },
-          "scheduledPostAt": {
-            "$ref": "#/components/schemas/SimplifiedDateISOString"
           },
           "ignoreTargetDeliveryDuration": {
             "type": "boolean",
@@ -1294,7 +1350,7 @@
           "Shipping Rates"
         ],
         "summary": "Simple rate",
-        "description": "Calculate the rate for a direct shipment from a single pickup address to a\nsingle delivery address.\n\nReturns the estimated distance (in meters), estimated travel duration (in\nseconds), and fee from the pickup address to the delivery address.\n\nIf no `pickupAddress` is specified then the merchant's business address will\nbe used as the pickup address.\n\n**(new in v1.7)** Review the [Usage Policy](/#section/Usage-Policy).\n\n**(new in v1.8)** Use this endpoint for direct shipment rates (single pickup\naddress and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)\nendpoint for multiple delivery addresses.\n",
+        "description": "Calculate the rate for a direct shipment from a single pickup address to a\nsingle delivery address.\n\nReturns the estimated distance (in meters), estimated travel duration (in\nseconds), and fee from the pickup address to the delivery address.\n\nIf no `pickupAddress` is specified then the merchant's business address will\nbe used as the pickup address.\n\n**(new in v1.7)** Review the [Usage Policy](/#section/Usage-Policy).\n\n**(new in v1.8)** Use this endpoint for direct shipment rates (single pickup\naddress and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)\nendpoint for multiple delivery addresses.\n\n**(new in 1.10)** The rate response will now include estimates for post, pickup, and delivery time.\nAdditionally, the new properties `deliverAfter` and `deliverBefore` can be provided to indicate a\ndelivery window. Otheriwse, ASAP is assumed. Use the estimated scheduled post date when creating the shipment.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -2924,7 +2980,7 @@
             "description": "Parcel does not have photographic Proof-Of-Delivery support.\nThis means that the Parcel is a part of a shipment that uses customer\nPIN as a delivery verification mechanism.\n"
           },
           "404": {
-            "description": "Parcel not found"
+            "description": "Parcel not found or parcel not delivered yet"
           }
         }
       }
