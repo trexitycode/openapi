@@ -5,6 +5,12 @@ post:
   description: |
     Queue a list of parcels to be routed and added to optimized shipments.
 
+    **NOTE: This request performs a complex route optimization operation. This may take up to
+    several minutes to complete. Keep this in mind when setting values for the timing
+    properties `scheduledPostAt`, `deliverAfter` and `deliverBefore`. After the operation
+    completes the `scheduledPostAt` could be in the past and shipments could be posted
+    immediately after they are created.**
+
     The typical use case of this API is to select all your parcels and
     provide in bulk to this endpoint, which responds with an asynchronous routing
     request ID. Then use this asynchronous routing request ID to obtain the
@@ -18,9 +24,8 @@ post:
 
     **Scheduled Post At**
 
-    Values for `scheduledPostAt` must be a date at least 1 hour from the time of the request.
-    This helps to ensure that there is enough time for routes to be created before
-    the driver network is notified of the deliveries.
+    If `scheduledPostAt` is not given and `deliverAfter` and `deliverBefore` are provided
+    then a value for `scheduledPostAt` will be estimated and computed for each shipment payload.
 
     **Note on Optimization**
     This endpoint does not use our most up-to-date routing optimization technology. We
@@ -28,6 +33,9 @@ post:
 
     **(deprecated in v1.8)** Use the new [Complex Rate](/#operation/createComplexRateRequest)
     endpoint, combined with the [Create Shipments](/#operation/createCreateBulkShipmentsRequest) endpoint.
+
+    **(new in v1.10)** The new properties `deliverAfter` and `deliverBefore` can be provided that describe a
+    delivery window for delivery. From these values a `scheduledPostAt` will be estimated and used when creating shipments.
 
   ##############################################################################
 

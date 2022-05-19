@@ -1,0 +1,29 @@
+type: object
+allOf:
+  - { $ref: './Rate.yaml' }
+  - type: object
+    properties:
+      estimateScheduledPostAt:
+        description: |
+          **(add in 1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+
+          Note that ISO date strings are always in UTC time.
+
+          An example: 2020-07-25T10:48:08.987Z
+        type: string
+      estimatePickupAt:
+        description: |
+          **(add in 1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+
+          Note that ISO date strings are always in UTC time.
+
+          An example: 2020-07-25T10:48:08.987Z
+        type: string
+      estimateDeliverAt:
+        description: |
+          **(add in 1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+
+          Note that ISO date strings are always in UTC time.
+
+          An example: 2020-07-25T10:48:08.987Z
+        type: string

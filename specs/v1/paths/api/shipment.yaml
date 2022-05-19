@@ -6,6 +6,9 @@ post:
     Create a new shipment.
 
     If no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.
+
+    **(new in v1.10)** The new properties `deliverAfter` and `deliverBefore` can be provided that describe a
+    delivery window for delivery. From these values a `scheduledPostAt` will be estimated and used when creating the shipment.
   x-codeSamples:
     - $ref: ../../code_samples/Shell/shipments/create-shipment.yaml
 
