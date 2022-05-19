@@ -4,6 +4,8 @@ properties:
     description: |
       **(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
 
+      Cannot be in the past and must be less than or equal to `deliverBefore` if `deliverBefore` is provided.
+
       Note that ISO date strings are always in UTC time.
 
       An example: 2020-07-25T10:48:08.987Z
@@ -11,6 +13,8 @@ properties:
   deliverBefore:
     description: |
       **(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+
+      Must be at least 60 minutes in the future.
 
       Note that ISO date strings are always in UTC time.
 

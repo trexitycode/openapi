@@ -66,17 +66,13 @@
     "schemas": {
       "DeliveryWindowProps": {
         "type": "object",
-        "required": [
-          "deliverAfter",
-          "deliverBefore"
-        ],
         "properties": {
           "deliverAfter": {
-            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nCannot be in the past and must be less than or equal to `deliverBefore` if `deliverBefore` is provided.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
             "type": "string"
           },
           "deliverBefore": {
-            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nMust be at least 60 minutes in the future.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
             "type": "string"
           }
         }
@@ -113,14 +109,7 @@
         "type": "object",
         "allOf": [
           {
-            "anyOf": [
-              {
-                "type": "object"
-              },
-              {
-                "$ref": "#/components/schemas/DeliveryWindowProps"
-              }
-            ]
+            "$ref": "#/components/schemas/DeliveryWindowProps"
           },
           {
             "type": "object",
