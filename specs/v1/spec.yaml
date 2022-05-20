@@ -107,6 +107,19 @@ tags:
       123 Fake St, Toronto ON M4T 5F6, CA
       123 Fake St, Toronto ON B4T 3F5, CA
       ```
+
+      ## Apartment / Unit / Suite
+
+      To specify an apartment, unit or suite as part of the address use the following
+      format (for example if the apartment number was 4):
+      ```
+      4-123 Fake St, Ottawa ON, K2G 8FT Canada
+      123 Fake St Apt 4, Ottawa ON, K2G 8FT Canada
+      123 Fake St Apartment 4, Ottawa ON, K2G 8FT Canada
+      123 Fake St Unit 4, Ottawa ON, K2G 8FT Canada
+      123 Fake St Suite 4, Ottawa ON, K2G 8FT Canada
+      123 Fake St #4, Ottawa ON, K2G 8FT Canada
+      ```
   - name: Shipping Rates
     description: |
       Prior to creating a Shipment, you can calculate the rates based on the pickup address and the number of stops the driver has to do.
