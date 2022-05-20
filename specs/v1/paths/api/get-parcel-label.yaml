@@ -1,7 +1,9 @@
 post:
   operationId: getParcelLabel
   tags: [Parcels]
-  summary: Gets Parcel Shipping Label
+  summary: Gets Parcel Label
+  description: |
+    Get a parcel's shipping label
   x-codeSamples:
     - $ref: ../../code_samples/Shell/parcels/get-parcel-label.yaml
 

@@ -1,7 +1,9 @@
 post:
   operationId: getParcel
   tags: [Parcels]
-  summary: Gets Parcel Information
+  summary: Gets Parcel
+  description: |
+    Retrieve a parcel
   x-codeSamples:
     - $ref: ../../code_samples/Shell/parcels/get-parcel.yaml
 

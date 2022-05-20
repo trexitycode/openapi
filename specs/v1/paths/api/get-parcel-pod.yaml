@@ -2,6 +2,8 @@ post:
   operationId: getParcelPod
   tags: [Parcels]
   summary: Gets Parcel Proof of Delivery
+  description: |
+    Get a parcel's proof of delivery
   x-codeSamples:
     - $ref: ../../code_samples/Shell/parcels/get-parcel-pod.yaml
 

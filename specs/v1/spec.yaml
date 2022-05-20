@@ -138,6 +138,10 @@ tags:
       Trexity guarantees that the scheduled Shipment will not be posted or broadcasted prior to the time it was scheduled for.
       Please see the [details](/#operation/createShipment) here.
 
+  - name: Parcels
+    description: |
+      Convenient API endpionts for managing shipment parcels.
+
   - name: Routing
     description: |
       Create and get status information for asynchronous routing requests.
