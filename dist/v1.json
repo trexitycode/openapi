@@ -28,6 +28,10 @@
       "description": "The most common approach to get a shipment on the road is to:\n  * [Create a Shipment](/#operation/createShipment)\n  * [Posting a Shipment](/#operation/postShipment)\n\nAfter [posting](/#section/Posting-a-shipment), assuming everything went well, the Trexity system will keep pinging drivers in the vicinity of the pickup address.\nIn the rare case of not finding an available driver in the vicinity of the pickup address, Trexity will refuse to post the shipment.\n\nAlternatively, Trexity allows for planning in the future via Scheduling.\nYou can schedule the posting of the Shipment in the future.\nTrexity guarantees that the scheduled Shipment will not be posted or broadcasted prior to the time it was scheduled for.\nPlease see the [details](/#operation/createShipment) here.\n"
     },
     {
+      "name": "Parcels",
+      "description": "Convenient API endpionts for managing shipment parcels.\n"
+    },
+    {
       "name": "Routing",
       "description": "Create and get status information for asynchronous routing requests.\n"
     },
@@ -2893,7 +2897,8 @@
         "tags": [
           "Parcels"
         ],
-        "summary": "Gets Parcel Information",
+        "summary": "Gets Parcel",
+        "description": "Retrieve a parcel\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -2935,6 +2940,7 @@
           "Parcels"
         ],
         "summary": "Gets Parcel Proof of Delivery",
+        "description": "Get a parcel's proof of delivery\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -2980,7 +2986,8 @@
         "tags": [
           "Parcels"
         ],
-        "summary": "Gets Parcel Shipping Label",
+        "summary": "Gets Parcel Label",
+        "description": "Get a parcel's shipping label\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -3842,6 +3849,7 @@
           "Webhooks"
         ],
         "summary": "Delete a webhook",
+        "description": "Delete a registered webhook.\n",
         "parameters": [
           {
             "in": "path",
