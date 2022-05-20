@@ -21,6 +21,9 @@ post:
     **(new in 1.10)** The rate response will now include estimates for post, pickup, and delivery time.
     Additionally, the new properties `deliverAfter` and `deliverBefore` can be provided to indicate a
     delivery window. Otheriwse, ASAP is assumed. Use the estimated scheduled post date when creating the shipment.
+
+    If a delivery window is provided and it's impossible to meet the delivery window then now rates will
+    be returned.
   x-codeSamples:
     - $ref: ../../code_samples/Shell/simple-rate/post.yaml
 
