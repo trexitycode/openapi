@@ -165,9 +165,7 @@ tags:
       inform you of what parcel the status is for.
 
       To listen to parcel events listen to the following webhooks:
-      - `parcel.arrived_at_pickup` The driver has arrived at a parcel's delivery address
       - `parcel.picked_up` The driver has scanned and picked up a parcel
-      - `parcel.arrived_at_delivery` The driver has arrived at a parcel's delivery address
       - `parcel.delivered` The driver has scanned and delivered a parcel
       - `parcel.returning` The driver is returning a parcel
       - `parcel.returned` The driver has returned a parcel to pickup address
