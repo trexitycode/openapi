@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.10",
+    "version": "1.11",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -1159,9 +1159,14 @@
       "ShipmentWebhookPayload": {
         "description": "Webhook payload during a shipment event.",
         "required": [
-          "data"
+          "data",
+          "timestamp"
         ],
         "properties": {
+          "timestamp": {
+            "description": "**(added in v1.11)** Date time the event took place in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "type": "string"
+          },
           "data": {
             "$ref": "#/components/schemas/Shipment"
           }
@@ -1170,9 +1175,14 @@
       "ParcelWebhookPayload": {
         "description": "Webhook payload during a parcel event.",
         "required": [
-          "data"
+          "data",
+          "timestamp"
         ],
         "properties": {
+          "timestamp": {
+            "description": "**(added in v1.11)** Date time the event took place in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "type": "string"
+          },
           "data": {
             "properties": {
               "shipmentId": {
