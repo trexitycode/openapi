@@ -2894,7 +2894,7 @@
         "tags": [
           "Parcels"
         ],
-        "summary": "Gets Parcel",
+        "summary": "Get Parcel",
         "description": "Retrieve a parcel\n",
         "x-codeSamples": [
           {
@@ -2936,7 +2936,7 @@
         "tags": [
           "Parcels"
         ],
-        "summary": "Gets Parcel Proof of Delivery",
+        "summary": "Get Parcel Proof of Delivery",
         "description": "Get a parcel's proof of delivery\n",
         "x-codeSamples": [
           {
@@ -2983,7 +2983,7 @@
         "tags": [
           "Parcels"
         ],
-        "summary": "Gets Parcel Label",
+        "summary": "Get Parcel Label",
         "description": "Get a parcel's shipping label\n",
         "x-codeSamples": [
           {
