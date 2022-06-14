@@ -1,7 +1,7 @@
 post:
   operationId: getParcel
   tags: [Parcels]
-  summary: Gets Parcel
+  summary: Get Parcel
   description: |
     Retrieve a parcel
   x-codeSamples:
