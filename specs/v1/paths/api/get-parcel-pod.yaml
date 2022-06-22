@@ -1,7 +1,7 @@
 post:
   operationId: getParcelPod
   tags: [Parcels]
-  summary: Gets Parcel Proof of Delivery
+  summary: Get Parcel Proof of Delivery
   description: |
     Get a parcel's proof of delivery
   x-codeSamples:

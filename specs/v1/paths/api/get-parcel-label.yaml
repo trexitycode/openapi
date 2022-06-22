@@ -1,7 +1,7 @@
 post:
   operationId: getParcelLabel
   tags: [Parcels]
-  summary: Gets Parcel Label
+  summary: Get Parcel Label
   description: |
     Get a parcel's shipping label
   x-codeSamples:
