@@ -214,6 +214,8 @@ tags:
 servers:
   - description: production
     url: 'https://trexity.app/api/v1_0'
+  - description: beta/staging
+    url: 'https://trexity-driver-mobile.uc.r.appspot.com/api/v1_0'
 components:
   securitySchemes:
     MerchantApiKeyAuth:

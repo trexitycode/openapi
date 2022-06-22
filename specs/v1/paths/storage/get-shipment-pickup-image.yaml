@@ -16,6 +16,8 @@ get:
   servers:
     - description: production
       url: 'https://trexity.app/storage'
+    - description: beta/staging
+      url: 'https://trexity-driver-mobile.uc.r.appspot.com/storage'
 
   ##############################################################################
 
