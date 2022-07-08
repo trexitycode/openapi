@@ -1,0 +1,81 @@
+description: A Merchant Location
+type: object
+properties:
+  id:
+    type: string
+
+  createdAt:
+    type: string
+    format: date-time
+
+  updatedAt:
+    type: string
+    format: date-time
+
+  name:
+    type: string
+
+  address:
+    type: string
+
+  addressNotes:
+    type: string
+
+  addressLocation:
+    $ref: ./Location.yaml
+
+  addressProvince:
+    type: string
+
+  addressCountry:
+    type: string
+
+  addressCity:
+    type: string
+
+  addressServiceCity:
+    type: string
+
+  contactEmail:
+    type: string
+    format: email
+
+  contactName:
+    type: string
+    format: email
+
+  contactPhone:
+    type: string
+
+  contactTitle:
+    type: string
+
+  availableRequirements:
+    type: object
+
+  timezone:
+    type: string
+
+  defaultRequiresPersonHandoff:
+    type: boolean
+
+  defaultContainsAlcohol:
+    type: boolean
+
+  defaultDeliveryInstructions:
+    type: string
+
+  defaultPickupInstructions:
+    type: string
+
+  operatingHours:
+    type: object
+
+  maxDistributionsPerDriver:
+    type: number
+
+  defaultTargetDeliveryDuration:
+    type: number
+
+  preferredDriverCapacity:
+    type: number

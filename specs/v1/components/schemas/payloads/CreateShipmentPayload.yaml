@@ -4,6 +4,9 @@ required:
   - requirements
   - parcels
 properties:
+  locationId:
+    type: string
+    description: Optionally set Location that this Shipment will belong to. Please see [Locations](#tag/Locations)
   pickupAddress:
     $ref: ../Address.yaml
   pickupAddressNotes:

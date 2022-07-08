@@ -192,6 +192,10 @@ tags:
       // ...
       ```
 
+  - name: Locations
+    description: |
+      Retrieve and manage Locations for a Trexity Merchant.
+
   - name: Regions
     description: |
       Region related operations that usually involve service cities and their zones
@@ -265,3 +269,5 @@ paths:
     $ref: ./paths/api/webhooks.yaml
   /webhooks/{webhookId}:
     $ref: ./paths/api/delete-webhook.yaml
+  /locations:
+    $ref: ./paths/api/merchant-locations.yaml
