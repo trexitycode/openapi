@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.9",
+    "version": "1.11",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -17,7 +17,7 @@
   "tags": [
     {
       "name": "Addresses",
-      "description": "Group of endpoints for handling addresses.\n\n### Address Formatting\n\nIn general wherever an address is expected the format we accept is:\n\n```\nSTREET, CITY PROVINCE POSTAL_CODE, COUNTRY\n```\n\nHowever, we also accept newlines and/or commas delimiting each component.\n\n**Good:**\n```\n123 Fake St, Ottawa ON, Canada\n123 Fake St, Toronto, Ontario, Canada\n123 Fake St, Toronto, Ontario, B4T 3F5, Canada\n```\n\n**Better:**\n```\n123 Fake St, Ottawa ON K2G 8F2, CA\n123 Fake St, Toronto ON M4T 5F6, CA\n123 Fake St, Toronto ON B4T 3F5, CA\n```\n"
+      "description": "Group of endpoints for handling addresses.\n\n### Address Formatting\n\nIn general wherever an address is expected the format we accept is:\n\n```\nSTREET, CITY PROVINCE POSTAL_CODE, COUNTRY\n```\n\nHowever, we also accept newlines and/or commas delimiting each component.\n\n**Good:**\n```\n123 Fake St, Ottawa ON, Canada\n123 Fake St, Toronto, Ontario, Canada\n123 Fake St, Toronto, Ontario, B4T 3F5, Canada\n```\n\n**Better:**\n```\n123 Fake St, Ottawa ON K2G 8F2, CA\n123 Fake St, Toronto ON M4T 5F6, CA\n123 Fake St, Toronto ON B4T 3F5, CA\n```\n\n## Apartment / Unit / Suite\n\nTo specify an apartment, unit or suite as part of the address use the following\nformat (for example if the apartment number was 4):\n```\n4-123 Fake St, Ottawa ON, K2G 8FT Canada\n123 Fake St Apt 4, Ottawa ON, K2G 8FT Canada\n123 Fake St Apartment 4, Ottawa ON, K2G 8FT Canada\n123 Fake St Unit 4, Ottawa ON, K2G 8FT Canada\n123 Fake St Suite 4, Ottawa ON, K2G 8FT Canada\n123 Fake St #4, Ottawa ON, K2G 8FT Canada\n```\n"
     },
     {
       "name": "Shipping Rates",
@@ -26,6 +26,10 @@
     {
       "name": "Shipments",
       "description": "The most common approach to get a shipment on the road is to:\n  * [Create a Shipment](/#operation/createShipment)\n  * [Posting a Shipment](/#operation/postShipment)\n\nAfter [posting](/#section/Posting-a-shipment), assuming everything went well, the Trexity system will keep pinging drivers in the vicinity of the pickup address.\nIn the rare case of not finding an available driver in the vicinity of the pickup address, Trexity will refuse to post the shipment.\n\nAlternatively, Trexity allows for planning in the future via Scheduling.\nYou can schedule the posting of the Shipment in the future.\nTrexity guarantees that the scheduled Shipment will not be posted or broadcasted prior to the time it was scheduled for.\nPlease see the [details](/#operation/createShipment) here.\n"
+    },
+    {
+      "name": "Parcels",
+      "description": "Convenient API endpionts for managing shipment parcels.\n"
     },
     {
       "name": "Routing",
@@ -37,7 +41,7 @@
     },
     {
       "name": "Webhooks",
-      "description": "Retrieve and manage webhooks for a Trexity Merchant.\n\n## Parcel Events\n\nA Shipment is a container of parcels, each with their own delivery address.\nHowever, the Shipment has a single pickup address. As activity occurs on a\nparcel the Shipment's `currentStatus` oscilates between `OUT_FOR_DELIVERY`,\n`ARRIVED_AT_DELIVERY` and `DELIVERED`. However, the Shipment alone doesn't\ninform you of what parcel the status is for.\n\nTo listen to parcel events listen to the following webhooks:\n- `parcel.arrived_at_pickup` The driver has arrived at a parcel's delivery address\n- `parcel.picked_up` The driver has scanned and picked up a parcel\n- `parcel.arrived_at_delivery` The driver has arrived at a parcel's delivery address\n- `parcel.delivered` The driver has scanned and delivered a parcel\n- `parcel.returning` The driver is returning a parcel\n- `parcel.returned` The driver has returned a parcel to pickup address\n\nThe request payload of these webhook events indicate the parcel that is currently\nbeing affected.\n\n## Verifying Webhook Requests\n\nAll webhook requests have a header that contains a signature signed with the Trexity Merchant's\nwebhook secret as found in their \"Trexity API\" settings. To verify the signature take the raw\nrequest body as text and create a SHA256 HMAC signed with the merchant's webhook secret and covert to hex.\n\nExample:\n```\n// nodejs\nconst text = await new Promise((resolve, reject) => {\n  const buff = []\n  req.setEncoding('utf8')\n  req.on('data', chunk => (buff.push(chunk)))\n  req.once('end', resolve(buff.join('')))\n  req.once('error', reject)\n})\n\nconst sig = require('crypto')\n  .createHmac('sha256', process.env.TRX_MERCH_WEBHOOK_SECRET)\n  .update(text)\n  .digest('hex')\n\nconst isValid = req.headers['x-trexity-signature'] === sig\n\nif (!isValid) {\n  res.statusCode = 403\n  res.end('Forbidden', 'utf8')\n  return\n}\n\nconst body = JSON.parse(body)\n// ...\n```\n"
+      "description": "Retrieve and manage webhooks for a Trexity Merchant.\n\n## Parcel Events\n\nA Shipment is a container of parcels, each with their own delivery address.\nHowever, the Shipment has a single pickup address. As activity occurs on a\nparcel the Shipment's `currentStatus` oscilates between `OUT_FOR_DELIVERY`,\n`ARRIVED_AT_DELIVERY` and `DELIVERED`. However, the Shipment alone doesn't\ninform you of what parcel the status is for.\n\nTo listen to parcel events listen to the following webhooks:\n- `parcel.picked_up` The driver has scanned and picked up a parcel\n- `parcel.delivered` The driver has scanned and delivered a parcel\n- `parcel.returning` The driver is returning a parcel\n- `parcel.returned` The driver has returned a parcel to pickup address\n\nThe request payload of these webhook events indicate the parcel that is currently\nbeing affected.\n\n## Verifying Webhook Requests\n\nAll webhook requests have a header that contains a signature signed with the Trexity Merchant's\nwebhook secret as found in their \"Trexity API\" settings. To verify the signature take the raw\nrequest body as text and create a SHA256 HMAC signed with the merchant's webhook secret and covert to hex.\n\nExample:\n```\n// nodejs\nconst text = await new Promise((resolve, reject) => {\n  const buff = []\n  req.setEncoding('utf8')\n  req.on('data', chunk => (buff.push(chunk)))\n  req.once('end', resolve(buff.join('')))\n  req.once('error', reject)\n})\n\nconst sig = require('crypto')\n  .createHmac('sha256', process.env.TRX_MERCH_WEBHOOK_SECRET)\n  .update(text)\n  .digest('hex')\n\nconst isValid = req.headers['x-trexity-signature'] === sig\n\nif (!isValid) {\n  res.statusCode = 403\n  res.end('Forbidden', 'utf8')\n  return\n}\n\nconst body = JSON.parse(body)\n// ...\n```\n"
     },
     {
       "name": "Regions",
@@ -48,6 +52,10 @@
     {
       "description": "production",
       "url": "https://trexity.app/api/v1_0"
+    },
+    {
+      "description": "beta/staging",
+      "url": "https://trexity-driver-mobile.uc.r.appspot.com/api/v1_0"
     }
   ],
   "components": {
@@ -64,6 +72,19 @@
       }
     },
     "schemas": {
+      "DeliveryWindowProps": {
+        "type": "object",
+        "properties": {
+          "deliverAfter": {
+            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nCannot be in the past and must be less than or equal to `deliverBefore` if `deliverBefore` is provided.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "type": "string"
+          },
+          "deliverBefore": {
+            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nMust be at least 60 minutes in the future.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "type": "string"
+          }
+        }
+      },
       "Address": {
         "description": "Address in the format \"STREET, CITY PROVINCE POSTAL_CODE, COUNTRY\" (e.g. \"456 Elgin St, Ottawa ON K2P 1N5, CA\").\n\nSee [Addresses](#tag/Addresses)\n",
         "type": "string",
@@ -94,30 +115,38 @@
       "SimpleRatePayload": {
         "description": "A minimal object that describes a direct shipment",
         "type": "object",
-        "required": [
-          "deliveryAddress",
-          "requirements"
-        ],
-        "properties": {
-          "pickupAddress": {
-            "$ref": "#/components/schemas/Address"
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DeliveryWindowProps"
           },
-          "deliveryAddress": {
-            "type": "string",
-            "description": "An address",
-            "items": {
-              "$ref": "#/components/schemas/Address"
+          {
+            "type": "object",
+            "required": [
+              "deliveryAddress",
+              "requirements"
+            ],
+            "properties": {
+              "pickupAddress": {
+                "$ref": "#/components/schemas/Address"
+              },
+              "deliveryAddress": {
+                "type": "string",
+                "description": "An address",
+                "items": {
+                  "$ref": "#/components/schemas/Address"
+                }
+              },
+              "requirements": {
+                "$ref": "#/components/schemas/ShipmentRequirements"
+              },
+              "orderValue": {
+                "type": "number",
+                "minimum": 0,
+                "description": "The order value, if any. Specified in cents."
+              }
             }
-          },
-          "requirements": {
-            "$ref": "#/components/schemas/ShipmentRequirements"
-          },
-          "orderValue": {
-            "type": "number",
-            "minimum": 0,
-            "description": "The order value, if any. Specified in cents."
           }
-        }
+        ]
       },
       "GeoJSONDirectionsResult": {
         "type": "object",
@@ -167,6 +196,31 @@
           }
         }
       },
+      "SimpleRate": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Rate"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "estimateScheduledPostAt": {
+                "description": "**(add in 1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+                "type": "string"
+              },
+              "estimatePickupAt": {
+                "description": "**(add in 1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+                "type": "string"
+              },
+              "estimateDeliverAt": {
+                "description": "**(add in 1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+                "type": "string"
+              }
+            }
+          }
+        ]
+      },
       "SimpleRateResponse": {
         "description": "Returns all rates that apply for this Shipment. Each rate will have the distance (in meters), duration (in seconds) of the trip\nand the fee (in Canadian cents).\n",
         "type": "object",
@@ -174,10 +228,15 @@
           "data": {
             "type": "array",
             "items": {
-              "$ref": "#/components/schemas/Rate"
+              "$ref": "#/components/schemas/SimpleRate"
             }
           }
         }
+      },
+      "SimplifiedDateISOString": {
+        "description": "Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+        "type": "string",
+        "nullable": true
       },
       "ParcelLoad": {
         "type": "object",
@@ -213,8 +272,8 @@
         "description": "Payload object used to identify a shipment from a pickup address to a delivery address",
         "type": "object",
         "required": [
-          "pickupAddress",
           "scheduledPostAt",
+          "pickupAddress",
           "deliveryAddress",
           "deliveryName",
           "description",
@@ -222,6 +281,9 @@
           "parcelValue"
         ],
         "properties": {
+          "scheduledPostAt": {
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
           "pickupAddress": {
             "$ref": "#/components/schemas/Address"
           },
@@ -251,10 +313,6 @@
           },
           "requirements": {
             "$ref": "#/components/schemas/ShipmentRequirements"
-          },
-          "scheduledPostAt": {
-            "description": "Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
-            "type": "string"
           },
           "ignoreTargetDeliveryDuration": {
             "type": "boolean",
@@ -401,11 +459,6 @@
             }
           }
         }
-      },
-      "SimplifiedDateISOString": {
-        "description": "Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
-        "type": "string",
-        "nullable": true
       },
       "ShipmentStatus": {
         "type": "string",
@@ -748,23 +801,6 @@
           }
         }
       },
-      "CreateBulkShipmentsStatusResponse": {
-        "type": "object",
-        "properties": {
-          "requestId": {
-            "type": "string",
-            "description": "A unique identifier for the asynchronous request. This can be used to\nretrieve the results of a request when it has completed.\n"
-          },
-          "callbackInSeconds": {
-            "type": "integer",
-            "description": "An estimated number of seconds to complete the request.\nWait this long before checking the status again.\n"
-          },
-          "isCompleted": {
-            "type": "boolean",
-            "description": "Specifies if the request has completed."
-          }
-        }
-      },
       "ParcelPayload": {
         "description": "Payload object used to identify a parcel",
         "type": "object",
@@ -842,6 +878,9 @@
           "parcels"
         ],
         "properties": {
+          "scheduledPostAt": {
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
           "pickupAddress": {
             "$ref": "#/components/schemas/Address"
           },
@@ -872,9 +911,6 @@
             "type": "string",
             "description": "Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts."
           },
-          "scheduledPostAt": {
-            "$ref": "#/components/schemas/SimplifiedDateISOString"
-          },
           "ignoreTargetDeliveryDuration": {
             "type": "boolean",
             "description": "Ignore the target delivery duration for this shipment only"
@@ -901,6 +937,23 @@
                 }
               ]
             }
+          }
+        }
+      },
+      "CreateBulkShipmentsStatusResponse": {
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "description": "A unique identifier for the asynchronous request. This can be used to\nretrieve the results of a request when it has completed.\n"
+          },
+          "callbackInSeconds": {
+            "type": "integer",
+            "description": "An estimated number of seconds to complete the request.\nWait this long before checking the status again.\n"
+          },
+          "isCompleted": {
+            "type": "boolean",
+            "description": "Specifies if the request has completed."
           }
         }
       },
@@ -1073,8 +1126,6 @@
           "shipment.cancelled",
           "shipment.driver.renounced",
           "shipment.on_hold",
-          "parcel.arrived_at_pickup",
-          "parcel.arrived_at_delivery",
           "parcel.picked_up",
           "parcel.delivered",
           "parcel.returning",
@@ -1112,9 +1163,14 @@
       "ShipmentWebhookPayload": {
         "description": "Webhook payload during a shipment event.",
         "required": [
-          "data"
+          "data",
+          "timestamp"
         ],
         "properties": {
+          "timestamp": {
+            "description": "**(added in v1.11)** Date time the event took place in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "type": "string"
+          },
           "data": {
             "$ref": "#/components/schemas/Shipment"
           }
@@ -1123,9 +1179,14 @@
       "ParcelWebhookPayload": {
         "description": "Webhook payload during a parcel event.",
         "required": [
-          "data"
+          "data",
+          "timestamp"
         ],
         "properties": {
+          "timestamp": {
+            "description": "**(added in v1.11)** Date time the event took place in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "type": "string"
+          },
           "data": {
             "properties": {
               "shipmentId": {
@@ -1294,7 +1355,7 @@
           "Shipping Rates"
         ],
         "summary": "Simple rate",
-        "description": "Calculate the rate for a direct shipment from a single pickup address to a\nsingle delivery address.\n\nReturns the estimated distance (in meters), estimated travel duration (in\nseconds), and fee from the pickup address to the delivery address.\n\nIf no `pickupAddress` is specified then the merchant's business address will\nbe used as the pickup address.\n\n**(new in v1.7)** Review the [Usage Policy](/#section/Usage-Policy).\n\n**(new in v1.8)** Use this endpoint for direct shipment rates (single pickup\naddress and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)\nendpoint for multiple delivery addresses.\n",
+        "description": "Calculate the rate for a direct shipment from a single pickup address to a\nsingle delivery address.\n\nReturns the estimated distance (in meters), estimated travel duration (in\nseconds), and fee from the pickup address to the delivery address.\n\nIf no `pickupAddress` is specified then the merchant's business address will\nbe used as the pickup address.\n\n**(new in v1.7)** Review the [Usage Policy](/#section/Usage-Policy).\n\n**(new in v1.8)** Use this endpoint for direct shipment rates (single pickup\naddress and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)\nendpoint for multiple delivery addresses.\n\n**(new in 1.10)** The rate response will now include estimates for post, pickup, and delivery time.\nAdditionally, the new properties `deliverAfter` and `deliverBefore` can be provided to indicate a\ndelivery window. Otheriwse, ASAP is assumed. Use the estimated scheduled post date when creating the shipment.\n\nIf a delivery window is provided and it's impossible to meet the delivery window then now rates will\nbe returned.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -1507,6 +1568,103 @@
       }
     },
     "/shipments": {
+      "post": {
+        "operationId": "createShipment",
+        "tags": [
+          "Shipments"
+        ],
+        "summary": "Create a shipment",
+        "description": "Create a new shipment.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X POST {server-url}/shipments\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\\\n  -d '{\n    \"pickupAddress\": \"9 Slack Rd, Nepean ON K2G 0B7, CA\",\n    \"pickupAddressNotes\": \"Unit 1, ring the buzzer.\",\n    \"pickupNotes\": \"Please be careful, since it may contain fragile things!\",\n    \"requirements\": {},\n    \"parcels\": [\n      {\n        \"deliveryAddress\": \"207 Queen St, Ottawa ON K1P 6E5, CA\",\n        \"deliveryName\": \"Srinivasa Ramanujan\",\n        \"description\": \"Glasses, bifocals\",\n        \"orderId\": \"BFG10K\",\n        \"parcelValue\": 10000\n      }\n    ]\n  }'\n"
+          }
+        ],
+        "requestBody": {
+          "description": "Payload describing your shipment",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateShipmentPayload"
+              },
+              "examples": {
+                "ImmediateInit": {
+                  "value": {
+                    "pickupAddress": "9 Slack Rd, Nepean ON K2G 0B7, CA",
+                    "pickupNotes": "Please be careful, since it may contain fragile things!",
+                    "requirements": {},
+                    "parcels": [
+                      {
+                        "deliveryAddress": "207 Queen St, Ottawa ON K1P 6E5, CA",
+                        "deliveryName": "Srinivasa Ramanujan",
+                        "description": "Glasses, bifocals",
+                        "orderId": "BFG10K",
+                        "parcelValue": 10000
+                      }
+                    ]
+                  }
+                },
+                "ScheduledInit": {
+                  "value": {
+                    "pickupAddress": "207 Queen St, Ottawa ON K1P 6E5, CA",
+                    "pickupNotes": "Please be careful, since it may contain fragile things!",
+                    "requirements": {},
+                    "scheduledPostAt": "2020-07-25T10:16:11.048Z",
+                    "parcels": [
+                      {
+                        "deliveryAddress": "343 Booth St, Ottawa ON K1R 7K1, CA",
+                        "deliveryName": "Lagrange",
+                        "description": "Copy of Newtons Principia Mathematica",
+                        "orderId": "NWTNRULZ",
+                        "parcelValue": 15000
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "shipmentId": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "Success": {
+                    "value": {
+                      "data": {
+                        "shipmentId": "TRX973036599-6KL"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid payload or permission denied."
+          },
+          "500": {
+            "description": "Unknown server problem"
+          }
+        }
+      },
       "get": {
         "operationId": "getShipments",
         "tags": [
@@ -1763,114 +1921,6 @@
       }
     },
     "/shipments/{shipmentId}": {
-      "post": {
-        "operationId": "createShipment",
-        "tags": [
-          "Shipments"
-        ],
-        "summary": "Create a shipment",
-        "description": "Create a new shipment.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n",
-        "x-codeSamples": [
-          {
-            "lang": "Shell",
-            "source": "curl -X POST {server-url}/shipments\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\\\n  -d '{\n    \"pickupAddress\": \"9 Slack Rd, Nepean ON K2G 0B7, CA\",\n    \"pickupAddressNotes\": \"Unit 1, ring the buzzer.\",\n    \"pickupNotes\": \"Please be careful, since it may contain fragile things!\",\n    \"requirements\": {},\n    \"parcels\": [\n      {\n        \"deliveryAddress\": \"207 Queen St, Ottawa ON K1P 6E5, CA\",\n        \"deliveryName\": \"Srinivasa Ramanujan\",\n        \"description\": \"Glasses, bifocals\",\n        \"orderId\": \"BFG10K\",\n        \"parcelValue\": 10000\n      }\n    ]\n  }'\n"
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "shipmentId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The id of the shipment that needs to be updated"
-          }
-        ],
-        "requestBody": {
-          "description": "Payload describing your shipment",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/CreateShipmentPayload"
-              },
-              "examples": {
-                "ImmediateInit": {
-                  "value": {
-                    "pickupAddress": "9 Slack Rd, Nepean ON K2G 0B7, CA",
-                    "pickupNotes": "Please be careful, since it may contain fragile things!",
-                    "requirements": {},
-                    "parcels": [
-                      {
-                        "deliveryAddress": "207 Queen St, Ottawa ON K1P 6E5, CA",
-                        "deliveryName": "Srinivasa Ramanujan",
-                        "description": "Glasses, bifocals",
-                        "orderId": "BFG10K",
-                        "parcelValue": 10000
-                      }
-                    ]
-                  }
-                },
-                "ScheduledInit": {
-                  "value": {
-                    "pickupAddress": "207 Queen St, Ottawa ON K1P 6E5, CA",
-                    "pickupNotes": "Please be careful, since it may contain fragile things!",
-                    "requirements": {},
-                    "scheduledPostAt": "2020-07-25T10:16:11.048Z",
-                    "parcels": [
-                      {
-                        "deliveryAddress": "343 Booth St, Ottawa ON K1R 7K1, CA",
-                        "deliveryName": "Lagrange",
-                        "description": "Copy of Newtons Principia Mathematica",
-                        "orderId": "NWTNRULZ",
-                        "parcelValue": 15000
-                      }
-                    ]
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "type": "object",
-                      "properties": {
-                        "shipmentId": {
-                          "type": "string"
-                        }
-                      }
-                    }
-                  }
-                },
-                "examples": {
-                  "Success": {
-                    "value": {
-                      "data": {
-                        "shipmentId": "TRX973036599-6KL"
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid payload or permission denied."
-          },
-          "500": {
-            "description": "Unknown server problem"
-          }
-        }
-      },
       "delete": {
         "operationId": "deleteShipment",
         "tags": [
@@ -2710,6 +2760,10 @@
           {
             "description": "production",
             "url": "https://trexity.app/storage"
+          },
+          {
+            "description": "beta/staging",
+            "url": "https://trexity-driver-mobile.uc.r.appspot.com/storage"
           }
         ],
         "parameters": [
@@ -2763,6 +2817,10 @@
           {
             "description": "production",
             "url": "https://trexity.app/storage"
+          },
+          {
+            "description": "beta/staging",
+            "url": "https://trexity-driver-mobile.uc.r.appspot.com/storage"
           }
         ],
         "parameters": [
@@ -2807,6 +2865,10 @@
           {
             "description": "production",
             "url": "https://trexity.app/storage"
+          },
+          {
+            "description": "beta/staging",
+            "url": "https://trexity-driver-mobile.uc.r.appspot.com/storage"
           }
         ],
         "parameters": [
@@ -2848,7 +2910,8 @@
         "tags": [
           "Parcels"
         ],
-        "summary": "Gets Parcel Information",
+        "summary": "Get Parcel",
+        "description": "Retrieve a parcel\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -2889,7 +2952,8 @@
         "tags": [
           "Parcels"
         ],
-        "summary": "Gets Parcel Proof of Delivery",
+        "summary": "Get Parcel Proof of Delivery",
+        "description": "Get a parcel's proof of delivery\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -2924,7 +2988,7 @@
             "description": "Parcel does not have photographic Proof-Of-Delivery support.\nThis means that the Parcel is a part of a shipment that uses customer\nPIN as a delivery verification mechanism.\n"
           },
           "404": {
-            "description": "Parcel not found"
+            "description": "Parcel not found or parcel not delivered yet"
           }
         }
       }
@@ -2935,7 +2999,8 @@
         "tags": [
           "Parcels"
         ],
-        "summary": "Gets Parcel Shipping Label",
+        "summary": "Get Parcel Label",
+        "description": "Get a parcel's shipping label\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -3583,74 +3648,6 @@
               }
             }
           },
-          "parcel.arrived_at_pickup": {
-            "{$request.body#/url}": {
-              "post": {
-                "summary": "parcel.arrived_at_pickup",
-                "description": "Occurs when a driver has arrived at the pickup address for a parcel within a shipment.",
-                "parameters": [
-                  {
-                    "$ref": "#/components/parameters/x-trexity-signature"
-                  },
-                  {
-                    "$ref": "#/components/parameters/x-trexity-event-name"
-                  },
-                  {
-                    "$ref": "#/components/parameters/x-trexity-webhook-order-id"
-                  }
-                ],
-                "requestBody": {
-                  "required": true,
-                  "content": {
-                    "application/json": {
-                      "schema": {
-                        "$ref": "#/components/schemas/ShipmentWebhookPayload"
-                      }
-                    }
-                  }
-                },
-                "responses": {
-                  "200": {
-                    "description": "Request successfully processed"
-                  }
-                }
-              }
-            }
-          },
-          "parcel.arrived_at_delivery": {
-            "{$request.body#/url}": {
-              "post": {
-                "summary": "parcel.arrived_at_delivery",
-                "description": "Occurs when a driver arrived at a parcel's delivery address.",
-                "parameters": [
-                  {
-                    "$ref": "#/components/parameters/x-trexity-signature"
-                  },
-                  {
-                    "$ref": "#/components/parameters/x-trexity-event-name"
-                  },
-                  {
-                    "$ref": "#/components/parameters/x-trexity-webhook-order-id"
-                  }
-                ],
-                "requestBody": {
-                  "required": true,
-                  "content": {
-                    "application/json": {
-                      "schema": {
-                        "$ref": "#/components/schemas/ParcelWebhookPayload"
-                      }
-                    }
-                  }
-                },
-                "responses": {
-                  "200": {
-                    "description": "Request successfully processed"
-                  }
-                }
-              }
-            }
-          },
           "parcel.picked_up": {
             "{$request.body#/url}": {
               "post": {
@@ -3797,6 +3794,7 @@
           "Webhooks"
         ],
         "summary": "Delete a webhook",
+        "description": "Delete a registered webhook.\n",
         "parameters": [
           {
             "in": "path",

@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: '1.9'
+  version: '1.11'
   title: Trexity API
   license:
     name: MIT
@@ -107,6 +107,19 @@ tags:
       123 Fake St, Toronto ON M4T 5F6, CA
       123 Fake St, Toronto ON B4T 3F5, CA
       ```
+
+      ## Apartment / Unit / Suite
+
+      To specify an apartment, unit or suite as part of the address use the following
+      format (for example if the apartment number was 4):
+      ```
+      4-123 Fake St, Ottawa ON, K2G 8FT Canada
+      123 Fake St Apt 4, Ottawa ON, K2G 8FT Canada
+      123 Fake St Apartment 4, Ottawa ON, K2G 8FT Canada
+      123 Fake St Unit 4, Ottawa ON, K2G 8FT Canada
+      123 Fake St Suite 4, Ottawa ON, K2G 8FT Canada
+      123 Fake St #4, Ottawa ON, K2G 8FT Canada
+      ```
   - name: Shipping Rates
     description: |
       Prior to creating a Shipment, you can calculate the rates based on the pickup address and the number of stops the driver has to do.
@@ -124,6 +137,10 @@ tags:
       You can schedule the posting of the Shipment in the future.
       Trexity guarantees that the scheduled Shipment will not be posted or broadcasted prior to the time it was scheduled for.
       Please see the [details](/#operation/createShipment) here.
+
+  - name: Parcels
+    description: |
+      Convenient API endpionts for managing shipment parcels.
 
   - name: Routing
     description: |
@@ -148,9 +165,7 @@ tags:
       inform you of what parcel the status is for.
 
       To listen to parcel events listen to the following webhooks:
-      - `parcel.arrived_at_pickup` The driver has arrived at a parcel's delivery address
       - `parcel.picked_up` The driver has scanned and picked up a parcel
-      - `parcel.arrived_at_delivery` The driver has arrived at a parcel's delivery address
       - `parcel.delivered` The driver has scanned and delivered a parcel
       - `parcel.returning` The driver is returning a parcel
       - `parcel.returned` The driver has returned a parcel to pickup address
@@ -203,6 +218,8 @@ tags:
 servers:
   - description: production
     url: 'https://trexity.app/api/v1_0'
+  - description: beta/staging
+    url: 'https://trexity-driver-mobile.uc.r.appspot.com/api/v1_0'
 components:
   securitySchemes:
     MerchantApiKeyAuth:

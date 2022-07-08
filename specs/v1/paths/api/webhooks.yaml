@@ -320,39 +320,6 @@ post:
                   $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
           responses: { '200': { description: Request successfully processed } }
 
-
-    parcel.arrived_at_pickup:
-      '{$request.body#/url}':
-        post:
-          summary: parcel.arrived_at_pickup
-          description: Occurs when a driver has arrived at the pickup address for a parcel within a shipment.
-          parameters:
-            - $ref: ../../components/headers/x-trexity-signature.yaml
-            - $ref: ../../components/headers/x-trexity-event-name.yaml
-            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema:
-                  $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
-    parcel.arrived_at_delivery:
-      '{$request.body#/url}':
-        post:
-          summary: parcel.arrived_at_delivery
-          description: Occurs when a driver arrived at a parcel's delivery address.
-          parameters:
-            - $ref: ../../components/headers/x-trexity-signature.yaml
-            - $ref: ../../components/headers/x-trexity-event-name.yaml
-            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema:
-                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
     parcel.picked_up:
       '{$request.body#/url}':
         post:

@@ -1,19 +1,22 @@
 description: A minimal object that describes a direct shipment
 type: object
-required:
-  - deliveryAddress
-  - requirements
-properties:
-  pickupAddress:
-    $ref: ../Address.yaml
-  deliveryAddress:
-    type: string
-    description: An address
-    items:
-      $ref: ../Address.yaml
-  requirements:
-    $ref: ../ShipmentRequirements.yaml
-  orderValue:
-    type: number
-    minimum: 0
-    description: The order value, if any. Specified in cents.
+allOf:
+  - $ref: '../DeliveryWindowProps.yaml'
+  - type: object
+    required:
+      - deliveryAddress
+      - requirements
+    properties:
+      pickupAddress:
+        $ref: ../Address.yaml
+      deliveryAddress:
+        type: string
+        description: An address
+        items:
+          $ref: ../Address.yaml
+      requirements:
+        $ref: ../ShipmentRequirements.yaml
+      orderValue:
+        type: number
+        minimum: 0
+        description: The order value, if any. Specified in cents.

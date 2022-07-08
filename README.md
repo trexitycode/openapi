@@ -23,6 +23,17 @@ The Trexity OpenAPI Specification is currently in Early Availability. While the 
 
 The organization for this project was heavily inspired by the [DigitalOcean OpenAPI project](https://github.com/digitalocean/openapi).
 
+## Servers
+
+Production:
+  https://trexity.app/api/v1_0
+  https://trexity.app/storage
+
+Beta:
+  https://trexity-driver-mobile.uc.r.appspot.com/api/v1_0
+  https://trexity-driver-mobile.uc.r.appspot.com/storage
+
+
 ---
 
 **Reference**
