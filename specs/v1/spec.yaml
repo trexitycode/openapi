@@ -288,3 +288,5 @@ paths:
     $ref: ./paths/api/delete-webhook.yaml
   /locations:
     $ref: ./paths/api/merchant-locations.yaml
+  /locations/by-query:
+    $ref: ./paths/api/merchant-location-by-query.yaml
