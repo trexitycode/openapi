@@ -44,6 +44,10 @@
       "description": "Retrieve and manage webhooks for a Trexity Merchant.\n\n## Parcel Events\n\nA Shipment is a container of parcels, each with their own delivery address.\nHowever, the Shipment has a single pickup address. As activity occurs on a\nparcel the Shipment's `currentStatus` oscilates between `OUT_FOR_DELIVERY`,\n`ARRIVED_AT_DELIVERY` and `DELIVERED`. However, the Shipment alone doesn't\ninform you of what parcel the status is for.\n\nTo listen to parcel events listen to the following webhooks:\n- `parcel.picked_up` The driver has scanned and picked up a parcel\n- `parcel.delivered` The driver has scanned and delivered a parcel\n- `parcel.returning` The driver is returning a parcel\n- `parcel.returned` The driver has returned a parcel to pickup address\n\nThe request payload of these webhook events indicate the parcel that is currently\nbeing affected.\n\n## Verifying Webhook Requests\n\nAll webhook requests have a header that contains a signature signed with the Trexity Merchant's\nwebhook secret as found in their \"Trexity API\" settings. To verify the signature take the raw\nrequest body as text and create a SHA256 HMAC signed with the merchant's webhook secret and covert to hex.\n\nExample:\n```\n// nodejs\nconst text = await new Promise((resolve, reject) => {\n  const buff = []\n  req.setEncoding('utf8')\n  req.on('data', chunk => (buff.push(chunk)))\n  req.once('end', resolve(buff.join('')))\n  req.once('error', reject)\n})\n\nconst sig = require('crypto')\n  .createHmac('sha256', process.env.TRX_MERCH_WEBHOOK_SECRET)\n  .update(text)\n  .digest('hex')\n\nconst isValid = req.headers['x-trexity-signature'] === sig\n\nif (!isValid) {\n  res.statusCode = 403\n  res.end('Forbidden', 'utf8')\n  return\n}\n\nconst body = JSON.parse(body)\n// ...\n```\n"
     },
     {
+      "name": "Locations",
+      "description": "Retrieve and manage Locations for a Trexity Merchant.\n"
+    },
+    {
       "name": "Regions",
       "description": "Region related operations that usually involve service cities and their zones\n"
     }
@@ -878,6 +882,10 @@
           "parcels"
         ],
         "properties": {
+          "locationId": {
+            "type": "string",
+            "description": "Optionally set Location that this Shipment will belong to. Please see [Locations](#tag/Locations)"
+          },
           "scheduledPostAt": {
             "$ref": "#/components/schemas/SimplifiedDateISOString"
           },
@@ -1207,6 +1215,102 @@
             }
           }
         }
+      },
+      "MerchantLocation": {
+        "description": "A Merchant Location",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "disabledAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "disabledReason": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "address": {
+            "type": "string"
+          },
+          "addressNotes": {
+            "type": "string"
+          },
+          "addressLocation": {
+            "$ref": "#/components/schemas/Location"
+          },
+          "addressProvince": {
+            "type": "string"
+          },
+          "addressCountry": {
+            "type": "string"
+          },
+          "addressCity": {
+            "type": "string"
+          },
+          "addressServiceCity": {
+            "type": "string"
+          },
+          "contactEmail": {
+            "type": "string",
+            "format": "email"
+          },
+          "contactName": {
+            "type": "string",
+            "format": "email"
+          },
+          "contactPhone": {
+            "type": "string"
+          },
+          "contactTitle": {
+            "type": "string"
+          },
+          "availableRequirements": {
+            "type": "object"
+          },
+          "billingContactEmail": {
+            "type": "string"
+          },
+          "timezone": {
+            "type": "string"
+          },
+          "defaultRequiresPersonHandoff": {
+            "type": "boolean"
+          },
+          "defaultContainsAlcohol": {
+            "type": "boolean"
+          },
+          "defaultDeliveryInstructions": {
+            "type": "string"
+          },
+          "defaultPickupInstructions": {
+            "type": "string"
+          },
+          "lifetimeDeliveryCount": {
+            "type": "number"
+          },
+          "lifetimeShipmentsCount": {
+            "type": "number"
+          },
+          "lastDeliveredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "operatingHours": {
+            "type": "object"
+          }
+        }
       }
     },
     "responses": {
@@ -1432,6 +1536,10 @@
                   "shipments"
                 ],
                 "properties": {
+                  "locationId": {
+                    "type": "string",
+                    "description": "Optionally attach a Location to this request. Will be set to default if not specified. Please see [Locations](#tag/getLocations)."
+                  },
                   "shipments": {
                     "type": "array",
                     "minItems": 1,
@@ -3828,6 +3936,119 @@
           },
           "404": {
             "description": "Webhook is not found."
+          },
+          "500": {
+            "description": "An internal error has occurred and the request cannot be completed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "error"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/locations": {
+      "get": {
+        "operationId": "getLocations",
+        "tags": [
+          "Locations"
+        ],
+        "summary": "List locations for a Merchant",
+        "description": "Gets all Locations. In order to manage Locations, you need to use the [Merchant Portal](https://merchant.trexity.com/).\n",
+        "responses": {
+          "200": {
+            "description": "List Locations for a Merchant",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/MerchantLocation"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "An internal error has occurred and the request cannot be completed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "required": [
+                    "error"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/locations/by-query": {
+      "get": {
+        "operationId": "getLocationByQuery",
+        "tags": [
+          "Locations"
+        ],
+        "summary": "Get a best match location based on name and address",
+        "description": "Returns a best match location based on name and address. It will always return exactly one location.\n",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "address",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The address that we will use to find a location.",
+            "example": "123 Fake St, Ottawa ON K2G 6F2, CA"
+          },
+          {
+            "in": "query",
+            "name": "name",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the location.",
+            "example": "default"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/MerchantLocation"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "description": "An internal error has occurred and the request cannot be completed.",
