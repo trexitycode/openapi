@@ -176,9 +176,17 @@
             "type": "number",
             "description": "The total fee in cents for delivery with taxes."
           },
+          "deliveryWithoutTaxes": {
+            "type": "number",
+            "description": "**(added in v1.12)** The total fee in cents for the delivery portion of the rate.\n"
+          },
+          "fuelWithoutTaxes": {
+            "type": "number",
+            "description": "**(added in v1.12)** The total fee in cents for fuel cost portion of the rate.\n"
+          },
           "totalWithoutTaxes": {
             "type": "number",
-            "description": "The total fee in cents for delivery without taxes."
+            "description": "The total fee in cents for entire delivery without taxes."
           },
           "taxRates": {
             "type": "object",
@@ -190,6 +198,21 @@
               "exclusiveMinimum": true,
               "exclusiveMaximum": true
             }
+          },
+          "taxAmounts": {
+            "type": "object",
+            "description": "**(added in v1.12)** An object whos keys are tax rate codes and value is the tax amount charged in cents.\n",
+            "additionalProperties": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "exclusiveMinimum": true,
+              "exclusiveMaximum": true
+            }
+          },
+          "totalTaxes": {
+            "type": "number",
+            "description": "**(added in v1.12)** The total taxes charged in cents.\n"
           },
           "directionsResult": {
             "$ref": "#/components/schemas/GeoJSONDirectionsResult"
