@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.11",
+    "version": "1.12",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -79,8 +79,12 @@
       "DeliveryWindowProps": {
         "type": "object",
         "properties": {
+          "pickupAfter": {
+            "description": "**(added in v1.12)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\n**If present then deliverAfter and deliverBefore are ignored.**\n\nCannot be in the past.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "type": "string"
+          },
           "deliverAfter": {
-            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nCannot be in the past and must be less than or equal to `deliverBefore` if `deliverBefore` is provided.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nIf in the past then defaults to NOW, and must be less than or equal to `deliverBefore` if `deliverBefore` is provided.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
             "type": "string"
           },
           "deliverBefore": {
