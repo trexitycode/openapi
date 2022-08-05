@@ -1,6 +1,12 @@
 description: Payload object used to identify a parcel
 type: object
 properties:
+  numLabels:
+    type: number
+    minimum: 1
+    default: 1
+    description: |
+      **(added in 1.12)** The number of labels for the parcel (each separate package needs a label).
   deliveryAddress:
     $ref: ../Address.yaml
   deliveryAddressNotes:

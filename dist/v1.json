@@ -137,6 +137,12 @@
               "pickupAddress": {
                 "$ref": "#/components/schemas/Address"
               },
+              "numLabels": {
+                "type": "number",
+                "minimum": 1,
+                "default": 1,
+                "description": "**(added in 1.12)** The number of labels for the parcel (each separate package needs a label).\n"
+              },
               "deliveryAddress": {
                 "type": "string",
                 "description": "An address",
@@ -378,6 +384,12 @@
             "minimum": 0,
             "description": "The dollar value of the parcel in CDN as cents"
           },
+          "numLabels": {
+            "type": "number",
+            "minimum": 1,
+            "default": 1,
+            "description": "**(added in 1.12)** The number of labels for the parcel (each separate package needs a label).\n"
+          },
           "deliveryEmail": {
             "type": "string",
             "format": "email",
@@ -533,6 +545,12 @@
           "id": {
             "type": "string",
             "description": "**(added in 1.9)** Unique identifier for this parcel.\n"
+          },
+          "numLabels": {
+            "type": "number",
+            "minimum": 1,
+            "default": 1,
+            "description": "**(added in 1.12)** The number of labels for the parcel (each separate package needs a label).\n"
           },
           "shipmentId": {
             "type": "string",
@@ -836,6 +854,12 @@
         "description": "Payload object used to identify a parcel",
         "type": "object",
         "properties": {
+          "numLabels": {
+            "type": "number",
+            "minimum": 1,
+            "default": 1,
+            "description": "**(added in 1.12)** The number of labels for the parcel (each separate package needs a label).\n"
+          },
           "deliveryAddress": {
             "$ref": "#/components/schemas/Address"
           },

@@ -66,6 +66,12 @@ properties:
     type: number
     minimum: 0
     description: The dollar value of the parcel in CDN as cents
+  numLabels:
+    type: number
+    minimum: 1
+    default: 1
+    description: |
+      **(added in 1.12)** The number of labels for the parcel (each separate package needs a label).
   deliveryEmail:
     type: string
     format: email

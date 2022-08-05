@@ -5,6 +5,12 @@ properties:
     type: string
     description: |
       **(added in 1.9)** Unique identifier for this parcel.
+  numLabels:
+    type: number
+    minimum: 1
+    default: 1
+    description: |
+      **(added in 1.12)** The number of labels for the parcel (each separate package needs a label).
   shipmentId:
     type: string
     description: |

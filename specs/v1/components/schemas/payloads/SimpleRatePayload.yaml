@@ -9,6 +9,12 @@ allOf:
     properties:
       pickupAddress:
         $ref: ../Address.yaml
+      numLabels:
+        type: number
+        minimum: 1
+        default: 1
+        description: |
+          **(added in 1.12)** The number of labels for the parcel (each separate package needs a label).
       deliveryAddress:
         type: string
         description: An address
