@@ -2,6 +2,9 @@ type: object
 description: |
   Object representing the requirements that must be met by a driver in order
   for them to be considered for delivery.
+
+  If no requirements object is specified then the merchant location's default requirements
+  will be used.
 properties:
   # vehicleType:
   #   type: string

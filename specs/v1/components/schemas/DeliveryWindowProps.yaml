@@ -6,7 +6,7 @@ properties:
 
       **If present then deliverAfter and deliverBefore are ignored.**
 
-      Cannot be in the past.
+      If in the past then defaults to NULL (i.e. ASAP).
 
       Note that ISO date strings are always in UTC time.
 
@@ -16,7 +16,7 @@ properties:
     description: |
       **(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
 
-      If in the past then defaults to NOW, and must be less than or equal to `deliverBefore` if `deliverBefore` is provided.
+      If in the past then defaults to NULL (i.e. ASAP), and must be less than or equal to `deliverBefore` if `deliverBefore` is provided.
 
       Note that ISO date strings are always in UTC time.
 
@@ -26,7 +26,7 @@ properties:
     description: |
       **(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
 
-      Must be at least 60 minutes in the future.
+      Cannot be in the past.
 
       Note that ISO date strings are always in UTC time.
 

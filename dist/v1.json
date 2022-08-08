@@ -80,15 +80,15 @@
         "type": "object",
         "properties": {
           "pickupAfter": {
-            "description": "**(added in v1.12)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\n**If present then deliverAfter and deliverBefore are ignored.**\n\nCannot be in the past.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "description": "**(added in v1.12)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\n**If present then deliverAfter and deliverBefore are ignored.**\n\nIf in the past then defaults to NULL (i.e. ASAP).\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
             "type": "string"
           },
           "deliverAfter": {
-            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nIf in the past then defaults to NOW, and must be less than or equal to `deliverBefore` if `deliverBefore` is provided.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nIf in the past then defaults to NULL (i.e. ASAP), and must be less than or equal to `deliverBefore` if `deliverBefore` is provided.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
             "type": "string"
           },
           "deliverBefore": {
-            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nMust be at least 60 minutes in the future.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nCannot be in the past.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
             "type": "string"
           }
         }
@@ -100,7 +100,7 @@
       },
       "ShipmentRequirements": {
         "type": "object",
-        "description": "Object representing the requirements that must be met by a driver in order\nfor them to be considered for delivery.\n",
+        "description": "Object representing the requirements that must be met by a driver in order\nfor them to be considered for delivery.\n\nIf no requirements object is specified then the merchant location's default requirements\nwill be used.\n",
         "properties": {
           "legalAgeAlcohol": {
             "type": "boolean",
@@ -130,8 +130,7 @@
           {
             "type": "object",
             "required": [
-              "deliveryAddress",
-              "requirements"
+              "deliveryAddress"
             ],
             "properties": {
               "pickupAddress": {
@@ -929,7 +928,6 @@
         "description": "Payload object used to create a shipment",
         "type": "object",
         "required": [
-          "requirements",
           "parcels"
         ],
         "properties": {
@@ -1553,18 +1551,89 @@
                         }
                       ]
                     }
-                  },
-                  "Cannot Deliver": {
-                    "value": {
-                      "data": []
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Input error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    },
+                    "code": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "Unexhaustive list of codes.\n\n- `invalid-merchant-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-data-payload` = When there are issues with the input data provided\n- `num-labels-too-large` = When numLabels is too large\n"
                     }
                   }
                 }
               }
             }
           },
+          "401": {
+            "description": "Unauthorized"
+          },
           "403": {
             "description": "Forbidden"
+          },
+          "404": {
+            "description": "No rates",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "minItems": 0,
+                      "maxItems": 0,
+                      "items": {
+                        "$ref": "#/components/schemas/SimpleRate"
+                      }
+                    },
+                    "error": {
+                      "type": "object",
+                      "properties": {
+                        "message": {
+                          "type": "string"
+                        },
+                        "code": {
+                          "type": "string",
+                          "description": "Unexhaustive list of codes.\n\n- `service-unavailable` = When API Service Availability Rules in merchant portal prevent rates from being returned\n- `time-constraint-violation` = When the constraint specified by pickupAfter, or deliverAfter and/or deliverBefore cannot be met\n- `post-date-outside-operating-hours` = When the estimated post date is outside Trexity's or the merchant's operating hours\n- `delivery-date-outside-operating-hours` = When the estimated delivery date is outside Trexity's or the merchant's operating hours\n- `pickup-address-outsidetaxboundary` = When the pickup address is outside the province/state of the merchant's location\n- `merchant-disabled` = When the merchant account has been disabled\n- `missing-profile-details` = When the merchant profile is incomplete\n- `delivery-point-outside-zone` = When the delivery address is outside Trexity's service area\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }

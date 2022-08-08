@@ -5,7 +5,6 @@ allOf:
   - type: object
     required:
       - deliveryAddress
-      - requirements
     properties:
       pickupAddress:
         $ref: ../Address.yaml
