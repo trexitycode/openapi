@@ -3,10 +3,9 @@ get:
   tags: [Locations]
   summary: Get a best match location based on name and address
   description: |
-    Returns a best match location based on name and address. It will always return exactly one location.
+    Returns a best match location based on name or address.
 
-  ##############################################################################
-
+    **One of name or address or both must be provided.**
   parameters:
     - in: query
       name: address
@@ -32,7 +31,28 @@ get:
             properties:
               data:
                 $ref: ../../components/schemas/MerchantLocation.yaml
+    '400':
+      description: Input error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string, nullable: true }
+              params: { type: object, nullable: true }
+              code:
+                type: string
+                nullable: true
+                description: |
+                  Unexhaustive list of codes.
 
+                  - `invalid-data-payload` = When there are issues with the input data provided
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: NotFound
     '500':
       description: An internal error has occurred and the request cannot be completed.
       content:

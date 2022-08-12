@@ -110,7 +110,6 @@ post:
                       - `missing-profile-details` = When the merchant profile is incomplete
                       - `delivery-point-outside-zone` = When the delivery address is outside Trexity's service area
                       - `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area
-
     '500':
       description: Internal server error
       content:
