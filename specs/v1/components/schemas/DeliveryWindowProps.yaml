@@ -6,21 +6,27 @@ properties:
 
       **If present then deliverAfter and deliverBefore are ignored.**
 
-      If in the past then defaults to NULL (i.e. ASAP).
+      If in the past then defaults to ASAP.
+      Can be set to `new Date().toISOString()` or `"ASAP"` for ASAP.
 
       Note that ISO date strings are always in UTC time.
 
       An example: 2020-07-25T10:48:08.987Z
+
+      An example: ASAP
     type: string
   deliverAfter:
     description: |
       **(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
 
-      If in the past then defaults to NULL (i.e. ASAP), and must be less than or equal to `deliverBefore` if `deliverBefore` is provided.
+      If in the past then defaults to ASAP, and must be less than or equal to `deliverBefore` if `deliverBefore` is provided.
+      Can be set to `new Date().toISOString()` or `"ASAP"` for ASAP.
 
       Note that ISO date strings are always in UTC time.
 
       An example: 2020-07-25T10:48:08.987Z
+
+      An example: ASAP
     type: string
   deliverBefore:
     description: |

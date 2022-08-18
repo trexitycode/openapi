@@ -18,12 +18,19 @@ post:
     address and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)
     endpoint for multiple delivery addresses.
 
-    **(new in 1.10)** The rate response will now include estimates for post, pickup, and delivery time.
-    Additionally, the new properties `deliverAfter` and `deliverBefore` can be provided to indicate a
-    delivery window. Otheriwse, ASAP is assumed. Use the estimated scheduled post date when creating the shipment.
+    The rate response will now include estimates for post, pickup, and delivery time.
+    Additionally, the new properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a
+    delivery window. Otheriwse ASAP is assumed. Use the estimated scheduled post
+    date in the response when creating the shipment.
 
-    If a delivery window is provided and it's impossible to meet the delivery window then now rates will
-    be returned.
+    **(changed in 1.13)** Restore the behaviour prior to v1.13; if no value is specified for `pickupAfter`, `deliverAfter`
+    or `deliverBefore`, then no time constraint or operating hours checks will be performed. However, if
+    any of the time constraint properties mentioned are provided, then the time constraints much be achievable,
+    and they must be within the merchant's and Trexity's operating hours, otherwise no rates will be returned with a status of 404.
+
+    ### ASAP
+    To simulate an ASAP delivery AND check operating hours set `pickupAfter` to `new Date()` or to avoid time drift between your server and Trexity use the value `"ASAP"`.
+    Otherwise, the timing estimates returned will still assume an ASAP delivery, but without time constraint or operating hours checks.
   x-codeSamples:
     - $ref: ../../code_samples/Shell/simple-rate/post.yaml
 

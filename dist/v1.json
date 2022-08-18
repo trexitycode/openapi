@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.12",
+    "version": "1.13",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -80,11 +80,11 @@
         "type": "object",
         "properties": {
           "pickupAfter": {
-            "description": "**(added in v1.12)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\n**If present then deliverAfter and deliverBefore are ignored.**\n\nIf in the past then defaults to NULL (i.e. ASAP).\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "description": "**(added in v1.12)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\n**If present then deliverAfter and deliverBefore are ignored.**\n\nIf in the past then defaults to ASAP.\nCan be set to `new Date().toISOString()` or `\"ASAP\"` for ASAP.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n\nAn example: ASAP\n",
             "type": "string"
           },
           "deliverAfter": {
-            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nIf in the past then defaults to NULL (i.e. ASAP), and must be less than or equal to `deliverBefore` if `deliverBefore` is provided.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nIf in the past then defaults to ASAP, and must be less than or equal to `deliverBefore` if `deliverBefore` is provided.\nCan be set to `new Date().toISOString()` or `\"ASAP\"` for ASAP.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n\nAn example: ASAP\n",
             "type": "string"
           },
           "deliverBefore": {
@@ -1508,7 +1508,7 @@
           "Shipping Rates"
         ],
         "summary": "Simple rate",
-        "description": "Calculate the rate for a direct shipment from a single pickup address to a\nsingle delivery address.\n\nReturns the estimated distance (in meters), estimated travel duration (in\nseconds), and fee from the pickup address to the delivery address.\n\nIf no `pickupAddress` is specified then the merchant's business address will\nbe used as the pickup address.\n\n**(new in v1.7)** Review the [Usage Policy](/#section/Usage-Policy).\n\n**(new in v1.8)** Use this endpoint for direct shipment rates (single pickup\naddress and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)\nendpoint for multiple delivery addresses.\n\n**(new in 1.10)** The rate response will now include estimates for post, pickup, and delivery time.\nAdditionally, the new properties `deliverAfter` and `deliverBefore` can be provided to indicate a\ndelivery window. Otheriwse, ASAP is assumed. Use the estimated scheduled post date when creating the shipment.\n\nIf a delivery window is provided and it's impossible to meet the delivery window then now rates will\nbe returned.\n",
+        "description": "Calculate the rate for a direct shipment from a single pickup address to a\nsingle delivery address.\n\nReturns the estimated distance (in meters), estimated travel duration (in\nseconds), and fee from the pickup address to the delivery address.\n\nIf no `pickupAddress` is specified then the merchant's business address will\nbe used as the pickup address.\n\n**(new in v1.7)** Review the [Usage Policy](/#section/Usage-Policy).\n\n**(new in v1.8)** Use this endpoint for direct shipment rates (single pickup\naddress and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)\nendpoint for multiple delivery addresses.\n\nThe rate response will now include estimates for post, pickup, and delivery time.\nAdditionally, the new properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a\ndelivery window. Otheriwse ASAP is assumed. Use the estimated scheduled post\ndate in the response when creating the shipment.\n\n**(changed in 1.13)** Restore the behaviour prior to v1.13; if no value is specified for `pickupAfter`, `deliverAfter`\nor `deliverBefore`, then no time constraint or operating hours checks will be performed. However, if\nany of the time constraint properties mentioned are provided, then the time constraints much be achievable,\nand they must be within the merchant's and Trexity's operating hours, otherwise no rates will be returned with a status of 404.\n\n### ASAP\nTo simulate an ASAP delivery AND check operating hours set `pickupAfter` to `new Date()` or to avoid time drift between your server and Trexity use the value `\"ASAP\"`.\nOtherwise, the timing estimates returned will still assume an ASAP delivery, but without time constraint or operating hours checks.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
