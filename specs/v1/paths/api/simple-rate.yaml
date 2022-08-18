@@ -28,7 +28,8 @@ post:
     any of the time constraint properties mentioned are provided, then the time constraints much be achievable,
     and they must be within the merchant's and Trexity's operating hours, otherwise no rates will be returned with a status of 404.
 
-    ### ASAP
+    **ASAP**
+
     To simulate an ASAP delivery AND check operating hours set `pickupAfter` to `new Date()` or to avoid time drift between your server and Trexity use the value `"ASAP"`.
     Otherwise, the timing estimates returned will still assume an ASAP delivery, but without time constraint or operating hours checks.
   x-codeSamples:
