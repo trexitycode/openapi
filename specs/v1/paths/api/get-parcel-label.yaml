@@ -1,4 +1,4 @@
-post:
+get:
   operationId: getParcelLabel
   tags: [Parcels]
   summary: Get Parcel Label

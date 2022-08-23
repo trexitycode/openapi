@@ -3137,7 +3137,7 @@
       }
     },
     "/parcels/{parcelId}": {
-      "post": {
+      "get": {
         "operationId": "getParcel",
         "tags": [
           "Parcels"
@@ -3179,7 +3179,7 @@
       }
     },
     "/parcels/{parcelId}/pod": {
-      "post": {
+      "get": {
         "operationId": "getParcelPod",
         "tags": [
           "Parcels"
@@ -3226,7 +3226,7 @@
       }
     },
     "/parcels/{parcelId}/label": {
-      "post": {
+      "get": {
         "operationId": "getParcelLabel",
         "tags": [
           "Parcels"
