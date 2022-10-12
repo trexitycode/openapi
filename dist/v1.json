@@ -574,7 +574,7 @@
           },
           "shipmentId": {
             "type": "string",
-            "description": "**(added in 1.9)** Shipment container ID\n"
+            "description": "**(added in 1.9)** Shipment container ID. In the case of a return, this will be the shipment ID of the original shipment (not the newly created return shipment)\n"
           },
           "deliveryAddress": {
             "$ref": "#/components/schemas/Address"
@@ -1269,7 +1269,7 @@
             "properties": {
               "shipmentId": {
                 "type": "string",
-                "description": "The ID of the shipment containing the parcel affected."
+                "description": "The ID of the shipment containing the parcel affected. In the case of a return, this ID will be for the newly created return shipment."
               },
               "deliveryIndex": {
                 "type": "integer",
