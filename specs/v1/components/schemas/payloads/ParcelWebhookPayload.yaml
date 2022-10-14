@@ -13,7 +13,7 @@ properties:
     properties:
       shipmentId:
         type: string
-        description: The ID of the shipment containing the parcel affected.
+        description: The ID of the shipment containing the parcel affected. In the case of a return, this ID will be for the newly created return shipment.
       deliveryIndex:
         type: integer
         description: The index of the parcel affected within the shipment.

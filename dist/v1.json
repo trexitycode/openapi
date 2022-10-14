@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.13",
+    "version": "1.14",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -189,9 +189,30 @@
             "type": "number",
             "description": "**(added in v1.12)** The total fee in cents for fuel cost portion of the rate.\n"
           },
+          "surchargesWithoutTaxes": {
+            "type": "array",
+            "description": "**(added in v1.14)** The breakdown of each surcharge before taxes added to the rate\n",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "oversized",
+                    "distance"
+                  ],
+                  "description": "The surcharge type.\n\n- `oversized` applied for a surplus of labels\n- `distance` applied for long distance deliveries\n"
+                },
+                "amount": {
+                  "type": "number",
+                  "description": "The amount in cents of the surcharge"
+                }
+              }
+            }
+          },
           "totalWithoutTaxes": {
             "type": "number",
-            "description": "The total fee in cents for entire delivery without taxes."
+            "description": "The total fee in cents for entire delivery without taxes.\n\nEquates to the sum of\n- `deliveryWithoutTaxes`\n- `fuelWithoutTaxes`\n- total `amount` from `surchargesWithoutTaxes`\n"
           },
           "taxRates": {
             "type": "object",
@@ -553,7 +574,7 @@
           },
           "shipmentId": {
             "type": "string",
-            "description": "**(added in 1.9)** Shipment container ID\n"
+            "description": "**(added in 1.9)** Shipment container ID. In the case of a return, this will be the shipment ID of the original shipment (not the newly created return shipment)\n"
           },
           "deliveryAddress": {
             "$ref": "#/components/schemas/Address"
@@ -1248,7 +1269,7 @@
             "properties": {
               "shipmentId": {
                 "type": "string",
-                "description": "The ID of the shipment containing the parcel affected."
+                "description": "The ID of the shipment containing the parcel affected. In the case of a return, this ID will be for the newly created return shipment."
               },
               "deliveryIndex": {
                 "type": "integer",
