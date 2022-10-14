@@ -1438,6 +1438,16 @@
             },
             "description": "The address to check.",
             "example": "123 Fake St, Ottawa ON K2G 6F2, CA"
+          },
+          {
+            "in": "query",
+            "name": "pickupAddress",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The pickup address used to generate the tiers from.",
+            "example": "123 Fake St, Ottawa ON K2G 6F2, CA"
           }
         ],
         "responses": {
@@ -1460,9 +1470,12 @@
                           "enum": [
                             "none",
                             "normal",
-                            "extended"
+                            "extended",
+                            "tier-1",
+                            "tier-2",
+                            "tier-3"
                           ],
-                          "description": "The delivery classification of the address.\n\n`none` = The address is outside a known delivery zone and is unserviceable.\n\n`normal` = The address is serviceable and normal delivery rates apply.\n\n`extended` = The address is serviceable and surcharges may apply.\n"
+                          "description": "The delivery classification of the address.\n\n`none` = The address is outside a known delivery zone and is unserviceable.\n\n`normal` = The address is serviceable and normal delivery rates apply.\n\n`extended` = The address is serviceable and surcharges may apply.\n\n`tier-1` = (only if pickupAddress is specified) The address belongs to 'tier-1' delivery tier.\n\n`tier-2` = (only if pickupAddress is specified) The address belongs to 'tier-2' delivery tier.\n\n`tier-3` = (only if pickupAddress is specified) The address belongs to 'tier-3' delivery tier.\n"
                         },
                         "lngLat": {
                           "type": "object",

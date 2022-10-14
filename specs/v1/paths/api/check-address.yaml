@@ -30,6 +30,13 @@ get:
         type: string
       description: The address to check.
       example: 123 Fake St, Ottawa ON K2G 6F2, CA
+    - in: query
+      name: pickupAddress
+      required: false
+      schema:
+        type: string
+      description: The pickup address used to generate the tiers from.
+      example: 123 Fake St, Ottawa ON K2G 6F2, CA
   responses:
     '200':
       description: Success
@@ -46,7 +53,7 @@ get:
                     description: If `true` then the address can be used as a pickup address (or business address).
                   delivery:
                     type: string
-                    enum: [none, normal, extended]
+                    enum: [none, normal, extended, 'tier-1', 'tier-2', 'tier-3']
                     description: |
                       The delivery classification of the address.
 
@@ -55,6 +62,12 @@ get:
                       `normal` = The address is serviceable and normal delivery rates apply.
 
                       `extended` = The address is serviceable and surcharges may apply.
+
+                      `tier-1` = (only if pickupAddress is specified) The address belongs to 'tier-1' delivery tier.
+
+                      `tier-2` = (only if pickupAddress is specified) The address belongs to 'tier-2' delivery tier.
+
+                      `tier-3` = (only if pickupAddress is specified) The address belongs to 'tier-3' delivery tier.
                   lngLat:
                     type: object
                     description: |
