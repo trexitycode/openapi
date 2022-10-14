@@ -20,6 +20,14 @@ get:
 
   ##############################################################################
 
+  parameters:
+    - in: query
+      name: pickupAddress
+      required: false
+      schema:
+        type: string
+      description: The pickup address from which to generate the tiered zones.
+      example: 123 Fake St, Ottawa ON K2G 6F2, CA
   responses:
     '200':
       description: Success
