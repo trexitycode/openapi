@@ -320,6 +320,57 @@ post:
                   $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
           responses: { '200': { description: Request successfully processed } }
 
+    parcel.created:
+      '{$request.body#/url}':
+        post:
+          summary: parcel.created
+          description: |
+            Occurs when a parcel has been created during a shipment create or added to a shipment during update.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    parcel.updated:
+      '{$request.body#/url}':
+        post:
+          summary: parcel.updted
+          description: |
+            Occurs when a parcel has been updated during a shipment update.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
+    parcel.deleted:
+      '{$request.body#/url}':
+        post:
+          summary: parcel.deleted
+          description: |
+            Occurs when a parcel has been deleted during a shipment update.
+          parameters:
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
+          responses: { '200': { description: Request successfully processed } }
     parcel.picked_up:
       '{$request.body#/url}':
         post:

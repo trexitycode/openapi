@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: '1.14'
+  version: '1.15'
   title: Trexity API
   license:
     name: MIT
@@ -165,6 +165,9 @@ tags:
       inform you of what parcel the status is for.
 
       To listen to parcel events listen to the following webhooks:
+      - `parcel.created` The parcel has been created during shipment creation or update
+      - `parcel.updated` The parcel has been updated during shipment update
+      - `parcel.deleted` The parcel has been deleted during shipment udpate
       - `parcel.picked_up` The driver has scanned and picked up a parcel
       - `parcel.delivered` The driver has scanned and delivered a parcel
       - `parcel.returning` The driver is returning a parcel
