@@ -6,7 +6,7 @@ source: |
     -d '{
       "pickupAddress": "9 Slack Rd, Nepean ON K2G 0B7, CA",
       "pickupAddressNotes": "Unit 1, ring the buzzer.",
-      "pickupNotes": "Please be careful, since it may contain fragile things!",
+      "pickupInstructions": "Please be careful, since it may contain fragile things!",
       "requirements": {},
       "parcels": [
         {

@@ -7,7 +7,7 @@ gdprRedacted: false
 archived: false
 currentStatus: ''
 pickupAddress: '456 Elgin St, Ottawa ON K2P 1N5, CA'
-pickupNotes: Please be careful since it's fragile!
+pickupInstructions: Please be careful since it's fragile!
 pickupAddressLocation: null
 pickupAddressProvince: ''
 pickupAddressCountry: ''

@@ -4,5 +4,5 @@ source: |
     -H 'Content-Type: application/json'\
     -H 'Authorization: Bearer <Trexity API Key>'\
     -d '{
-      "pickupNotes": "Needs to go out ASAP!"
+      "pickupInstructions": "Needs to go out ASAP!"
     }'

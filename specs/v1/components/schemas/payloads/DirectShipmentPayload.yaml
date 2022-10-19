@@ -17,9 +17,11 @@ properties:
   pickupAddressNotes:
     type: string
     description: Extra information relating to the pickup address ONLY, like the apartment/unit number.
-  pickupNotes:
+  pickupInstructions:
     type: string
-    description: Special notes or instructions regarding pickup like the description of the location, what door to use, etc.
+    description: |
+      **(renamed from pickupNotes to pickupInstructions in v1.16) pickupNotes will still be accepted**
+      Special notes or instructions regarding pickup like the description of the location, what door to use, etc.
   merchantPpid:
     type: string
     description: |

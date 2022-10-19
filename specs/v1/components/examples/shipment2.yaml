@@ -355,7 +355,7 @@ gdprRedacted: false
 archived: false
 currentStatus: WAITING_FOR_ACCEPTANCE
 pickupAddress: '456 Elgin St, Ottawa ON K2P 1N5, CA'
-pickupNotes: Please be careful since it's fragile!
+pickupInstructions: Please be careful since it's fragile!
 pickupAddressLocation:
   latitude: 45.4115087
   longitude: -75.69323659999999

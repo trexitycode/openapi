@@ -52,7 +52,7 @@ patch:
         schema:
           $ref: ../../components/schemas/payloads/UpdateShipmentPayload.yaml
         example:
-          pickupNotes: 'Needs to go out ASAP!'
+          pickupInstructions: 'Needs to go out ASAP!'
   responses:
     '204':
       description: Success

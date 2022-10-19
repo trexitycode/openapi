@@ -6,9 +6,11 @@ properties:
   pickupAddressNotes:
     type: string
     description: Extra notes relating to the pickup address, such as apartment/unit number, reference, description of the location, etc.
-  pickupNotes:
+  pickupInstructions:
     type: string
-    description: Special notes or instructions regarding pickup
+    description: |
+      **(renamed in v1.16) pickupNotes will still be accepted**
+      Special notes or instructions regarding pickup
   requirements:
     $ref: ../ShipmentRequirements.yaml
   ignoreTargetDeliveryDuration:

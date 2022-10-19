@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.15",
+    "version": "1.16",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -348,9 +348,9 @@
             "type": "string",
             "description": "Extra information relating to the pickup address ONLY, like the apartment/unit number."
           },
-          "pickupNotes": {
+          "pickupInstructions": {
             "type": "string",
-            "description": "Special notes or instructions regarding pickup like the description of the location, what door to use, etc."
+            "description": "**(renamed from pickupNotes to pickupInstructions in v1.16) pickupNotes will still be accepted**\nSpecial notes or instructions regarding pickup like the description of the location, what door to use, etc.\n"
           },
           "merchantPpid": {
             "type": "string",
@@ -694,7 +694,7 @@
             "type": "string",
             "description": "Extra notes relating to the pickup address, such as apartment/unit number, reference, description of the location, etc."
           },
-          "pickupNotes": {
+          "pickupInstructions": {
             "type": "string",
             "description": "Special notes or instructions regarding pickup"
           },
@@ -969,9 +969,9 @@
           "requirements": {
             "$ref": "#/components/schemas/ShipmentRequirements"
           },
-          "pickupNotes": {
+          "pickupInstructions": {
             "type": "string",
-            "description": "Special notes or instructions regarding pickup like the description of the location, what door to use, etc."
+            "description": "**(renamed from pickupNotes to pickupInstructions in v1.16) pickupNotes will still be accepted**\nSpecial notes or instructions regarding pickup like the description of the location, what door to use, etc.\n"
           },
           "merchantPpid": {
             "type": "string",
@@ -1046,9 +1046,9 @@
             "type": "string",
             "description": "Extra notes relating to the pickup address, such as apartment/unit number, reference, description of the location, etc."
           },
-          "pickupNotes": {
+          "pickupInstructions": {
             "type": "string",
-            "description": "Special notes or instructions regarding pickup"
+            "description": "**(renamed in v1.16) pickupNotes will still be accepted**\nSpecial notes or instructions regarding pickup\n"
           },
           "requirements": {
             "$ref": "#/components/schemas/ShipmentRequirements"
@@ -1840,7 +1840,7 @@
         "x-codeSamples": [
           {
             "lang": "Shell",
-            "source": "curl -X POST {server-url}/shipments\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\\\n  -d '{\n    \"pickupAddress\": \"9 Slack Rd, Nepean ON K2G 0B7, CA\",\n    \"pickupAddressNotes\": \"Unit 1, ring the buzzer.\",\n    \"pickupNotes\": \"Please be careful, since it may contain fragile things!\",\n    \"requirements\": {},\n    \"parcels\": [\n      {\n        \"deliveryAddress\": \"207 Queen St, Ottawa ON K1P 6E5, CA\",\n        \"deliveryName\": \"Srinivasa Ramanujan\",\n        \"description\": \"Glasses, bifocals\",\n        \"orderId\": \"BFG10K\",\n        \"parcelValue\": 10000\n      }\n    ]\n  }'\n"
+            "source": "curl -X POST {server-url}/shipments\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\\\n  -d '{\n    \"pickupAddress\": \"9 Slack Rd, Nepean ON K2G 0B7, CA\",\n    \"pickupAddressNotes\": \"Unit 1, ring the buzzer.\",\n    \"pickupInstructions\": \"Please be careful, since it may contain fragile things!\",\n    \"requirements\": {},\n    \"parcels\": [\n      {\n        \"deliveryAddress\": \"207 Queen St, Ottawa ON K1P 6E5, CA\",\n        \"deliveryName\": \"Srinivasa Ramanujan\",\n        \"description\": \"Glasses, bifocals\",\n        \"orderId\": \"BFG10K\",\n        \"parcelValue\": 10000\n      }\n    ]\n  }'\n"
           }
         ],
         "requestBody": {
@@ -1855,7 +1855,7 @@
                 "ImmediateInit": {
                   "value": {
                     "pickupAddress": "9 Slack Rd, Nepean ON K2G 0B7, CA",
-                    "pickupNotes": "Please be careful, since it may contain fragile things!",
+                    "pickupInstructions": "Please be careful, since it may contain fragile things!",
                     "requirements": {},
                     "parcels": [
                       {
@@ -1871,7 +1871,7 @@
                 "ScheduledInit": {
                   "value": {
                     "pickupAddress": "207 Queen St, Ottawa ON K1P 6E5, CA",
-                    "pickupNotes": "Please be careful, since it may contain fragile things!",
+                    "pickupInstructions": "Please be careful, since it may contain fragile things!",
                     "requirements": {},
                     "scheduledPostAt": "2020-07-25T10:16:11.048Z",
                     "parcels": [
@@ -2232,7 +2232,7 @@
         "x-codeSamples": [
           {
             "lang": "Shell",
-            "source": "curl -X PATCH {server-url}/shipments/TRX973036599-6KL\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\\\n  -d '{\n    \"pickupNotes\": \"Needs to go out ASAP!\"\n  }'\n"
+            "source": "curl -X PATCH {server-url}/shipments/TRX973036599-6KL\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\\\n  -d '{\n    \"pickupInstructions\": \"Needs to go out ASAP!\"\n  }'\n"
           }
         ],
         "parameters": [
@@ -2255,7 +2255,7 @@
                 "$ref": "#/components/schemas/UpdateShipmentPayload"
               },
               "example": {
-                "pickupNotes": "Needs to go out ASAP!"
+                "pickupInstructions": "Needs to go out ASAP!"
               }
             }
           }
