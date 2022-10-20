@@ -35,10 +35,14 @@ post:
               data:
                 type: object
                 properties:
-                  error:
+                  errors:
                     type: array
+                    items: { type: object }
+                    nullable: true
                   result:
                     type: array
+                    description: Array of shipment IDs that have been created
+                    items: { type: string }
           examples:
             Success:
               value:

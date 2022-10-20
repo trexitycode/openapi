@@ -55,6 +55,9 @@ get:
                         coordinates:
                           type: array
                           description: Array of arrays containing longitude and latitude coordinates (in that order)
+                          items:
+                            type: array
+                            items: { type: number }
                     metadata:
                       type: object
                       description: Object that can contain miscellaneous props, but will always contain "layer"
@@ -84,6 +87,9 @@ get:
                         coordinates:
                           type: array
                           description: Array of arrays containing longitude and latitude coordinates (in that order)
+                          items:
+                            type: array
+                            items: { type: number }
                     metadata:
                       type: object
                       description: Object that can contain miscellaneous props, but will always contain "layer"
@@ -114,6 +120,9 @@ get:
                         coordinates:
                           type: array
                           description: Array of arrays containing longitude and latitude coordinates (in that order)
+                          items:
+                            type: array
+                            items: { type: number }
                     metadata:
                       type: object
                       description: Object that can contain miscellaneous props, but will always contain "layer"

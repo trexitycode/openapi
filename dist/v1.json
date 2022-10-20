@@ -832,7 +832,28 @@
           "postErrors": {
             "type": "array",
             "description": "If anything goes wrong during posting, this will contain details of the errors. Typically, it's an empty array.",
-            "nullable": true
+            "nullable": true,
+            "items": {
+              "type": "object",
+              "properties": {
+                "date": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "key": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "acknowledged": {
+                  "type": "boolean"
+                },
+                "metadata": {
+                  "type": "object"
+                }
+              }
+            }
           },
           "currentDriverEstimatedSecondsToPickup": {
             "type": "number",
@@ -2144,11 +2165,19 @@
                     "data": {
                       "type": "object",
                       "properties": {
-                        "error": {
-                          "type": "array"
+                        "errors": {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          },
+                          "nullable": true
                         },
                         "result": {
-                          "type": "array"
+                          "type": "array",
+                          "description": "Array of shipment IDs that have been created",
+                          "items": {
+                            "type": "string"
+                          }
                         }
                       }
                     }
@@ -2746,7 +2775,13 @@
                               },
                               "coordinates": {
                                 "type": "array",
-                                "description": "Array of arrays containing longitude and latitude coordinates (in that order)"
+                                "description": "Array of arrays containing longitude and latitude coordinates (in that order)",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number"
+                                  }
+                                }
                               }
                             }
                           },
@@ -2788,7 +2823,13 @@
                               },
                               "coordinates": {
                                 "type": "array",
-                                "description": "Array of arrays containing longitude and latitude coordinates (in that order)"
+                                "description": "Array of arrays containing longitude and latitude coordinates (in that order)",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number"
+                                  }
+                                }
                               }
                             }
                           },
@@ -2830,7 +2871,13 @@
                               },
                               "coordinates": {
                                 "type": "array",
-                                "description": "Array of arrays containing longitude and latitude coordinates (in that order)"
+                                "description": "Array of arrays containing longitude and latitude coordinates (in that order)",
+                                "items": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "number"
+                                  }
+                                }
                               }
                             }
                           },

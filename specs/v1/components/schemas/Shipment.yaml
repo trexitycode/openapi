@@ -155,6 +155,14 @@ properties:
     type: array
     description: If anything goes wrong during posting, this will contain details of the errors. Typically, it's an empty array.
     nullable: true
+    items:
+      type: object
+      properties:
+        date: { type: string, format: date-time }
+        key: { type: string }
+        message: { type: string }
+        acknowledged: { type: boolean }
+        metadata: { type: object }
 
   currentDriverEstimatedSecondsToPickup:
     type: number
