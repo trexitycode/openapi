@@ -43,6 +43,7 @@ properties:
     items:
       allOf:
         - $ref: ./ParcelPayload.yaml
+        - $ref: ./SpecialParcelFields.yaml
         - type: object
           required:
             - deliveryAddress

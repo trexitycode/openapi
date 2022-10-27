@@ -947,6 +947,19 @@
             "type": "boolean",
             "description": "**(added in v1.8)** Does this parcel contain alcoholic products?\n"
           },
+          "load": {
+            "$ref": "#/components/schemas/ParcelLoad"
+          },
+          "metadata": {
+            "type": "object",
+            "description": "**(added in v1.1)**\nThe metadata fields associated to the parcel. If the intent is to\nlist shipments with this metadata field, then ensure the value is\nsaved as a string and not say a number.\n"
+          }
+        }
+      },
+      "SpecialParcelFields": {
+        "description": "Payload object used to identify special parcel fields",
+        "type": "object",
+        "properties": {
           "externalId": {
             "type": "string",
             "maxLength": 256,
@@ -956,13 +969,6 @@
             "type": "string",
             "maxLength": 256,
             "description": "**(added in v1.9)** The ID embedded in your custom label’s QR code. If\nnot specified, you will be required to use our built-in labels. If\nspecified, you will not be able to request our built-in label for this\nparcel.\n"
-          },
-          "load": {
-            "$ref": "#/components/schemas/ParcelLoad"
-          },
-          "metadata": {
-            "type": "object",
-            "description": "**(added in v1.1)**\nThe metadata fields associated to the parcel. If the intent is to\nlist shipments with this metadata field, then ensure the value is\nsaved as a string and not say a number.\n"
           }
         }
       },
@@ -1023,6 +1029,9 @@
               "allOf": [
                 {
                   "$ref": "#/components/schemas/ParcelPayload"
+                },
+                {
+                  "$ref": "#/components/schemas/SpecialParcelFields"
                 },
                 {
                   "type": "object",
