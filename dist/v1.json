@@ -4019,7 +4019,7 @@
           "parcel.updated": {
             "{$request.body#/url}": {
               "post": {
-                "summary": "parcel.updted",
+                "summary": "parcel.updated",
                 "description": "Occurs when a parcel has been updated during a shipment update.\n",
                 "parameters": [
                   {
