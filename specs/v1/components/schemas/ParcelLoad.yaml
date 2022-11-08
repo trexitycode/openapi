@@ -6,20 +6,20 @@ properties:
   length:
     type: integer
     minimum: 0
-    maximum: 130
-    description: Length (in centimeters)
+    maximum: 91
+    description: Length (in centimeters). Maximum is ~3 feet.
   width:
     type: integer
     minimum: 0
-    maximum: 80
-    description: Width (in centimeters)
+    maximum: 91
+    description: Width (in centimeters). Maximum is ~3 feet.
   height:
     type: integer
     minimum: 0
-    maximum: 80
-    description: Height (in centimeters)
+    maximum: 91
+    description: Height (in centimeters). Maximum is ~3 feet.
   weight:
     type: integer
     minimum: 0
-    maximum: 30000
-    description: Weight (in grams)
+    maximum: 15876
+    description: Weight (in grams). Maximum is ~35 lbs.
