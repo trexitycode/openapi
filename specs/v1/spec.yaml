@@ -156,6 +156,13 @@ tags:
     description: |
       Retrieve and manage webhooks for a Trexity Merchant.
 
+      > ### FUTURE PROOFING
+      > Use the parcel events whenever possible. There are scenarios that would cause
+      > a new shipment ID to be created without you knowing it (i.e. the parcel container changing).
+      > For this reason the shipment events will be deprecated at a later date.
+      > Leverage the parcel events where possible and use the parcel's `externalId` to
+      > determine the order in your system the event is associated with.
+
       ## Parcel Events
 
       A Shipment is a container of parcels, each with their own delivery address.
