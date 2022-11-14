@@ -2,24 +2,28 @@ type: object
 description: |
   **(added in v1.9)** Optional dimensions and weight of the parcel. This
   will inform the driver matching algorithm accordingly.
+
+  **(changed in v1.17)** The maximums have changed from 130 cm length, 80 cm width
+  and 80 cm height, to 91 cm for any dimension. The maximum for weight changed from
+  30000 grams to 15876.
 properties:
   length:
     type: integer
     minimum: 0
-    maximum: 130
-    description: Length (in centimeters)
+    maximum: 91
+    description: Length (in centimeters). Maximum is ~3 feet.
   width:
     type: integer
     minimum: 0
-    maximum: 80
-    description: Width (in centimeters)
+    maximum: 91
+    description: Width (in centimeters). Maximum is ~3 feet.
   height:
     type: integer
     minimum: 0
-    maximum: 80
-    description: Height (in centimeters)
+    maximum: 91
+    description: Height (in centimeters). Maximum is ~3 feet.
   weight:
     type: integer
     minimum: 0
-    maximum: 30000
-    description: Weight (in grams)
+    maximum: 15876
+    description: Weight (in grams). Maximum is ~35 lbs.
