@@ -27,12 +27,13 @@ properties:
       properties:
         type:
           type: string
-          enum: [oversized, distance]
+          enum: [oversized, distance, large-vehicle]
           description: |
             The surcharge type.
 
             - `oversized` applied for a surplus of labels
             - `distance` applied for long distance deliveries
+            - `large-vehicle` applied for shipments that require a medium or large vehicle
         amount:
           type: number
           description: The amount in cents of the surcharge

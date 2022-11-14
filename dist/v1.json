@@ -199,9 +199,10 @@
                   "type": "string",
                   "enum": [
                     "oversized",
-                    "distance"
+                    "distance",
+                    "large-vehicle"
                   ],
-                  "description": "The surcharge type.\n\n- `oversized` applied for a surplus of labels\n- `distance` applied for long distance deliveries\n"
+                  "description": "The surcharge type.\n\n- `oversized` applied for a surplus of labels\n- `distance` applied for long distance deliveries\n- `large-vehicle` applied for shipments that require a medium or large vehicle\n"
                 },
                 "amount": {
                   "type": "number",
