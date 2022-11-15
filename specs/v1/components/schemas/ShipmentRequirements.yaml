@@ -6,18 +6,16 @@ description: |
   If no requirements object is specified then the merchant location's default requirements
   will be used.
 properties:
-  # vehicleType:
-  #   type: string
-  #   description: |
-  #     Describe the type of vehicle that must be used for a shipment.
+  vehicleType:
+    type: string
+    description: |
+      Describe the type of vehicle that must be used for a shipment.
 
-  #     - small - Sedan, hatchback, etc [example: Honda Civic]
-  #     - medium - SUV, minivan, etc [example: Toyota Sienna]
-  #     - large - Cargo van, pickup truck, etc [example: Ford F150]
-  #   enum:
-  #     - small
-  #     - medium
-  #     - large
+      - small - Sedan, hatchback, etc [example: Honda Civic]
+      - medium - SUV, minivan, etc [example: Toyota Sienna]
+    enum:
+      - small
+      - medium
   legalAgeAlcohol:
     type: boolean
     description: |
