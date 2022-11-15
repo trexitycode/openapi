@@ -102,6 +102,14 @@
         "type": "object",
         "description": "Object representing the requirements that must be met by a driver in order\nfor them to be considered for delivery.\n\nIf no requirements object is specified then the merchant location's default requirements\nwill be used.\n",
         "properties": {
+          "vehicleType": {
+            "type": "string",
+            "description": "Describe the type of vehicle that must be used for a shipment.\n\n- small - Sedan, hatchback, etc [example: Honda Civic]\n- medium - SUV, minivan, etc [example: Toyota Sienna]\n",
+            "enum": [
+              "small",
+              "medium"
+            ]
+          },
           "legalAgeAlcohol": {
             "type": "boolean",
             "description": "Must be delivered by a driver who is of legal age to transport alcohol.\n"
