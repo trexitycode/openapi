@@ -104,7 +104,7 @@
         "properties": {
           "vehicleType": {
             "type": "string",
-            "description": "Describe the type of vehicle that must be used for a shipment.\n\n- small - Sedan, hatchback, etc [example: Honda Civic]\n- medium - SUV, minivan, etc [example: Toyota Sienna]\n",
+            "description": "Describe the type of vehicle that must be used for a shipment.\n\n- small - Sedan, hatchback, etc [example: Honda Civic]\n- medium - SUV or similar [example: Toyota Sienna]\n",
             "enum": [
               "small",
               "medium"

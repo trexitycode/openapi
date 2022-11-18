@@ -12,7 +12,7 @@ properties:
       Describe the type of vehicle that must be used for a shipment.
 
       - small - Sedan, hatchback, etc [example: Honda Civic]
-      - medium - SUV, minivan, etc [example: Toyota Sienna]
+      - medium - SUV or similar [example: Toyota Sienna]
     enum:
       - small
       - medium
