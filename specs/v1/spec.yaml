@@ -176,6 +176,47 @@ tags:
       The request payload of these webhook events indicate the parcel that is currently
       being affected.
 
+      ## Storing The shipmentId
+
+      If you have the need to update pickup-related information such as the pickup address, POD settings,
+      or the pickup instructions, or you are polling the shipment endpoints for the status of the shipment
+      then you will need to store and reference the `shipmentId`. However, the `shipmentId` can change for
+      a parcel if the parcel is moved, cloned or bundled. You can re-map your orders/parcels by listening to
+      the `shipment.created` webhook.
+
+      > You will need to ensure that you provide a value for a parcel's `externalId` field when you crate a shipment.
+      > This field is intended to be an identifier that references back to your system.
+
+      ```js
+      // This sample code uses Nodejs with Express
+      function trexity_shipmentCreated (req, res, next) {
+        const shipmentId = req.body.data.id
+        const parcels = body.parcels
+        const promises = []
+
+        for (const parcel of parcels) {
+          const orderId = parcel.externalId
+
+          // Generally this is where you would update the Trexity shipment ID associated to your order.
+          //
+          // For example update the metadata associated to your order where the orders_metadata table
+          // has at least the following columns: order_id, key, and value, and there is a unique constraint
+          // on the order_id:key column pair. The end result is that the metadata field will be upserted.
+          const promise = executeParameterizedSql(`
+            INSERT INTO orders_metadata (order_id, key, value)
+            VALUES ($1, 'trexity_shipment_id', $2)
+            ON CONFLICT
+            DO UPDATE set value = EXCLUDED.value
+          `, [orderId, shipmentId])
+
+          promises.push(promise)
+        }
+
+        Promise.allSettled(promises)
+          .then(() => res.status(200).json({}))
+      }
+      ```
+
       ## Verifying Webhook Requests
 
       All webhook requests have a header that contains a signature signed with the Trexity Merchant's
