@@ -3371,6 +3371,13 @@
                   "format": "binary",
                   "description": "A label that needs to be scanned at pickup by a Trexity driver."
                 }
+              },
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "A label that needs to be scanned at pickup by a Trexity driver."
+                }
               }
             }
           },
