@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.17",
+    "version": "1.18",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -382,7 +382,7 @@
           },
           "ignoreTargetDeliveryDuration": {
             "type": "boolean",
-            "description": "Ignore the target delivery duration for this shipment only"
+            "description": "**DEPRECATED AS OF v1.18**\n\n~~Ignore the target delivery duration for this shipment only~~\n"
           },
           "deliveryAddress": {
             "$ref": "#/components/schemas/Address"
@@ -1027,7 +1027,7 @@
           },
           "ignoreTargetDeliveryDuration": {
             "type": "boolean",
-            "description": "Ignore the target delivery duration for this shipment only"
+            "description": "**DEPRECATED AS OF v1.18**\n\n~~Ignore the target delivery duration for this shipment only~~\n"
           },
           "parcels": {
             "type": "array",
@@ -1094,7 +1094,7 @@
           },
           "ignoreTargetDeliveryDuration": {
             "type": "boolean",
-            "description": "Ignore the target delivery duration for this shipment only"
+            "description": "**DEPRECATED AS OF v1.18**\n\n~~Ignore the target delivery duration for this shipment only~~\n"
           },
           "merchantPpid": {
             "type": "string",

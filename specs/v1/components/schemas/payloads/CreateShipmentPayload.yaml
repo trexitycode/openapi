@@ -34,7 +34,10 @@ properties:
     description: Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts.
   ignoreTargetDeliveryDuration:
     type: boolean
-    description: Ignore the target delivery duration for this shipment only
+    description: |
+      **DEPRECATED AS OF v1.18**
+
+      ~~Ignore the target delivery duration for this shipment only~~
   parcels:
     type: array
     description: The parcels that will be delivered in this shipment

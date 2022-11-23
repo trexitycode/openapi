@@ -42,7 +42,10 @@ properties:
     $ref: ../ShipmentRequirements.yaml
   ignoreTargetDeliveryDuration:
     type: boolean
-    description: Ignore the target delivery duration for this shipment only
+    description: |
+      **DEPRECATED AS OF v1.18**
+
+      ~~Ignore the target delivery duration for this shipment only~~
 
   # Delivery/parcel properties
   deliveryAddress:

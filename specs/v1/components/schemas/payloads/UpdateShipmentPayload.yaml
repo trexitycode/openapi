@@ -15,7 +15,10 @@ properties:
     $ref: ../ShipmentRequirements.yaml
   ignoreTargetDeliveryDuration:
     type: boolean
-    description: Ignore the target delivery duration for this shipment only
+    description: |
+      **DEPRECATED AS OF v1.18**
+
+      ~~Ignore the target delivery duration for this shipment only~~
   merchantPpid:
     type: string
     description: Partner-provided ID of the merchant. This ID can be used when querying for shipments. Only used by Partner accounts.
