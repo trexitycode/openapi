@@ -9,12 +9,13 @@ properties:
   pickupInstructions:
     type: string
     description: |
-      **(renamed in v1.16) pickupNotes will still be accepted**
+      **(RENAMED IN v1.16) pickupNotes will still be accepted**
       Special notes or instructions regarding pickup
   requirements:
     $ref: ../ShipmentRequirements.yaml
   ignoreTargetDeliveryDuration:
     type: boolean
+    deprecated: true
     description: |
       **DEPRECATED AS OF v1.18**
 

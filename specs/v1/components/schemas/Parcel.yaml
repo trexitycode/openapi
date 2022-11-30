@@ -4,17 +4,17 @@ properties:
   id:
     type: string
     description: |
-      **(added in 1.9)** Unique identifier for this parcel.
+      **(ADDED IN 1.9)** Unique identifier for this parcel.
   numLabels:
     type: number
     minimum: 1
     default: 1
     description: |
-      **(added in 1.12)** The number of labels for the parcel (each separate package needs a label).
+      **(ADDED IN 1.12)** The number of labels for the parcel (each separate package needs a label).
   shipmentId:
     type: string
     description: |
-      **(added in 1.9)** Shipment container ID. In the case of a return, this will be the shipment ID of the original shipment (not the newly created return shipment)
+      **(ADDED IN 1.9)** Shipment container ID. In the case of a return, this will be the shipment ID of the original shipment (not the newly created return shipment)
   deliveryAddress:
     $ref: ./Address.yaml
   deliveryAddressLocation:
@@ -46,7 +46,7 @@ properties:
   deliveryInstructions:
     type: string
     description: |
-      **(added in 1.4)** Delivery instructions for drop off
+      **(ADDED IN 1.4)** Delivery instructions for drop off
   deliveryName:
     type: string
     description: The name of the recipient
@@ -75,18 +75,18 @@ properties:
   containsAlcohol:
     type: boolean
     description: |
-      **(added in v1.8)** Does this parcel contain alcoholic products?
+      **(ADDED IN v1.8)** Does this parcel contain alcoholic products?
   externalId:
     type: string
     maxLength: 256
     description: |
-      **(added in v1.2)** The ID of the external entity that is associated to
+      **(ADDED IN v1.2)** The ID of the external entity that is associated to
       this parcel (e.g. the external order or shipment ID).
   scanId:
     type: string
     maxLength: 256
     description: |
-      **(added in v1.9)** The ID embedded in your custom label’s QR code. If
+      **(ADDED IN v1.9)** The ID embedded in your custom label’s QR code. If
       not specified, you will be required to use our built-in labels. If
       specified, you will not be able to request our built-in label for this
       parcel.
@@ -95,7 +95,7 @@ properties:
   metadata:
     type: object
     description: |
-      **(added in v1.1)** Object with metadata fields. If the intent is to
+      **(ADDED IN v1.1)** Object with metadata fields. If the intent is to
       list shipments with this metadata field, then ensure the value is
       saved as a string and not say a number.
 

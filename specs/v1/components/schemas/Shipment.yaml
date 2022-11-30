@@ -177,7 +177,7 @@ properties:
     type: object
     nullable: true
     description: |
-      **(added in v1.5)**
+      **(ADDED IN v1.5)**
 
       If this shipment has a parent shipment then this will contain meta information
       about its parent shipment ID and the type of the relationship. Otherwise will be null.

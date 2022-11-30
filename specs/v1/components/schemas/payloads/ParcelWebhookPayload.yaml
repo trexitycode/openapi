@@ -3,7 +3,7 @@ required: [data, timestamp]
 properties:
   timestamp:
     description: |
-      **(added in v1.11)** Date time the event took place in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+      **(ADDED IN v1.11)** Date time the event took place in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
 
       Note that ISO date strings are always in UTC time.
 

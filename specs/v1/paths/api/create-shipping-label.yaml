@@ -30,7 +30,7 @@ post:
       description: |
         The index of the parcel to get the shipping label for
 
-        **(changed in v1.4)**
+        **(CHANGED IN v1.4)**
 
         If not specified then get labels for all parcels in the shipment.
     - in: query

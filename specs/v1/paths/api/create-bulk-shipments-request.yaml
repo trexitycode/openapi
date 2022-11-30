@@ -3,7 +3,7 @@ post:
   tags: [Shipments]
   summary: Create bulk shipment creation request
   description: |
-    **(added in v1.8)**
+    **(ADDED IN v1.8)**
 
     Create shipments in bulk based on a previously computed rate. See the
     [Complex Rate](/#operation/createComplexRateRequest) endpoint for details

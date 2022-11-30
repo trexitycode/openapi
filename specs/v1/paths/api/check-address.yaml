@@ -3,7 +3,7 @@ get:
   tags: [Addresses]
   summary: Check an address
   description: |
-    **(added in v1.1)**
+    **(ADDED IN v1.1)**
 
     Checks an address and returns a result that identifies if the address can be
     used as a pickup address/business address, and what delivery classification it
@@ -71,7 +71,7 @@ get:
                   lngLat:
                     type: object
                     description: |
-                      **(added in v1.3)**
+                      **(ADDED IN v1.3)**
 
                       The latitude and logitude of the checked address.
                     properties:
@@ -84,7 +84,7 @@ get:
                   serviceCity:
                     type: string
                     description: |
-                      **(added in v1.3)**
+                      **(ADDED IN v1.3)**
 
                       Service city that the address is located. Provided in the format: "(city name), (2 letter abbreviation of province)" (may or may not be supported by Trexity)
     '400':

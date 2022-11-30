@@ -6,22 +6,22 @@ properties:
   description:
     type: string
     description: |
-      **(added in v1.7)** The description of the rate to show to the customer (if applicable)
+      **(ADDED IN v1.7)** The description of the rate to show to the customer (if applicable)
   total:
     type: number
     description: The total fee in cents for delivery with taxes.
   deliveryWithoutTaxes:
     type: number
     description: |
-      **(added in v1.12)** The total fee in cents for the delivery portion of the rate.
+      **(ADDED IN v1.12)** The total fee in cents for the delivery portion of the rate.
   fuelWithoutTaxes:
     type: number
     description: |
-      **(added in v1.12)** The total fee in cents for fuel cost portion of the rate.
+      **(ADDED IN v1.12)** The total fee in cents for fuel cost portion of the rate.
   surchargesWithoutTaxes:
     type: array
     description: |
-      **(added in v1.14)** The breakdown of each surcharge before taxes added to the rate
+      **(ADDED IN v1.14)** The breakdown of each surcharge before taxes added to the rate
     items:
       type: object
       properties:
@@ -49,17 +49,17 @@ properties:
   taxRates:
     type: object
     description: |
-      **(added in v1.1)** An object whos keys are tax rate codes and value is the tax rate.
+      **(ADDED IN v1.1)** An object whos keys are tax rate codes and value is the tax rate.
     additionalProperties: { type: number, minimum: 0, maximum: 1, exclusiveMinimum: true, exclusiveMaximum: true }
   taxAmounts:
     type: object
     description: |
-      **(added in v1.12)** An object whos keys are tax rate codes and value is the tax amount charged in cents.
+      **(ADDED IN v1.12)** An object whos keys are tax rate codes and value is the tax amount charged in cents.
     additionalProperties: { type: number, minimum: 0, maximum: 1, exclusiveMinimum: true, exclusiveMaximum: true }
   totalTaxes:
     type: number
     description: |
-      **(added in v1.12)** The total taxes charged in cents.
+      **(ADDED IN v1.12)** The total taxes charged in cents.
   directionsResult:
     $ref: ./GeoJSONDirectionsResult.yaml
   pickupDeliveryDistance:

@@ -3,6 +3,20 @@ post:
   tags: [Shipping Rates]
   summary: Simple rate
   description: |
+    **(CHANGE AS OF DEC 1, 2022)** All `scheduledPostAt` values must be within **8:00am-1:00pm and 1:00pm-5:00pm local time**.
+
+    Additionally, `scheduledPostAt` cannot be set to a value within the current time window.
+
+    For example: If the current time is 9AM local time, then you can only set `scheduledPostAt` to 1PM or later on the same day.
+
+    For example: If the current time is 2PM local time, then you can only set `scheduledPostAt` to 8AM or later the following day.
+
+    You can still schedule in the future, but the `scheduledPostAt` value needs to be within one of the time windows described above.
+
+    When getting a rate for an ASAP shipment `estimateScheduledPostAt` in the response will be set to the start of the next time window.
+
+    ---
+
     Calculate the rate for a direct shipment from a single pickup address to a
     single delivery address.
 
@@ -12,26 +26,16 @@ post:
     If no `pickupAddress` is specified then the merchant's business address will
     be used as the pickup address.
 
-    **(new in v1.7)** Review the [Usage Policy](/#section/Usage-Policy).
+    **(ADDED IN v1.7)** Review the [Usage Policy](/#section/Usage-Policy).
 
-    **(new in v1.8)** Use this endpoint for direct shipment rates (single pickup
+    **(ADDED IN v1.8)** Use this endpoint for direct shipment rates (single pickup
     address and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)
     endpoint for multiple delivery addresses.
 
     The rate response will now include estimates for post, pickup, and delivery time.
     Additionally, the new properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a
-    delivery window. Otheriwse ASAP is assumed. Use the estimated scheduled post
+    delivery window. Otheriwse the next available delivery window (i.e. ASAP) is assumed. Use the estimated scheduled post
     date in the response when creating the shipment.
-
-    **(changed in 1.13)** Restore the behaviour prior to v1.13; if no value is specified for `pickupAfter`, `deliverAfter`
-    or `deliverBefore`, then no time constraint or operating hours checks will be performed. However, if
-    any of the time constraint properties mentioned are provided, then the time constraints much be achievable,
-    and they must be within the merchant's and Trexity's operating hours, otherwise no rates will be returned with a status of 404.
-
-    **ASAP**
-
-    To simulate an ASAP delivery AND check operating hours set `pickupAfter` to `new Date()` or to avoid time drift between your server and Trexity use the value `"ASAP"`.
-    Otherwise, the timing estimates returned will still assume an ASAP delivery, but without time constraint or operating hours checks.
   x-codeSamples:
     - $ref: ../../code_samples/Shell/simple-rate/post.yaml
 
@@ -83,6 +87,8 @@ post:
                   - `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area
                   - `invalid-data-payload` = When there are issues with the input data provided
                   - `num-labels-too-large` = When numLabels is too large
+                  - `num-labels-too-large` = When numLabels is too large
+                  - `time-constraint-violation` = When the delivery/pickup time constraints specified cannot be met
     '401':
       description: Unauthorized
     '403':

@@ -3,7 +3,7 @@ get:
   tags: [Shipments]
   summary: Get bulk shipment creation request status
   description: |
-    **(added in v1.8)**
+    **(ADDED IN v1.8)**
 
     Get the status of an asynchronous bulk shipment creation request
   x-codeSamples:

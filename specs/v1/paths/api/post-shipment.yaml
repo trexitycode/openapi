@@ -2,10 +2,11 @@ post:
   operationId: postShipment
   tags: [Shipments]
   summary: Post a shipment
+  deprecated: true
   description: |
+    **REMOVED AS OF v1.19. Will always respond with 404.**
+
     Post a shipment to our driver community for pickup.
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipments/post-shipment.yaml
 
   ##############################################################################
 

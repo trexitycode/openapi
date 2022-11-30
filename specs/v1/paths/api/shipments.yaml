@@ -3,6 +3,18 @@ post:
   tags: [Shipments]
   summary: Create a shipment
   description: |
+    **(CHANGE AS OF DEC 1, 2022)** All `scheduledPostAt` values must be within **8:00am-1:00pm and 1:00pm-5:00pm local time**.
+
+    Additionally, `scheduledPostAt` cannot be set to a value within the current time window.
+
+    For example: If the current time is 9AM local time, then you can only set `scheduledPostAt` to 1PM or later on the same day.
+
+    For example: If the current time is 2PM local time, then you can only set `scheduledPostAt` to 8AM or later the following day.
+
+    You can still schedule in the future, but the `scheduledPostAt` value needs to be within one of the time windows described above.
+
+    ---
+
     Create a new shipment.
 
     If no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.
@@ -79,9 +91,10 @@ get:
     ## Filtering By External ID
 
     When filtering by a parcel's external ID you **cannot filter by dates**. Filtering by dates and external ID are mutually exclusive filters. If `externalId` is specified it will take precendence.
-    **(added in v1.2)**
+    **(ADDED IN v1.2)**
 
-    ## ~~Filtering By Parcel Metadata~~
+    ## Filtering By Parcel Metadata
+    **(DEPRECATED AS OF v1.2)**
 
     ~~Parcel metadata fields can be filtered on by using query parameters with the following pattern `meta_{fieldName}`.~~
 
@@ -89,7 +102,6 @@ get:
     the query parameter value is not converted to a number.~~
 
     ~~Example: `https://{server-url}/shipments?meta_partnerShipmentId=someid`~~
-    **(deprecated in v1.2)**
   x-codeSamples:
     - $ref: ../../code_samples/Shell/shipments/get-shipments.yaml
 
@@ -110,12 +122,12 @@ get:
         type: string
         maxLength: 256
         description: |
-          **(added in v1.2)** The ID of the external entity that is associated to this parcel (e.g. the external order or shipment ID).
+          **(ADDED IN v1.2)** The ID of the external entity that is associated to this parcel (e.g. the external order or shipment ID).
     - in: query
       name: merchantPpid
       deprecated: true
       description: |
-        **(deprecated in v1.1)**
+        **(DEPRECATED AS OF v1.1)**
       schema:
         type: string
   responses:

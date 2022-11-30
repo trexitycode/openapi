@@ -5,7 +5,7 @@ patch:
   description: |
     Updates the details of a parcel.
 
-    **(added in v1.1)**
+    **(ADDED IN v1.1)**
     When updating metadata fields the fields will be merged into the parcel's existing
     metadata. Any metadata fields set to `null` or `undefined` will be deleted.
   x-codeSamples:

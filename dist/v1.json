@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.18",
+    "version": "1.19",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -12,7 +12,7 @@
       "email": "support@trexity.com",
       "url": "http://trexity.com"
     },
-    "description": "# Usage Policy\n\n**(added in v1.7)**\n\nBy using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.\nThe [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the Rate.\n\nThis allows Trexity to ensure consistent messaging wherever Trexity devliery rates are shown.\n\n## Suspension & Termination\n\nFailure to comply with this Usage Policy may result in suspension of your Trexity merchant account and/or API Keys. Continued failure to comply may result in the termination of your Trexity merchant account.\n\n# Concepts & Workflows\n\n**Parcels** represent an order, customer information and a delivery address.\n\n**Shipments** represent a route, has one or more parcels, requirements, and a pickup address.\n\n**Posting shipments** means the shipment will be sent to our driver community for pickup and delivery.\n\n### Simple Workflow\n\nCreate a simple shipment without worrying about optimizing the route.\n\n1. [Create a shipment](#operation/createShipment) and specify the parcels, customer information and delivery address\n2. [Get shipping labels](#operation/createShippingLabel) for the shipment, download, print, and affix to the parcel packaging\n3. [Post the shipment](#operation/postShipment) to our drivers for pickup and delivery\n\n> Optionally, when creating a shipment a future date can be specified for `scheduledPostAt`. This date will be when the\n> system will automatically post the shipment to our drivers. Before this date ensure the labels are printed and affixed\n> to the parcel packages.\n\n### \"Bundling\" Workflow\n\nCreate many shipments each with an optimal route that reduces time on the road and total cost.\n\n1. [Make a routing request](#operation/createRoutingRequest) with a batch of parcels each with a `scheduledPostAt` set to a future date\n2. [Monitor the routing request status](#operation/getRoutingStatus) by polling the status of the routing request\n3. [Get the routing result](#operation/getRoutingRequestResult) when routing is complete or errored \n4. [Get shipping labels](#operation/createShippingLabel) for each shipment created during the routing request, download, print, and affix to all packages\n\n> The date specified in `scheduledPostAt` will be when the system will automatically post the shipment to our drivers.\n> Before this date ensure the labels are printed and affixed to the parcel packages.\n\n### Parcel Status\n\nFollow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.\n\n# Responses\n\nAll endpoints will return an object and if there is actual data\nto be returned, it is going to be named `data`, where `data` may\nbe an array or an object.\n\nIf there is an `error` field present on the root JSON object, that\nmeans something went wrong and that error message is all we know about it.\nAdditionally, in some cases, you may inspect the HTTP status codes to\ngather more information.\n\nPlease check our payload/response examples in detail as well as the\ncurl examples that are a part of each section that documents an operation.\n\nExample of a successful response:\n`{ data: ... }`\n\nExample of a response with an error:\n`{ error: 'Some error message', data: null }`\n"
+    "description": "# Usage Policy\n\n**(ADDED IN v1.7)**\n\nBy using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.\nThe [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the Rate.\n\nThis allows Trexity to ensure consistent messaging wherever Trexity devliery rates are shown.\n\n## Suspension & Termination\n\nFailure to comply with this Usage Policy may result in suspension of your Trexity merchant account and/or API Keys. Continued failure to comply may result in the termination of your Trexity merchant account.\n\n# Concepts & Workflows\n\n**Parcels** represent an order, customer information and a delivery address.\n\n**Shipments** represent a route, has one or more parcels, requirements, and a pickup address.\n\n**Posting shipments** means the shipment will be sent to our driver community for pickup and delivery.\n\n### Simple Workflow\n\nCreate a simple shipment without worrying about optimizing the route.\n\n1. [Create a shipment](#operation/createShipment) and specify the parcels, customer information and delivery address\n2. [Get shipping labels](#operation/createShippingLabel) for the shipment, download, print, and affix to the parcel packaging\n3. [Post the shipment](#operation/postShipment) to our drivers for pickup and delivery\n\n> Optionally, when creating a shipment a future date can be specified for `scheduledPostAt`. This date will be when the\n> system will automatically post the shipment to our drivers. Before this date ensure the labels are printed and affixed\n> to the parcel packages.\n\n### \"Bundling\" Workflow\n\nCreate many shipments each with an optimal route that reduces time on the road and total cost.\n\n1. [Make a routing request](#operation/createRoutingRequest) with a batch of parcels each with a `scheduledPostAt` set to a future date\n2. [Monitor the routing request status](#operation/getRoutingStatus) by polling the status of the routing request\n3. [Get the routing result](#operation/getRoutingRequestResult) when routing is complete or errored \n4. [Get shipping labels](#operation/createShippingLabel) for each shipment created during the routing request, download, print, and affix to all packages\n\n> The date specified in `scheduledPostAt` will be when the system will automatically post the shipment to our drivers.\n> Before this date ensure the labels are printed and affixed to the parcel packages.\n\n### Parcel Status\n\nFollow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.\n\n# Responses\n\nAll endpoints will return an object and if there is actual data\nto be returned, it is going to be named `data`, where `data` may\nbe an array or an object.\n\nIf there is an `error` field present on the root JSON object, that\nmeans something went wrong and that error message is all we know about it.\nAdditionally, in some cases, you may inspect the HTTP status codes to\ngather more information.\n\nPlease check our payload/response examples in detail as well as the\ncurl examples that are a part of each section that documents an operation.\n\nExample of a successful response:\n`{ data: ... }`\n\nExample of a response with an error:\n`{ error: 'Some error message', data: null }`\n"
   },
   "tags": [
     {
@@ -80,15 +80,15 @@
         "type": "object",
         "properties": {
           "pickupAfter": {
-            "description": "**(added in v1.12)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\n**If present then deliverAfter and deliverBefore are ignored.**\n\nIf in the past then defaults to ASAP.\nCan be set to `new Date().toISOString()` or `\"ASAP\"` for ASAP.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n\nAn example: ASAP\n",
+            "description": "**(ADDED IN v1.12)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\n**If present then deliverAfter and deliverBefore are ignored.**\n\nIf in the past then defaults to ASAP.\nCan be set to `new Date().toISOString()` or `\"ASAP\"` for ASAP.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n\nAn example: ASAP\n",
             "type": "string"
           },
           "deliverAfter": {
-            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nIf in the past then defaults to ASAP, and must be less than or equal to `deliverBefore` if `deliverBefore` is provided.\nCan be set to `new Date().toISOString()` or `\"ASAP\"` for ASAP.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n\nAn example: ASAP\n",
+            "description": "**(ADDED IN v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nIf in the past then defaults to ASAP, and must be less than or equal to `deliverBefore` if `deliverBefore` is provided.\nCan be set to `new Date().toISOString()` or `\"ASAP\"` for ASAP.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n\nAn example: ASAP\n",
             "type": "string"
           },
           "deliverBefore": {
-            "description": "**(added in v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nCannot be in the past.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "description": "**(ADDED IN v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nCannot be in the past.\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
             "type": "string"
           }
         }
@@ -183,7 +183,7 @@
           },
           "description": {
             "type": "string",
-            "description": "**(added in v1.7)** The description of the rate to show to the customer (if applicable)\n"
+            "description": "**(ADDED IN v1.7)** The description of the rate to show to the customer (if applicable)\n"
           },
           "total": {
             "type": "number",
@@ -191,15 +191,15 @@
           },
           "deliveryWithoutTaxes": {
             "type": "number",
-            "description": "**(added in v1.12)** The total fee in cents for the delivery portion of the rate.\n"
+            "description": "**(ADDED IN v1.12)** The total fee in cents for the delivery portion of the rate.\n"
           },
           "fuelWithoutTaxes": {
             "type": "number",
-            "description": "**(added in v1.12)** The total fee in cents for fuel cost portion of the rate.\n"
+            "description": "**(ADDED IN v1.12)** The total fee in cents for fuel cost portion of the rate.\n"
           },
           "surchargesWithoutTaxes": {
             "type": "array",
-            "description": "**(added in v1.14)** The breakdown of each surcharge before taxes added to the rate\n",
+            "description": "**(ADDED IN v1.14)** The breakdown of each surcharge before taxes added to the rate\n",
             "items": {
               "type": "object",
               "properties": {
@@ -225,7 +225,7 @@
           },
           "taxRates": {
             "type": "object",
-            "description": "**(added in v1.1)** An object whos keys are tax rate codes and value is the tax rate.\n",
+            "description": "**(ADDED IN v1.1)** An object whos keys are tax rate codes and value is the tax rate.\n",
             "additionalProperties": {
               "type": "number",
               "minimum": 0,
@@ -236,7 +236,7 @@
           },
           "taxAmounts": {
             "type": "object",
-            "description": "**(added in v1.12)** An object whos keys are tax rate codes and value is the tax amount charged in cents.\n",
+            "description": "**(ADDED IN v1.12)** An object whos keys are tax rate codes and value is the tax amount charged in cents.\n",
             "additionalProperties": {
               "type": "number",
               "minimum": 0,
@@ -247,7 +247,7 @@
           },
           "totalTaxes": {
             "type": "number",
-            "description": "**(added in v1.12)** The total taxes charged in cents.\n"
+            "description": "**(ADDED IN v1.12)** The total taxes charged in cents.\n"
           },
           "directionsResult": {
             "$ref": "#/components/schemas/GeoJSONDirectionsResult"
@@ -306,7 +306,7 @@
       },
       "ParcelLoad": {
         "type": "object",
-        "description": "**(added in v1.9)** Optional dimensions and weight of the parcel. This\nwill inform the driver matching algorithm accordingly.\n\n**(changed in v1.17)** The maximums have changed from 130 cm length, 80 cm width\nand 80 cm height, to 91 cm for any dimension. The maximum for weight changed from\n30000 grams to 15876.\n",
+        "description": "**(ADDED IN v1.9)** Optional dimensions and weight of the parcel. This\nwill inform the driver matching algorithm accordingly.\n\n**(CHANGED IN v1.17)** The maximums have changed from 130 cm length, 80 cm width\nand 80 cm height, to 91 cm for any dimension. The maximum for weight changed from\n30000 grams to 15876.\n",
         "properties": {
           "length": {
             "type": "integer",
@@ -363,25 +363,26 @@
           },
           "merchantPpid": {
             "type": "string",
-            "description": "**(added in 1.9)** Partner-provided ID of the merchant. This ID can be used when querying for shipments. Only used by Partner accounts.\n"
+            "description": "**(ADDED IN 1.9)** Partner-provided ID of the merchant. This ID can be used when querying for shipments. Only used by Partner accounts.\n"
           },
           "merchantName": {
             "type": "string",
-            "description": "**(added in 1.9)** Partner-provided name of the merchant. This will be displayed in place of the merchant name defined in the merchant profile. Only used by Partner accounts.\n"
+            "description": "**(ADDED IN 1.9)** Partner-provided name of the merchant. This will be displayed in place of the merchant name defined in the merchant profile. Only used by Partner accounts.\n"
           },
           "merchantPhone": {
             "type": "string",
-            "description": "**(added in 1.9)** Partner-provided phone of the merchant. This will be displayed in place of the merchant phone defined in the merchant profile. Only used by Partner accounts.\n"
+            "description": "**(ADDED IN 1.9)** Partner-provided phone of the merchant. This will be displayed in place of the merchant phone defined in the merchant profile. Only used by Partner accounts.\n"
           },
           "merchantEmail": {
             "type": "string",
-            "description": "**(added in 1.9)** Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts.\n"
+            "description": "**(ADDED IN 1.9)** Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts.\n"
           },
           "requirements": {
             "$ref": "#/components/schemas/ShipmentRequirements"
           },
           "ignoreTargetDeliveryDuration": {
             "type": "boolean",
+            "deprecated": true,
             "description": "**DEPRECATED AS OF v1.18**\n\n~~Ignore the target delivery duration for this shipment only~~\n"
           },
           "deliveryAddress": {
@@ -393,7 +394,7 @@
           },
           "deliveryInstructions": {
             "type": "string",
-            "description": "**(added in 1.4)** Delivery instructions for drop off\n"
+            "description": "**(ADDED IN 1.4)** Delivery instructions for drop off\n"
           },
           "deliveryName": {
             "type": "string",
@@ -417,7 +418,7 @@
             "type": "number",
             "minimum": 1,
             "default": 1,
-            "description": "**(added in 1.12)** The number of labels for the parcel (each separate package needs a label).\n"
+            "description": "**(ADDED IN 1.12)** The number of labels for the parcel (each separate package needs a label).\n"
           },
           "deliveryEmail": {
             "type": "string",
@@ -434,24 +435,24 @@
           },
           "containsAlcohol": {
             "type": "boolean",
-            "description": "**(added in v1.8)** Does this parcel contain alcoholic products?\n"
+            "description": "**(ADDED IN v1.8)** Does this parcel contain alcoholic products?\n"
           },
           "externalId": {
             "type": "string",
             "maxLength": 256,
-            "description": "**(added in v1.8)**\nThe ID of the external entity that is associated to this delivery (e.g.\nthe external order or shipment ID).\n"
+            "description": "**(ADDED IN v1.8)**\nThe ID of the external entity that is associated to this delivery (e.g.\nthe external order or shipment ID).\n"
           },
           "scanId": {
             "type": "string",
             "maxLength": 256,
-            "description": "**(added in v1.9)** The ID embedded in your custom label’s QR code. If\nnot specified, you will be required to use our built-in labels. If\nspecified, you will not be able to request our built-in label for this\nparcel.\n"
+            "description": "**(ADDED IN v1.9)** The ID embedded in your custom label’s QR code. If\nnot specified, you will be required to use our built-in labels. If\nspecified, you will not be able to request our built-in label for this\nparcel.\n"
           },
           "load": {
             "$ref": "#/components/schemas/ParcelLoad"
           },
           "metadata": {
             "type": "object",
-            "description": "**(added in v1.1)**\nThe metadata fields associated to the parcel. If the intent is to\nlist shipments with this metadata field, then ensure the value is\nsaved as a string and not say a number.\n"
+            "description": "**(ADDED IN v1.1)**\nThe metadata fields associated to the parcel. If the intent is to\nlist shipments with this metadata field, then ensure the value is\nsaved as a string and not say a number.\n"
           }
         }
       },
@@ -573,17 +574,17 @@
         "properties": {
           "id": {
             "type": "string",
-            "description": "**(added in 1.9)** Unique identifier for this parcel.\n"
+            "description": "**(ADDED IN 1.9)** Unique identifier for this parcel.\n"
           },
           "numLabels": {
             "type": "number",
             "minimum": 1,
             "default": 1,
-            "description": "**(added in 1.12)** The number of labels for the parcel (each separate package needs a label).\n"
+            "description": "**(ADDED IN 1.12)** The number of labels for the parcel (each separate package needs a label).\n"
           },
           "shipmentId": {
             "type": "string",
-            "description": "**(added in 1.9)** Shipment container ID. In the case of a return, this will be the shipment ID of the original shipment (not the newly created return shipment)\n"
+            "description": "**(ADDED IN 1.9)** Shipment container ID. In the case of a return, this will be the shipment ID of the original shipment (not the newly created return shipment)\n"
           },
           "deliveryAddress": {
             "$ref": "#/components/schemas/Address"
@@ -617,7 +618,7 @@
           },
           "deliveryInstructions": {
             "type": "string",
-            "description": "**(added in 1.4)** Delivery instructions for drop off\n"
+            "description": "**(ADDED IN 1.4)** Delivery instructions for drop off\n"
           },
           "deliveryName": {
             "type": "string",
@@ -652,24 +653,24 @@
           },
           "containsAlcohol": {
             "type": "boolean",
-            "description": "**(added in v1.8)** Does this parcel contain alcoholic products?\n"
+            "description": "**(ADDED IN v1.8)** Does this parcel contain alcoholic products?\n"
           },
           "externalId": {
             "type": "string",
             "maxLength": 256,
-            "description": "**(added in v1.2)** The ID of the external entity that is associated to\nthis parcel (e.g. the external order or shipment ID).\n"
+            "description": "**(ADDED IN v1.2)** The ID of the external entity that is associated to\nthis parcel (e.g. the external order or shipment ID).\n"
           },
           "scanId": {
             "type": "string",
             "maxLength": 256,
-            "description": "**(added in v1.9)** The ID embedded in your custom label’s QR code. If\nnot specified, you will be required to use our built-in labels. If\nspecified, you will not be able to request our built-in label for this\nparcel.\n"
+            "description": "**(ADDED IN v1.9)** The ID embedded in your custom label’s QR code. If\nnot specified, you will be required to use our built-in labels. If\nspecified, you will not be able to request our built-in label for this\nparcel.\n"
           },
           "load": {
             "$ref": "#/components/schemas/ParcelLoad"
           },
           "metadata": {
             "type": "object",
-            "description": "**(added in v1.1)** Object with metadata fields. If the intent is to\nlist shipments with this metadata field, then ensure the value is\nsaved as a string and not say a number.\n"
+            "description": "**(ADDED IN v1.1)** Object with metadata fields. If the intent is to\nlist shipments with this metadata field, then ensure the value is\nsaved as a string and not say a number.\n"
           },
           "driverDeliveredAt": {
             "$ref": "#/components/schemas/SimplifiedDateISOString"
@@ -872,7 +873,7 @@
           "linkedParentShipment": {
             "type": "object",
             "nullable": true,
-            "description": "**(added in v1.5)**\n\nIf this shipment has a parent shipment then this will contain meta information\nabout its parent shipment ID and the type of the relationship. Otherwise will be null.\n",
+            "description": "**(ADDED IN v1.5)**\n\nIf this shipment has a parent shipment then this will contain meta information\nabout its parent shipment ID and the type of the relationship. Otherwise will be null.\n",
             "properties": {
               "shipmentId": {
                 "type": "string"
@@ -954,14 +955,14 @@
           },
           "containsAlcohol": {
             "type": "boolean",
-            "description": "**(added in v1.8)** Does this parcel contain alcoholic products?\n"
+            "description": "**(ADDED IN v1.8)** Does this parcel contain alcoholic products?\n"
           },
           "load": {
             "$ref": "#/components/schemas/ParcelLoad"
           },
           "metadata": {
             "type": "object",
-            "description": "**(added in v1.1)**\nThe metadata fields associated to the parcel. If the intent is to\nlist shipments with this metadata field, then ensure the value is\nsaved as a string and not say a number.\n"
+            "description": "**(ADDED IN v1.1)**\nThe metadata fields associated to the parcel. If the intent is to\nlist shipments with this metadata field, then ensure the value is\nsaved as a string and not say a number.\n"
           }
         }
       },
@@ -972,12 +973,12 @@
           "externalId": {
             "type": "string",
             "maxLength": 256,
-            "description": "**(added in v1.2)** The ID of the external entity that is associated to\nthis parcel (e.g. the external order or shipment ID).\n"
+            "description": "**(ADDED IN v1.2)** The ID of the external entity that is associated to\nthis parcel (e.g. the external order or shipment ID).\n"
           },
           "scanId": {
             "type": "string",
             "maxLength": 256,
-            "description": "**(added in v1.9)** The ID embedded in your custom label’s QR code. If\nnot specified, you will be required to use our built-in labels. If\nspecified, you will not be able to request our built-in label for this\nparcel.\n"
+            "description": "**(ADDED IN v1.9)** The ID embedded in your custom label’s QR code. If\nnot specified, you will be required to use our built-in labels. If\nspecified, you will not be able to request our built-in label for this\nparcel.\n"
           }
         }
       },
@@ -1007,7 +1008,7 @@
           },
           "pickupInstructions": {
             "type": "string",
-            "description": "**(renamed from pickupNotes to pickupInstructions in v1.16) pickupNotes will still be accepted**\nSpecial notes or instructions regarding pickup like the description of the location, what door to use, etc.\n"
+            "description": "**(RENAMED FROM pickupNotes TO pickupInstructions IN v1.16) pickupNotes will still be accepted**\nSpecial notes or instructions regarding pickup like the description of the location, what door to use, etc.\n"
           },
           "merchantPpid": {
             "type": "string",
@@ -1027,6 +1028,7 @@
           },
           "ignoreTargetDeliveryDuration": {
             "type": "boolean",
+            "deprecated": true,
             "description": "**DEPRECATED AS OF v1.18**\n\n~~Ignore the target delivery duration for this shipment only~~\n"
           },
           "parcels": {
@@ -1087,13 +1089,14 @@
           },
           "pickupInstructions": {
             "type": "string",
-            "description": "**(renamed in v1.16) pickupNotes will still be accepted**\nSpecial notes or instructions regarding pickup\n"
+            "description": "**(RENAMED IN v1.16) pickupNotes will still be accepted**\nSpecial notes or instructions regarding pickup\n"
           },
           "requirements": {
             "$ref": "#/components/schemas/ShipmentRequirements"
           },
           "ignoreTargetDeliveryDuration": {
             "type": "boolean",
+            "deprecated": true,
             "description": "**DEPRECATED AS OF v1.18**\n\n~~Ignore the target delivery duration for this shipment only~~\n"
           },
           "merchantPpid": {
@@ -1285,7 +1288,7 @@
         ],
         "properties": {
           "timestamp": {
-            "description": "**(added in v1.11)** Date time the event took place in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "description": "**(ADDED IN v1.11)** Date time the event took place in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
             "type": "string"
           },
           "data": {
@@ -1301,7 +1304,7 @@
         ],
         "properties": {
           "timestamp": {
-            "description": "**(added in v1.11)** Date time the event took place in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+            "description": "**(ADDED IN v1.11)** Date time the event took place in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
             "type": "string"
           },
           "data": {
@@ -1478,7 +1481,7 @@
           "Addresses"
         ],
         "summary": "Check an address",
-        "description": "**(added in v1.1)**\n\nChecks an address and returns a result that identifies if the address can be\nused as a pickup address/business address, and what delivery classification it\nfalls under.\n\n### Rate Limiting\n\nThis operation can be requested without authentication, however it will have a\nstrict rate limit of 3 requests every 10 seconds.\n\nHowever, authenticated requests can request 12 times every 10 seconds.\n",
+        "description": "**(ADDED IN v1.1)**\n\nChecks an address and returns a result that identifies if the address can be\nused as a pickup address/business address, and what delivery classification it\nfalls under.\n\n### Rate Limiting\n\nThis operation can be requested without authentication, however it will have a\nstrict rate limit of 3 requests every 10 seconds.\n\nHowever, authenticated requests can request 12 times every 10 seconds.\n",
         "security": [
           {},
           {
@@ -1539,7 +1542,7 @@
                         },
                         "lngLat": {
                           "type": "object",
-                          "description": "**(added in v1.3)**\n\nThe latitude and logitude of the checked address.\n",
+                          "description": "**(ADDED IN v1.3)**\n\nThe latitude and logitude of the checked address.\n",
                           "properties": {
                             "longitude": {
                               "type": "number",
@@ -1553,7 +1556,7 @@
                         },
                         "serviceCity": {
                           "type": "string",
-                          "description": "**(added in v1.3)**\n\nService city that the address is located. Provided in the format: \"(city name), (2 letter abbreviation of province)\" (may or may not be supported by Trexity)\n"
+                          "description": "**(ADDED IN v1.3)**\n\nService city that the address is located. Provided in the format: \"(city name), (2 letter abbreviation of province)\" (may or may not be supported by Trexity)\n"
                         }
                       }
                     }
@@ -1581,7 +1584,7 @@
           "Shipping Rates"
         ],
         "summary": "Simple rate",
-        "description": "Calculate the rate for a direct shipment from a single pickup address to a\nsingle delivery address.\n\nReturns the estimated distance (in meters), estimated travel duration (in\nseconds), and fee from the pickup address to the delivery address.\n\nIf no `pickupAddress` is specified then the merchant's business address will\nbe used as the pickup address.\n\n**(new in v1.7)** Review the [Usage Policy](/#section/Usage-Policy).\n\n**(new in v1.8)** Use this endpoint for direct shipment rates (single pickup\naddress and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)\nendpoint for multiple delivery addresses.\n\nThe rate response will now include estimates for post, pickup, and delivery time.\nAdditionally, the new properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a\ndelivery window. Otheriwse ASAP is assumed. Use the estimated scheduled post\ndate in the response when creating the shipment.\n\n**(changed in 1.13)** Restore the behaviour prior to v1.13; if no value is specified for `pickupAfter`, `deliverAfter`\nor `deliverBefore`, then no time constraint or operating hours checks will be performed. However, if\nany of the time constraint properties mentioned are provided, then the time constraints much be achievable,\nand they must be within the merchant's and Trexity's operating hours, otherwise no rates will be returned with a status of 404.\n\n**ASAP**\n\nTo simulate an ASAP delivery AND check operating hours set `pickupAfter` to `new Date()` or to avoid time drift between your server and Trexity use the value `\"ASAP\"`.\nOtherwise, the timing estimates returned will still assume an ASAP delivery, but without time constraint or operating hours checks.\n",
+        "description": "**(CHANGE AS OF DEC 1, 2022)** All `scheduledPostAt` values must be within **8:00am-1:00pm and 1:00pm-5:00pm local time**.\n\nAdditionally, `scheduledPostAt` cannot be set to a value within the current time window.\n\nFor example: If the current time is 9AM local time, then you can only set `scheduledPostAt` to 1PM or later on the same day.\n\nFor example: If the current time is 2PM local time, then you can only set `scheduledPostAt` to 8AM or later the following day.\n\nYou can still schedule in the future, but the `scheduledPostAt` value needs to be within one of the time windows described above.\n\nWhen getting a rate for an ASAP shipment `estimateScheduledPostAt` in the response will be set to the start of the next time window.\n\n---\n\nCalculate the rate for a direct shipment from a single pickup address to a\nsingle delivery address.\n\nReturns the estimated distance (in meters), estimated travel duration (in\nseconds), and fee from the pickup address to the delivery address.\n\nIf no `pickupAddress` is specified then the merchant's business address will\nbe used as the pickup address.\n\n**(ADDED IN v1.7)** Review the [Usage Policy](/#section/Usage-Policy).\n\n**(ADDED IN v1.8)** Use this endpoint for direct shipment rates (single pickup\naddress and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)\nendpoint for multiple delivery addresses.\n\nThe rate response will now include estimates for post, pickup, and delivery time.\nAdditionally, the new properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a\ndelivery window. Otheriwse the next available delivery window (i.e. ASAP) is assumed. Use the estimated scheduled post\ndate in the response when creating the shipment.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -1647,7 +1650,7 @@
                     "code": {
                       "type": "string",
                       "nullable": true,
-                      "description": "Unexhaustive list of codes.\n\n- `invalid-merchant-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-data-payload` = When there are issues with the input data provided\n- `num-labels-too-large` = When numLabels is too large\n"
+                      "description": "Unexhaustive list of codes.\n\n- `invalid-merchant-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-data-payload` = When there are issues with the input data provided\n- `num-labels-too-large` = When numLabels is too large\n- `num-labels-too-large` = When numLabels is too large\n- `time-constraint-violation` = When the delivery/pickup time constraints specified cannot be met\n"
                     }
                   }
                 }
@@ -1875,7 +1878,7 @@
           "Shipments"
         ],
         "summary": "Create a shipment",
-        "description": "Create a new shipment.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n",
+        "description": "**(CHANGE AS OF DEC 1, 2022)** All `scheduledPostAt` values must be within **8:00am-1:00pm and 1:00pm-5:00pm local time**.\n\nAdditionally, `scheduledPostAt` cannot be set to a value within the current time window.\n\nFor example: If the current time is 9AM local time, then you can only set `scheduledPostAt` to 1PM or later on the same day.\n\nFor example: If the current time is 2PM local time, then you can only set `scheduledPostAt` to 8AM or later the following day.\n\nYou can still schedule in the future, but the `scheduledPostAt` value needs to be within one of the time windows described above.\n\n---\n\nCreate a new shipment.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -1972,7 +1975,7 @@
           "Shipments"
         ],
         "summary": "List shipments",
-        "description": "List shipments that match the specified filters.\n\n## Filtering By Dates\n\nWhen filtering by a date range both the `fromDate` and `toDate` query parameters must be provided.\n\n## Filtering By External ID\n\nWhen filtering by a parcel's external ID you **cannot filter by dates**. Filtering by dates and external ID are mutually exclusive filters. If `externalId` is specified it will take precendence.\n**(added in v1.2)**\n\n## ~~Filtering By Parcel Metadata~~\n\n~~Parcel metadata fields can be filtered on by using query parameters with the following pattern `meta_{fieldName}`.~~\n\n~~Additionally, the metadata field must have been saved as a string, and not a number for example. This is required since\nthe query parameter value is not converted to a number.~~\n\n~~Example: `https://{server-url}/shipments?meta_partnerShipmentId=someid`~~\n**(deprecated in v1.2)**\n",
+        "description": "List shipments that match the specified filters.\n\n## Filtering By Dates\n\nWhen filtering by a date range both the `fromDate` and `toDate` query parameters must be provided.\n\n## Filtering By External ID\n\nWhen filtering by a parcel's external ID you **cannot filter by dates**. Filtering by dates and external ID are mutually exclusive filters. If `externalId` is specified it will take precendence.\n**(ADDED IN v1.2)**\n\n## Filtering By Parcel Metadata\n**(DEPRECATED AS OF v1.2)**\n\n~~Parcel metadata fields can be filtered on by using query parameters with the following pattern `meta_{fieldName}`.~~\n\n~~Additionally, the metadata field must have been saved as a string, and not a number for example. This is required since\nthe query parameter value is not converted to a number.~~\n\n~~Example: `https://{server-url}/shipments?meta_partnerShipmentId=someid`~~\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -2000,14 +2003,14 @@
             "schema": {
               "type": "string",
               "maxLength": 256,
-              "description": "**(added in v1.2)** The ID of the external entity that is associated to this parcel (e.g. the external order or shipment ID).\n"
+              "description": "**(ADDED IN v1.2)** The ID of the external entity that is associated to this parcel (e.g. the external order or shipment ID).\n"
             }
           },
           {
             "in": "query",
             "name": "merchantPpid",
             "deprecated": true,
-            "description": "**(deprecated in v1.1)**\n",
+            "description": "**(DEPRECATED AS OF v1.1)**\n",
             "schema": {
               "type": "string"
             }
@@ -2042,7 +2045,7 @@
           "Shipments"
         ],
         "summary": "Create bulk shipment creation request",
-        "description": "**(added in v1.8)**\n\nCreate shipments in bulk based on a previously computed rate. See the\n[Complex Rate](/#operation/createComplexRateRequest) endpoint for details\non how to obtain a rateId.\n",
+        "description": "**(ADDED IN v1.8)**\n\nCreate shipments in bulk based on a previously computed rate. See the\n[Complex Rate](/#operation/createComplexRateRequest) endpoint for details\non how to obtain a rateId.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -2089,7 +2092,7 @@
           "Shipments"
         ],
         "summary": "Get bulk shipment creation request status",
-        "description": "**(added in v1.8)**\n\nGet the status of an asynchronous bulk shipment creation request\n",
+        "description": "**(ADDED IN v1.8)**\n\nGet the status of an asynchronous bulk shipment creation request\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -2145,7 +2148,7 @@
           "Shipments"
         ],
         "summary": "Get bulk shipment creation result",
-        "description": "**(added in v1.8)**\n\nGet the result of a completed asynchronous bulk shipment creation request\n",
+        "description": "**(ADDED IN v1.8)**\n\nGet the result of a completed asynchronous bulk shipment creation request\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -2369,13 +2372,8 @@
           "Shipments"
         ],
         "summary": "Post a shipment",
-        "description": "Post a shipment to our driver community for pickup.\n",
-        "x-codeSamples": [
-          {
-            "lang": "Shell",
-            "source": "curl -X POST {server-url}/shipments/TRX973036599-6KL/post\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
-          }
-        ],
+        "deprecated": true,
+        "description": "**REMOVED AS OF v1.19. Will always respond with 404.**\n\nPost a shipment to our driver community for pickup.\n",
         "parameters": [
           {
             "in": "path",
@@ -2442,7 +2440,7 @@
           "Shipments"
         ],
         "summary": "Update a parcel",
-        "description": "Updates the details of a parcel.\n\n**(added in v1.1)**\nWhen updating metadata fields the fields will be merged into the parcel's existing\nmetadata. Any metadata fields set to `null` or `undefined` will be deleted.\n",
+        "description": "Updates the details of a parcel.\n\n**(ADDED IN v1.1)**\nWhen updating metadata fields the fields will be merged into the parcel's existing\nmetadata. Any metadata fields set to `null` or `undefined` will be deleted.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -2613,7 +2611,7 @@
             "schema": {
               "type": "boolean"
             },
-            "description": "The index of the parcel to get the shipping label for\n\n**(changed in v1.4)**\n\nIf not specified then get labels for all parcels in the shipment.\n"
+            "description": "The index of the parcel to get the shipping label for\n\n**(CHANGED IN v1.4)**\n\nIf not specified then get labels for all parcels in the shipment.\n"
           },
           {
             "in": "query",
@@ -2740,7 +2738,7 @@
           "Regions"
         ],
         "summary": "Retrieve service city zones",
-        "description": "**(added in v1.6)**\n\nReturns all the service city zones that includes (for each city) their geoJSON geometry (polygons/multipolygons)\n\n### Rate Limiting\n\nThis operation can be requested without authentication, however it will have a\nstrict rate limit of 6 requests every 10 seconds.\n\nHowever, authenticated requests can request 12 times every 10 seconds.\n",
+        "description": "**(ADDED IN v1.6)**\n\nReturns all the service city zones that includes (for each city) their geoJSON geometry (polygons/multipolygons)\n\n### Rate Limiting\n\nThis operation can be requested without authentication, however it will have a\nstrict rate limit of 6 requests every 10 seconds.\n\nHowever, authenticated requests can request 12 times every 10 seconds.\n",
         "security": [
           {},
           {
@@ -2935,7 +2933,7 @@
           "Routing"
         ],
         "summary": "Create routing request",
-        "description": "Queue a list of parcels to be routed and added to optimized shipments.\n\nThe typical use case of this API is to select all your parcels and\nprovide in bulk to this endpoint, which responds with an asynchronous routing\nrequest ID. Then use this asynchronous routing request ID to obtain the\nstatus of the routing request and later the result.\n\n**Order ID**\n\nFor each parcel provided to this endpoint, the `orderId` must be unique among\nall parcels. This allows us to refer back to the parcel by `orderId` in the\nresult `errors` array.\n\n**Scheduled Post At**\n\nValues for `scheduledPostAt` must be a date at least 1 hour from the time of the request.\nThis helps to ensure that there is enough time for routes to be created before\nthe driver network is notified of the deliveries.\n\n**Note on Optimization**\nThis endpoint does not use our most up-to-date routing optimization technology. We\nrecommend using the [Complex Rate](/#operation/createComplexRateRequest) endpoint instead.\n\n**(deprecated in v1.8)** Use the new [Complex Rate](/#operation/createComplexRateRequest)\nendpoint, combined with the [Create Shipments](/#operation/createCreateBulkShipmentsRequest) endpoint.\n",
+        "description": "Queue a list of parcels to be routed and added to optimized shipments.\n\nThe typical use case of this API is to select all your parcels and\nprovide in bulk to this endpoint, which responds with an asynchronous routing\nrequest ID. Then use this asynchronous routing request ID to obtain the\nstatus of the routing request and later the result.\n\n**Order ID**\n\nFor each parcel provided to this endpoint, the `orderId` must be unique among\nall parcels. This allows us to refer back to the parcel by `orderId` in the\nresult `errors` array.\n\n**Scheduled Post At**\n\nValues for `scheduledPostAt` must be a date at least 1 hour from the time of the request.\nThis helps to ensure that there is enough time for routes to be created before\nthe driver network is notified of the deliveries.\n\n**Note on Optimization**\nThis endpoint does not use our most up-to-date routing optimization technology. We\nrecommend using the [Complex Rate](/#operation/createComplexRateRequest) endpoint instead.\n\n**(DEPRECATED AS OF v1.8)** Use the new [Complex Rate](/#operation/createComplexRateRequest)\nendpoint, combined with the [Create Shipments](/#operation/createCreateBulkShipmentsRequest) endpoint.\n",
         "requestBody": {
           "required": true,
           "content": {

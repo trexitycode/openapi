@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: '1.18'
+  version: '1.19'
   title: Trexity API
   license:
     name: MIT
@@ -12,7 +12,7 @@ info:
   description: |
     # Usage Policy
 
-    **(added in v1.7)**
+    **(ADDED IN v1.7)**
 
     By using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.
     The [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the Rate.
