@@ -3,6 +3,19 @@ post:
   tags: [Routing]
   summary: Create routing request
   description: |
+    **(CHANGE AS OF DEC 1, 2022)** All `scheduledPostAt` values must be within **8:00am-1:00pm and 1:00pm-5:00pm local time (inclusive)**.
+
+    Additionally, `scheduledPostAt` cannot be set to a value within the current time window or in the past. A time window is current when
+    the local time of the pickup address enters the time window.
+
+    For example: If the current time is 9AM local time, then you can only set `scheduledPostAt` to 1PM or later on the same day.
+
+    For example: If the current time is 2PM local time, then you can only set `scheduledPostAt` to 8AM or later the following day.
+
+    You can still schedule in the future, but the `scheduledPostAt` value needs to be within one of the time windows described above.
+
+    ---
+
     Queue a list of parcels to be routed and added to optimized shipments.
 
     The typical use case of this API is to select all your parcels and
@@ -15,12 +28,6 @@ post:
     For each parcel provided to this endpoint, the `orderId` must be unique among
     all parcels. This allows us to refer back to the parcel by `orderId` in the
     result `errors` array.
-
-    **Scheduled Post At**
-
-    Values for `scheduledPostAt` must be a date at least 1 hour from the time of the request.
-    This helps to ensure that there is enough time for routes to be created before
-    the driver network is notified of the deliveries.
 
     **Note on Optimization**
     This endpoint does not use our most up-to-date routing optimization technology. We
