@@ -1,0 +1,10 @@
+description: The receipt items for a receipt
+type: object
+properties:
+  data:
+    type: object
+    properties:
+      receiptItems:
+        type: array
+        items:
+          $ref: ../ReceiptItem.yaml

@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: '1.19'
+  version: '1.20'
   title: Trexity API
   license:
     name: MIT
@@ -145,6 +145,10 @@ tags:
   - name: Routing
     description: |
       Create and get status information for asynchronous routing requests.
+
+  - name: Receipts
+    description: |
+      Retrieve receipt information
 
   - name: Storage
     description: |
@@ -334,3 +338,5 @@ paths:
     $ref: ./paths/api/merchant-locations.yaml
   /locations/by-query:
     $ref: ./paths/api/merchant-location-by-query.yaml
+  /receipts/{yearMonth}:
+    $ref: ./paths/api/get-receipt.yaml

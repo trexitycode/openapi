@@ -1,0 +1,44 @@
+get:
+  operationId: getReceipt
+  tags: [Receipts]
+  summary: Get Receipt
+  description: |
+    Retrieve the receipt items for all or one location from a receipt for a particular calendar month
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: yearMonth
+      required: true
+      schema:
+        type: string
+      description: The year and month like "YYYY-MM"
+      example: 2022-01
+    - in: query
+      name: location
+      schema:
+        type: string
+      description: The merchant location ID or case insensitive name. If specified then all receipt items will only be for this lcoation.
+      example: My Shop
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/responses/ReceiptResponse.yaml
+        text/csv:
+          schema:
+            description: The receipt items rendered as CSV
+        text/html:
+          schema:
+            description: The receipt items rendered as a standalone HTML
+        application/pdf:
+          schema:
+            description: The receipt items rendered as a PDF
+
+    '400':
+      description: Invalid parameters
+    '404':
+      description: Merchant or merchant location not found
