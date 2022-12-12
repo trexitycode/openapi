@@ -4615,7 +4615,7 @@
             "description": "Invalid parameters"
           },
           "404": {
-            "description": "Merchant or merchant location not found"
+            "description": "Merchant location not found"
           }
         }
       }
