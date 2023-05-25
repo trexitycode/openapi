@@ -728,11 +728,11 @@
             "$ref": "#/components/schemas/SimplifiedDateISOString"
           },
           "pickupStartAt": {
-            "description": "The start of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.\nThe list of available Pickup Windows can be found here: TODO TODO TODO.\n",
+            "description": "The start of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.\nThe list of available Pickup Windows can be found here: https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows\n",
             "$ref": "#/components/schemas/SimplifiedDateISOString"
           },
           "pickupEndAt": {
-            "description": "The end of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.\nThe list of available Pickup Windows can be found here: TODO TODO TODO.\n",
+            "description": "The end of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.\nThe list of available Pickup Windows can be found here: https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows\n",
             "$ref": "#/components/schemas/SimplifiedDateISOString"
           },
           "merchantId": {
