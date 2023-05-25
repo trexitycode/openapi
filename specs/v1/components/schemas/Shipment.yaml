@@ -20,8 +20,31 @@ properties:
   requirements:
     $ref: ./ShipmentRequirements.yaml
   scheduledPostAt:
+    description: |
+      Deprecated. If you want to schedule a shipment, use exactly one of:
+      1) pickup windows (pickupStartAt/pickupEndAt)
+      2) delivery windows (deliveryStartAt, deliver)
     $ref: ./SimplifiedDateISOString.yaml
-
+  deliverStartAt:
+    description: |
+      The start of the Delivery Windows. Only date and hours/minutes will be used to match it to your delivery windows.
+      To see your delivery windows, please visit the merchant portal and head over to the API settings.
+    $ref: ./SimplifiedDateISOString.yaml
+  deliverEndAt:
+    description: |
+      The start of the Delivery Windows. Only date and hours/minutes will be used to match it to your delivery windows.
+      To see your delivery windows, please visit the merchant portal and head over to the API settings.
+    $ref: ./SimplifiedDateISOString.yaml
+  pickupStartAt:
+    description: |
+      The start of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.
+      The list of available Pickup Windows can be found here: TODO TODO TODO.
+    $ref: ./SimplifiedDateISOString.yaml
+  pickupEndAt:
+    description: |
+      The end of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.
+      The list of available Pickup Windows can be found here: TODO TODO TODO.
+    $ref: ./SimplifiedDateISOString.yaml
   merchantId:
     type: string
     description: User id of the Merchant who is the owner of the Shipment
