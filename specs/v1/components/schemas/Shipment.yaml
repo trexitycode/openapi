@@ -28,12 +28,12 @@ properties:
   deliverStartAt:
     description: |
       The start of the Delivery Windows. Only date and hours/minutes will be used to match it to your delivery windows.
-      To see your delivery windows, please visit the merchant portal and head over to the API settings.
+      To see your delivery windows, please visit the merchant portal and head over to the API settings: https://merchant.trexity.com/api
     $ref: ./SimplifiedDateISOString.yaml
   deliverEndAt:
     description: |
       The start of the Delivery Windows. Only date and hours/minutes will be used to match it to your delivery windows.
-      To see your delivery windows, please visit the merchant portal and head over to the API settings.
+      To see your delivery windows, please visit the merchant portal and head over to the API settings: https://merchant.trexity.com/api
     $ref: ./SimplifiedDateISOString.yaml
   pickupStartAt:
     description: |
