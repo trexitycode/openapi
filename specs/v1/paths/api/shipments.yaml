@@ -4,7 +4,7 @@ post:
   summary: Create a shipment
   description: |
     **(CHANGE AS OF MAY 25, 2023)** scheduledPostAt is considered deprecated. It is still supported, but at some point in the future, it will not be.
-    If you want to schedule a shipment, [lease use exactly one of:
+    If you want to schedule a shipment, please use exactly one of:
       1) pickupStartAt/pickupEndAt (pickup windows)
       2) deliverStartAt/deliverEndAt (delivery windows)
 
