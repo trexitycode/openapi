@@ -36,23 +36,23 @@ properties:
   merchantEmail:
     type: string
     description: Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts.
-  deliverStartAt:
+  scheduledPostAt:
+    type: 'string'
+    deprecated: true
     description: |
-      The start of the Delivery Windows. Only date and hours/minutes will be used to match it to your delivery windows.
-      To see your delivery windows, please visit the merchant portal and head over to the API settings: https://merchant.trexity.com/api
-    $ref: '../SimplifiedDateISOString.yaml'
-  deliverEndAt:
-    description: |
-      The start of the Delivery Windows. Only date and hours/minutes will be used to match it to your delivery windows.
-      To see your delivery windows, please visit the merchant portal and head over to the API settings: https://merchant.trexity.com/api
-    $ref: '../SimplifiedDateISOString.yaml'
+      **DEPRECATED AS OF v1.21**.
+      If provided, then an approximate pickup time will be determined based on the pickup windows and the scheduledPostAt time.
+      If a pickup time cannot be determined, then the shipment will not be updated and an email will be sent off to
+      the merchant asking them to schedule the shipment for pickup.
+
+      Instead to schedule a shipment for pickup/delivery use one of the following new fields:
+      1) pickup windows (pickupStartAt/pickupEndAt)
+      2) delivery windows (deliverStartAt, deliverEndAt)
   pickupStartAt:
-    description: |
-      The start of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.
-      The list of available Pickup Windows can be found here: https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows
-    $ref: '../SimplifiedDateISOString.yaml'
+    $ref: '../PickupStartAt.yaml'
   pickupEndAt:
-    description: |
-      The end of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.
-      The list of available Pickup Windows can be found here: https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows
-    $ref: '../SimplifiedDateISOString.yaml'
+    $ref: '../PickupEndAt.yaml'
+  deliverStartAt:
+    $ref: '../DeliverStartAt.yaml'
+  deliverEndAt:
+    $ref: '../DeliverEndAt.yaml'

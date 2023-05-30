@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: '1.20'
+  version: '1.21'
   title: Trexity API
   license:
     name: MIT
@@ -128,7 +128,6 @@ tags:
     description: |
       The most common approach to get a shipment on the road is to:
         * [Create a Shipment](/#operation/createShipment)
-        * [Posting a Shipment](/#operation/postShipment)
 
       After [posting](/#section/Posting-a-shipment), assuming everything went well, the Trexity system will keep pinging drivers in the vicinity of the pickup address.
       In the rare case of not finding an available driver in the vicinity of the pickup address, Trexity will refuse to post the shipment.

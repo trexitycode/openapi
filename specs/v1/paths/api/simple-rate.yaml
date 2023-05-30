@@ -3,21 +3,6 @@ post:
   tags: [Shipping Rates]
   summary: Simple rate
   description: |
-    **(CHANGE AS OF DEC 1, 2022)** All `scheduledPostAt` values must be within **8:00am-11:00am, 11:00am-2:00pm, and 2:00pm-5:00pm local time (inclusive)**.
-
-    Additionally, `scheduledPostAt` cannot be set to a value within the current time window or in the past. A time window is current when
-    the local time of the pickup address enters the time window.
-
-    For example: If the current time is 9AM local time, then you can only set `scheduledPostAt` to 1PM or later on the same day.
-
-    For example: If the current time is 2PM local time, then you can only set `scheduledPostAt` to 8AM or later the following day.
-
-    You can still schedule in the future, but the `scheduledPostAt` value needs to be within one of the time windows described above.
-
-    When getting a rate for an ASAP shipment `estimateScheduledPostAt` in the response will be set to the start of the next time window.
-
-    ---
-
     Calculate the rate for a direct shipment from a single pickup address to a
     single delivery address.
 
@@ -35,22 +20,8 @@ post:
 
     The rate response will now include estimates for post, pickup, and delivery time.
     Additionally, the new properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a
-    delivery window. Otheriwse the next available delivery window (i.e. ASAP) is assumed. Use the estimated scheduled post
-    date in the response when creating the shipment.
-
-    ---
-
-    ### Examples
-
-    Because the `pickupAfter`, `deliverAfter`, and `deliverBefore` are pickup and delivery time constraints, and there
-    is a time window constraint on values for `scheduledPostAt` you will need to do to the math yourself before submitting
-    to this API when specifying a pickup or delivery time constraint by taking into consideration of the delivery duration
-    from pickup and adding **2 hours (this may change at a later time)** to allow for a driver to arrive at pickup.
-
-    If `deliverBefore` is "2022-11-23T12:00:00.000-05:00" and the delivery duration from pickup to drop off is estimated to be 30 minutes,
-    then `estimateScheduledPostAt` will be "2022-11-23T09:30:00.000-05:00".
-
-    **NOTE: The estimated timings in the response will be rounded to intervals of 30 minutes.**
+    delivery window. Otheriwse the next available delivery window (i.e. ASAP) is assumed. Use the estimated values
+    in the response when creating the shipment.
 
   x-codeSamples:
     - $ref: ../../code_samples/Shell/simple-rate/post.yaml

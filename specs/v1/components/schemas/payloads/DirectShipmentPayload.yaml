@@ -1,7 +1,6 @@
 description: Payload object used to identify a shipment from a pickup address to a delivery address
 type: object
 required:
-  - scheduledPostAt
   - pickupAddress
   - deliveryAddress
   - deliveryName
@@ -11,7 +10,24 @@ required:
 properties:
   # Pickup properties
   scheduledPostAt:
-    $ref: '../SimplifiedDateISOString.yaml'
+    type: 'string'
+    deprecated: true
+    description: |
+      **DEPRECATED AS OF v1.21**. 
+      If provided, then an approximate pickup time will be determined based on the pickup windows and the scheduledPostAt time.
+      If a pickup time cannot be determined, then no complex rate will be returned and an error will be returned.
+
+      Instead to schedule a shipment for pickup/delivery use one of the following new fields:
+      1) pickup windows (pickupStartAt/pickupEndAt)
+      2) delivery windows (deliverStartAt, deliverEndAt)
+  pickupStartAt:
+    $ref: '../PickupStartAt.yaml'
+  pickupEndAt:
+    $ref: '../PickupEndAt.yaml'
+  deliverStartAt:
+    $ref: '../DeliverStartAt.yaml'
+  deliverEndAt:
+    $ref: '../DeliverEndAt.yaml'
   pickupAddress:
     $ref: ../Address.yaml
   pickupAddressNotes:

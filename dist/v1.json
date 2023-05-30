@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.20",
+    "version": "1.21",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -25,7 +25,7 @@
     },
     {
       "name": "Shipments",
-      "description": "The most common approach to get a shipment on the road is to:\n  * [Create a Shipment](/#operation/createShipment)\n  * [Posting a Shipment](/#operation/postShipment)\n\nAfter [posting](/#section/Posting-a-shipment), assuming everything went well, the Trexity system will keep pinging drivers in the vicinity of the pickup address.\nIn the rare case of not finding an available driver in the vicinity of the pickup address, Trexity will refuse to post the shipment.\n\nAlternatively, Trexity allows for planning in the future via Scheduling.\nYou can schedule the posting of the Shipment in the future.\nTrexity guarantees that the scheduled Shipment will not be posted or broadcasted prior to the time it was scheduled for.\nPlease see the [details](/#operation/createShipment) here.\n"
+      "description": "The most common approach to get a shipment on the road is to:\n  * [Create a Shipment](/#operation/createShipment)\n\nAfter [posting](/#section/Posting-a-shipment), assuming everything went well, the Trexity system will keep pinging drivers in the vicinity of the pickup address.\nIn the rare case of not finding an available driver in the vicinity of the pickup address, Trexity will refuse to post the shipment.\n\nAlternatively, Trexity allows for planning in the future via Scheduling.\nYou can schedule the posting of the Shipment in the future.\nTrexity guarantees that the scheduled Shipment will not be posted or broadcasted prior to the time it was scheduled for.\nPlease see the [details](/#operation/createShipment) here.\n"
     },
     {
       "name": "Parcels",
@@ -303,8 +303,23 @@
           }
         }
       },
-      "SimplifiedDateISOString": {
-        "description": "Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
+      "PickupStartAt": {
+        "description": "Specifies the start of the pickup window for the shipment (i.e. the earliest time that the driver can arrive to pickup the shipment).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the start of an available pickup window.\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
+        "type": "string",
+        "nullable": true
+      },
+      "PickupEndAt": {
+        "description": "Specifies the end of the pickup window for the shipment (i.e. the latest time that the driver can arrive to pickup the shipment).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the end of the available pickup window indicated by the value of `pickupStartAt`.\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
+        "type": "string",
+        "nullable": true
+      },
+      "DeliverStartAt": {
+        "description": "Specifies the start of the deliver window for the shipment (i.e. the earliest time that the driver can deliver the shipment).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the start of a suggested delivery window.\n\nThe delivery windows are unique to each of your locations within Trexity because they are determined by the market's pickup windows and each location's delivery SLA. A delivery SLA is the maximum amount of time a delivery can take (.e.g. 2 hours). The general formula for computing a delivery window for each pickup window is the following.\n\n```\ndeliveryWindowStart = pickupWindowStart\ndeliveryWindowEnd = pickupWindowEnd + deliverySLA\n```\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).\nReview your suggested [delivery windows](https://merchant.trexity.com/api).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
+        "type": "string",
+        "nullable": true
+      },
+      "DeliverEndAt": {
+        "description": "Specifies the start of the deliver window for the shipment (i.e. the latest time that the driver can deliver the shipment).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the end of the suggested delivery window indicated by the value of `deliverStartAt`.\n\nThe delivery windows are unique to each of your locations within Trexity because they are determined by the market's pickup windows and each of your location's delivery SLA. A delivery SLA is the maximum amount of time a delivery can take (.e.g. 2 hours). The general formula for computing a delivery window for each pickup window is the following.\n\n```\ndeliveryWindowStart = pickupWindowStart\ndeliveryWindowEnd = pickupWindowEnd + deliverySLA\n```\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).\nReview your suggested [delivery windows](https://merchant.trexity.com/api).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
         "type": "string",
         "nullable": true
       },
@@ -342,7 +357,6 @@
         "description": "Payload object used to identify a shipment from a pickup address to a delivery address",
         "type": "object",
         "required": [
-          "scheduledPostAt",
           "pickupAddress",
           "deliveryAddress",
           "deliveryName",
@@ -352,7 +366,21 @@
         ],
         "properties": {
           "scheduledPostAt": {
-            "$ref": "#/components/schemas/SimplifiedDateISOString"
+            "type": "string",
+            "deprecated": true,
+            "description": "**DEPRECATED AS OF v1.21**. \nIf provided, then an approximate pickup time will be determined based on the pickup windows and the scheduledPostAt time.\nIf a pickup time cannot be determined, then no complex rate will be returned and an error will be returned.\n\nInstead to schedule a shipment for pickup/delivery use one of the following new fields:\n1) pickup windows (pickupStartAt/pickupEndAt)\n2) delivery windows (deliverStartAt, deliverEndAt)\n"
+          },
+          "pickupStartAt": {
+            "$ref": "#/components/schemas/PickupStartAt"
+          },
+          "pickupEndAt": {
+            "$ref": "#/components/schemas/PickupEndAt"
+          },
+          "deliverStartAt": {
+            "$ref": "#/components/schemas/DeliverStartAt"
+          },
+          "deliverEndAt": {
+            "$ref": "#/components/schemas/DeliverEndAt"
           },
           "pickupAddress": {
             "$ref": "#/components/schemas/Address"
@@ -536,6 +564,11 @@
             }
           }
         }
+      },
+      "SimplifiedDateISOString": {
+        "description": "Date time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
+        "type": "string",
+        "nullable": true
       },
       "ShipmentStatus": {
         "type": "string",
@@ -1017,23 +1050,19 @@
           "scheduledPostAt": {
             "type": "string",
             "deprecated": true,
-            "description": "Deprecated. If you want to schedule a shipment, use exactly one of:\n1) pickup windows (pickupStartAt/pickupEndAt)\n2) delivery windows (deliverStartAt, deliverEndAt)\n"
-          },
-          "deliverStartAt": {
-            "description": "The start of the Delivery Windows. Only date and hours/minutes will be used to match it to your delivery windows.\nTo see your delivery windows, please visit the merchant portal and head over to the API settings: https://merchant.trexity.com/api\n",
-            "$ref": "#/components/schemas/SimplifiedDateISOString"
-          },
-          "deliverEndAt": {
-            "description": "The start of the Delivery Windows. Only date and hours/minutes will be used to match it to your delivery windows.\nTo see your delivery windows, please visit the merchant portal and head over to the API settings: https://merchant.trexity.com/api\n",
-            "$ref": "#/components/schemas/SimplifiedDateISOString"
+            "description": "**DEPRECATED AS OF v1.21**. \nIf provided, then an approximate pickup time will be determined based on the pickup windows and the scheduledPostAt time.\nIf a pickup time cannot be determined, then the shipment will be created as a draft and an email will be sent off to\nthe merchant asking them to schedule the shipment for pickup.\n\nInstead to schedule a shipment for pickup/delivery use one of the following new fields:\n1) pickup windows (pickupStartAt/pickupEndAt)\n2) delivery windows (deliverStartAt, deliverEndAt)\n"
           },
           "pickupStartAt": {
-            "description": "The start of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.\nThe list of available Pickup Windows can be found here: https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows\n",
-            "$ref": "#/components/schemas/SimplifiedDateISOString"
+            "$ref": "#/components/schemas/PickupStartAt"
           },
           "pickupEndAt": {
-            "description": "The end of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.\nThe list of available Pickup Windows can be found here: https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows\n",
-            "$ref": "#/components/schemas/SimplifiedDateISOString"
+            "$ref": "#/components/schemas/PickupEndAt"
+          },
+          "deliverStartAt": {
+            "$ref": "#/components/schemas/DeliverStartAt"
+          },
+          "deliverEndAt": {
+            "$ref": "#/components/schemas/DeliverEndAt"
           },
           "pickupAddress": {
             "$ref": "#/components/schemas/Address"
@@ -1154,21 +1183,22 @@
             "type": "string",
             "description": "Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts."
           },
-          "deliverStartAt": {
-            "description": "The start of the Delivery Windows. Only date and hours/minutes will be used to match it to your delivery windows.\nTo see your delivery windows, please visit the merchant portal and head over to the API settings: https://merchant.trexity.com/api\n",
-            "$ref": "#/components/schemas/SimplifiedDateISOString"
-          },
-          "deliverEndAt": {
-            "description": "The start of the Delivery Windows. Only date and hours/minutes will be used to match it to your delivery windows.\nTo see your delivery windows, please visit the merchant portal and head over to the API settings: https://merchant.trexity.com/api\n",
-            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          "scheduledPostAt": {
+            "type": "string",
+            "deprecated": true,
+            "description": "**DEPRECATED AS OF v1.21**.\nIf provided, then an approximate pickup time will be determined based on the pickup windows and the scheduledPostAt time.\nIf a pickup time cannot be determined, then the shipment will not be updated and an email will be sent off to\nthe merchant asking them to schedule the shipment for pickup.\n\nInstead to schedule a shipment for pickup/delivery use one of the following new fields:\n1) pickup windows (pickupStartAt/pickupEndAt)\n2) delivery windows (deliverStartAt, deliverEndAt)\n"
           },
           "pickupStartAt": {
-            "description": "The start of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.\nThe list of available Pickup Windows can be found here: https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows\n",
-            "$ref": "#/components/schemas/SimplifiedDateISOString"
+            "$ref": "#/components/schemas/PickupStartAt"
           },
           "pickupEndAt": {
-            "description": "The end of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.\nThe list of available Pickup Windows can be found here: https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows\n",
-            "$ref": "#/components/schemas/SimplifiedDateISOString"
+            "$ref": "#/components/schemas/PickupEndAt"
+          },
+          "deliverStartAt": {
+            "$ref": "#/components/schemas/DeliverStartAt"
+          },
+          "deliverEndAt": {
+            "$ref": "#/components/schemas/DeliverEndAt"
           }
         }
       },
@@ -1745,7 +1775,7 @@
           "Shipping Rates"
         ],
         "summary": "Simple rate",
-        "description": "**(CHANGE AS OF DEC 1, 2022)** All `scheduledPostAt` values must be within **8:00am-11:00am, 11:00am-2:00pm, and 2:00pm-5:00pm local time (inclusive)**.\n\nAdditionally, `scheduledPostAt` cannot be set to a value within the current time window or in the past. A time window is current when\nthe local time of the pickup address enters the time window.\n\nFor example: If the current time is 9AM local time, then you can only set `scheduledPostAt` to 1PM or later on the same day.\n\nFor example: If the current time is 2PM local time, then you can only set `scheduledPostAt` to 8AM or later the following day.\n\nYou can still schedule in the future, but the `scheduledPostAt` value needs to be within one of the time windows described above.\n\nWhen getting a rate for an ASAP shipment `estimateScheduledPostAt` in the response will be set to the start of the next time window.\n\n---\n\nCalculate the rate for a direct shipment from a single pickup address to a\nsingle delivery address.\n\nReturns the estimated distance (in meters), estimated travel duration (in\nseconds), and fee from the pickup address to the delivery address.\n\nIf no `pickupAddress` is specified then the merchant's business address will\nbe used as the pickup address.\n\n**(ADDED IN v1.7)** Review the [Usage Policy](/#section/Usage-Policy).\n\n**(ADDED IN v1.8)** Use this endpoint for direct shipment rates (single pickup\naddress and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)\nendpoint for multiple delivery addresses.\n\nThe rate response will now include estimates for post, pickup, and delivery time.\nAdditionally, the new properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a\ndelivery window. Otheriwse the next available delivery window (i.e. ASAP) is assumed. Use the estimated scheduled post\ndate in the response when creating the shipment.\n\n---\n\n### Examples\n\nBecause the `pickupAfter`, `deliverAfter`, and `deliverBefore` are pickup and delivery time constraints, and there\nis a time window constraint on values for `scheduledPostAt` you will need to do to the math yourself before submitting\nto this API when specifying a pickup or delivery time constraint by taking into consideration of the delivery duration\nfrom pickup and adding **2 hours (this may change at a later time)** to allow for a driver to arrive at pickup.\n\nIf `deliverBefore` is \"2022-11-23T12:00:00.000-05:00\" and the delivery duration from pickup to drop off is estimated to be 30 minutes,\nthen `estimateScheduledPostAt` will be \"2022-11-23T09:30:00.000-05:00\".\n\n**NOTE: The estimated timings in the response will be rounded to intervals of 30 minutes.**\n",
+        "description": "Calculate the rate for a direct shipment from a single pickup address to a\nsingle delivery address.\n\nReturns the estimated distance (in meters), estimated travel duration (in\nseconds), and fee from the pickup address to the delivery address.\n\nIf no `pickupAddress` is specified then the merchant's business address will\nbe used as the pickup address.\n\n**(ADDED IN v1.7)** Review the [Usage Policy](/#section/Usage-Policy).\n\n**(ADDED IN v1.8)** Use this endpoint for direct shipment rates (single pickup\naddress and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)\nendpoint for multiple delivery addresses.\n\nThe rate response will now include estimates for post, pickup, and delivery time.\nAdditionally, the new properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a\ndelivery window. Otheriwse the next available delivery window (i.e. ASAP) is assumed. Use the estimated values\nin the response when creating the shipment.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -1882,7 +1912,7 @@
           "Shipping Rates"
         ],
         "summary": "Create complex rate request",
-        "description": "**(CHANGE AS OF DEC 1, 2022)** All `scheduledPostAt` values must be within **8:00am-11:00am, 11:00am-2:00pm, and 2:00pm-5:00pm local time (inclusive)**.\n\nAdditionally, `scheduledPostAt` cannot be set to a value within the current time window or in the past. A time window is current when\nthe local time of the pickup address enters the time window.\n\nFor example: If the current time is 9AM local time, then you can only set `scheduledPostAt` to 1PM or later on the same day.\n\nFor example: If the current time is 2PM local time, then you can only set `scheduledPostAt` to 8AM or later the following day.\n\nYou can still schedule in the future, but the `scheduledPostAt` value needs to be within one of the time windows described above.\n\n---\n\nQueue a list of shipments for an optimally routed rate.\n\nThe typical use case of this API is to provide multiple shipments (pickup &\ndelivery) to this endpoint, which responds with a request ID to be polled\nasynchronously using the [Complex Rate status](/#operation/getComplexRateStatus)\nendpoint, and ultimately retrieving the rate using the [Complex Rate result](/#operation/getComplexRateResult)\nendpoint.\n\nOptionally, you can then take the rate ID provided in the rate result and\nhave the shipments created in bulk using the [Bulk Shipment Creation](/#operation/createCreateBulkShipmentsRequest)\nendpoint.\n\n**Order ID**\n\nFor each parcel across all shipments provided to this endpoint, the\n`orderId` must be unique. This allows us to refer back to the parcel by\n`orderId` in the result `errors` array.\n",
+        "description": "**(CHANGE AS OF JUNE 1, 2023)** scheduledPostAt is considered deprecated. It is still supported, but at some point in the future, it will not be.\nIf you want to schedule a shipment, please use exactly one of:\n  1) pickupStartAt and an optional pickupEndAt (when to pickup by)\n  2) deliverStartAt and an optional deliverEndAt (when to deliver by)\n\nIf providing a value for `scheduledPostAt` then an approximate value for `pickupStartAt` will attempt to be calculated. If an appproximation\ncannot be determined, then no complex rate will be returned and an error will be returned.\n\n---\n\nQueue a list of shipments for an optimally routed rate.\n\nThe typical use case of this API is to provide multiple shipments (pickup &\ndelivery) to this endpoint, which responds with a request ID to be polled\nasynchronously using the [Complex Rate status](/#operation/getComplexRateStatus)\nendpoint, and ultimately retrieving the rate using the [Complex Rate result](/#operation/getComplexRateResult)\nendpoint.\n\nOptionally, you can then take the rate ID provided in the rate result and\nhave the shipments created in bulk using the [Bulk Shipment Creation](/#operation/createCreateBulkShipmentsRequest)\nendpoint.\n\n**Order ID**\n\nFor each parcel across all shipments provided to this endpoint, the\n`orderId` must be unique. This allows us to refer back to the parcel by\n`orderId` in the result `errors` array.\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -2039,7 +2069,7 @@
           "Shipments"
         ],
         "summary": "Create a shipment",
-        "description": "**(CHANGE AS OF MAY 25, 2023)** scheduledPostAt is considered deprecated. It is still supported, but at some point in the future, it will not be.\nIf you want to schedule a shipment, please use exactly one of:\n  1) pickupStartAt/pickupEndAt (pickup windows)\n  2) deliverStartAt/deliverEndAt (delivery windows)\n\nwhen you are scheduling a shipment.\n\n**(CHANGE AS OF DEC 1, 2022)** All `scheduledPostAt` values must be within **8:00am-11:00am, 11:00am-2:00pm, and 2:00pm-5:00pm local time (inclusive)**.\n\nAdditionally, `scheduledPostAt` cannot be set to a value within the current time window or in the past. A time window is current when\nthe local time of the pickup address enters the time window.\n\nFor example: If the current time is 9AM local time, then you can only set `scheduledPostAt` to 1PM or later on the same day.\n\nFor example: If the current time is 2PM local time, then you can only set `scheduledPostAt` to 8AM or later the following day.\n\nYou can still schedule in the future, but the `scheduledPostAt` value needs to be within one of the time windows described above.\n\n---\n\nCreate a new shipment.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n",
+        "description": "**(CHANGE AS OF JUNE 1, 2023)** scheduledPostAt is considered deprecated. It is still supported, but at some point in the future, it will not be.\nIf you want to schedule a shipment, please use exactly one of:\n  1) pickupStartAt and an optional pickupEndAt (when to pickup by)\n  2) deliverStartAt and an optional deliverEndAt (when to deliver by)\n\nIf providing a value for `scheduledPostAt` then an approximate value for `pickupStartAt` will attempt to be calculated. If an appproximation\ncannot be determined, then the shipment will be created as a draft and an email will be sent off to the merchant asking them to schedule\nthe shipment for pickup.\n\n---\n\nCreate a new shipment.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",

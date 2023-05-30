@@ -3,23 +3,14 @@ post:
   tags: [Shipments]
   summary: Create a shipment
   description: |
-    **(CHANGE AS OF MAY 25, 2023)** scheduledPostAt is considered deprecated. It is still supported, but at some point in the future, it will not be.
+    **(CHANGE AS OF JUNE 1, 2023)** scheduledPostAt is considered deprecated. It is still supported, but at some point in the future, it will not be.
     If you want to schedule a shipment, please use exactly one of:
-      1) pickupStartAt/pickupEndAt (pickup windows)
-      2) deliverStartAt/deliverEndAt (delivery windows)
+      1) pickupStartAt and an optional pickupEndAt (when to pickup by)
+      2) deliverStartAt and an optional deliverEndAt (when to deliver by)
 
-    when you are scheduling a shipment.
-
-    **(CHANGE AS OF DEC 1, 2022)** All `scheduledPostAt` values must be within **8:00am-11:00am, 11:00am-2:00pm, and 2:00pm-5:00pm local time (inclusive)**.
-
-    Additionally, `scheduledPostAt` cannot be set to a value within the current time window or in the past. A time window is current when
-    the local time of the pickup address enters the time window.
-
-    For example: If the current time is 9AM local time, then you can only set `scheduledPostAt` to 1PM or later on the same day.
-
-    For example: If the current time is 2PM local time, then you can only set `scheduledPostAt` to 8AM or later the following day.
-
-    You can still schedule in the future, but the `scheduledPostAt` value needs to be within one of the time windows described above.
+    If providing a value for `scheduledPostAt` then an approximate value for `pickupStartAt` will attempt to be calculated. If an appproximation
+    cannot be determined, then the shipment will be created as a draft and an email will be sent off to the merchant asking them to schedule
+    the shipment for pickup.
 
     ---
 
