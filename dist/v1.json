@@ -1015,6 +1015,24 @@
             "description": "Optionally set Location that this Shipment will belong to. Please see [Locations](#tag/Locations)"
           },
           "scheduledPostAt": {
+            "type": "string",
+            "deprecated": true,
+            "description": "Deprecated. If you want to schedule a shipment, use exactly one of:\n1) pickup windows (pickupStartAt/pickupEndAt)\n2) delivery windows (deliverStartAt, deliverEndAt)\n"
+          },
+          "deliverStartAt": {
+            "description": "The start of the Delivery Windows. Only date and hours/minutes will be used to match it to your delivery windows.\nTo see your delivery windows, please visit the merchant portal and head over to the API settings: https://merchant.trexity.com/api\n",
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "deliverEndAt": {
+            "description": "The start of the Delivery Windows. Only date and hours/minutes will be used to match it to your delivery windows.\nTo see your delivery windows, please visit the merchant portal and head over to the API settings: https://merchant.trexity.com/api\n",
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "pickupStartAt": {
+            "description": "The start of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.\nThe list of available Pickup Windows can be found here: https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows\n",
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "pickupEndAt": {
+            "description": "The end of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.\nThe list of available Pickup Windows can be found here: https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows\n",
             "$ref": "#/components/schemas/SimplifiedDateISOString"
           },
           "pickupAddress": {
@@ -1098,7 +1116,7 @@
         }
       },
       "UpdateShipmentPayload": {
-        "description": "Payload object describing the changes of a shipment",
+        "description": "Payload object describing the changes of a shipment. Optionally, if you want to schedule the shipment, please use exactly one of:\n1) pickup windows (pickupStartAt, pickupEndAt)\n2) delivery windows (deliverStartAt, deliverEndAt)\n",
         "type": "object",
         "properties": {
           "pickupAddress": {
@@ -1135,6 +1153,22 @@
           "merchantEmail": {
             "type": "string",
             "description": "Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts."
+          },
+          "deliverStartAt": {
+            "description": "The start of the Delivery Windows. Only date and hours/minutes will be used to match it to your delivery windows.\nTo see your delivery windows, please visit the merchant portal and head over to the API settings: https://merchant.trexity.com/api\n",
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "deliverEndAt": {
+            "description": "The start of the Delivery Windows. Only date and hours/minutes will be used to match it to your delivery windows.\nTo see your delivery windows, please visit the merchant portal and head over to the API settings: https://merchant.trexity.com/api\n",
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "pickupStartAt": {
+            "description": "The start of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.\nThe list of available Pickup Windows can be found here: https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows\n",
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
+          },
+          "pickupEndAt": {
+            "description": "The end of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.\nThe list of available Pickup Windows can be found here: https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows\n",
+            "$ref": "#/components/schemas/SimplifiedDateISOString"
           }
         }
       },
