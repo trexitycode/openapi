@@ -74,7 +74,6 @@ post:
                   - `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area
                   - `invalid-data-payload` = When there are issues with the input data provided
                   - `num-labels-too-large` = When numLabels is too large
-                  - `num-labels-too-large` = When numLabels is too large
                   - `time-constraint-violation` = When the delivery/pickup time constraints specified cannot be met
     '401':
       description: Unauthorized

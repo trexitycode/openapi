@@ -1841,7 +1841,7 @@
                     "code": {
                       "type": "string",
                       "nullable": true,
-                      "description": "Unexhaustive list of codes.\n\n- `invalid-merchant-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-data-payload` = When there are issues with the input data provided\n- `num-labels-too-large` = When numLabels is too large\n- `num-labels-too-large` = When numLabels is too large\n- `time-constraint-violation` = When the delivery/pickup time constraints specified cannot be met\n"
+                      "description": "Unexhaustive list of codes.\n\n- `invalid-merchant-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-data-payload` = When there are issues with the input data provided\n- `num-labels-too-large` = When numLabels is too large\n- `time-constraint-violation` = When the delivery/pickup time constraints specified cannot be met\n"
                     }
                   }
                 }
@@ -2153,7 +2153,29 @@
             }
           },
           "400": {
-            "description": "Invalid payload or permission denied."
+            "description": "Invalid payload or permission denied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    },
+                    "code": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "Unexhaustive list of codes.\n\n- `unauthorized-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `invalid-delivery-address` = When the delivery address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-input` = When there are issues with the input data provided\n- `invalid-shipment-data` = When there are issues with the input data provided and the shipment entity cannot be instantiated\n- `num-labels-too-large` = When numLabels is too large\n- `invalid-scanids` = When the scanId specified is already in use\n- `outside-operating-hours` = When the pickup or delivery time specified is outside the your delivery hours or Trexity's service hours\n"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "description": "Unknown server problem"
