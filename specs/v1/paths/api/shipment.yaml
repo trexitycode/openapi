@@ -75,11 +75,28 @@ get:
       schema:
         type: string
       description: The id of the shipment
+    - in: query
+      name: select
+      schema:
+        type: string
+      description: |
+        **(ADDED IN v1.22)** The comma-separated list of fields to include in the shipment response (if not specified or blank then all fields will be included).
+
+        If a field is specified that is not defined by the Shipment object, then responds with HTTP 400. Only top-level fields are supported.
   responses:
     '500':
       description: Unknown server problem
     '400':
-      description: Invalid payload or permission denied.
+      description: Invalid payload, select contains a field not in a Shipment object, or permission denied.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: The error message
+                example: Invalid data payload
     '200':
       description: Success
       content:

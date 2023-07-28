@@ -137,6 +137,14 @@ get:
 
   parameters:
     - in: query
+      name: select
+      schema:
+        type: string
+      description: |
+        **(ADDED IN v1.22)** The comma-separated list of fields to include in the shipment response (if not specified or blank then all fields will be included).
+
+        If a field is specified that is not defined by the Shipment object, then responds with HTTP 400. Only top-level fields are supported.
+    - in: query
       name: fromDate
       schema:
         $ref: ../../components/schemas/SimplifiedDateISOString.yaml
@@ -159,6 +167,17 @@ get:
       schema:
         type: string
   responses:
+    '400':
+      description: Select contains a field not in a Shipment object, query params invalid, or permission denied.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: The error message
+                example: Invalid data payload
     '200':
       description: Success
       content:
