@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.21",
+    "version": "1.22",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -2198,6 +2198,14 @@
         "parameters": [
           {
             "in": "query",
+            "name": "select",
+            "schema": {
+              "type": "string"
+            },
+            "description": "**(ADDED IN v1.22)** The comma-separated list of fields to include in the shipment response (if not specified or blank then all fields will be included).\n\nIf a field is specified that is not defined by the Shipment object, then responds with HTTP 400.\n"
+          },
+          {
+            "in": "query",
             "name": "fromDate",
             "schema": {
               "$ref": "#/components/schemas/SimplifiedDateISOString"
@@ -2242,6 +2250,23 @@
                       "items": {
                         "$ref": "#/components/schemas/Shipment"
                       }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Select contains a field not in a Shipment object, query params invalid, or permission denied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "The error message",
+                      "example": "Invalid data payload"
                     }
                   }
                 }
@@ -2551,6 +2576,14 @@
               "type": "string"
             },
             "description": "The id of the shipment"
+          },
+          {
+            "in": "query",
+            "name": "select",
+            "schema": {
+              "type": "string"
+            },
+            "description": "**(ADDED IN v1.22)** The comma-separated list of fields to include in the shipment response (if not specified or blank then all fields will be included).\n\nIf a field is specified that is not defined by the Shipment object, then responds with HTTP 400.\n"
           }
         ],
         "responses": {
@@ -2570,7 +2603,21 @@
             }
           },
           "400": {
-            "description": "Invalid payload or permission denied."
+            "description": "Invalid payload, select contains a field not in a Shipment object, or permission denied.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "description": "The error message",
+                      "example": "Invalid data payload"
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "description": "Unknown server problem"
