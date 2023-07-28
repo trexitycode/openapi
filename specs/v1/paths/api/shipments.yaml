@@ -143,7 +143,7 @@ get:
       description: |
         **(ADDED IN v1.22)** The comma-separated list of fields to include in the shipment response (if not specified or blank then all fields will be included).
 
-        If a field is specified that is not defined by the Shipment object, then responds with HTTP 400.
+        If a field is specified that is not defined by the Shipment object, then responds with HTTP 400. Only top-level fields are supported.
     - in: query
       name: fromDate
       schema:

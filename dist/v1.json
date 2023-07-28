@@ -2202,7 +2202,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "**(ADDED IN v1.22)** The comma-separated list of fields to include in the shipment response (if not specified or blank then all fields will be included).\n\nIf a field is specified that is not defined by the Shipment object, then responds with HTTP 400.\n"
+            "description": "**(ADDED IN v1.22)** The comma-separated list of fields to include in the shipment response (if not specified or blank then all fields will be included).\n\nIf a field is specified that is not defined by the Shipment object, then responds with HTTP 400. Only top-level fields are supported.\n"
           },
           {
             "in": "query",
@@ -2583,7 +2583,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "**(ADDED IN v1.22)** The comma-separated list of fields to include in the shipment response (if not specified or blank then all fields will be included).\n\nIf a field is specified that is not defined by the Shipment object, then responds with HTTP 400.\n"
+            "description": "**(ADDED IN v1.22)** The comma-separated list of fields to include in the shipment response (if not specified or blank then all fields will be included).\n\nIf a field is specified that is not defined by the Shipment object, then responds with HTTP 400. Only top-level fields are supported.\n"
           }
         ],
         "responses": {
