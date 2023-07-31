@@ -307,8 +307,6 @@ paths:
     $ref: ./paths/api/create-tracking-url-deliveryIndex.yaml
   /shipments/{shipmentId}/create-shipping-label:
     $ref: ./paths/api/create-shipping-label.yaml
-  /shipments/{shipmentId}/parcels/{deliveryIndex}/photo:
-    $ref: ./paths/api/update-shipment-parcel-photo.yaml
   /regions/service-city-zones:
     $ref: ./paths/api/service-city-zones.yaml
   /routing:
