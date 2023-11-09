@@ -6,6 +6,9 @@ description: |
   **(CHANGED IN v1.17)** The maximums have changed from 130 cm length, 80 cm width
   and 80 cm height, to 91 cm for any dimension. The maximum for weight changed from
   30000 grams to 15876.
+
+  **(CHANGED IN v1.23)** The maximum weight changed from 15876 to 9072 grams to coincides
+  with our merchant code of conduct policy.
 properties:
   length:
     type: integer
@@ -25,5 +28,5 @@ properties:
   weight:
     type: integer
     minimum: 0
-    maximum: 15876
-    description: Weight (in grams). Maximum is ~35 lbs.
+    maximum: 9072
+    description: Weight (in grams). Maximum is ~20 lbs.

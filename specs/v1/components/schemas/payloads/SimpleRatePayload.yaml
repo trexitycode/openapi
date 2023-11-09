@@ -1,5 +1,4 @@
 description: A minimal object that describes a direct shipment
-type: object
 allOf:
   - $ref: '../DeliveryWindowProps.yaml'
   - type: object

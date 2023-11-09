@@ -3,6 +3,18 @@ post:
   tags: [Shipments]
   summary: Create a shipment
   description: |
+    **(CHANGE AS OF NOVEMBER 14, 2023)** The concept of a "service type" was introduced
+    and will by default have no change on the API. However, each merchant location from
+    the Merchant portal can have the default service type can be changed to "Trexity Standard".
+
+    When the default service type is set to "Trexity Standard" from the Merchant UI for a location
+    then the following changes apply:
+    - The "containsAlcohol" field will not be able to be set to "true".
+    - The "requirements.perishable" field will not be able to be set to "true".
+    - The "requirements.returnReusables" field will not be able to be set to "true".
+    - The Parcel "requiresPersonHandoff" field will not be able to be set to "true".
+    - The supported pickup windows will change as outlined in this article.
+
     **(CHANGE AS OF JUNE 1, 2023)** scheduledPostAt is considered deprecated. It is still supported, but at some point in the future, it will not be.
     If you want to schedule a shipment, please use exactly one of:
       1) pickupStartAt and an optional pickupEndAt (when to pickup by)

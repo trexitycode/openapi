@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.22",
+    "version": "1.23",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -116,7 +116,7 @@
           },
           "legalAgeAlcohol": {
             "type": "boolean",
-            "description": "Must be delivered by a driver who is of legal age to transport alcohol.\n"
+            "description": "Contains any trace of alcohol.\n"
           },
           "perishable": {
             "type": "boolean",
@@ -134,7 +134,6 @@
       },
       "SimpleRatePayload": {
         "description": "A minimal object that describes a direct shipment",
-        "type": "object",
         "allOf": [
           {
             "$ref": "#/components/schemas/DeliveryWindowProps"
@@ -325,7 +324,7 @@
       },
       "ParcelLoad": {
         "type": "object",
-        "description": "**(ADDED IN v1.9)** Optional dimensions and weight of the parcel. This\nwill inform the driver matching algorithm accordingly.\n\n**(CHANGED IN v1.17)** The maximums have changed from 130 cm length, 80 cm width\nand 80 cm height, to 91 cm for any dimension. The maximum for weight changed from\n30000 grams to 15876.\n",
+        "description": "**(ADDED IN v1.9)** Optional dimensions and weight of the parcel. This\nwill inform the driver matching algorithm accordingly.\n\n**(CHANGED IN v1.17)** The maximums have changed from 130 cm length, 80 cm width\nand 80 cm height, to 91 cm for any dimension. The maximum for weight changed from\n30000 grams to 15876.\n\n**(CHANGED IN v1.23)** The maximum weight changed from 15876 to 9072 grams to coincides\nwith our merchant code of conduct policy.\n",
         "properties": {
           "length": {
             "type": "integer",
@@ -348,8 +347,8 @@
           "weight": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 15876,
-            "description": "Weight (in grams). Maximum is ~35 lbs."
+            "maximum": 9072,
+            "description": "Weight (in grams). Maximum is ~20 lbs."
           }
         }
       },
@@ -690,7 +689,7 @@
           },
           "containsAlcohol": {
             "type": "boolean",
-            "description": "**(ADDED IN v1.8)** Does this parcel contain alcoholic products?\n"
+            "description": "**(ADDED IN v1.8)** Requires legal age verification by law\n"
           },
           "externalId": {
             "type": "string",
@@ -1009,7 +1008,7 @@
           },
           "containsAlcohol": {
             "type": "boolean",
-            "description": "**(ADDED IN v1.8)** Does this parcel contain alcoholic products?\n"
+            "description": "**(ADDED IN v1.8)** Requires legal age verification by law\n"
           },
           "load": {
             "$ref": "#/components/schemas/ParcelLoad"
@@ -2069,7 +2068,7 @@
           "Shipments"
         ],
         "summary": "Create a shipment",
-        "description": "**(CHANGE AS OF JUNE 1, 2023)** scheduledPostAt is considered deprecated. It is still supported, but at some point in the future, it will not be.\nIf you want to schedule a shipment, please use exactly one of:\n  1) pickupStartAt and an optional pickupEndAt (when to pickup by)\n  2) deliverStartAt and an optional deliverEndAt (when to deliver by)\n\nIf providing a value for `scheduledPostAt` then an approximate value for `pickupStartAt` will attempt to be calculated. If an appproximation\ncannot be determined, then the shipment will be created as a draft and an email will be sent off to the merchant asking them to schedule\nthe shipment for pickup.\n\n---\n\nCreate a new shipment.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n",
+        "description": "**(CHANGE AS OF NOVEMBER 14, 2023)** The concept of a \"service type\" was introduced\nand will by default have no change on the API. However, each merchant location from\nthe Merchant portal can have the default service type can be changed to \"Trexity Standard\".\n\nWhen the default service type is set to \"Trexity Standard\" from the Merchant UI for a location\nthen the following changes apply:\n- The \"containsAlcohol\" field will not be able to be set to \"true\".\n- The \"requirements.perishable\" field will not be able to be set to \"true\".\n- The \"requirements.returnReusables\" field will not be able to be set to \"true\".\n- The Parcel \"requiresPersonHandoff\" field will not be able to be set to \"true\".\n- The supported pickup windows will change as outlined in this article.\n\n**(CHANGE AS OF JUNE 1, 2023)** scheduledPostAt is considered deprecated. It is still supported, but at some point in the future, it will not be.\nIf you want to schedule a shipment, please use exactly one of:\n  1) pickupStartAt and an optional pickupEndAt (when to pickup by)\n  2) deliverStartAt and an optional deliverEndAt (when to deliver by)\n\nIf providing a value for `scheduledPostAt` then an approximate value for `pickupStartAt` will attempt to be calculated. If an appproximation\ncannot be determined, then the shipment will be created as a draft and an email will be sent off to the merchant asking them to schedule\nthe shipment for pickup.\n\n---\n\nCreate a new shipment.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -2927,70 +2926,6 @@
         }
       }
     },
-    "/shipments/{shipmentId}/parcels/{deliveryIndex}/photo": {
-      "patch": {
-        "operationId": "updateShipmentParcelPhoto",
-        "tags": [
-          "Shipments"
-        ],
-        "summary": "Update parcel photo",
-        "description": "Updates the photo for a parcel.",
-        "x-codeSamples": [
-          {
-            "lang": "Shell",
-            "source": "curl -X PATCH {server-url}/shipments/TRX973036599-6KL/parcels/0\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\\\n  -d '{\n    \"base64image\": \"(base64 encoded image here, truncated)\"\n  }'\n"
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "shipmentId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The id of the shipment"
-          },
-          {
-            "in": "path",
-            "name": "deliveryIndex",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "The index of the parcel to be updated"
-          }
-        ],
-        "requestBody": {
-          "description": "Payload containing the parcel's photo (JPG) base64 encoded",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "base64image": {
-                    "type": "string",
-                    "description": "The JPG data must be base64 encoded."
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "400": {
-            "description": "Invalid payload or permission denied."
-          },
-          "500": {
-            "description": "Unknown server problem"
-          }
-        }
-      }
-    },
     "/regions/service-city-zones": {
       "get": {
         "operationId": "serviceCityZones",
@@ -3339,63 +3274,6 @@
           },
           "422": {
             "description": "Asynchronous routing request is not complete yet"
-          }
-        }
-      }
-    },
-    "/storage/get/shipment/images/initial": {
-      "get": {
-        "operationId": "getShipmentParcelInitialImage",
-        "tags": [
-          "Storage"
-        ],
-        "summary": "Parcel photo",
-        "description": "Gets the actual image data of the specified shipment's parcel.\n",
-        "x-codeSamples": [
-          {
-            "lang": "Shell",
-            "source": "curl -X GET \"{server-url}/get/shipment/images/initial?shipmentId=TRX973036599-6KL&index=0\"\\\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
-          }
-        ],
-        "servers": [
-          {
-            "description": "production",
-            "url": "https://trexity.app/storage"
-          },
-          {
-            "description": "beta/staging",
-            "url": "https://trexity-driver-mobile.uc.r.appspot.com/storage"
-          }
-        ],
-        "parameters": [
-          {
-            "in": "query",
-            "name": "shipmentId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The id of the Shipment that this parcel belongs to"
-          },
-          {
-            "in": "query",
-            "name": "index",
-            "required": true,
-            "schema": {
-              "type": "integer"
-            },
-            "description": "The (delivery) index of the parcel"
-          }
-        ],
-        "responses": {
-          "200": {
-            "$ref": "#/components/responses/FileResponse"
-          },
-          "304": {
-            "description": "File contents haven't changed"
-          },
-          "404": {
-            "description": "File not found"
           }
         }
       }
