@@ -3,7 +3,7 @@ post:
   tags: [Shipments]
   summary: Create a shipment
   description: |
-    **(CHANGE AS OF NOVEMBER 14, 2023)** The concept of a "service type" was introduced
+    **(CHANGE AS OF NOVEMBER 20, 2023)** The concept of a "service type" was introduced
     and will by default have no change on the API. However, each merchant location from
     the Merchant portal can have the default service type can be changed to "Trexity Standard".
 
