@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.23",
+    "version": "1.24",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -324,7 +324,7 @@
       },
       "ParcelLoad": {
         "type": "object",
-        "description": "**(ADDED IN v1.9)** Optional dimensions and weight of the parcel. This\nwill inform the driver matching algorithm accordingly.\n\n**(CHANGED IN v1.17)** The maximums have changed from 130 cm length, 80 cm width\nand 80 cm height, to 91 cm for any dimension. The maximum for weight changed from\n30000 grams to 15876.\n\n**(CHANGED IN v1.23)** The maximum weight changed from 15876 to 9072 grams to coincides\nwith our merchant code of conduct policy.\n",
+        "description": "**(ADDED IN v1.9)** Optional dimensions and weight of the parcel. This\nwill inform the driver matching algorithm accordingly.\n\n**(CHANGED IN v1.17)** The maximums have changed from 130 cm length, 80 cm width\nand 80 cm height, to 91 cm for any dimension. The maximum for weight changed from\n30000 grams to 15876.\n\n**(CHANGED IN v1.23)** The maximum weight changed from 15876 to 9072 grams to coincides\nwith our merchant code of conduct policy.\n\n**(CHANGED IN v1.24)** The maximum weight changed from 9072 back to 15876 grams to give\nmerchants time to adjust to the new weight limit.\n",
         "properties": {
           "length": {
             "type": "integer",
@@ -347,8 +347,8 @@
           "weight": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 9072,
-            "description": "Weight (in grams). Maximum is ~20 lbs."
+            "maximum": 15876,
+            "description": "Weight (in grams). Maximum is ~35 lbs."
           }
         }
       },
