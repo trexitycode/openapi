@@ -32,7 +32,7 @@ Example: `make link VERSION=v1`
 
 ## Previewing
 
-While working on an OpenAPI spec often times it's useful to be able to preview the specification rendered as documenation.
+While working on an OpenAPI spec often times it's useful to be able to preview the specification rendered as documentation.
 
 > Where {version} is the name of the folder under specs (defaults to v1 if not specified).
 
