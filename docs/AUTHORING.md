@@ -24,7 +24,7 @@ we like using.
 When we want a more GUI centric, less error-prone option then we reach
 for [Stoplight Studio Desktop](https://stoplight.io/studio/).
 
-Stoplight Studio is great because the GUI makes it realy easy to edit your OpenAPI documents,
+Stoplight Studio is great because the GUI makes it really easy to edit your OpenAPI documents,
 find and fix problems while you're editing, and even try your endpoints with a built-in mock server
 all without leaving the editor.
 
