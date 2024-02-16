@@ -5,9 +5,9 @@ post:
   description: |
     **(CHANGE AS OF NOVEMBER 20, 2023)** The concept of a "service type" was introduced
     and will by default have no change on the API. However, each merchant location from
-    the Merchant portal can have the default service type can be changed to "Trexity Standard".
+    the Merchant portal can have the default service type changed to "Trexity Select".
 
-    When the default service type is set to "Trexity Standard" from the Merchant UI for a location
+    When the default service type is set to "Trexity Select" from the Merchant UI for a location
     then the following changes apply:
     - The "containsAlcohol" field will not be able to be set to "true".
     - The "requirements.perishable" field will not be able to be set to "true".
