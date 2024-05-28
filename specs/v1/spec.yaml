@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: '1.22'
+  version: '1.24'
   title: Trexity API
   license:
     name: MIT
@@ -315,8 +315,6 @@ paths:
     $ref: ./paths/api/routing-status.yaml
   /routing/{requestId}/result:
     $ref: ./paths/api/routing-result.yaml
-  /storage/get/shipment/images/initial:
-    $ref: ./paths/storage/get-shipment-initial-image.yaml
   /storage/get/shipment/images/pickup:
     $ref: ./paths/storage/get-shipment-pickup-image.yaml
   /storage/get/shipment/images/delivery:

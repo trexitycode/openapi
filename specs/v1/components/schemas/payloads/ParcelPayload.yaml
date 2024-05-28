@@ -43,7 +43,7 @@ properties:
   containsAlcohol:
     type: boolean
     description: |
-      **(ADDED IN v1.8)** Does this parcel contain alcoholic products?
+      **(ADDED IN v1.8)** Requires legal age verification by law
   load:
     $ref: ../ParcelLoad.yaml
   metadata:

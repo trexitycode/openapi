@@ -19,7 +19,7 @@ properties:
   legalAgeAlcohol:
     type: boolean
     description: |
-      Must be delivered by a driver who is of legal age to transport alcohol.
+      Contains any trace of alcohol.
   perishable:
     type: boolean
     description: |
