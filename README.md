@@ -30,7 +30,7 @@ Production:
   https://trexity.app/storage
 
 Beta:
-  https://fn.beta.trexity.app/api/v1_0
+  https://trexity-driver-mobile.uc.r.appspot.com/api/v1_0
   https://trexity-driver-mobile.uc.r.appspot.com/storage
 
 
