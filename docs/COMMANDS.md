@@ -28,7 +28,7 @@ To lint a particular API version:
 make lint VERSION={version}
 ```
 
-Example: `make link VERSION=v1`
+Example: `make lint VERSION=v1`
 
 ## Previewing
 

@@ -10,6 +10,10 @@ info:
     email: support@trexity.com
     url: 'http://trexity.com'
   description: |
+    # Issues
+
+    Please open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) requests in the [issues](https://github.com/trexitycode/openapi/issues) board.
+
     # Usage Policy
 
     **(ADDED IN v1.7)**
