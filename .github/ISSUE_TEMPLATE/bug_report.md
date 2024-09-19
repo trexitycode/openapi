@@ -20,8 +20,8 @@ Steps to reproduce the behaviour:
 **Expected behaviour**
 A clear and concise description of what you expected to happen.
 
-**API Request / Response**
-Add samples of request and response payloads, including headers.
+**API Request / Response / Screenshot**
+Add samples of request and response payloads, including headers. If applicable, provide screenshots. PLEASE REMOVE ANY PII DATA IN YOUR SAMPLES.
 
 **Additional context**
 Add any other context about the problem here.
