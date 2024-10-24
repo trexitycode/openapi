@@ -29,39 +29,67 @@ info:
 
     # Concepts & Workflows
 
-    **Parcels** represent an order, customer information and a delivery address.
+    ## Concepts
+
+    **Parcels** represent an order, has customer information and a delivery address.
 
     **Shipments** represent a route, has one or more parcels, requirements, and a pickup address.
 
-    **Posting shipments** means the shipment will be sent to our driver community for pickup and delivery.
+    ## Preferred Workflow
 
-    ### Simple Workflow
+    This workflow is the most common and preferred way to create a shipment for delivery. Just provide a parcel,
+    and optionally a pickup time to create a shipment.
 
-    Create a simple shipment without worrying about optimizing the route.
+    1. [Create a shipment](#operation/createShipment) specify the parcels, customer information and delivery address
+    2. [Get parcel label](#operation/getParcelLabel) for the parcel then affix to the parcel packaging
 
-    1. [Create a shipment](#operation/createShipment) and specify the parcels, customer information and delivery address
-    2. [Get shipping labels](#operation/createShippingLabel) for the shipment, download, print, and affix to the parcel packaging
-    3. [Post the shipment](#operation/postShipment) to our drivers for pickup and delivery
+    ## "Bundling" or Batching Workflow
 
-    > Optionally, when creating a shipment a future date can be specified for `scheduledPostAt`. This date will be when the
-    > system will automatically post the shipment to our drivers. Before this date ensure the labels are printed and affixed
-    > to the parcel packages.
-
-    ### "Bundling" Workflow
-
-    Create many shipments each with an optimal route that reduces time on the road and total cost.
+    This workflow optimizes egress for businesses that have a large number of parcels to deliver.
+    Egress is more efficient by the fact that parcels are optimally grouped into shipments and each shipment is
+    assigned a route ID. The route ID is what is used for staging parcels for pickup by our couriers.
 
     1. [Make a routing request](#operation/createRoutingRequest) with a batch of parcels each with a `scheduledPostAt` set to a future date
     2. [Monitor the routing request status](#operation/getRoutingStatus) by polling the status of the routing request
     3. [Get the routing result](#operation/getRoutingRequestResult) when routing is complete or errored 
-    4. [Get shipping labels](#operation/createShippingLabel) for each shipment created during the routing request, download, print, and affix to all packages
+    4. [Get shipping labels](#operation/createShippingLabel) for each shipment created and affix to all parcel packages
 
     > The date specified in `scheduledPostAt` will be when the system will automatically post the shipment to our drivers.
     > Before this date ensure the labels are printed and affixed to the parcel packages.
 
-    ### Parcel Status
+    ## Parcel Status
 
     Follow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.
+
+    ## Sandbox Environment
+
+    All API operations have an alternate base URL available in the sandbox environment.
+
+    To use the sandbox environment:
+    1. Create an account on the [Sandbox Merchant Portal](https://merchant.beta.trexity.com/signup)
+    2. Navigate to the [API Keys page](https://merchant.beta.trexity.com/api/keys) in the Advanced area.
+    3. Create a new API Key
+    4. Use the new API Key and the sandbox base URL in your API requests
+
+    > Use the dropdown in the top right of an API operation page to select the sandbox environment server.
+
+    ### Credit Cards
+
+    When signing up for the sandbox environment you can use the  following
+    credit card with any 3-digit CVC and a future expiration date.
+
+    ```
+    4000 0012 4000 0000
+    ```
+
+    ### Expectations
+
+    The sandbox environment is intended for development and testing purposes only.
+    Expect latency to be higher than the production environment.
+  
+    We use our sandbox environment as well when developing new features to ensure
+    there are no breaking changes. So expect the occasional breaking change when
+    using the sandbox environment.
 
     # Responses
 
@@ -269,7 +297,7 @@ tags:
 servers:
   - description: production
     url: 'https://trexity.app/api/v1_0'
-  - description: beta/staging
+  - description: sandbox
     url: 'https://trexity-driver-mobile.uc.r.appspot.com/api/v1_0'
 components:
   securitySchemes:

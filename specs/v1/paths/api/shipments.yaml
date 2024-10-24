@@ -111,11 +111,19 @@ post:
                 properties:
                   shipmentId:
                     type: string
+                  parcels:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
           examples:
             Success:
               value:
                 data:
                   shipmentId: 'TRX973036599-6KL'
+                  parcels: [{ id: '123e4567-e89b-12d3-a456-426614174000' }]
 
 get:
   operationId: getShipments
