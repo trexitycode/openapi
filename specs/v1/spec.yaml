@@ -47,7 +47,7 @@ info:
 
     This workflow optimizes egress for businesses that have a large number of parcels to deliver.
     Egress is more efficient by the fact that parcels are optimally grouped into shipments and each shipment is
-    assigned a route ID. The route ID is what is used for staging parcels for pickup by our couriers.
+    assigned a route ID. The route ID (present on our labels) is what is used for staging parcels for pickup by our couriers.
 
     1. [Make a routing request](#operation/createRoutingRequest) with a batch of parcels each with a `scheduledPostAt` set to a future date
     2. [Monitor the routing request status](#operation/getRoutingStatus) by polling the status of the routing request
