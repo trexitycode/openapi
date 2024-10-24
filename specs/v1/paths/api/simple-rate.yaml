@@ -49,10 +49,7 @@ post:
           schema:
             $ref: ../../components/schemas/responses/SimpleRateResponse.yaml
           examples:
-            Can Deliver:
-              value:
-                data:
-                  - $ref: ../../components/examples/rate1.yaml
+            $ref: ../../components/examples/rate1.yaml
     '400':
       description: Input error
       content:
