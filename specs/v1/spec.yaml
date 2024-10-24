@@ -54,9 +54,6 @@ info:
     3. [Get the routing result](#operation/getRoutingRequestResult) when routing is complete or errored 
     4. [Get shipping labels](#operation/createShippingLabel) for each shipment created and affix to all parcel packages
 
-    > The date specified in `scheduledPostAt` will be when the system will automatically post the shipment to our drivers.
-    > Before this date ensure the labels are printed and affixed to the parcel packages.
-
     ## Parcel Status
 
     Follow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.
