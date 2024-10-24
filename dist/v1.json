@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.24",
+    "version": "1.25",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -2137,6 +2137,7 @@
                         },
                         "parcels": {
                           "type": "array",
+                          "description": "**(ADDED IN v1.25)** The IDs of the parcels that were created as part of this shipment.\n",
                           "items": {
                             "type": "object",
                             "properties": {
