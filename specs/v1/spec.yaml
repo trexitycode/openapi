@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
-  title: Trexity API
   version: '1.26'
+  title: Trexity API
   license:
     name: MIT
     url: https://raw.githubusercontent.com/trexitycode/openapi/main/license
@@ -12,7 +12,7 @@ info:
   description: |
     # Issues
 
-    Please open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) requests in the [issues](https://github.com/trexitycode/openapi/issues) board.
+    Please open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) requests in the [issues](https://github.com/trexitycode/openapi/issues) board. -
 
     # Usage Policy
 
