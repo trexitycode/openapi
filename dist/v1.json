@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.25",
+    "version": "1.26",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -4022,7 +4022,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The id of the parcel (can be externalId or orderUuid)"
+            "description": "The id of the parcel (can be externalId or parcel ID)"
           }
         ],
         "responses": {
@@ -4032,6 +4032,61 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ParcelResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Parcel not found"
+          }
+        }
+      }
+    },
+    "/parcels/{parcelId}/delivery-status": {
+      "get": {
+        "operationId": "getParcelDeliveryStatus",
+        "tags": [
+          "Parcels"
+        ],
+        "summary": "Get Parcel Delivery Status",
+        "description": "**(ADDED IN v1.26)** Retrieve a parcel's delivery status\n",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X GET {server-url}/parcels/1234-4321-1234-4321/delivery-status\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "parcelId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the parcel (can be externalId or parcel ID)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "description": "The current delivery status of the parcel.\n\n- `pending`: The parcel is awaiting pickup or delivery.\n- `in-transit`: The parcel is in transit, either out for pickup or out for delivery.\n- `delivered`: The parcel has been delivered.\n- `undeliverable`: The delivery was attempted but failed and the parcel was returned to the sender.\n- `cancelled`: The parcel was cancelled.\n",
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "in-transit",
+                        "delivered",
+                        "undeliverable",
+                        "cancelled"
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -4064,7 +4119,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The id of the parcel (can be externalId or orderUuid)"
+            "description": "The id of the parcel (can be externalId or parcel ID)"
           }
         ],
         "responses": {
@@ -4111,7 +4166,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The id of the parcel (can be externalId or orderUuid)"
+            "description": "The id of the parcel (can be externalId or parcel ID)"
           }
         ],
         "responses": {

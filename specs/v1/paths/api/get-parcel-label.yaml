@@ -15,7 +15,7 @@ get:
       required: true
       schema:
         type: string
-      description: The id of the parcel (can be externalId or orderUuid)
+      description: The id of the parcel (can be externalId or parcel ID)
   responses:
     '200':
       description: Success
