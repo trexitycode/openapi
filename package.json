@@ -1,7 +1,7 @@
 {
   "name": "trexity-openapi",
-  "version": "1.0.0",
   "private": true,
+  "version": "1.0.0",
   "scripts": {
     "start": "echo 'Please read the docs/COMMANDS.md'",
     "test": "echo 'Please read the docs/COMMANDS.md'"
