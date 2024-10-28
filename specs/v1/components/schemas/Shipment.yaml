@@ -40,6 +40,9 @@ properties:
   directionsResult:
     $ref: ./GeoJSONDirectionsResult.yaml
 
+  rate:
+    $ref: ./ShipmentRate.yaml
+
   gdprRedacted:
     type: boolean
     description: |
