@@ -4148,16 +4148,21 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": {
-                      "description": "The current delivery status of the parcel.\n\n- `pending`: The parcel is awaiting pickup or delivery.\n- `in-transit`: The parcel is in transit, either out for pickup or out for delivery.\n- `delivered`: The parcel has been delivered.\n- `undeliverable`: The delivery was attempted but failed and the parcel was returned to the sender.\n- `cancelled`: The parcel was cancelled.\n",
-                      "type": "string",
-                      "enum": [
-                        "pending",
-                        "in-transit",
-                        "delivered",
-                        "undeliverable",
-                        "cancelled"
-                      ]
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "description": "The current delivery status of the parcel.\n\n- `pending`: The parcel is awaiting pickup or delivery.\n- `in-transit`: The parcel is in transit, either out for pickup or out for delivery.\n- `delivered`: The parcel has been delivered.\n- `undeliverable`: The delivery was attempted but failed and the parcel was returned to the sender.\n- `cancelled`: The parcel was cancelled.\n",
+                          "type": "string",
+                          "enum": [
+                            "pending",
+                            "in-transit",
+                            "delivered",
+                            "undeliverable",
+                            "cancelled"
+                          ]
+                        }
+                      }
                     }
                   }
                 }
