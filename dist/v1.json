@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.26",
+    "version": "1.27",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -587,6 +587,76 @@
         ],
         "description": "The status of the queried Shipment.\n\n(empty string) - Shipment is a draft. Shipments are considered a draft if they haven't been posted to the driver network yet and scheduling has been disabled.\n\nWAITING_FOR_ACCEPTANCE - Shipments that have been posted to the driver network, but waiting for a driver to accept them. When a shipment is posted the owning merchant's credit card is pre-authorized for the full shipment rate.\n\nEN_ROUTE_TO_PICKUP - Shipments where a driver has accepted and the driver is driving to the pickup location.\n\nARRIVED_AT_PICKUP - Shipments where a driver has arrived at the pickup location.\n\n---\n\n**A shipment can osciliate between these three statuses while parecels are being deliveried.**\n\nOUT_FOR_DELIVERY - Shipments where a driver is delivering a parcel.\n\nARRIVED_AT_DELIVERY - Shipments where a driver has arrived at a parcel's the delivery location.\n\nDELIVERED - Shipments that where a driver has delivered a parcel.\n\n---\n\nRENOUNCED_BY_DRIVER - Shipments that have been explicitly unaccepted by a driver. Drivers can only renounce shipments before they have picked up any orders.\n\nCANCELLED - Shipments that have been cancelled.\n\nEXPIRED - Shipments that have been posted to drivers and have waited for acceptance longer than 7 days. Similar to being on hold, the shipment rate pre-authorization is reversed on the owning merchant's credit card, and these shipments can be re-posted at a later time.\n\nON_HOLD - Shipments that have been posted but not accepted and have been explicitly removed from the driver network. All shipments that are on hold will have the shipment rate pre-authorization reversed on the owning merchant's credit card. Additionally, shipments on hold can be re-posted at a later time.\n"
       },
+      "ShipmentRate": {
+        "type": "object",
+        "description": "**(ADDED IN v1.27)** The rate of a Shipment.\n",
+        "properties": {
+          "total": {
+            "type": "number",
+            "description": "The total fee in cents for delivery with taxes."
+          },
+          "deliveryWithoutTaxes": {
+            "type": "number",
+            "description": "The total fee in cents for the delivery portion of the rate."
+          },
+          "fuelWithoutTaxes": {
+            "type": "number",
+            "description": "The total fee in cents for fuel cost portion of the rate."
+          },
+          "surchargesWithoutTaxes": {
+            "type": "array",
+            "description": "The breakdown of each surcharge before taxes added to the rate",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "oversized",
+                    "distance",
+                    "large-vehicle"
+                  ],
+                  "description": "The surcharge type.\n\n- `oversized` applied for a surplus of labels\n- `distance` applied for long distance deliveries\n- `large-vehicle` applied for shipments that require a medium or large vehicle\n"
+                },
+                "amount": {
+                  "type": "number",
+                  "description": "The amount in cents of the surcharge"
+                }
+              }
+            }
+          },
+          "totalWithoutTaxes": {
+            "type": "number",
+            "description": "The total fee in cents for entire delivery without taxes.\n\nEquates to the sum of\n- `deliveryWithoutTaxes`\n- `fuelWithoutTaxes`\n- total `amount` from `surchargesWithoutTaxes`\n"
+          },
+          "taxRates": {
+            "type": "object",
+            "description": "An object whos keys are tax rate codes and value is the tax rate.",
+            "additionalProperties": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "exclusiveMinimum": true,
+              "exclusiveMaximum": true
+            }
+          },
+          "taxAmounts": {
+            "type": "object",
+            "description": "An object whos keys are tax rate codes and value is the tax amount charged in cents.",
+            "additionalProperties": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "exclusiveMinimum": true,
+              "exclusiveMaximum": true
+            }
+          },
+          "totalTaxes": {
+            "type": "number",
+            "description": "The total taxes charged in cents."
+          }
+        }
+      },
       "Location": {
         "description": "A location described by latitude and longitude",
         "type": "object",
@@ -773,6 +843,9 @@
           },
           "directionsResult": {
             "$ref": "#/components/schemas/GeoJSONDirectionsResult"
+          },
+          "rate": {
+            "$ref": "#/components/schemas/ShipmentRate"
           },
           "gdprRedacted": {
             "type": "boolean",
@@ -4075,16 +4148,21 @@
                 "schema": {
                   "type": "object",
                   "properties": {
-                    "status": {
-                      "description": "The current delivery status of the parcel.\n\n- `pending`: The parcel is awaiting pickup or delivery.\n- `in-transit`: The parcel is in transit, either out for pickup or out for delivery.\n- `delivered`: The parcel has been delivered.\n- `undeliverable`: The delivery was attempted but failed and the parcel was returned to the sender.\n- `cancelled`: The parcel was cancelled.\n",
-                      "type": "string",
-                      "enum": [
-                        "pending",
-                        "in-transit",
-                        "delivered",
-                        "undeliverable",
-                        "cancelled"
-                      ]
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "description": "The current delivery status of the parcel.\n\n- `pending`: The parcel is awaiting pickup or delivery.\n- `in-transit`: The parcel is in transit, either out for pickup or out for delivery.\n- `delivered`: The parcel has been delivered.\n- `undeliverable`: The delivery was attempted but failed and the parcel was returned to the sender.\n- `cancelled`: The parcel was cancelled.\n",
+                          "type": "string",
+                          "enum": [
+                            "pending",
+                            "in-transit",
+                            "delivered",
+                            "undeliverable",
+                            "cancelled"
+                          ]
+                        }
+                      }
                     }
                   }
                 }
@@ -4186,6 +4264,14 @@
                   "format": "binary",
                   "description": "A label that needs to be scanned at pickup by a Trexity driver."
                 }
+              },
+              "application/jsonl": {
+                "schema": {
+                  "type": "string",
+                  "format": "jsonl",
+                  "description": "**(ADDED IN v1.27)** JSONL text where each line represents a label encoded as a JSON object. Up to \"numLabels\" (from the parcel) labels are returned.\n\nEach label is an encoded JSON object with the following fields:\n\n- `label`: The label as a base64 encoded string with PNG format.\n- `mimeType`: The MIME type of the label. Default is `image/png`.\n\n**NOTE:** The example shows the response as a JSON encoded string, but in practice\nthe response is actually JSON encoded objects separated by newline characters. This is\na limitation of our OpenAPI renderer.\n\nSee: https://jsonlines.org/\n"
+                },
+                "example": "{\"label\": \"...base64encodedstring...\", \"mimeType\": \"image/png\"}\n{\"label\": \"...base64encodedstring...\", \"mimeType\": \"image/png\"}\n"
               }
             }
           },
