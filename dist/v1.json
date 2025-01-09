@@ -3069,7 +3069,7 @@
       }
     },
     "/shipments/bulk/{rateId}/{requestId}/result": {
-      "post": {
+      "get": {
         "operationId": "getCreateBulkShipmentsResult",
         "tags": [
           "Shipments"

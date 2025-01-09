@@ -1,4 +1,4 @@
-post:
+get:
   operationId: getCreateBulkShipmentsResult
   tags: [Shipments]
   summary: Get bulk shipment creation result
