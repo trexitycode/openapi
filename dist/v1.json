@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.27",
+    "version": "1.28",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -687,6 +687,11 @@
             "minimum": 1,
             "default": 1,
             "description": "**(ADDED IN 1.12)** The number of labels for the parcel (each separate package needs a label).\n"
+          },
+          "sortOrder": {
+            "type": "number",
+            "minimum": 0,
+            "description": "**(ADDED IN 1.28)** Represents the order of this parcel in relation to other parcels in a shipment.\nLower values will either be visited first during delivery, or estimated to be visited first. The\nvalue of this property could change depending on the information we have of the courier at the time\nof the request.\n"
           },
           "shipmentId": {
             "type": "string",

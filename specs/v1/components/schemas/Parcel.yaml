@@ -11,6 +11,14 @@ properties:
     default: 1
     description: |
       **(ADDED IN 1.12)** The number of labels for the parcel (each separate package needs a label).
+  sortOrder:
+    type: number
+    minimum: 0
+    description: |
+      **(ADDED IN 1.28)** Represents the order of this parcel in relation to other parcels in a shipment.
+      Lower values will either be visited first during delivery, or estimated to be visited first. The
+      value of this property could change depending on the information we have of the courier at the time
+      of the request.
   shipmentId:
     type: string
     description: |
