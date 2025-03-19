@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.28",
+    "version": "1.29",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -691,7 +691,11 @@
           "sortOrder": {
             "type": "number",
             "minimum": 0,
-            "description": "**(ADDED IN 1.28)** Represents the order of this parcel in relation to other parcels in a shipment.\nLower values will either be visited first during delivery, or estimated to be visited first. The\nvalue of this property could change depending on the information we have of the courier at the time\nof the request.\n"
+            "description": "**(ADDED IN 1.28)** Represents the ascending order of this parcel in relation to other parcels in a shipment.\nLower values are estimated to be delivered before higher values. The value of this property could change\ndepending on the information we have of the courier at the time of the request, and/or if parcels are removed from the shipment.\n"
+          },
+          "sequence": {
+            "type": "number",
+            "description": "**(ADDED IN 1.29)** Represents the fixed ascending order of this parcel in relation to other parcels in a shipment\nas known at the time the shipment was created. This is the same sequence number that appears on the\nlabel for this parcel and what couriers may ask for at pickup. *Only present if the shipment has more than one parcel.*\n"
           },
           "shipmentId": {
             "type": "string",
