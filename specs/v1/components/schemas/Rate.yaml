@@ -72,6 +72,6 @@ properties:
   orderIds:
     type: array
     description: |
-      **(ADDED IN v1.25)** The order IDs that this rate is for. Applicable only to complex rates.
+      **(ADDED IN v1.30)** The order IDs that this rate is for. Applicable only to complex rates.
     items:
       type: string

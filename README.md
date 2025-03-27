@@ -19,6 +19,10 @@ From the [OpenAPI Specification](https://swagger.io/specification/):
 
 The Trexity OpenAPI Specification is currently in Early Availability. While the specification should be accurate, it is under active development. The structure of this repository may continue to evolve. If you encounter any inaccuracies or have feedback on how it can better suite your use case, please [open an issue](https://github.com/trexitycode/openapi/issues/new) to let us know.
 
+## Issues
+
+Please open issues and feature requests in the [issues](https://github.com/trexitycode/openapi/issues) board.
+
 ## Prior Work
 
 The organization for this project was heavily inspired by the [DigitalOcean OpenAPI project](https://github.com/digitalocean/openapi).

@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: '1.25'
+  version: '1.30'
   title: Trexity API
   license:
     name: MIT
@@ -10,6 +10,10 @@ info:
     email: support@trexity.com
     url: 'http://trexity.com'
   description: |
+    # Issues
+
+    Please open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) requests in the [issues](https://github.com/trexitycode/openapi/issues) board.
+
     # Usage Policy
 
     **(ADDED IN v1.7)**
@@ -17,7 +21,7 @@ info:
     By using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.
     The [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the Rate.
 
-    This allows Trexity to ensure consistent messaging wherever Trexity devliery rates are shown.
+    This allows Trexity to ensure consistent messaging wherever Trexity delivery rates are shown.
 
     ## Suspension & Termination
 
@@ -25,39 +29,64 @@ info:
 
     # Concepts & Workflows
 
-    **Parcels** represent an order, customer information and a delivery address.
+    ## Concepts
+
+    **Parcels** represent an order, has customer information and a delivery address.
 
     **Shipments** represent a route, has one or more parcels, requirements, and a pickup address.
 
-    **Posting shipments** means the shipment will be sent to our driver community for pickup and delivery.
+    ## Preferred Workflow
 
-    ### Simple Workflow
+    This workflow is the most common and preferred way to create a shipment for delivery. Just provide a parcel,
+    and optionally a pickup time to create a shipment.
 
-    Create a simple shipment without worrying about optimizing the route.
+    1. [Create a shipment](#operation/createShipment) specify the parcels, customer information and delivery address
+    2. [Get parcel label](#operation/getParcelLabel) for the parcel then affix to the parcel packaging
 
-    1. [Create a shipment](#operation/createShipment) and specify the parcels, customer information and delivery address
-    2. [Get shipping labels](#operation/createShippingLabel) for the shipment, download, print, and affix to the parcel packaging
-    3. [Post the shipment](#operation/postShipment) to our drivers for pickup and delivery
+    ## "Bundling" or Batching Workflow
 
-    > Optionally, when creating a shipment a future date can be specified for `scheduledPostAt`. This date will be when the
-    > system will automatically post the shipment to our drivers. Before this date ensure the labels are printed and affixed
-    > to the parcel packages.
-
-    ### "Bundling" Workflow
-
-    Create many shipments each with an optimal route that reduces time on the road and total cost.
+    This workflow optimizes egress for businesses that have a large number of parcels to deliver.
+    Egress is more efficient by the fact that parcels are optimally grouped into shipments and each shipment is
+    assigned a route ID. The route ID (present on our labels) is what is used for staging parcels for pickup by our couriers.
 
     1. [Make a routing request](#operation/createRoutingRequest) with a batch of parcels each with a `scheduledPostAt` set to a future date
     2. [Monitor the routing request status](#operation/getRoutingStatus) by polling the status of the routing request
     3. [Get the routing result](#operation/getRoutingRequestResult) when routing is complete or errored 
-    4. [Get shipping labels](#operation/createShippingLabel) for each shipment created during the routing request, download, print, and affix to all packages
+    4. [Get shipping labels](#operation/createShippingLabel) for each shipment created and affix to all parcel packages
 
-    > The date specified in `scheduledPostAt` will be when the system will automatically post the shipment to our drivers.
-    > Before this date ensure the labels are printed and affixed to the parcel packages.
-
-    ### Parcel Status
+    ## Parcel Status
 
     Follow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.
+
+    ## Sandbox Environment
+
+    All API operations have an alternate base URL available in the sandbox environment.
+
+    To use the sandbox environment:
+    1. Create an account on the [Sandbox Merchant Portal](https://merchant.beta.trexity.com/signup)
+    2. Navigate to the [API Keys page](https://merchant.beta.trexity.com/api/keys) in the Advanced area.
+    3. Create a new API Key
+    4. Use the new API Key and the sandbox base URL in your API requests
+
+    > Use the dropdown in the top right of an API operation page to select the sandbox environment server.
+
+    ### Credit Cards
+
+    When signing up for the sandbox environment you can use the  following
+    credit card with any 3-digit CVC and a future expiration date.
+
+    ```
+    4000 0012 4000 0000
+    ```
+
+    ### Expectations
+
+    The sandbox environment is intended for development and testing purposes only.
+    Expect latency to be higher than the production environment.
+  
+    We use our sandbox environment as well when developing new features to ensure
+    there are no breaking changes. So expect the occasional breaking change when
+    using the sandbox environment.
 
     # Responses
 
@@ -265,7 +294,7 @@ tags:
 servers:
   - description: production
     url: 'https://trexity.app/api/v1_0'
-  - description: beta/staging
+  - description: sandbox
     url: 'https://trexity-driver-mobile.uc.r.appspot.com/api/v1_0'
 components:
   securitySchemes:
@@ -321,6 +350,8 @@ paths:
     $ref: ./paths/storage/get-shipment-delivery-image.yaml
   /parcels/{parcelId}:
     $ref: ./paths/api/get-parcel.yaml
+  /parcels/{parcelId}/delivery-status:
+    $ref: ./paths/api/get-parcel-delivery-status.yaml
   /parcels/{parcelId}/pod:
     $ref: ./paths/api/get-parcel-pod.yaml
   /parcels/{parcelId}/label:

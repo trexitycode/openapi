@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.24",
+    "version": "1.29",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -12,7 +12,7 @@
       "email": "support@trexity.com",
       "url": "http://trexity.com"
     },
-    "description": "# Usage Policy\n\n**(ADDED IN v1.7)**\n\nBy using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.\nThe [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the Rate.\n\nThis allows Trexity to ensure consistent messaging wherever Trexity devliery rates are shown.\n\n## Suspension & Termination\n\nFailure to comply with this Usage Policy may result in suspension of your Trexity merchant account and/or API Keys. Continued failure to comply may result in the termination of your Trexity merchant account.\n\n# Concepts & Workflows\n\n**Parcels** represent an order, customer information and a delivery address.\n\n**Shipments** represent a route, has one or more parcels, requirements, and a pickup address.\n\n**Posting shipments** means the shipment will be sent to our driver community for pickup and delivery.\n\n### Simple Workflow\n\nCreate a simple shipment without worrying about optimizing the route.\n\n1. [Create a shipment](#operation/createShipment) and specify the parcels, customer information and delivery address\n2. [Get shipping labels](#operation/createShippingLabel) for the shipment, download, print, and affix to the parcel packaging\n3. [Post the shipment](#operation/postShipment) to our drivers for pickup and delivery\n\n> Optionally, when creating a shipment a future date can be specified for `scheduledPostAt`. This date will be when the\n> system will automatically post the shipment to our drivers. Before this date ensure the labels are printed and affixed\n> to the parcel packages.\n\n### \"Bundling\" Workflow\n\nCreate many shipments each with an optimal route that reduces time on the road and total cost.\n\n1. [Make a routing request](#operation/createRoutingRequest) with a batch of parcels each with a `scheduledPostAt` set to a future date\n2. [Monitor the routing request status](#operation/getRoutingStatus) by polling the status of the routing request\n3. [Get the routing result](#operation/getRoutingRequestResult) when routing is complete or errored \n4. [Get shipping labels](#operation/createShippingLabel) for each shipment created during the routing request, download, print, and affix to all packages\n\n> The date specified in `scheduledPostAt` will be when the system will automatically post the shipment to our drivers.\n> Before this date ensure the labels are printed and affixed to the parcel packages.\n\n### Parcel Status\n\nFollow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.\n\n# Responses\n\nAll endpoints will return an object and if there is actual data\nto be returned, it is going to be named `data`, where `data` may\nbe an array or an object.\n\nIf there is an `error` field present on the root JSON object, that\nmeans something went wrong and that error message is all we know about it.\nAdditionally, in some cases, you may inspect the HTTP status codes to\ngather more information.\n\nPlease check our payload/response examples in detail as well as the\ncurl examples that are a part of each section that documents an operation.\n\nExample of a successful response:\n`{ data: ... }`\n\nExample of a response with an error:\n`{ error: 'Some error message', data: null }`\n"
+    "description": "# Issues\n\nPlease open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) requests in the [issues](https://github.com/trexitycode/openapi/issues) board.\n\n# Usage Policy\n\n**(ADDED IN v1.7)**\n\nBy using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.\nThe [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the Rate.\n\nThis allows Trexity to ensure consistent messaging wherever Trexity delivery rates are shown.\n\n## Suspension & Termination\n\nFailure to comply with this Usage Policy may result in suspension of your Trexity merchant account and/or API Keys. Continued failure to comply may result in the termination of your Trexity merchant account.\n\n# Concepts & Workflows\n\n## Concepts\n\n**Parcels** represent an order, has customer information and a delivery address.\n\n**Shipments** represent a route, has one or more parcels, requirements, and a pickup address.\n\n## Preferred Workflow\n\nThis workflow is the most common and preferred way to create a shipment for delivery. Just provide a parcel,\nand optionally a pickup time to create a shipment.\n\n1. [Create a shipment](#operation/createShipment) specify the parcels, customer information and delivery address\n2. [Get parcel label](#operation/getParcelLabel) for the parcel then affix to the parcel packaging\n\n## \"Bundling\" or Batching Workflow\n\nThis workflow optimizes egress for businesses that have a large number of parcels to deliver.\nEgress is more efficient by the fact that parcels are optimally grouped into shipments and each shipment is\nassigned a route ID. The route ID (present on our labels) is what is used for staging parcels for pickup by our couriers.\n\n1. [Make a routing request](#operation/createRoutingRequest) with a batch of parcels each with a `scheduledPostAt` set to a future date\n2. [Monitor the routing request status](#operation/getRoutingStatus) by polling the status of the routing request\n3. [Get the routing result](#operation/getRoutingRequestResult) when routing is complete or errored \n4. [Get shipping labels](#operation/createShippingLabel) for each shipment created and affix to all parcel packages\n\n## Parcel Status\n\nFollow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.\n\n## Sandbox Environment\n\nAll API operations have an alternate base URL available in the sandbox environment.\n\nTo use the sandbox environment:\n1. Create an account on the [Sandbox Merchant Portal](https://merchant.beta.trexity.com/signup)\n2. Navigate to the [API Keys page](https://merchant.beta.trexity.com/api/keys) in the Advanced area.\n3. Create a new API Key\n4. Use the new API Key and the sandbox base URL in your API requests\n\n> Use the dropdown in the top right of an API operation page to select the sandbox environment server.\n\n### Credit Cards\n\nWhen signing up for the sandbox environment you can use the  following\ncredit card with any 3-digit CVC and a future expiration date.\n\n```\n4000 0012 4000 0000\n```\n\n### Expectations\n\nThe sandbox environment is intended for development and testing purposes only.\nExpect latency to be higher than the production environment.\n\nWe use our sandbox environment as well when developing new features to ensure\nthere are no breaking changes. So expect the occasional breaking change when\nusing the sandbox environment.\n\n# Responses\n\nAll endpoints will return an object and if there is actual data\nto be returned, it is going to be named `data`, where `data` may\nbe an array or an object.\n\nIf there is an `error` field present on the root JSON object, that\nmeans something went wrong and that error message is all we know about it.\nAdditionally, in some cases, you may inspect the HTTP status codes to\ngather more information.\n\nPlease check our payload/response examples in detail as well as the\ncurl examples that are a part of each section that documents an operation.\n\nExample of a successful response:\n`{ data: ... }`\n\nExample of a response with an error:\n`{ error: 'Some error message', data: null }`\n"
   },
   "tags": [
     {
@@ -62,7 +62,7 @@
       "url": "https://trexity.app/api/v1_0"
     },
     {
-      "description": "beta/staging",
+      "description": "sandbox",
       "url": "https://trexity-driver-mobile.uc.r.appspot.com/api/v1_0"
     }
   ],
@@ -587,6 +587,76 @@
         ],
         "description": "The status of the queried Shipment.\n\n(empty string) - Shipment is a draft. Shipments are considered a draft if they haven't been posted to the driver network yet and scheduling has been disabled.\n\nWAITING_FOR_ACCEPTANCE - Shipments that have been posted to the driver network, but waiting for a driver to accept them. When a shipment is posted the owning merchant's credit card is pre-authorized for the full shipment rate.\n\nEN_ROUTE_TO_PICKUP - Shipments where a driver has accepted and the driver is driving to the pickup location.\n\nARRIVED_AT_PICKUP - Shipments where a driver has arrived at the pickup location.\n\n---\n\n**A shipment can osciliate between these three statuses while parecels are being deliveried.**\n\nOUT_FOR_DELIVERY - Shipments where a driver is delivering a parcel.\n\nARRIVED_AT_DELIVERY - Shipments where a driver has arrived at a parcel's the delivery location.\n\nDELIVERED - Shipments that where a driver has delivered a parcel.\n\n---\n\nRENOUNCED_BY_DRIVER - Shipments that have been explicitly unaccepted by a driver. Drivers can only renounce shipments before they have picked up any orders.\n\nCANCELLED - Shipments that have been cancelled.\n\nEXPIRED - Shipments that have been posted to drivers and have waited for acceptance longer than 7 days. Similar to being on hold, the shipment rate pre-authorization is reversed on the owning merchant's credit card, and these shipments can be re-posted at a later time.\n\nON_HOLD - Shipments that have been posted but not accepted and have been explicitly removed from the driver network. All shipments that are on hold will have the shipment rate pre-authorization reversed on the owning merchant's credit card. Additionally, shipments on hold can be re-posted at a later time.\n"
       },
+      "ShipmentRate": {
+        "type": "object",
+        "description": "**(ADDED IN v1.27)** The rate of a Shipment.\n",
+        "properties": {
+          "total": {
+            "type": "number",
+            "description": "The total fee in cents for delivery with taxes."
+          },
+          "deliveryWithoutTaxes": {
+            "type": "number",
+            "description": "The total fee in cents for the delivery portion of the rate."
+          },
+          "fuelWithoutTaxes": {
+            "type": "number",
+            "description": "The total fee in cents for fuel cost portion of the rate."
+          },
+          "surchargesWithoutTaxes": {
+            "type": "array",
+            "description": "The breakdown of each surcharge before taxes added to the rate",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "oversized",
+                    "distance",
+                    "large-vehicle"
+                  ],
+                  "description": "The surcharge type.\n\n- `oversized` applied for a surplus of labels\n- `distance` applied for long distance deliveries\n- `large-vehicle` applied for shipments that require a medium or large vehicle\n"
+                },
+                "amount": {
+                  "type": "number",
+                  "description": "The amount in cents of the surcharge"
+                }
+              }
+            }
+          },
+          "totalWithoutTaxes": {
+            "type": "number",
+            "description": "The total fee in cents for entire delivery without taxes.\n\nEquates to the sum of\n- `deliveryWithoutTaxes`\n- `fuelWithoutTaxes`\n- total `amount` from `surchargesWithoutTaxes`\n"
+          },
+          "taxRates": {
+            "type": "object",
+            "description": "An object whos keys are tax rate codes and value is the tax rate.",
+            "additionalProperties": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "exclusiveMinimum": true,
+              "exclusiveMaximum": true
+            }
+          },
+          "taxAmounts": {
+            "type": "object",
+            "description": "An object whos keys are tax rate codes and value is the tax amount charged in cents.",
+            "additionalProperties": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "exclusiveMinimum": true,
+              "exclusiveMaximum": true
+            }
+          },
+          "totalTaxes": {
+            "type": "number",
+            "description": "The total taxes charged in cents."
+          }
+        }
+      },
       "Location": {
         "description": "A location described by latitude and longitude",
         "type": "object",
@@ -617,6 +687,15 @@
             "minimum": 1,
             "default": 1,
             "description": "**(ADDED IN 1.12)** The number of labels for the parcel (each separate package needs a label).\n"
+          },
+          "sortOrder": {
+            "type": "number",
+            "minimum": 0,
+            "description": "**(ADDED IN 1.28)** Represents the ascending order of this parcel in relation to other parcels in a shipment.\nLower values are estimated to be delivered before higher values. The value of this property could change\ndepending on the information we have of the courier at the time of the request, and/or if parcels are removed from the shipment.\n"
+          },
+          "sequence": {
+            "type": "number",
+            "description": "**(ADDED IN 1.29)** Represents the fixed ascending order of this parcel in relation to other parcels in a shipment\nas known at the time the shipment was created. This is the same sequence number that appears on the\nlabel for this parcel and what couriers may ask for at pickup. *Only present if the shipment has more than one parcel.*\n"
           },
           "shipmentId": {
             "type": "string",
@@ -748,23 +827,18 @@
             "$ref": "#/components/schemas/ShipmentRequirements"
           },
           "scheduledPostAt": {
-            "description": "Deprecated. If you want to schedule a shipment, use exactly one of:\n1) pickup windows (pickupStartAt/pickupEndAt)\n2) delivery windows (deliveryStartAt, deliver)\n",
             "$ref": "#/components/schemas/SimplifiedDateISOString"
           },
           "deliverStartAt": {
-            "description": "The start of the Delivery Windows. Only date and hours/minutes will be used to match it to your delivery windows.\nTo see your delivery windows, please visit the merchant portal and head over to the API settings: https://merchant.trexity.com/api\n",
             "$ref": "#/components/schemas/SimplifiedDateISOString"
           },
           "deliverEndAt": {
-            "description": "The start of the Delivery Windows. Only date and hours/minutes will be used to match it to your delivery windows.\nTo see your delivery windows, please visit the merchant portal and head over to the API settings: https://merchant.trexity.com/api\n",
             "$ref": "#/components/schemas/SimplifiedDateISOString"
           },
           "pickupStartAt": {
-            "description": "The start of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.\nThe list of available Pickup Windows can be found here: https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows\n",
             "$ref": "#/components/schemas/SimplifiedDateISOString"
           },
           "pickupEndAt": {
-            "description": "The end of the Pickup Windows. Only date and hours/minutes will be used to match it to your pickup windows.\nThe list of available Pickup Windows can be found here: https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows\n",
             "$ref": "#/components/schemas/SimplifiedDateISOString"
           },
           "merchantId": {
@@ -778,6 +852,9 @@
           },
           "directionsResult": {
             "$ref": "#/components/schemas/GeoJSONDirectionsResult"
+          },
+          "rate": {
+            "$ref": "#/components/schemas/ShipmentRate"
           },
           "gdprRedacted": {
             "type": "boolean",
@@ -1813,7 +1890,612 @@
                     "value": {
                       "data": [
                         {
-                          "$ref": "../../components/examples/rate1.yaml"
+                          "totalWithoutTaxes": 1688,
+                          "name": "Local Delivery",
+                          "description": "by Trexity",
+                          "taxRates": {
+                            "HST": 0.13
+                          },
+                          "pickupDeliveryDuration": 2121,
+                          "pickupDeliveryDistance": 17172,
+                          "directionsResult": {
+                            "features": [
+                              {
+                                "geometry": {
+                                  "type": "LineString",
+                                  "coordinates": [
+                                    [
+                                      -75.72048,
+                                      45.32606
+                                    ],
+                                    [
+                                      -75.72022,
+                                      45.32575
+                                    ],
+                                    [
+                                      -75.72007,
+                                      45.32555
+                                    ],
+                                    [
+                                      -75.72038,
+                                      45.32544
+                                    ],
+                                    [
+                                      -75.72209,
+                                      45.32479
+                                    ],
+                                    [
+                                      -75.72319,
+                                      45.32436
+                                    ],
+                                    [
+                                      -75.72502,
+                                      45.32366
+                                    ],
+                                    [
+                                      -75.72764,
+                                      45.32266
+                                    ],
+                                    [
+                                      -75.7343,
+                                      45.32012
+                                    ],
+                                    [
+                                      -75.73699,
+                                      45.31907
+                                    ],
+                                    [
+                                      -75.73815,
+                                      45.31863
+                                    ],
+                                    [
+                                      -75.73974,
+                                      45.31802
+                                    ],
+                                    [
+                                      -75.73994,
+                                      45.31801
+                                    ],
+                                    [
+                                      -75.74025,
+                                      45.31792
+                                    ],
+                                    [
+                                      -75.7417,
+                                      45.31735
+                                    ],
+                                    [
+                                      -75.74183,
+                                      45.3173
+                                    ],
+                                    [
+                                      -75.7422,
+                                      45.31788
+                                    ],
+                                    [
+                                      -75.74249,
+                                      45.31834
+                                    ],
+                                    [
+                                      -75.74303,
+                                      45.31918
+                                    ],
+                                    [
+                                      -75.74357,
+                                      45.32011
+                                    ],
+                                    [
+                                      -75.74428,
+                                      45.32132
+                                    ],
+                                    [
+                                      -75.7446,
+                                      45.32186
+                                    ],
+                                    [
+                                      -75.74507,
+                                      45.32262
+                                    ],
+                                    [
+                                      -75.74675,
+                                      45.32537
+                                    ],
+                                    [
+                                      -75.7486,
+                                      45.32835
+                                    ],
+                                    [
+                                      -75.74912,
+                                      45.32923
+                                    ],
+                                    [
+                                      -75.74962,
+                                      45.33001
+                                    ],
+                                    [
+                                      -75.75044,
+                                      45.33134
+                                    ],
+                                    [
+                                      -75.75067,
+                                      45.33167
+                                    ],
+                                    [
+                                      -75.7511,
+                                      45.33242
+                                    ],
+                                    [
+                                      -75.75171,
+                                      45.33339
+                                    ],
+                                    [
+                                      -75.75201,
+                                      45.33394
+                                    ],
+                                    [
+                                      -75.75287,
+                                      45.3355
+                                    ],
+                                    [
+                                      -75.75375,
+                                      45.33713
+                                    ],
+                                    [
+                                      -75.75483,
+                                      45.33911
+                                    ],
+                                    [
+                                      -75.75518,
+                                      45.33977
+                                    ],
+                                    [
+                                      -75.75584,
+                                      45.34089
+                                    ],
+                                    [
+                                      -75.75655,
+                                      45.34206
+                                    ],
+                                    [
+                                      -75.7569,
+                                      45.34268
+                                    ],
+                                    [
+                                      -75.75786,
+                                      45.34434
+                                    ],
+                                    [
+                                      -75.75866,
+                                      45.34572
+                                    ],
+                                    [
+                                      -75.75942,
+                                      45.34698
+                                    ],
+                                    [
+                                      -75.76006,
+                                      45.34809
+                                    ],
+                                    [
+                                      -75.76026,
+                                      45.34836
+                                    ],
+                                    [
+                                      -75.76049,
+                                      45.34861
+                                    ],
+                                    [
+                                      -75.76117,
+                                      45.34926
+                                    ],
+                                    [
+                                      -75.76187,
+                                      45.34995
+                                    ],
+                                    [
+                                      -75.7621,
+                                      45.35022
+                                    ],
+                                    [
+                                      -75.76231,
+                                      45.3505
+                                    ],
+                                    [
+                                      -75.76283,
+                                      45.35145
+                                    ],
+                                    [
+                                      -75.76295,
+                                      45.35166
+                                    ],
+                                    [
+                                      -75.76363,
+                                      45.35288
+                                    ],
+                                    [
+                                      -75.76475,
+                                      45.35486
+                                    ],
+                                    [
+                                      -75.76566,
+                                      45.3565
+                                    ],
+                                    [
+                                      -75.76625,
+                                      45.35759
+                                    ],
+                                    [
+                                      -75.76727,
+                                      45.35935
+                                    ],
+                                    [
+                                      -75.76763,
+                                      45.36002
+                                    ],
+                                    [
+                                      -75.76761,
+                                      45.36012
+                                    ],
+                                    [
+                                      -75.76766,
+                                      45.36027
+                                    ],
+                                    [
+                                      -75.76769,
+                                      45.36053
+                                    ],
+                                    [
+                                      -75.76768,
+                                      45.36066
+                                    ],
+                                    [
+                                      -75.76764,
+                                      45.3608
+                                    ],
+                                    [
+                                      -75.76757,
+                                      45.36094
+                                    ],
+                                    [
+                                      -75.76747,
+                                      45.36107
+                                    ],
+                                    [
+                                      -75.76727,
+                                      45.36126
+                                    ],
+                                    [
+                                      -75.766,
+                                      45.36212
+                                    ],
+                                    [
+                                      -75.76479,
+                                      45.36289
+                                    ],
+                                    [
+                                      -75.76477,
+                                      45.36291
+                                    ],
+                                    [
+                                      -75.76474,
+                                      45.36299
+                                    ],
+                                    [
+                                      -75.76451,
+                                      45.36312
+                                    ],
+                                    [
+                                      -75.76389,
+                                      45.36345
+                                    ],
+                                    [
+                                      -75.76335,
+                                      45.36374
+                                    ],
+                                    [
+                                      -75.76238,
+                                      45.36425
+                                    ],
+                                    [
+                                      -75.76147,
+                                      45.36474
+                                    ],
+                                    [
+                                      -75.75969,
+                                      45.3657
+                                    ],
+                                    [
+                                      -75.75897,
+                                      45.36618
+                                    ],
+                                    [
+                                      -75.75838,
+                                      45.36665
+                                    ],
+                                    [
+                                      -75.75665,
+                                      45.36833
+                                    ],
+                                    [
+                                      -75.75444,
+                                      45.37044
+                                    ],
+                                    [
+                                      -75.74848,
+                                      45.37595
+                                    ],
+                                    [
+                                      -75.74274,
+                                      45.3812
+                                    ],
+                                    [
+                                      -75.73835,
+                                      45.38522
+                                    ],
+                                    [
+                                      -75.73816,
+                                      45.3854
+                                    ],
+                                    [
+                                      -75.73737,
+                                      45.38611
+                                    ],
+                                    [
+                                      -75.73613,
+                                      45.38726
+                                    ],
+                                    [
+                                      -75.73556,
+                                      45.38785
+                                    ],
+                                    [
+                                      -75.73516,
+                                      45.38828
+                                    ],
+                                    [
+                                      -75.73463,
+                                      45.38892
+                                    ],
+                                    [
+                                      -75.73369,
+                                      45.39013
+                                    ],
+                                    [
+                                      -75.73317,
+                                      45.39084
+                                    ],
+                                    [
+                                      -75.73228,
+                                      45.39198
+                                    ],
+                                    [
+                                      -75.7309,
+                                      45.39371
+                                    ],
+                                    [
+                                      -75.72964,
+                                      45.39524
+                                    ],
+                                    [
+                                      -75.72912,
+                                      45.39574
+                                    ],
+                                    [
+                                      -75.72856,
+                                      45.39622
+                                    ],
+                                    [
+                                      -75.7281,
+                                      45.39654
+                                    ],
+                                    [
+                                      -75.72744,
+                                      45.39691
+                                    ],
+                                    [
+                                      -75.72456,
+                                      45.39828
+                                    ],
+                                    [
+                                      -75.72286,
+                                      45.39906
+                                    ],
+                                    [
+                                      -75.72178,
+                                      45.39954
+                                    ],
+                                    [
+                                      -75.72093,
+                                      45.39989
+                                    ],
+                                    [
+                                      -75.71979,
+                                      45.40034
+                                    ],
+                                    [
+                                      -75.71849,
+                                      45.4008
+                                    ],
+                                    [
+                                      -75.71714,
+                                      45.40125
+                                    ],
+                                    [
+                                      -75.71549,
+                                      45.40175
+                                    ],
+                                    [
+                                      -75.71453,
+                                      45.40201
+                                    ],
+                                    [
+                                      -75.71334,
+                                      45.40231
+                                    ],
+                                    [
+                                      -75.7124,
+                                      45.40253
+                                    ],
+                                    [
+                                      -75.71094,
+                                      45.40285
+                                    ],
+                                    [
+                                      -75.70871,
+                                      45.40328
+                                    ],
+                                    [
+                                      -75.70661,
+                                      45.4037
+                                    ],
+                                    [
+                                      -75.70437,
+                                      45.40419
+                                    ],
+                                    [
+                                      -75.70303,
+                                      45.40453
+                                    ],
+                                    [
+                                      -75.70176,
+                                      45.40488
+                                    ],
+                                    [
+                                      -75.70002,
+                                      45.4054
+                                    ],
+                                    [
+                                      -75.69832,
+                                      45.40596
+                                    ],
+                                    [
+                                      -75.69703,
+                                      45.40644
+                                    ],
+                                    [
+                                      -75.69667,
+                                      45.4065
+                                    ],
+                                    [
+                                      -75.69615,
+                                      45.40668
+                                    ],
+                                    [
+                                      -75.69523,
+                                      45.40701
+                                    ],
+                                    [
+                                      -75.69409,
+                                      45.40741
+                                    ],
+                                    [
+                                      -75.69383,
+                                      45.40752
+                                    ],
+                                    [
+                                      -75.69363,
+                                      45.40763
+                                    ],
+                                    [
+                                      -75.69346,
+                                      45.40781
+                                    ],
+                                    [
+                                      -75.69341,
+                                      45.40792
+                                    ],
+                                    [
+                                      -75.69339,
+                                      45.40803
+                                    ],
+                                    [
+                                      -75.69339,
+                                      45.40817
+                                    ],
+                                    [
+                                      -75.69344,
+                                      45.40831
+                                    ],
+                                    [
+                                      -75.69363,
+                                      45.40857
+                                    ],
+                                    [
+                                      -75.69383,
+                                      45.40879
+                                    ],
+                                    [
+                                      -75.69389,
+                                      45.40895
+                                    ],
+                                    [
+                                      -75.6941,
+                                      45.40922
+                                    ],
+                                    [
+                                      -75.69476,
+                                      45.41006
+                                    ],
+                                    [
+                                      -75.69579,
+                                      45.41129
+                                    ],
+                                    [
+                                      -75.69797,
+                                      45.41383
+                                    ],
+                                    [
+                                      -75.69912,
+                                      45.41515
+                                    ],
+                                    [
+                                      -75.70019,
+                                      45.41642
+                                    ],
+                                    [
+                                      -75.70101,
+                                      45.41743
+                                    ],
+                                    [
+                                      -75.7019,
+                                      45.41845
+                                    ],
+                                    [
+                                      -75.70106,
+                                      45.4188
+                                    ],
+                                    [
+                                      -75.69873,
+                                      45.4198
+                                    ],
+                                    [
+                                      -75.69724,
+                                      45.42044
+                                    ],
+                                    [
+                                      -75.69662,
+                                      45.4207
+                                    ]
+                                  ]
+                                },
+                                "type": "Feature",
+                                "properties": {
+                                  "bounds": {
+                                    "northeast": {
+                                      "lat": 45.4207038,
+                                      "lng": -75.6933862
+                                    },
+                                    "southwest": {
+                                      "lat": 45.3172975,
+                                      "lng": -75.7676887
+                                    }
+                                  }
+                                }
+                              }
+                            ],
+                            "type": "FeatureCollection"
+                          },
+                          "total": 1908
                         }
                       ]
                     }
@@ -2134,6 +2816,18 @@
                       "properties": {
                         "shipmentId": {
                           "type": "string"
+                        },
+                        "parcels": {
+                          "type": "array",
+                          "description": "**(ADDED IN v1.25)** The IDs of the parcels that were created as part of this shipment.\n",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              }
+                            }
+                          }
                         }
                       }
                     }
@@ -2143,7 +2837,12 @@
                   "Success": {
                     "value": {
                       "data": {
-                        "shipmentId": "TRX973036599-6KL"
+                        "shipmentId": "TRX973036599-6KL",
+                        "parcels": [
+                          {
+                            "id": "123e4567-e89b-12d3-a456-426614174000"
+                          }
+                        ]
                       }
                     }
                   }
@@ -2379,7 +3078,7 @@
       }
     },
     "/shipments/bulk/{rateId}/{requestId}/result": {
-      "post": {
+      "get": {
         "operationId": "getCreateBulkShipmentsResult",
         "tags": [
           "Shipments"
@@ -3298,7 +3997,7 @@
             "url": "https://trexity.app/storage"
           },
           {
-            "description": "beta/staging",
+            "description": "sandbox",
             "url": "https://trexity-driver-mobile.uc.r.appspot.com/storage"
           }
         ],
@@ -3346,7 +4045,7 @@
             "url": "https://trexity.app/storage"
           },
           {
-            "description": "beta/staging",
+            "description": "sandbox",
             "url": "https://trexity-driver-mobile.uc.r.appspot.com/storage"
           }
         ],
@@ -3405,7 +4104,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The id of the parcel (can be externalId or orderUuid)"
+            "description": "The id of the parcel (can be externalId or parcel ID)"
           }
         ],
         "responses": {
@@ -3415,6 +4114,66 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ParcelResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Parcel not found"
+          }
+        }
+      }
+    },
+    "/parcels/{parcelId}/delivery-status": {
+      "get": {
+        "operationId": "getParcelDeliveryStatus",
+        "tags": [
+          "Parcels"
+        ],
+        "summary": "Get Parcel Delivery Status",
+        "description": "**(ADDED IN v1.26)** Retrieve a parcel's delivery status\n",
+        "x-codeSamples": [
+          {
+            "lang": "Shell",
+            "source": "curl -X GET {server-url}/parcels/1234-4321-1234-4321/delivery-status\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "parcelId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the parcel (can be externalId or parcel ID)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "description": "The current delivery status of the parcel.\n\n- `pending`: The parcel is awaiting pickup or delivery.\n- `in-transit`: The parcel is in transit, either out for pickup or out for delivery.\n- `delivered`: The parcel has been delivered.\n- `undeliverable`: The delivery was attempted but failed and the parcel was returned to the sender.\n- `cancelled`: The parcel was cancelled.\n",
+                          "type": "string",
+                          "enum": [
+                            "pending",
+                            "in-transit",
+                            "delivered",
+                            "undeliverable",
+                            "cancelled"
+                          ]
+                        }
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -3447,7 +4206,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The id of the parcel (can be externalId or orderUuid)"
+            "description": "The id of the parcel (can be externalId or parcel ID)"
           }
         ],
         "responses": {
@@ -3494,7 +4253,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The id of the parcel (can be externalId or orderUuid)"
+            "description": "The id of the parcel (can be externalId or parcel ID)"
           }
         ],
         "responses": {
@@ -3514,6 +4273,14 @@
                   "format": "binary",
                   "description": "A label that needs to be scanned at pickup by a Trexity driver."
                 }
+              },
+              "application/jsonl": {
+                "schema": {
+                  "type": "string",
+                  "format": "jsonl",
+                  "description": "**(ADDED IN v1.27)** JSONL text where each line represents a label encoded as a JSON object. Up to \"numLabels\" (from the parcel) labels are returned.\n\nEach label is an encoded JSON object with the following fields:\n\n- `label`: The label as a base64 encoded string with PNG format.\n- `mimeType`: The MIME type of the label. Default is `image/png`.\n\n**NOTE:** The example shows the response as a JSON encoded string, but in practice\nthe response is actually JSON encoded objects separated by newline characters. This is\na limitation of our OpenAPI renderer.\n\nSee: https://jsonlines.org/\n"
+                },
+                "example": "{\"label\": \"...base64encodedstring...\", \"mimeType\": \"image/png\"}\n{\"label\": \"...base64encodedstring...\", \"mimeType\": \"image/png\"}\n"
               }
             }
           },

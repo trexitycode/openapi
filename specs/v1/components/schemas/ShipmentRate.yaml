@@ -1,0 +1,51 @@
+type: object
+description: |
+  **(ADDED IN v1.27)** The rate of a Shipment.
+properties:
+  total:
+    type: number
+    description: The total fee in cents for delivery with taxes.
+  deliveryWithoutTaxes:
+    type: number
+    description: The total fee in cents for the delivery portion of the rate.
+  fuelWithoutTaxes:
+    type: number
+    description: The total fee in cents for fuel cost portion of the rate.
+  surchargesWithoutTaxes:
+    type: array
+    description: The breakdown of each surcharge before taxes added to the rate
+    items:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [oversized, distance, large-vehicle]
+          description: |
+            The surcharge type.
+
+            - `oversized` applied for a surplus of labels
+            - `distance` applied for long distance deliveries
+            - `large-vehicle` applied for shipments that require a medium or large vehicle
+        amount:
+          type: number
+          description: The amount in cents of the surcharge
+  totalWithoutTaxes:
+    type: number
+    description: |
+      The total fee in cents for entire delivery without taxes.
+
+      Equates to the sum of
+      - `deliveryWithoutTaxes`
+      - `fuelWithoutTaxes`
+      - total `amount` from `surchargesWithoutTaxes`
+  taxRates:
+    type: object
+    description: An object whos keys are tax rate codes and value is the tax rate.
+    additionalProperties: { type: number, minimum: 0, maximum: 1, exclusiveMinimum: true, exclusiveMaximum: true }
+  taxAmounts:
+    type: object
+    description: An object whos keys are tax rate codes and value is the tax amount charged in cents.
+    additionalProperties: { type: number, minimum: 0, maximum: 1, exclusiveMinimum: true, exclusiveMaximum: true }
+  totalTaxes:
+    type: number
+    description: The total taxes charged in cents.
