@@ -69,3 +69,9 @@ properties:
     type: number
     description: |
       Estimated duration (in seconds) of the entire trip (starting from the pickup location) that the driver would have to make in order to finalize this shipment (takes into account multiple dropoffs, if any).
+  orderIds:
+    type: array
+    description: |
+      **(ADDED IN v1.25)** The order IDs that this rate is for. Applicable only to complex rates.
+    items:
+      type: string
