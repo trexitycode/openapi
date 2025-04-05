@@ -43,17 +43,6 @@ info:
     1. [Create a shipment](#operation/createShipment) specify the parcels, customer information and delivery address
     2. [Get parcel label](#operation/getParcelLabel) for the parcel then affix to the parcel packaging
 
-    ## "Bundling" or Batching Workflow
-
-    This workflow optimizes egress for businesses that have a large number of parcels to deliver.
-    Egress is more efficient by the fact that parcels are optimally grouped into shipments and each shipment is
-    assigned a route ID. The route ID (present on our labels) is what is used for staging parcels for pickup by our couriers.
-
-    1. [Make a routing request](#operation/createRoutingRequest) with a batch of parcels each with a `scheduledPostAt` set to a future date
-    2. [Monitor the routing request status](#operation/getRoutingStatus) by polling the status of the routing request
-    3. [Get the routing result](#operation/getRoutingRequestResult) when routing is complete or errored 
-    4. [Get shipping labels](#operation/createShippingLabel) for each shipment created and affix to all parcel packages
-
     ## Parcel Status
 
     Follow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.
@@ -169,10 +158,6 @@ tags:
   - name: Parcels
     description: |
       Convenient API endpionts for managing shipment parcels.
-
-  - name: Routing
-    description: |
-      Create and get status information for asynchronous routing requests.
 
   - name: Receipts
     description: |
@@ -338,12 +323,6 @@ paths:
     $ref: ./paths/api/create-shipping-label.yaml
   /regions/service-city-zones:
     $ref: ./paths/api/service-city-zones.yaml
-  /routing:
-    $ref: ./paths/api/routing-request.yaml
-  /routing/{requestId}:
-    $ref: ./paths/api/routing-status.yaml
-  /routing/{requestId}/result:
-    $ref: ./paths/api/routing-result.yaml
   /storage/get/shipment/images/pickup:
     $ref: ./paths/storage/get-shipment-pickup-image.yaml
   /storage/get/shipment/images/delivery:
