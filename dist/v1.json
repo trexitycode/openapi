@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.29",
+    "version": "1.30",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -12,7 +12,7 @@
       "email": "support@trexity.com",
       "url": "http://trexity.com"
     },
-    "description": "# Issues\n\nPlease open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) requests in the [issues](https://github.com/trexitycode/openapi/issues) board.\n\n# Usage Policy\n\n**(ADDED IN v1.7)**\n\nBy using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.\nThe [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the Rate.\n\nThis allows Trexity to ensure consistent messaging wherever Trexity delivery rates are shown.\n\n## Suspension & Termination\n\nFailure to comply with this Usage Policy may result in suspension of your Trexity merchant account and/or API Keys. Continued failure to comply may result in the termination of your Trexity merchant account.\n\n# Concepts & Workflows\n\n## Concepts\n\n**Parcels** represent an order, has customer information and a delivery address.\n\n**Shipments** represent a route, has one or more parcels, requirements, and a pickup address.\n\n## Preferred Workflow\n\nThis workflow is the most common and preferred way to create a shipment for delivery. Just provide a parcel,\nand optionally a pickup time to create a shipment.\n\n1. [Create a shipment](#operation/createShipment) specify the parcels, customer information and delivery address\n2. [Get parcel label](#operation/getParcelLabel) for the parcel then affix to the parcel packaging\n\n## \"Bundling\" or Batching Workflow\n\nThis workflow optimizes egress for businesses that have a large number of parcels to deliver.\nEgress is more efficient by the fact that parcels are optimally grouped into shipments and each shipment is\nassigned a route ID. The route ID (present on our labels) is what is used for staging parcels for pickup by our couriers.\n\n1. [Make a routing request](#operation/createRoutingRequest) with a batch of parcels each with a `scheduledPostAt` set to a future date\n2. [Monitor the routing request status](#operation/getRoutingStatus) by polling the status of the routing request\n3. [Get the routing result](#operation/getRoutingRequestResult) when routing is complete or errored \n4. [Get shipping labels](#operation/createShippingLabel) for each shipment created and affix to all parcel packages\n\n## Parcel Status\n\nFollow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.\n\n## Sandbox Environment\n\nAll API operations have an alternate base URL available in the sandbox environment.\n\nTo use the sandbox environment:\n1. Create an account on the [Sandbox Merchant Portal](https://merchant.beta.trexity.com/signup)\n2. Navigate to the [API Keys page](https://merchant.beta.trexity.com/api/keys) in the Advanced area.\n3. Create a new API Key\n4. Use the new API Key and the sandbox base URL in your API requests\n\n> Use the dropdown in the top right of an API operation page to select the sandbox environment server.\n\n### Credit Cards\n\nWhen signing up for the sandbox environment you can use the  following\ncredit card with any 3-digit CVC and a future expiration date.\n\n```\n4000 0012 4000 0000\n```\n\n### Expectations\n\nThe sandbox environment is intended for development and testing purposes only.\nExpect latency to be higher than the production environment.\n\nWe use our sandbox environment as well when developing new features to ensure\nthere are no breaking changes. So expect the occasional breaking change when\nusing the sandbox environment.\n\n# Responses\n\nAll endpoints will return an object and if there is actual data\nto be returned, it is going to be named `data`, where `data` may\nbe an array or an object.\n\nIf there is an `error` field present on the root JSON object, that\nmeans something went wrong and that error message is all we know about it.\nAdditionally, in some cases, you may inspect the HTTP status codes to\ngather more information.\n\nPlease check our payload/response examples in detail as well as the\ncurl examples that are a part of each section that documents an operation.\n\nExample of a successful response:\n`{ data: ... }`\n\nExample of a response with an error:\n`{ error: 'Some error message', data: null }`\n"
+    "description": "# Issues\n\nPlease open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) requests in the [issues](https://github.com/trexitycode/openapi/issues) board.\n\n# Usage Policy\n\n**(ADDED IN v1.7)**\n\nBy using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.\nThe [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the Rate.\n\nThis allows Trexity to ensure consistent messaging wherever Trexity delivery rates are shown.\n\n## Suspension & Termination\n\nFailure to comply with this Usage Policy may result in suspension of your Trexity merchant account and/or API Keys. Continued failure to comply may result in the termination of your Trexity merchant account.\n\n# Concepts & Workflows\n\n## Concepts\n\n**Parcels** represent an order, has customer information and a delivery address.\n\n**Shipments** represent a route, has one or more parcels, requirements, and a pickup address.\n\n## Preferred Workflow\n\nThis workflow is the most common and preferred way to create a shipment for delivery. Just provide a parcel,\nand optionally a pickup time to create a shipment.\n\n1. [Create a shipment](#operation/createShipment) specify the parcels, customer information and delivery address\n2. [Get parcel label](#operation/getParcelLabel) for the parcel then affix to the parcel packaging\n\n## Parcel Status\n\nFollow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.\n\n## Sandbox Environment\n\nAll API operations have an alternate base URL available in the sandbox environment.\n\nTo use the sandbox environment:\n1. Create an account on the [Sandbox Merchant Portal](https://merchant.beta.trexity.com/signup)\n2. Navigate to the [API Keys page](https://merchant.beta.trexity.com/api/keys) in the Advanced area.\n3. Create a new API Key\n4. Use the new API Key and the sandbox base URL in your API requests\n\n> Use the dropdown in the top right of an API operation page to select the sandbox environment server.\n\n### Credit Cards\n\nWhen signing up for the sandbox environment you can use the  following\ncredit card with any 3-digit CVC and a future expiration date.\n\n```\n4000 0012 4000 0000\n```\n\n### Expectations\n\nThe sandbox environment is intended for development and testing purposes only.\nExpect latency to be higher than the production environment.\n\nWe use our sandbox environment as well when developing new features to ensure\nthere are no breaking changes. So expect the occasional breaking change when\nusing the sandbox environment.\n\n# Responses\n\nAll endpoints will return an object and if there is actual data\nto be returned, it is going to be named `data`, where `data` may\nbe an array or an object.\n\nIf there is an `error` field present on the root JSON object, that\nmeans something went wrong and that error message is all we know about it.\nAdditionally, in some cases, you may inspect the HTTP status codes to\ngather more information.\n\nPlease check our payload/response examples in detail as well as the\ncurl examples that are a part of each section that documents an operation.\n\nExample of a successful response:\n`{ data: ... }`\n\nExample of a response with an error:\n`{ error: 'Some error message', data: null }`\n"
   },
   "tags": [
     {
@@ -30,10 +30,6 @@
     {
       "name": "Parcels",
       "description": "Convenient API endpionts for managing shipment parcels.\n"
-    },
-    {
-      "name": "Routing",
-      "description": "Create and get status information for asynchronous routing requests.\n"
     },
     {
       "name": "Receipts",
@@ -262,6 +258,13 @@
           "pickupDeliveryDuration": {
             "type": "number",
             "description": "Estimated duration (in seconds) of the entire trip (starting from the pickup location) that the driver would have to make in order to finalize this shipment (takes into account multiple dropoffs, if any).\n"
+          },
+          "orderIds": {
+            "type": "array",
+            "description": "**(ADDED IN v1.30)** The order IDs that this rate is for. Applicable only to complex rates.\n",
+            "items": {
+              "type": "string"
+            }
           }
         }
       },
@@ -1302,81 +1305,6 @@
               "base64image": {
                 "description": "base64 contents of the shipping label (png image).",
                 "type": "string"
-              }
-            }
-          }
-        }
-      },
-      "RoutingStatusResponse": {
-        "type": "object",
-        "properties": {
-          "requestId": {
-            "type": "string",
-            "description": "A unique identifier for the asynchronous request. This can be used to retrieve the results\nof a request when it has completed.\n"
-          },
-          "callbackInSeconds": {
-            "type": "integer",
-            "description": "An estimated number of seconds to complete the request.\nWait this long before checking the status again.\n"
-          },
-          "isAccepted": {
-            "type": "boolean",
-            "description": "Specifies if the request is accepted. A request will not be accepted\nif it is not valid.\n"
-          },
-          "isCompleted": {
-            "type": "boolean",
-            "description": "Specifies if the request has completed."
-          }
-        }
-      },
-      "RoutingResultResponse": {
-        "type": "object",
-        "properties": {
-          "errors": {
-            "type": "array",
-            "items": {
-              "type": "object",
-              "properties": {
-                "error": {
-                  "type": "string",
-                  "description": "The message of the error"
-                },
-                "code": {
-                  "type": "string",
-                  "enum": [
-                    "DELIVERY_TOO_FAR",
-                    "PICKUP_OUTSIDE_SERVICE_AREA",
-                    "DELIVERY_NO_GEOCODE",
-                    "PICKUP_NO_GEOCODE",
-                    "SYSTEM_ERROR"
-                  ],
-                  "description": "The error code that identifies the error"
-                },
-                "orderId": {
-                  "type": "string",
-                  "description": "The \"orderId\" of the parcel this error relates to"
-                },
-                "params": {
-                  "type": "object",
-                  "description": "An object that contains extra information related to the error (i.e. address, etc. )\n"
-                }
-              }
-            }
-          },
-          "result": {
-            "type": "object",
-            "properties": {
-              "shipments": {
-                "type": "array",
-                "items": {
-                  "$ref": "#/components/schemas/Shipment"
-                }
-              },
-              "unassignedOrders": {
-                "type": "array",
-                "description": "Array of order IDs that could not be assigned to a shipment due to\ndelivery contraints or an error occurred when validating the parcel\n",
-                "items": {
-                  "type": "string"
-                }
               }
             }
           }
@@ -3816,163 +3744,6 @@
           },
           "500": {
             "description": "Server error. Try making the request again."
-          }
-        }
-      }
-    },
-    "/routing": {
-      "post": {
-        "operationId": "createRoutingRequest",
-        "tags": [
-          "Routing"
-        ],
-        "summary": "Create routing request",
-        "description": "**(CHANGE AS OF DEC 1, 2022)** All `scheduledPostAt` values must be within **8:00am-11:00am, 11:00am-2:00pm, and 2:00pm-5:00pm local time (inclusive)**.\n\nAdditionally, `scheduledPostAt` cannot be set to a value within the current time window or in the past. A time window is current when\nthe local time of the pickup address enters the time window.\n\nFor example: If the current time is 9AM local time, then you can only set `scheduledPostAt` to 1PM or later on the same day.\n\nFor example: If the current time is 2PM local time, then you can only set `scheduledPostAt` to 8AM or later the following day.\n\nYou can still schedule in the future, but the `scheduledPostAt` value needs to be within one of the time windows described above.\n\n---\n\nQueue a list of parcels to be routed and added to optimized shipments.\n\nThe typical use case of this API is to select all your parcels and\nprovide in bulk to this endpoint, which responds with an asynchronous routing\nrequest ID. Then use this asynchronous routing request ID to obtain the\nstatus of the routing request and later the result.\n\n**Order ID**\n\nFor each parcel provided to this endpoint, the `orderId` must be unique among\nall parcels. This allows us to refer back to the parcel by `orderId` in the\nresult `errors` array.\n\n**Note on Optimization**\nThis endpoint does not use our most up-to-date routing optimization technology. We\nrecommend using the [Complex Rate](/#operation/createComplexRateRequest) endpoint instead.\n\n**(DEPRECATED AS OF v1.8)** Use the new [Complex Rate](/#operation/createComplexRateRequest)\nendpoint, combined with the [Create Shipments](/#operation/createCreateBulkShipmentsRequest) endpoint.\n",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "parcels"
-                ],
-                "properties": {
-                  "locationId": {
-                    "type": "string",
-                    "description": "Optionally attach a Location to this request. Will be set to default if not specified. Please see [Locations](#tag/getLocations)."
-                  },
-                  "parcels": {
-                    "type": "array",
-                    "minItems": 1,
-                    "maxItems": 400,
-                    "items": {
-                      "$ref": "#/components/schemas/DirectShipmentPayload"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Successfully queued an asynchronous routing request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/RoutingStatusResponse"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid input provided such as invalid address, etc. No routing request\nis scheduled when input errors are detected.\n",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "required": [
-                    "error"
-                  ],
-                  "properties": {
-                    "error": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/routing/{requestId}": {
-      "get": {
-        "operationId": "getRoutingStatus",
-        "tags": [
-          "Routing"
-        ],
-        "summary": "Get routing request status",
-        "description": "Get the status of an asynchronous routing request",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "requestId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The asynchronous routing request ID"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The status of an asynchronous routing request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/RoutingStatusResponse"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "No asynchronous routing request found"
-          }
-        }
-      }
-    },
-    "/routing/{requestId}/result": {
-      "get": {
-        "operationId": "getRoutingRequestResult",
-        "tags": [
-          "Routing"
-        ],
-        "summary": "Get routing request result",
-        "description": "Get the result of a completed asynchronous routing request",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "requestId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The asynchronous routing request ID"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "The result of a completed asynchronous routing request",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/RoutingResultResponse"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "No asynchronous routing request found"
-          },
-          "422": {
-            "description": "Asynchronous routing request is not complete yet"
           }
         }
       }
