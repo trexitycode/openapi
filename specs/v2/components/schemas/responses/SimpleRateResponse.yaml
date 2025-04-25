@@ -1,0 +1,9 @@
+description: |
+  Returns all rates that apply for this Shipment. Each rate will have the distance (in meters), duration (in seconds) of the trip
+  and the fee (in Canadian cents).
+type: object
+properties:
+  data:
+    type: array
+    items:
+      $ref: ../SimpleRate.yaml

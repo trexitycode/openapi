@@ -1,0 +1,34 @@
+post:
+  operationId: createCreateBulkShipmentsRequest
+  tags: [Shipments]
+  summary: Create bulk shipment creation request
+  description: |
+    **(ADDED IN v1.8)**
+
+    Create shipments in bulk based on a previously computed rate. See the
+    [Complex Rate](/#operation/createComplexRateRequest) endpoint for details
+    on how to obtain a rateId.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/create-bulk-shipments/request.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: rateId
+      required: true
+      schema:
+        type: string
+      description: The rateId from a [Complex Rate result](/#operation/getComplexRateResult)
+  responses:
+    '200':
+      description: Successfully queued an asynchronous bulk shipment creation request
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: ../../components/schemas/responses/CreateBulkShipmentsStatusResponse.yaml
+    '404':
+      description: The specified rateId could not be found

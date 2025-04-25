@@ -1,0 +1,95 @@
+get:
+  operationId: checkAddress
+  tags: [Addresses]
+  summary: Check an address
+  description: |
+    **(ADDED IN v1.1)**
+
+    Checks an address and returns a result that identifies if the address can be
+    used as a pickup address/business address, and what delivery classification it
+    falls under.
+
+    ### Rate Limiting
+
+    This operation can be requested without authentication, however it will have a
+    strict rate limit of 3 requests every 10 seconds.
+
+    However, authenticated requests can request 12 times every 10 seconds.
+  security:
+    - {}
+    - MerchantApiKeyAuth: []
+    - AccessTokenAuth: []
+
+  ##############################################################################
+
+  parameters:
+    - in: query
+      name: address
+      required: true
+      schema:
+        type: string
+      description: The address to check.
+      example: 123 Fake St, Ottawa ON K2G 6F2, CA
+    - in: query
+      name: pickupAddress
+      required: false
+      schema:
+        type: string
+      description: The pickup address from which to generate the tiered zones.
+      example: 123 Fake St, Ottawa ON K2G 6F2, CA
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  pickup:
+                    type: boolean
+                    description: If `true` then the address can be used as a pickup address (or business address).
+                  delivery:
+                    type: string
+                    enum: [none, normal, extended, 'tier-1', 'tier-2', 'tier-3']
+                    description: |
+                      The delivery classification of the address.
+
+                      `none` = The address is outside a known delivery zone and is unserviceable.
+
+                      `normal` = The address is serviceable and normal delivery rates apply.
+
+                      `extended` = The address is serviceable and surcharges may apply.
+
+                      `tier-1` = (only if pickupAddress is specified) The address belongs to 'tier-1' delivery tier.
+
+                      `tier-2` = (only if pickupAddress is specified) The address belongs to 'tier-2' delivery tier.
+
+                      `tier-3` = (only if pickupAddress is specified) The address belongs to 'tier-3' delivery tier.
+                  lngLat:
+                    type: object
+                    description: |
+                      **(ADDED IN v1.3)**
+
+                      The latitude and logitude of the checked address.
+                    properties:
+                      longitude:
+                        type: number
+                        description: Longitude of the address
+                      latitude:
+                        type: number
+                        description: Latitude of the address
+                  serviceCity:
+                    type: string
+                    description: |
+                      **(ADDED IN v1.3)**
+
+                      Service city that the address is located. Provided in the format: "(city name), (2 letter abbreviation of province)" (may or may not be supported by Trexity)
+    '400':
+      description: Address could not be recognized as a valid address. Review address and ensure all address components are present and follow formatting guide.
+    '429':
+      description: The request has been rate limited. Try making the request again after the rate limit window.
+    '500':
+      description: Server error. Try making the request again.

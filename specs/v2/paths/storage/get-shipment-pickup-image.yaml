@@ -1,0 +1,38 @@
+get:
+  operationId: getShipmentPickupImage
+  tags: [Storage]
+  summary: Pickup photo
+  description: |
+    Gets the actual JPG image data of the driver's pickup.
+
+    This is used as a confirmation that the driver has picked up the parcel,
+    and ideally should be on the way to delivery.
+
+    You may assume this photo exists if the Status of the Shipment is at least 'Out for delivery'.
+
+    Please see [shipments](/#operation/getShipment) for the possible statuses a Shipment may have.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/storage/get-shipment-pickup-photo.yaml
+  servers:
+    - description: production
+      url: 'https://trexity.app/storage'
+    - description: sandbox
+      url: 'https://trexity-driver-mobile.uc.r.appspot.com/storage'
+
+  ##############################################################################
+
+  parameters:
+    - in: query
+      name: shipmentId
+      required: true
+      schema:
+        type: string
+      description:
+        The id of the Shipment that this parcel belongs to
+  responses:
+    '304':
+      description: File contents haven't changed
+    '404':
+      description: File not found
+    '200':
+      $ref: ../../components/schemas/responses/FileResponse.yaml

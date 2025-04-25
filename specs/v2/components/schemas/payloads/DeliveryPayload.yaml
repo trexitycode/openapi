@@ -1,0 +1,48 @@
+description: Object used to identify a delivery
+type: object
+properties:
+  numLabels:
+    type: number
+    minimum: 1
+    default: 1
+    description: |
+      The number of labels for the parcel (each separate package needs a label).
+  deliveryAddress:
+    $ref: ../Address.yaml
+  deliveryAddressNotes:
+    type: string
+    description: Extra notes relating to the delivery address, such as apartment/unit number, reference, description of the location, etc.
+  deliveryInstructions:
+    type: string
+    description: |
+      Delivery instructions for drop off
+  deliveryName:
+    type: string
+    description: The name of the recipient
+  description:
+    type: string
+    description: Description of the parcel being delivered
+  orderId:
+    type: string
+    maxLength: 20
+    description: The order ID that this parcel belongs to.
+  parcelValue:
+    type: number
+    minimum: 0
+    description: The dollar value of the parcel in CDN as cents
+  deliveryEmail:
+    type: string
+    format: email
+    description: The email address of the recipient
+  deliveryPhone:
+    type: string
+    description: The cell phone number of the recipient
+  requiresPersonHandoff:
+    type: boolean
+    description: Does this parcel require delivery PIN verification?
+  containsAlcohol:
+    type: boolean
+    description: |
+      Requires legal age verification by law
+  load:
+    $ref: ../DeliveryLoad.yaml

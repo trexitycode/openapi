@@ -1,0 +1,108 @@
+delete:
+  operationId: deleteShipment
+  tags: [Shipments]
+  summary: Delete a shipment
+  description: |
+    Attempt to delete a shipment. Only draft shipments can be deleted.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/delete-shipment.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: shipmentId
+      required: true
+      schema:
+        type: string
+      description: The id of the shipment to delete
+  responses:
+    '204':
+      description: Successfully deleted shipment
+    '400':
+      description: Invalid shipment ID in path or don't have permission to delete shipment
+    '404':
+      description: Shipment not found
+    '422':
+      description: Shipment cannot be deleted due to the shipment not being in deletable state
+
+patch:
+  operationId: updateShipment
+  tags: [Shipments]
+  summary: Update a shipment
+  description: |
+    Updates the details of a shipment.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/update-shipment.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: shipmentId
+      required: true
+      schema:
+        type: string
+      description: The id of the shipment that needs to be updated
+  requestBody:
+    description: Payload describing the changes that need to be updated in your shipment
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/payloads/UpdateShipmentPayload.yaml
+        example:
+          pickupInstructions: 'Needs to go out ASAP!'
+  responses:
+    '204':
+      description: Success
+
+get:
+  operationId: getShipment
+  tags: [Shipments]
+  summary: Get a shipment
+  description: |
+    Gets the details of a shipment
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/get-shipment.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: shipmentId
+      required: true
+      schema:
+        type: string
+      description: The id of the shipment
+    - in: query
+      name: select
+      schema:
+        type: string
+      description: |
+        **(ADDED IN v1.22)** The comma-separated list of fields to include in the shipment response (if not specified or blank then all fields will be included).
+
+        If a field is specified that is not defined by the Shipment object, then responds with HTTP 400. Only top-level fields are supported.
+  responses:
+    '500':
+      description: Unknown server problem
+    '400':
+      description: Invalid payload, select contains a field not in a Shipment object, or permission denied.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                description: The error message
+                example: Invalid data payload
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: ../../components/schemas/Shipment.yaml

@@ -1,0 +1,25 @@
+description: |
+  Specifies the start of the deliver window for the shipment (i.e. the latest time that the driver can deliver the shipment).
+  The second and millsecond time components of the date will be ignored.
+
+  When specified, this value must match the end of the suggested delivery window indicated by the value of `deliverStartAt`.
+
+  The delivery windows are unique to each of your locations within Trexity because they are determined by the market's pickup windows and each of your location's delivery SLA. A delivery SLA is the maximum amount of time a delivery can take (.e.g. 2 hours). The general formula for computing a delivery window for each pickup window is the following.
+
+  ```
+  deliveryWindowStart = pickupWindowStart
+  deliveryWindowEnd = pickupWindowEnd + deliverySLA
+  ```
+
+  Review the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).
+  Review your suggested [delivery windows](https://merchant.trexity.com/api).
+
+  **Data type**
+
+  Date time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`
+
+  Note that ISO date strings are always in UTC time.
+
+  An example: `2020-07-25T10:48:08.987Z`
+type: string
+nullable: true

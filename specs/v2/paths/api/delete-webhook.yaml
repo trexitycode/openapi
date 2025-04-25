@@ -1,0 +1,41 @@
+delete:
+  operationId: deleteWebhook
+  tags: [Webhooks]
+  summary: Delete a webhook
+  description: |
+    Delete a registered webhook.
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      required: true
+      name: webhookId
+      schema:
+        type: string
+  responses:
+    '204':
+      description: Successfully deleted a webhook or if the webhook ID does not exist.
+    '400':
+      description: Parameters or payload is invalid. Correct the parameters and try again.
+      content:
+        application/json:
+          schema:
+            required: [error]
+            properties:
+              error:
+                type:
+                  string
+    '404':
+      description: Webhook is not found.
+    '500':
+      description: An internal error has occurred and the request cannot be completed.
+      content:
+        application/json:
+          schema:
+            required: [error]
+            properties:
+              error:
+                type:
+                  string
+

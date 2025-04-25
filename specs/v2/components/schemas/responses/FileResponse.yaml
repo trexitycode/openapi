@@ -1,0 +1,9 @@
+description: |
+  Returns the binary content of the file in question.
+  
+  Please note that our storage endpoints provide [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) header for caching purposes.
+content:
+  application/octet-stream:
+    schema:
+      type: string
+      format: binary

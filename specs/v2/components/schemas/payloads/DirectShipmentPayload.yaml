@@ -1,0 +1,134 @@
+description: Payload object used to identify a shipment from a pickup address to a delivery address
+type: object
+required:
+  - pickupAddress
+  - deliveryAddress
+  - deliveryName
+  - description
+  - orderId
+  - parcelValue
+properties:
+  # Pickup properties
+  scheduledPostAt:
+    type: 'string'
+    deprecated: true
+    description: |
+      **DEPRECATED AS OF v1.21**. 
+      If provided, then an approximate pickup time will be determined based on the pickup windows and the scheduledPostAt time.
+      If a pickup time cannot be determined, then no complex rate will be returned and an error will be returned.
+
+      Instead to schedule a shipment for pickup/delivery use one of the following new fields:
+      1) pickup windows (pickupStartAt/pickupEndAt)
+      2) delivery windows (deliverStartAt, deliverEndAt)
+  pickupStartAt:
+    $ref: '../PickupStartAt.yaml'
+  pickupEndAt:
+    $ref: '../PickupEndAt.yaml'
+  deliverStartAt:
+    $ref: '../DeliverStartAt.yaml'
+  deliverEndAt:
+    $ref: '../DeliverEndAt.yaml'
+  pickupAddress:
+    $ref: ../Address.yaml
+  pickupAddressNotes:
+    type: string
+    description: Extra information relating to the pickup address ONLY, like the apartment/unit number.
+  pickupInstructions:
+    type: string
+    description: |
+      **(renamed from pickupNotes to pickupInstructions in v1.16) pickupNotes will still be accepted**
+      Special notes or instructions regarding pickup like the description of the location, what door to use, etc.
+  merchantPpid:
+    type: string
+    description: |
+      **(ADDED IN 1.9)** Partner-provided ID of the merchant. This ID can be used when querying for shipments. Only used by Partner accounts.
+  merchantName:
+    type: string
+    description: |
+      **(ADDED IN 1.9)** Partner-provided name of the merchant. This will be displayed in place of the merchant name defined in the merchant profile. Only used by Partner accounts.
+  merchantPhone:
+    type: string
+    description: |
+      **(ADDED IN 1.9)** Partner-provided phone of the merchant. This will be displayed in place of the merchant phone defined in the merchant profile. Only used by Partner accounts.
+  merchantEmail:
+    type: string
+    description: |
+      **(ADDED IN 1.9)** Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts.
+  requirements:
+    $ref: ../ShipmentRequirements.yaml
+  ignoreTargetDeliveryDuration:
+    type: boolean
+    deprecated: true
+    description: |
+      **DEPRECATED AS OF v1.18**
+
+      ~~Ignore the target delivery duration for this shipment only~~
+
+  # Delivery/parcel properties
+  deliveryAddress:
+    $ref: ../Address.yaml
+  deliveryAddressNotes:
+    type: string
+    description: Extra notes relating to the delivery address, such as apartment/unit number, reference, description of the location, etc.
+  deliveryInstructions:
+    type: string
+    description: |
+      **(ADDED IN 1.4)** Delivery instructions for drop off
+  deliveryName:
+    type: string
+    description: The name of the recipient
+  description:
+    type: string
+    description: Description of the parcel being delivered
+  orderId:
+    type: string
+    maxLength: 20
+    description: The order ID that this parcel belongs to.
+  parcelValue:
+    type: number
+    minimum: 0
+    description: The dollar value of the parcel in CDN as cents
+  numLabels:
+    type: number
+    minimum: 1
+    default: 1
+    description: |
+      **(ADDED IN 1.12)** The number of labels for the parcel (each separate package needs a label).
+  deliveryEmail:
+    type: string
+    format: email
+    description: The email address of the recipient
+  deliveryPhone:
+    type: string
+    description: The cell phone number of the recipient
+  requiresPersonHandoff:
+    type: boolean
+    description: Does this parcel require delivery PIN verification?
+  containsAlcohol:
+    type: boolean
+    description: |
+      **(ADDED IN v1.8)** Does this parcel contain alcoholic products?
+  externalId:
+    type: string
+    maxLength: 256
+    description: |
+      **(ADDED IN v1.8)**
+      The ID of the external entity that is associated to this delivery (e.g.
+      the external order or shipment ID).
+  scanId:
+    type: string
+    maxLength: 256
+    description: |
+      **(ADDED IN v1.9)** The ID embedded in your custom label’s QR code. If
+      not specified, you will be required to use our built-in labels. If
+      specified, you will not be able to request our built-in label for this
+      parcel.
+  load:
+    $ref: ../ParcelLoad.yaml
+  metadata:
+    type: object
+    description: |
+      **(ADDED IN v1.1)**
+      The metadata fields associated to the parcel. If the intent is to
+      list shipments with this metadata field, then ensure the value is
+      saved as a string and not say a number.

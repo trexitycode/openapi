@@ -1,0 +1,4 @@
+lang: Shell
+source: |
+  curl -X GET "{server-url}/delivery/images?id={orderUuid}"\
+    -H 'Authorization: Bearer <Trexity API Key>'

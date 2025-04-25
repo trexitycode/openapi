@@ -1,0 +1,32 @@
+post:
+  operationId: cancelShipment
+  tags: [Shipments]
+  summary: Cancel a Shipment
+  description: |
+    Cancels a shipment. A cancelled shipment will no longer be able to be posted to drivers. 
+    Additionally, the merchant will be charged a cancellation fee if a driver has already accepted the shipment.
+
+    Can only cancel shipments that have a `currentStatus` of
+    WAITING_FOR_ACCEPTANCE, EN_ROUTE_TO_PICKUP, OUT_FOR_DELIVERY,
+    RENOUNCED_BY_DRIVER, or ON_HOLD.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/cancel-shipment.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: shipmentId
+      required: true
+      schema:
+        type: string
+      description: The id of the shipment that needs to be cancelled
+  responses:
+    '204':
+      description: Success
+    '400':
+      description: Invalid shipment ID in path or don't have permission to delete shipment
+    '404':
+      description: Shipment not found
+    '422':
+      description: Shipment cannot be cancelled due to the shipment not being in cancellable state

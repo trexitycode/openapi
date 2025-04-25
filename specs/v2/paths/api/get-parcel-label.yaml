@@ -1,0 +1,59 @@
+get:
+  operationId: getParcelLabel
+  tags: [Parcels]
+  summary: Get Parcel Label
+  description: |
+    Get a parcel's shipping label
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/parcels/get-parcel-label.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: parcelId
+      required: true
+      schema:
+        type: string
+      description: The id of the parcel (can be externalId or parcel ID)
+  responses:
+    '200':
+      description: Success
+      content:
+        application/pdf:
+          schema:
+            type: string
+            format: binary
+            description: A label that needs to be scanned at pickup by a Trexity driver.
+        image/png:
+          schema:
+            type: string
+            format: binary
+            description: A label that needs to be scanned at pickup by a Trexity driver.
+        application/jsonl:
+          schema:
+            type: string
+            format: jsonl
+            description: |
+              **(ADDED IN v1.27)** JSONL text where each line represents a label encoded as a JSON object. Up to "numLabels" (from the parcel) labels are returned.
+
+              Each label is an encoded JSON object with the following fields:
+
+              - `label`: The label as a base64 encoded string with PNG format.
+              - `mimeType`: The MIME type of the label. Default is `image/png`.
+
+              **NOTE:** The example shows the response as a JSON encoded string, but in practice
+              the response is actually JSON encoded objects separated by newline characters. This is
+              a limitation of our OpenAPI renderer.
+
+              See: https://jsonlines.org/
+          example: |
+            {"label": "...base64encodedstring...", "mimeType": "image/png"}
+            {"label": "...base64encodedstring...", "mimeType": "image/png"}
+    '400':
+      description: |
+        Parcel does not have a label.
+        This means that the Merchant is responsible for creating the labels.
+
+    '404':
+      description: Parcel not found

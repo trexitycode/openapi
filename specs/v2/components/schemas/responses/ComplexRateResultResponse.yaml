@@ -1,0 +1,52 @@
+type: object
+properties:
+  errors:
+    type: array
+    items:
+      type: object
+      properties:
+        error:
+          type: string
+          description: The message of the error
+        code:
+          type: string
+          enum: [
+            "PICKUP_ADDRESS_INVALID",
+            "PICKUP_NO_GEOCODE",
+            "PICKUP_OUTSIDE_SERVICE_AREA",
+            "DELIVERY_ADDRESS_INVALID",
+            "DELIVERY_NO_GEOCODE",
+            "DELIVERY_OUTSIDE_SERVICE_AREA",
+            "SYSTEM_ERROR"
+          ]
+          description: The error code that identifies the error
+        orderId:
+          type: string
+          description: The "orderId" of the parcel this error relates to
+        params:
+          type: object
+          description: |
+            An object that contains extra information related to the error (i.e.
+            address, etc.)
+  result:
+    type: object
+    properties:
+      rateId:
+        type: string
+        description: |
+          This rate response expires after 8 hours, and can be converted to
+          shipments using the [Bulk Shipment Creation](/#operation/createCreateBulkShipmentsRequest)
+          endpoint, and this rateId. Please note that pricing may differ
+          between this rate response and the creation process, where the
+          likelihood of drift increases with time.
+      rates:
+        type: array
+        items:
+          $ref: ../Rate.yaml
+      unservedOrderIds:
+        type: array
+        description: |
+          Array of order IDs that could not be assigned to a shipment due to
+          delivery constraints
+        items:
+          type: string

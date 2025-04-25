@@ -1,0 +1,347 @@
+openapi: 3.0.2
+info:
+  version: '1.30'
+  title: Trexity API
+  license:
+    name: MIT
+    url: https://raw.githubusercontent.com/trexitycode/openapi/main/license
+  termsOfService: 'https://trexity.com/terms-of-service/'
+  contact:
+    email: support@trexity.com
+    url: 'http://trexity.com'
+  description: |
+    # Issues
+
+    Please open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) requests in the [issues](https://github.com/trexitycode/openapi/issues) board.
+
+    # Usage Policy
+
+    **(ADDED IN v1.7)**
+
+    By using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.
+    The [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the Rate.
+
+    This allows Trexity to ensure consistent messaging wherever Trexity delivery rates are shown.
+
+    ## Suspension & Termination
+
+    Failure to comply with this Usage Policy may result in suspension of your Trexity merchant account and/or API Keys. Continued failure to comply may result in the termination of your Trexity merchant account.
+
+    # Concepts & Workflows
+
+    ## Concepts
+
+    **Parcels** represent an order, has customer information and a delivery address.
+
+    **Shipments** represent a route, has one or more parcels, requirements, and a pickup address.
+
+    ## Preferred Workflow
+
+    This workflow is the most common and preferred way to create a shipment for delivery. Just provide a parcel,
+    and optionally a pickup time to create a shipment.
+
+    1. [Create a shipment](#operation/createShipment) specify the parcels, customer information and delivery address
+    2. [Get parcel label](#operation/getParcelLabel) for the parcel then affix to the parcel packaging
+
+    ## Parcel Status
+
+    Follow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.
+
+    ## Sandbox Environment
+
+    All API operations have an alternate base URL available in the sandbox environment.
+
+    To use the sandbox environment:
+    1. Create an account on the [Sandbox Merchant Portal](https://merchant.beta.trexity.com/signup)
+    2. Navigate to the [API Keys page](https://merchant.beta.trexity.com/api/keys) in the Advanced area.
+    3. Create a new API Key
+    4. Use the new API Key and the sandbox base URL in your API requests
+
+    > Use the dropdown in the top right of an API operation page to select the sandbox environment server.
+
+    ### Credit Cards
+
+    When signing up for the sandbox environment you can use the  following
+    credit card with any 3-digit CVC and a future expiration date.
+
+    ```
+    4000 0012 4000 0000
+    ```
+
+    ### Expectations
+
+    The sandbox environment is intended for development and testing purposes only.
+    Expect latency to be higher than the production environment.
+  
+    We use our sandbox environment as well when developing new features to ensure
+    there are no breaking changes. So expect the occasional breaking change when
+    using the sandbox environment.
+
+    # Responses
+
+    All endpoints will return an object and if there is actual data
+    to be returned, it is going to be named `data`, where `data` may
+    be an array or an object.
+
+    If there is an `error` field present on the root JSON object, that
+    means something went wrong and that error message is all we know about it.
+    Additionally, in some cases, you may inspect the HTTP status codes to
+    gather more information.
+
+    Please check our payload/response examples in detail as well as the
+    curl examples that are a part of each section that documents an operation.
+
+    Example of a successful response:
+    `{ data: ... }`
+
+    Example of a response with an error:
+    `{ error: 'Some error message', data: null }`
+
+tags:
+  - name: Addresses
+    description: |
+      Group of endpoints for handling addresses.
+
+      ### Address Formatting
+
+      In general wherever an address is expected the format we accept is:
+
+      ```
+      STREET, CITY PROVINCE POSTAL_CODE, COUNTRY
+      ```
+
+      However, we also accept newlines and/or commas delimiting each component.
+
+      **Good:**
+      ```
+      123 Fake St, Ottawa ON, Canada
+      123 Fake St, Toronto, Ontario, Canada
+      123 Fake St, Toronto, Ontario, B4T 3F5, Canada
+      ```
+
+      **Better:**
+      ```
+      123 Fake St, Ottawa ON K2G 8F2, CA
+      123 Fake St, Toronto ON M4T 5F6, CA
+      123 Fake St, Toronto ON B4T 3F5, CA
+      ```
+
+      ## Apartment / Unit / Suite
+
+      To specify an apartment, unit or suite as part of the address use the following
+      format (for example if the apartment number was 4):
+      ```
+      4-123 Fake St, Ottawa ON, K2G 8FT Canada
+      123 Fake St Apt 4, Ottawa ON, K2G 8FT Canada
+      123 Fake St Apartment 4, Ottawa ON, K2G 8FT Canada
+      123 Fake St Unit 4, Ottawa ON, K2G 8FT Canada
+      123 Fake St Suite 4, Ottawa ON, K2G 8FT Canada
+      123 Fake St #4, Ottawa ON, K2G 8FT Canada
+      ```
+  - name: Shipping Rates
+    description: |
+      Prior to creating a Shipment, you can calculate the rates based on the pickup address and the number of stops the driver has to do.
+      See our [rates](/#operation/getSimpleRate) endpoint for more information.
+  - name: Shipments
+    description: |
+      The most common approach to get a shipment on the road is to:
+        * [Create a Shipment](/#operation/createShipment)
+
+      After [posting](/#section/Posting-a-shipment), assuming everything went well, the Trexity system will keep pinging drivers in the vicinity of the pickup address.
+      In the rare case of not finding an available driver in the vicinity of the pickup address, Trexity will refuse to post the shipment.
+
+      Alternatively, Trexity allows for planning in the future via Scheduling.
+      You can schedule the posting of the Shipment in the future.
+      Trexity guarantees that the scheduled Shipment will not be posted or broadcasted prior to the time it was scheduled for.
+      Please see the [details](/#operation/createShipment) here.
+
+  - name: Parcels
+    description: |
+      Convenient API endpionts for managing shipment parcels.
+
+  - name: Receipts
+    description: |
+      Retrieve receipt information
+
+  - name: Storage
+    description: |
+      Storage related operations.
+
+      > IMPORTANT: These operations have a different server URL.
+
+  - name: Webhooks
+    description: |
+      Retrieve and manage webhooks for a Trexity Merchant.
+
+      ## Parcel Events
+
+      A Shipment is a container of parcels, each with their own delivery address.
+      However, the Shipment has a single pickup address. As activity occurs on a
+      parcel the Shipment's `currentStatus` oscilates between `OUT_FOR_DELIVERY`,
+      `ARRIVED_AT_DELIVERY` and `DELIVERED`. However, the Shipment alone doesn't
+      inform you of what parcel the status is for.
+
+      To listen to parcel events listen to the following webhooks:
+      - `parcel.created` The parcel has been created during shipment creation or update
+      - `parcel.updated` The parcel has been updated during shipment update
+      - `parcel.deleted` The parcel has been deleted during shipment udpate
+      - `parcel.picked_up` The driver has scanned and picked up a parcel
+      - `parcel.delivered` The driver has scanned and delivered a parcel
+      - `parcel.returning` The driver is returning a parcel
+      - `parcel.returned` The driver has returned a parcel to pickup address
+
+      The request payload of these webhook events indicate the parcel that is currently
+      being affected.
+
+      ## Storing The shipmentId
+
+      If you have the need to update pickup-related information such as the pickup address, POD settings,
+      or the pickup instructions, or you are polling the shipment endpoints for the status of the shipment
+      then you will need to store and reference the `shipmentId`. However, the `shipmentId` can change for
+      a parcel if the parcel is moved, cloned or bundled. You can re-map your orders/parcels by listening to
+      the `shipment.created` webhook.
+
+      > You will need to ensure that you provide a value for a parcel's `externalId` field when you crate a shipment.
+      > This field is intended to be an identifier that references back to your system.
+
+      ```js
+      // This sample code uses Nodejs with Express
+      function trexity_shipmentCreated (req, res, next) {
+        const shipmentId = req.body.data.id
+        const parcels = body.parcels
+        const promises = []
+
+        for (const parcel of parcels) {
+          const orderId = parcel.externalId
+
+          // Generally this is where you would update the Trexity shipment ID associated to your order.
+          //
+          // For example update the metadata associated to your order where the orders_metadata table
+          // has at least the following columns: order_id, key, and value, and there is a unique constraint
+          // on the order_id:key column pair. The end result is that the metadata field will be upserted.
+          const promise = executeParameterizedSql(`
+            INSERT INTO orders_metadata (order_id, key, value)
+            VALUES ($1, 'trexity_shipment_id', $2)
+            ON CONFLICT
+            DO UPDATE set value = EXCLUDED.value
+          `, [orderId, shipmentId])
+
+          promises.push(promise)
+        }
+
+        Promise.allSettled(promises)
+          .then(() => res.status(200).json({}))
+      }
+      ```
+
+      ## Verifying Webhook Requests
+
+      All webhook requests have a header that contains a signature signed with the Trexity Merchant's
+      webhook secret as found in their "Trexity API" settings. To verify the signature take the raw
+      request body as text and create a SHA256 HMAC signed with the merchant's webhook secret and covert to hex.
+
+      Example:
+      ```
+      // nodejs
+      const text = await new Promise((resolve, reject) => {
+        const buff = []
+        req.setEncoding('utf8')
+        req.on('data', chunk => (buff.push(chunk)))
+        req.once('end', resolve(buff.join('')))
+        req.once('error', reject)
+      })
+
+      const sig = require('crypto')
+        .createHmac('sha256', process.env.TRX_MERCH_WEBHOOK_SECRET)
+        .update(text)
+        .digest('hex')
+
+      const isValid = req.headers['x-trexity-signature'] === sig
+
+      if (!isValid) {
+        res.statusCode = 403
+        res.end('Forbidden', 'utf8')
+        return
+      }
+
+      const body = JSON.parse(body)
+      // ...
+      ```
+
+  - name: Locations
+    description: |
+      Retrieve and manage Locations for a Trexity Merchant.
+
+  - name: Regions
+    description: |
+      Region related operations that usually involve service cities and their zones
+
+servers:
+  - description: production
+    url: 'https://trexity.app/api/v1_0'
+  - description: sandbox
+    url: 'https://trexity-driver-mobile.uc.r.appspot.com/api/v1_0'
+components:
+  securitySchemes:
+    MerchantApiKeyAuth:
+      $ref: components/securitySchemes/MerchantApiKeyAuth.yaml
+    AccessTokenAuth:
+      $ref: components/securitySchemes/AccessTokenAuth.yaml
+security:
+  - MerchantApiKeyAuth: []
+  - AccessTokenAuth: []
+paths:
+  /addresses/check:
+    $ref: ./paths/api/check-address.yaml
+  /rates/simple:
+    $ref: ./paths/api/simple-rate.yaml
+  /rates/complex:
+    $ref: ./paths/api/complex-rate-request.yaml
+  /rates/complex/{requestId}:
+    $ref: ./paths/api/complex-rate-status.yaml
+  /rates/complex/{requestId}/result:
+    $ref: ./paths/api/complex-rate-result.yaml
+  /shipments:
+    $ref: ./paths/api/shipments.yaml
+  /shipments/bulk/{rateId}:
+    $ref: ./paths/api/create-bulk-shipments-request.yaml
+  /shipments/bulk/{rateId}/{requestId}:
+    $ref: ./paths/api/create-bulk-shipments-status.yaml
+  /shipments/bulk/{rateId}/{requestId}/result:
+    $ref: ./paths/api/create-bulk-shipments-result.yaml
+  /shipments/{shipmentId}:
+    $ref: ./paths/api/shipment.yaml
+  /shipments/{shipmentId}/post:
+    $ref: ./paths/api/post-shipment.yaml
+  /shipments/{shipmentId}/cancel:
+    $ref: ./paths/api/cancel-shipment.yaml
+  /shipments/{shipmentId}/parcels/{deliveryIndex}:
+    $ref: ./paths/api/update-shipment-parcel.yaml
+  /shipments/{shipmentId}/tracking/{deliveryIndex}:
+    $ref: ./paths/api/create-tracking-url-deliveryIndex.yaml
+  /shipments/{shipmentId}/create-shipping-label:
+    $ref: ./paths/api/create-shipping-label.yaml
+  /regions/service-city-zones:
+    $ref: ./paths/api/service-city-zones.yaml
+  /storage/get/shipment/images/pickup:
+    $ref: ./paths/storage/get-shipment-pickup-image.yaml
+  /storage/get/shipment/images/delivery:
+    $ref: ./paths/storage/get-shipment-delivery-image.yaml
+  /parcels/{parcelId}:
+    $ref: ./paths/api/get-parcel.yaml
+  /parcels/{parcelId}/delivery-status:
+    $ref: ./paths/api/get-parcel-delivery-status.yaml
+  /parcels/{parcelId}/pod:
+    $ref: ./paths/api/get-parcel-pod.yaml
+  /parcels/{parcelId}/label:
+    $ref: ./paths/api/get-parcel-label.yaml
+  /webhooks:
+    $ref: ./paths/api/webhooks.yaml
+  /webhooks/{webhookId}:
+    $ref: ./paths/api/delete-webhook.yaml
+  /locations:
+    $ref: ./paths/api/merchant-locations.yaml
+  /locations/by-query:
+    $ref: ./paths/api/merchant-location-by-query.yaml
+  /receipts/{yearMonth}:
+    $ref: ./paths/api/get-receipt.yaml

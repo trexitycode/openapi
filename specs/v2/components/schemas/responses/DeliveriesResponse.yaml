@@ -1,0 +1,9 @@
+description: The deliveries reponse object
+type: object
+properties:
+  success:
+    type: boolean
+  deliveries:
+    type: array
+    items:
+      $ref: ../Delivery.yaml

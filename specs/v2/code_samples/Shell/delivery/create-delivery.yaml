@@ -1,0 +1,12 @@
+lang: Shell
+source: |
+  curl -X POST {server-url}/delivery\
+    -H 'Content-Type: application/json'\
+    -H 'Authorization: Bearer <Trexity API Key>'\
+    -d '{
+      "pickupAddress": AddressDetailsDto,
+      "deliveryAddress": AddressDetailsDto,
+      "requirements": {},
+      "orderId": "BFG10K",
+      "parcelValue": 10000
+    }'

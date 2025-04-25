@@ -1,0 +1,35 @@
+get:
+  operationId: getParcelPod
+  tags: [Parcels]
+  summary: Get Parcel Proof of Delivery
+  description: |
+    Get a parcel's proof of delivery
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/parcels/get-parcel-pod.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: parcelId
+      required: true
+      schema:
+        type: string
+      description: The id of the parcel (can be externalId or parcel ID)
+  responses:
+    '200':
+      description: Success
+      content:
+        image/png:
+          schema:
+            type: string
+            format: binary
+            description: Photographic Proof of Delivery.
+    '400':
+      description: |
+        Parcel does not have photographic Proof-Of-Delivery support.
+        This means that the Parcel is a part of a shipment that uses customer
+        PIN as a delivery verification mechanism.
+
+    '404':
+      description: Parcel not found or parcel not delivered yet

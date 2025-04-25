@@ -1,0 +1,20 @@
+type: object
+properties:
+  requestId:
+    type: string
+    description: |
+      A unique identifier for the asynchronous request. This can be used to retrieve the results
+      of a request when it has completed.
+  callbackInSeconds:
+    type: integer
+    description: |
+      An estimated number of seconds to complete the request.
+      Wait this long before checking the status again.
+  isAccepted:
+    type: boolean
+    description: |
+      Specifies if the request is accepted. A request will not be accepted
+      if it is not valid.
+  isCompleted:
+    type: boolean
+    description: Specifies if the request has completed.

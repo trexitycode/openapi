@@ -1,0 +1,5 @@
+lang: Shell
+source: |
+  curl -X DELETE {server-url}/delivery/{orderUuid}
+    -H 'Content-Type: application/json'
+    -H 'Authorization: Bearer <Trexity API Key>'

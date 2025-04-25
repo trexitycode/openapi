@@ -1,0 +1,17 @@
+description: Payload object used to identify special parcel fields
+type: object
+properties:
+  externalId:
+    type: string
+    maxLength: 256
+    description: |
+      **(ADDED IN v1.2)** The ID of the external entity that is associated to
+      this parcel (e.g. the external order or shipment ID).
+  scanId:
+    type: string
+    maxLength: 256
+    description: |
+      **(ADDED IN v1.9)** The ID embedded in your custom label’s QR code. If
+      not specified, you will be required to use our built-in labels. If
+      specified, you will not be able to request our built-in label for this
+      parcel.
