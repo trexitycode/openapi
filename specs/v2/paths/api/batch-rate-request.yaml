@@ -1,74 +1,28 @@
-post:
-  operationId: createBatchRateRequest
+get:
+  operationId: getBatchRateRequest
   tags: [Batching]
-  summary: Create batch rate request
-  description: |
-    scheduledPostAt is considered deprecated. It is still supported, but at some point in the future, it will not be.
-    If you want to schedule a shipment, please use exactly one of:
-      1) pickupStartAt and an optional pickupEndAt (when to pickup by)
-      2) deliverStartAt and an optional deliverEndAt (when to deliver by)
+  summary: Get batch rate request
+  description: Get a batch rate request
 
-    If providing a value for `scheduledPostAt` then an approximate value for `pickupStartAt` will attempt to be calculated. If an appproximation
-    cannot be determined, then no complex rate will be returned and an error will be returned.
-
-    ---
-
-    Queue a list of shipments for an optimally routed rate.
-
-    The typical use case of this API is to provide multiple shipments (pickup &
-    delivery) to this endpoint, which responds with a request ID to be polled
-    asynchronously using the [Batch Rate status](/#operation/getBatchRateStatus)
-    endpoint, and ultimately retrieving the rate using the [Batch Rate result](/#operation/getBatchRateResult)
-    endpoint.
-
-    Optionally, you can then take the rate ID provided in the rate result and
-    have the shipments created in bulk using the [Bulk Shipment Creation](/#operation/createCreateBulkShipmentsRequest)
-    endpoint.
-
-    **Order ID**
-
-    For each parcel across all shipments provided to this endpoint, the
-    `orderId` must be unique. This allows us to refer back to the parcel by
-    `orderId` in the result `errors` array.
-
-  ##############################################################################
-
-  requestBody:
-    required: true
-    content:
-      application/json:
-        schema:
-          type: object
-          required: [shipments]
-          properties:
-            locationId:
-              type: string
-              description: Optionally attach a Location to this request. Will be set to default if not specified. Please see [Locations](#tag/getLocations).
-            shipments:
-              type: array
-              minItems: 1
-              maxItems: 400
-              items:
-                $ref: ../../components/schemas/payloads/DirectDeliveryPayload.yaml
+  parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+      description: The batch rate request ID
 
   responses:
     '200':
-      description: Successfully queued an asynchronous batch rate request
+      description: The status of a batch rate request
       content:
         application/json:
           schema:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/responses/BatchRateStatusResponse.yaml
-    '400':
-      description: Invalid input provided
-      content:
-        application/json:
-          schema:
-            type: object
-            required: [error]
-            properties:
-              error: { type: string }
+                $ref: ../../components/schemas/responses/BatchRateRequestResponse.yaml
+    '404':
+      description: The batch rate request does not exist
     '500':
       description: Unknown server problem

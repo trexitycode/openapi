@@ -1,6 +1,16 @@
 type: object
 properties:
+  id:
+    type: string
+    description: |
+      The ID of the batch rate request.
+  batchRateId:
+    type: string
+    description: |
+      The ID of the batch rate created. This will only be present if the batch rate request has completed.
   errors:
+    description: |
+      The errors that occurred during the batch rate request. Will only be present if the batch rate request has completed.
     type: array
     items:
       type: object
@@ -28,25 +38,11 @@ properties:
           description: |
             An object that contains extra information related to the error (i.e.
             address, etc.)
-  result:
-    type: object
-    properties:
-      rateId:
-        type: string
-        description: |
-          This rate response expires after 8 hours, and can be converted to
-          shipments using the [Bulk Shipment Creation](/#operation/createCreateBulkShipmentsRequest)
-          endpoint, and this rateId. Please note that pricing may differ
-          between this rate response and the creation process, where the
-          likelihood of drift increases with time.
-      rates:
-        type: array
-        items:
-          $ref: ../Rate.yaml
-      unservedOrderIds:
-        type: array
-        description: |
-          Array of order IDs that could not be assigned to a shipment due to
-          delivery constraints
-        items:
-          type: string
+  callbackInSeconds:
+    type: integer
+    description: |
+      An estimated number of seconds to complete the request.
+      Wait this long before checking the status again.
+  isCompleted:
+    type: boolean
+    description: Specifies if the request has completed.

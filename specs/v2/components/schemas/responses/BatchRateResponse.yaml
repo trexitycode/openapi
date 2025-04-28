@@ -1,0 +1,18 @@
+type: object
+properties:
+  rates:
+    type: array
+    items:
+      $ref: ../Rate.yaml
+  unservedOrderIds:
+    type: array
+    description: |
+      Array of order IDs that could not be assigned to a shipment due to
+      delivery constraints
+    items:
+      type: string
+  expiresAt:
+    type: string
+    format: date-time
+    description: |
+      The date and time the batch rate will expire.
