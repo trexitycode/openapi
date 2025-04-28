@@ -1,5 +1,5 @@
 lang: Shell
 source: |
-  curl -X PATCH {server-url}/delivery/{orderUuid}/cancelled\
+  curl -X PATCH {server-url}/delivery/{deliveryId}/cancelled\
     -H 'Content-Type: application/json'\
     -H 'Authorization: Bearer <Trexity API Key>'

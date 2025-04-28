@@ -1,6 +1,6 @@
 post:
   operationId: createTrackingUrlDeliveryIndex
-  tags: [Shipments]
+  tags: [Deliveries]
   summary: Parcel tracking URL
   description: |
     Creates a tracking URL for a specific parcel by index
@@ -11,11 +11,11 @@ post:
 
   parameters:
     - in: path
-      name: shipmentId
+      name: deliveryId
       required: true
       schema:
         type: string
-      description: The ID of the shipment
+      description: The ID of the delivery
     - in: path
       name: deliveryIndex
       required: true

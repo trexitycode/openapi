@@ -1,12 +1,8 @@
 post:
-  operationId: createShipment
-  tags: [Shipments]
-  summary: Create a shipment
+  operationId: createDelivery
+  tags: [Deliveries]
+  summary: Create a delivery
   description: |
-    **(CHANGE AS OF NOVEMBER 20, 2023)** The concept of a "service type" was introduced
-    and will by default have no change on the API. However, each merchant location from
-    the Merchant portal can have the default service type changed to "Trexity Select".
-
     When the default service type is set to "Trexity Select" from the Merchant UI for a location
     then the following changes apply:
     - The "containsAlcohol" field will not be able to be set to "true".
@@ -14,33 +10,28 @@ post:
     - The "requirements.returnReusables" field will not be able to be set to "true".
     - The Parcel "requiresPersonHandoff" field will not be able to be set to "true".
     - The supported pickup windows will change as outlined in this article.
-
-    **(CHANGE AS OF JUNE 1, 2023)** scheduledPostAt is considered deprecated. It is still supported, but at some point in the future, it will not be.
+    
     If you want to schedule a shipment, please use exactly one of:
       1) pickupStartAt and an optional pickupEndAt (when to pickup by)
       2) deliverStartAt and an optional deliverEndAt (when to deliver by)
 
-    If providing a value for `scheduledPostAt` then an approximate value for `pickupStartAt` will attempt to be calculated. If an appproximation
-    cannot be determined, then the shipment will be created as a draft and an email will be sent off to the merchant asking them to schedule
-    the shipment for pickup.
-
     ---
 
-    Create a new shipment.
+    Create a new delivery.
 
     If no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.
   x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipments/create-shipment.yaml
+    - $ref: ../../code_samples/Shell/deliveries/create-delivery.yaml
 
   ##############################################################################
 
   requestBody:
-    description: Payload describing your shipment
+    description: Payload describing your delivery
     required: true
     content:
       application/json:
         schema:
-          $ref: ../../components/schemas/payloads/CreateShipmentPayload.yaml
+          $ref: ../../components/schemas/payloads/CreateDeliveryPayload.yaml
         examples:
           ImmediateInit:
             value:
@@ -58,7 +49,7 @@ post:
               pickupAddress: '207 Queen St, Ottawa ON K1P 6E5, CA'
               pickupInstructions: 'Please be careful, since it may contain fragile things!'
               requirements: {}
-              scheduledPostAt: '2020-07-25T10:16:11.048Z'
+              pickupStartAt: '2020-07-25T10:16:11.048Z'
               parcels:
                 - deliveryAddress: '343 Booth St, Ottawa ON K1R 7K1, CA'
                   deliveryName: 'Lagrange'
@@ -89,7 +80,7 @@ post:
                     - `invalid-delivery-address` = When the delivery address is invalid
                     - `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area
                     - `invalid-input` = When there are issues with the input data provided
-                    - `invalid-shipment-data` = When there are issues with the input data provided and the shipment entity cannot be instantiated
+                    - `invalid-delivery-data` = When there are issues with the input data provided and the shipment entity cannot be instantiated
                     - `num-labels-too-large` = When numLabels is too large
                     - `invalid-scanids` = When the scanId specified is already in use
                     - `outside-operating-hours` = When the pickup or delivery time specified is outside the your delivery hours or Trexity's service hours
@@ -98,7 +89,7 @@ post:
                     - `pickup-address-outsidetaxboundary` = The pickup address is outside the merchant's location province
                     - `merchant-disabled` = The merchant has been disabled
                     - `missing-profile-details` = The merchant has an incomplete profile
-                    - `no-shipment-rate` = A shipment rate failed to be calculated due to delivery or pickup address geofencing error
+                    - `no-shipment-rate` = A delivery rate failed to be calculated due to delivery or pickup address geofencing error
     '200':
       description: Success
       content:
@@ -114,7 +105,7 @@ post:
                   parcels:
                     type: array
                     description: |
-                      **(ADDED IN v1.25)** The IDs of the parcels that were created as part of this shipment.
+                      The IDs of the parcels that were created as part of this delivery.
                     items:
                       type: object
                       properties:
@@ -124,15 +115,15 @@ post:
             Success:
               value:
                 data:
-                  shipmentId: 'TRX973036599-6KL'
-                  parcels: [{ id: '123e4567-e89b-12d3-a456-426614174000' }]
+                  routeId: 'TRX973036599-6KL'
+                  deliveryId: '123e4567-e89b-12d3-a456-426614174000'
 
 get:
-  operationId: getShipments
-  tags: [Shipments]
-  summary: List shipments
+  operationId: getDeliveries
+  tags: [Deliveries]
+  summary: List deliveries
   description: |
-    List shipments that match the specified filters.
+    List deliveries that match the specified filters.
 
     ## Filtering By Dates
 
@@ -140,20 +131,9 @@ get:
 
     ## Filtering By External ID
 
-    When filtering by a parcel's external ID you **cannot filter by dates**. Filtering by dates and external ID are mutually exclusive filters. If `externalId` is specified it will take precendence.
-    **(ADDED IN v1.2)**
-
-    ## Filtering By Parcel Metadata
-    **(DEPRECATED AS OF v1.2)**
-
-    ~~Parcel metadata fields can be filtered on by using query parameters with the following pattern `meta_{fieldName}`.~~
-
-    ~~Additionally, the metadata field must have been saved as a string, and not a number for example. This is required since
-    the query parameter value is not converted to a number.~~
-
-    ~~Example: `https://{server-url}/shipments?meta_partnerShipmentId=someid`~~
+    When filtering by a delivery's external ID you **cannot filter by dates**. Filtering by dates and external ID are mutually exclusive filters. If `externalId` is specified it will take precendence.    
   x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipments/get-shipments.yaml
+    - $ref: ../../code_samples/Shell/deliveries/get-deliveries.yaml
 
   ##############################################################################
 
@@ -163,9 +143,9 @@ get:
       schema:
         type: string
       description: |
-        **(ADDED IN v1.22)** The comma-separated list of fields to include in the shipment response (if not specified or blank then all fields will be included).
+        The comma-separated list of fields to include in the delivery response (if not specified or blank then all fields will be included).
 
-        If a field is specified that is not defined by the Shipment object, then responds with HTTP 400. Only top-level fields are supported.
+        If a field is specified that is not defined by the Delivery object, then responds with HTTP 400. Only top-level fields are supported.
     - in: query
       name: fromDate
       schema:
@@ -180,17 +160,10 @@ get:
         type: string
         maxLength: 256
         description: |
-          **(ADDED IN v1.2)** The ID of the external entity that is associated to this parcel (e.g. the external order or shipment ID).
-    - in: query
-      name: merchantPpid
-      deprecated: true
-      description: |
-        **(DEPRECATED AS OF v1.1)**
-      schema:
-        type: string
+          The ID of the external entity that is associated to this delivery (e.g. the external order or shipment ID).
   responses:
     '400':
-      description: Select contains a field not in a Shipment object, query params invalid, or permission denied.
+      description: Select contains a field not in a Delivery object, query params invalid, or permission denied.
       content:
         application/json:
           schema:
@@ -210,5 +183,5 @@ get:
               data:
                 type: array
                 items:
-                  $ref: ../../components/schemas/Shipment.yaml
+                  $ref: ../../components/schemas/Delivery.yaml
 

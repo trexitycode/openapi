@@ -1,5 +1,5 @@
 lang: Shell
 source: |
-  curl -X POST {server-url}/delivery/{orderUuid}/tracking\
+  curl -X POST {server-url}/delivery/{deliveryId}/create-shipping-label?deliveryIndex=1\
     -H 'Content-Type: application/json'\
     -H 'Authorization: Bearer <Trexity API Key>'

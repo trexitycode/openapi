@@ -1,6 +1,6 @@
 post:
   operationId: createShippingLabel
-  tags: [Shipments]
+  tags: [Deliveries]
   summary: Get shipping labels
   description: |
     Get a shipping label for a specific parcel by index, or if `deliveryIndex` is not provided then get shipping labels for all parcels in the shipment.
@@ -12,17 +12,17 @@ post:
 
     Otherwise responds with `image/png`.
   x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipments/create-shipping-label.yaml
+    - $ref: ../../code_samples/Shell/deliveries/create-delivery-label.yaml
 
   ##############################################################################
 
   parameters:
     - in: path
-      name: shipmentId
+      name: deliveryId
       required: true
       schema:
         type: string
-      description: The id of the shipment
+      description: The id of the delivery
     - in: query
       name: deliveryIndex
       schema:
@@ -30,9 +30,7 @@ post:
       description: |
         The index of the parcel to get the shipping label for
 
-        **(CHANGED IN v1.4)**
-
-        If not specified then get labels for all parcels in the shipment.
+        If not specified then get labels for all parcels in the delivery.
     - in: query
       name: imageHeight
       schema:

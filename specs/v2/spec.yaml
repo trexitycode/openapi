@@ -278,9 +278,9 @@ tags:
 
 servers:
   - description: production
-    url: 'https://trexity.app/api/v1_0'
+    url: 'https://trexity.app/api/v2'
   - description: sandbox
-    url: 'https://trexity-driver-mobile.uc.r.appspot.com/api/v1_0'
+    url: 'https://trexity-driver-mobile.uc.r.appspot.com/api/v2'
 components:
   securitySchemes:
     MerchantApiKeyAuth:
@@ -301,40 +301,20 @@ paths:
     $ref: ./paths/api/complex-rate-status.yaml
   /rates/complex/{requestId}/result:
     $ref: ./paths/api/complex-rate-result.yaml
-  /shipments:
-    $ref: ./paths/api/shipments.yaml
-  /shipments/bulk/{rateId}:
-    $ref: ./paths/api/create-bulk-shipments-request.yaml
-  /shipments/bulk/{rateId}/{requestId}:
-    $ref: ./paths/api/create-bulk-shipments-status.yaml
-  /shipments/bulk/{rateId}/{requestId}/result:
-    $ref: ./paths/api/create-bulk-shipments-result.yaml
-  /shipments/{shipmentId}:
-    $ref: ./paths/api/shipment.yaml
-  /shipments/{shipmentId}/post:
-    $ref: ./paths/api/post-shipment.yaml
-  /shipments/{shipmentId}/cancel:
-    $ref: ./paths/api/cancel-shipment.yaml
-  /shipments/{shipmentId}/parcels/{deliveryIndex}:
-    $ref: ./paths/api/update-shipment-parcel.yaml
-  /shipments/{shipmentId}/tracking/{deliveryIndex}:
-    $ref: ./paths/api/create-tracking-url-deliveryIndex.yaml
-  /shipments/{shipmentId}/create-shipping-label:
-    $ref: ./paths/api/create-shipping-label.yaml
   /regions/service-city-zones:
     $ref: ./paths/api/service-city-zones.yaml
   /storage/get/shipment/images/pickup:
     $ref: ./paths/storage/get-shipment-pickup-image.yaml
   /storage/get/shipment/images/delivery:
     $ref: ./paths/storage/get-shipment-delivery-image.yaml
-  /parcels/{parcelId}:
-    $ref: ./paths/api/get-parcel.yaml
-  /parcels/{parcelId}/delivery-status:
-    $ref: ./paths/api/get-parcel-delivery-status.yaml
-  /parcels/{parcelId}/pod:
-    $ref: ./paths/api/get-parcel-pod.yaml
-  /parcels/{parcelId}/label:
-    $ref: ./paths/api/get-parcel-label.yaml
+  /delivery/{deliveryId}:
+    $ref: ./paths/api/get-delivery.yaml
+  /delivery/{deliveryId}/delivery-status:
+    $ref: ./paths/api/get-delivery-delivery-status.yaml
+  /delivery/{deliveryId}/pod:
+    $ref: ./paths/api/get-delivery-pod.yaml
+  /delivery/{deliveryId}/label:
+    $ref: ./paths/api/get-delivery-label.yaml
   /webhooks:
     $ref: ./paths/api/webhooks.yaml
   /webhooks/{webhookId}:

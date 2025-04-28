@@ -3,7 +3,7 @@ post:
   tags: [Shipping Rates]
   summary: Create complex rate request
   description: |
-    **(CHANGE AS OF JUNE 1, 2023)** scheduledPostAt is considered deprecated. It is still supported, but at some point in the future, it will not be.
+    scheduledPostAt is considered deprecated. It is still supported, but at some point in the future, it will not be.
     If you want to schedule a shipment, please use exactly one of:
       1) pickupStartAt and an optional pickupEndAt (when to pickup by)
       2) deliverStartAt and an optional deliverEndAt (when to deliver by)

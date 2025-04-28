@@ -1,0 +1,32 @@
+post:
+  operationId: cancelDelivery
+  tags: [Deliveries]
+  summary: Cancel a Delivery
+  description: |
+    Cancels a delivery. A cancelled delivery will no longer be able to be posted to drivers. 
+    Additionally, the merchant will be charged a cancellation fee if a driver has already accepted the delivery.
+
+    Can only cancel deliveries that have a `currentStatus` of
+    WAITING_FOR_ACCEPTANCE, EN_ROUTE_TO_PICKUP, OUT_FOR_DELIVERY,
+    RENOUNCED_BY_DRIVER, or ON_HOLD.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/deliveries/cancel-delivery.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: deliveryId
+      required: true
+      schema:
+        type: string
+      description: The id of the delivery that needs to be cancelled
+  responses:
+    '204':
+      description: Success
+    '400':
+      description: Invalid delivery ID in path or don't have permission to delete delivery
+    '404':
+      description: Delivery not found
+    '422':
+      description: Delivery cannot be cancelled due to the it not being in cancellable state
