@@ -40,17 +40,20 @@ info:
     This workflow is the most common and typical way to create a delivery. Just provide delivery and pickup information,
     and optionally a pickup time to create a delivery.
 
-    1. [Create a delivery](#operation/createDelivery) specify the pickup information, customer information and delivery address
-    2. [Get delivery label](#operation/getDeliveryLabel) for the delivery then affix to the delivery packaging
+    1. [Optionally get a delivery rate](#operation/getDeliveryRate) specify the pickup information, customer information and delivery address to get a rate to show your customer
+    2. [Create a delivery](#operation/createDelivery) specify the pickup information, customer information and delivery address
+    3. [Get delivery label](#operation/getDeliveryLabel) for the delivery then affix to the delivery packaging
+    4. [Listen for delivery events](#section/Delivery-Events) to track the delivery until it is delivered
 
     ## Batching Workflow
 
     This workflow is used when you have **more than 20 deliveries to create from a single location and you will benefit from optimizing your egress operations**.
     This is because the batch rate workflow will optimize the pickup and delivery of all the deliveries in multiple, optimially routed, trips.
 
-    1. [Create a batch rate](#operation/createBatchRate) specify the pickup information, customer information and delivery addresses
-    2. [Accept the batch rate](#operation/acceptBatchRate) and create the deliveries
+    1. [Create a batch rate](#operation/createBatchRateRequest) specify the pickup information, customer information and delivery addresses
+    2. [Accept the batch rate](#operation/createBatchRateAcceptRequest) and create the deliveries
     3. [Get delivery labels](#operation/getDeliveryLabel) for each delivery then affix to the delivery packaging
+    4. [Listen for delivery events](#section/Delivery-Events) to track the deliveries until they are delivered
 
     ## Delivery Status
 
@@ -297,7 +300,7 @@ paths:
   /addresses/check:
     $ref: ./paths/api/check-address.yaml
   /rates:
-    $ref: ./paths/api/rate.yaml
+    $ref: ./paths/api/rate-create.yaml
   /batch-rate-requests:
     $ref: ./paths/api/batch-rate-request-create.yaml
   /batch-rate-requests/{id}:

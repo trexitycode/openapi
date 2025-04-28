@@ -1,11 +1,9 @@
 get:
-  operationId: getAcceptBatchRateRequest
+  operationId: getRateAcceptRequest
   tags: [Batching]
-  summary: Get batch rate accept request
+  summary: Get a rate accept request
   description: |
-    Get the status of a batch rate accept request
-
-  ##############################################################################
+    Get the status of a rate accept request
 
   parameters:
     - in: path
@@ -13,7 +11,7 @@ get:
       required: true
       schema:
         type: string
-      description: The ID of the batch rate.
+      description: The ID of the rate accept request.
     - in: path
       name: requestId
       required: true
@@ -30,7 +28,7 @@ get:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/responses/BatchRateAcceptRequestResponse.yaml
+                $ref: ../../components/schemas/BatchRateAcceptRequest.yaml
     '404':
       description: The batch rate or batch rate accept request does not exist
     '500':

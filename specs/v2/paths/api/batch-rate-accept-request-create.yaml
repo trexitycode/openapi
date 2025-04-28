@@ -1,13 +1,11 @@
 post:
-  operationId: createAcceptBatchRateRequest
+  operationId: createBatchRateAcceptRequest
   tags: [Batching]
-  summary: Create batch rate accept request
+  summary: Create a batch rate accept request
   description: |
     Accept a batch rate. See the
     [Batch Rate](/#operation/createBatchRateRequest) endpoint for details
     on how to obtain a rateId.
-
-  ##############################################################################
 
   parameters:
     - in: path
@@ -25,10 +23,10 @@ post:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/responses/BatchRateAcceptRequestResponse.yaml
+                $ref: ../../components/schemas/BatchRateAcceptRequest.yaml
     '404':
       description: The specified batch rate could not be found
     '422':
-      description: The specified batch rate is already being accepted
+      description: The specified batch rate has already been accepted
     '500':
       description: Unknown server problem
