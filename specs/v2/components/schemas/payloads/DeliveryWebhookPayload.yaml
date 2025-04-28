@@ -1,4 +1,4 @@
-description: Webhook payload during a shipment event.
+description: Webhook payload during a delivery event.
 required: [data, timestamp]
 properties:
   timestamp:
@@ -10,4 +10,4 @@ properties:
       An example: 2020-07-25T10:48:08.987Z
     type: string
   data:
-    $ref: ../Shipment.yaml
+    $ref: ../Delivery.yaml

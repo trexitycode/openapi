@@ -7,7 +7,7 @@ get:
 
     This is used as a confirmation that the driver has delivered the parcel.
   x-codeSamples:
-    - $ref: ../../code_samples/Shell/storage/get-shipment-delivery-photo.yaml
+    - $ref: ../../code_samples/Shell/storage/get-delivery-photo.yaml
   servers:
     - description: production
       url: 'https://trexity.app/storage'
@@ -18,22 +18,13 @@ get:
 
   parameters:
     - in: query
-      name: shipmentId
+      name: deliveryId
       required: true
 
       schema:
         type: string
       description:
-        The id of the Shipment that this parcel belongs to
-    - in: query
-      name: index
-      required: true
-      schema:
-        type: number
-      description: |
-        The index of the parcel as specified in the Shipment's definition.
-
-        See [here](/#operation/getShipment) and check the "parcels" array inside the Shipment's data for reference.
+        The id of the Delivery that this delivery belongs to
   responses:
     '304':
       description: File contents haven't changed

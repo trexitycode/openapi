@@ -3,7 +3,7 @@ post:
   tags: [Shipping Rates]
   summary: Simple rate
   description: |
-    Calculate the rate for a direct shipment from a single pickup address to a
+    Calculate the rate for a direct delivery from a single pickup address to a
     single delivery address.
 
     Returns the estimated distance (in meters), estimated travel duration (in
@@ -12,16 +12,16 @@ post:
     If no `pickupAddress` is specified then the merchant's business address will
     be used as the pickup address.
 
-    **(ADDED IN v1.7)** Review the [Usage Policy](/#section/Usage-Policy).
+    Review the [Usage Policy](/#section/Usage-Policy).
 
-    **(ADDED IN v1.8)** Use this endpoint for direct shipment rates (single pickup
+    Use this endpoint for direct delivery rates (single pickup
     address and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)
     endpoint for multiple delivery addresses.
 
     The rate response will now include estimates for post, pickup, and delivery time.
     Additionally, the new properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a
     delivery window. Otheriwse the next available delivery window (i.e. ASAP) is assumed. Use the estimated values
-    in the response when creating the shipment.
+    in the response when creating the delivery.
 
   x-codeSamples:
     - $ref: ../../code_samples/Shell/simple-rate/post.yaml
@@ -29,7 +29,7 @@ post:
   ##############################################################################
 
   requestBody:
-    description: Payload that minimally describes a direct shipment.
+    description: Payload that minimally describes a direct delivery.
     required: true
     content:
       application/json:

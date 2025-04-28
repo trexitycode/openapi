@@ -3,8 +3,6 @@ get:
   tags: [Regions]
   summary: Retrieve service city zones
   description: |
-    **(ADDED IN v1.6)**
-
     Returns all the service city zones that includes (for each city) their geoJSON geometry (polygons/multipolygons)
 
     ### Rate Limiting

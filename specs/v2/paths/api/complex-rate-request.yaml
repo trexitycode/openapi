@@ -49,7 +49,7 @@ post:
               minItems: 1
               maxItems: 400
               items:
-                $ref: ../../components/schemas/payloads/DirectShipmentPayload.yaml
+                $ref: ../../components/schemas/payloads/DirectDeliveryPayload.yaml
 
   responses:
     '200':

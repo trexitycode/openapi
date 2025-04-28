@@ -1,33 +1,26 @@
 patch:
-  operationId: updateShipmentParcel
-  tags: [Shipments]
-  summary: Update a parcel
+  operationId: updateDelivery
+  tags: [Deliveries]
+  summary: Update a delivery
   description: |
     Updates the details of a parcel.
 
-    **(ADDED IN v1.1)**
     When updating metadata fields the fields will be merged into the parcel's existing
     metadata. Any metadata fields set to `null` or `undefined` will be deleted.
   x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipments/update-shipment-parcel.yaml
+    - $ref: ../../code_samples/Shell/deliveries/update-delivery.yaml
 
   ##############################################################################
 
   parameters:
     - in: path
-      name: shipmentId
+      name: deliveryId
       required: true
       schema:
         type: string
-      description: The id of the shipment that needs to be updated
-    - in: path
-      name: deliveryIndex
-      required: true
-      schema:
-        type: integer
-      description: The delivery index of the parcel to be updated
+      description: The id of the delivery that needs to be updated
   requestBody:
-    description: Payload containing the parcel's data that needs to be updated
+    description: Payload containing the delivery's data that needs to be updated
     required: true
     content:
       application/json:
