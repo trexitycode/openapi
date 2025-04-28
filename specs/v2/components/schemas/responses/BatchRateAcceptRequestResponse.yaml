@@ -1,0 +1,23 @@
+type: object
+properties:
+  deliveryIds:
+    type: array
+    items:
+      type: string
+    nullable: true
+    description: |
+      The IDs of the deliveries that were created. Will only be present if the batch rate accept request has completed.
+  errors:
+    type: array
+    items: { type: object }
+    nullable: true
+    description: |
+      The errors that occurred during the batch rate accept request. Will only be present if the batch rate accept request has completed.
+  callbackInSeconds:
+    type: integer
+    description: |
+      An estimated number of seconds to complete the request.
+      Wait this long before checking the status again.
+  isCompleted:
+    type: boolean
+    description: Specifies if the request has completed.

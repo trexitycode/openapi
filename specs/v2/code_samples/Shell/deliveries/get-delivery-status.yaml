@@ -1,5 +1,5 @@
 lang: Shell
 source: |
-  curl -X GET {server-url}/delivery/{deliveryId}/delivery-status\
+  curl -X GET {server-url}/delivery/1234-5678-9012-3456/delivery-status\
     -H 'Content-Type: application/json'\
     -H 'Authorization: Bearer <Trexity API Key>'

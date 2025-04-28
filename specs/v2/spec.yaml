@@ -298,12 +298,16 @@ paths:
     $ref: ./paths/api/check-address.yaml
   /rates:
     $ref: ./paths/api/rate.yaml
-  /batch-rates:
+  /batch-rate-requests:
+    $ref: ./paths/api/batch-rate-request-create.yaml
+  /batch-rate-requests/{id}:
     $ref: ./paths/api/batch-rate-request.yaml
-  /batch-rates/{requestId}:
-    $ref: ./paths/api/batch-rate-status.yaml
-  /batch-rates/{requestId}/result:
-    $ref: ./paths/api/batch-rate-result.yaml
+  /batch-rates/{id}:
+    $ref: ./paths/api/batch-rate.yaml
+  /batch-rates/{id}/accept-requests:
+    $ref: ./paths/api/batch-rate-accept-request-create.yaml
+  /batch-rates/{id}/accept-requests/{requestId}:
+    $ref: ./paths/api/batch-rate-accept-request.yaml
   /regions/service-city-zones:
     $ref: ./paths/api/service-city-zones.yaml
   /storage/delivery/images/delivery:

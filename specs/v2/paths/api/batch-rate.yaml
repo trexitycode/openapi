@@ -1,0 +1,31 @@
+get:
+  operationId: getBatchRate
+  tags: [Batching]
+  summary: Get batch rate
+  description: |
+    Get a batch rate
+
+    A batch rate can only be accepted for up to 8 hours after it is created. After this time, the batch rate will expire and cannot be used to create deliveries.
+    Please note that pricing may differ between this rate response and the creation process, where the likelihood of drift increases with time.
+
+  parameters:
+    - in: path
+      name: id
+      required: true
+      schema:
+        type: string
+      description: The batch rate ID
+  responses:
+    '200':
+      description: The batch rate
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: ../../components/schemas/responses/BatchRateResponse.yaml
+    '404':
+      description: The batch rate does not exist
+    '422':
+      description: Asynchronous batch rate request is not complete yet
