@@ -50,12 +50,12 @@ properties:
     type: object
     description: |
       **(ADDED IN v1.1)** An object whos keys are tax rate codes and value is the tax rate.
-    additionalProperties: { type: number, minimum: 0, maximum: 1, exclusiveMinimum: 0, exclusiveMaximum: 1 }
+    additionalProperties: { type: number, minimum: 0, maximum: 1, exclusiveMinimum: true, exclusiveMaximum: true }
   taxAmounts:
     type: object
     description: |
       **(ADDED IN v1.12)** An object whos keys are tax rate codes and value is the tax amount charged in cents.
-    additionalProperties: { type: number, minimum: 0, maximum: 1, exclusiveMinimum: 0, exclusiveMaximum: 1 }
+    additionalProperties: { type: number, minimum: 0, maximum: 1, exclusiveMinimum: true, exclusiveMaximum: true }
   totalTaxes:
     type: number
     description: |
