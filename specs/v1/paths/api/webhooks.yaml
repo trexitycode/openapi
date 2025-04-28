@@ -119,7 +119,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     shipment.updated:
       '{$request.body#/url}':
         post:
@@ -135,7 +139,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     shipment.deleted:
       '{$request.body#/url}':
         post:
@@ -151,7 +159,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     shipment.posted:
       '{$request.body#/url}':
         post:
@@ -169,7 +181,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     shipment.driver.accepted:
       '{$request.body#/url}':
         post:
@@ -185,7 +201,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     shipment.driver.arrived_at_pickup:
       '{$request.body#/url}':
         post:
@@ -201,7 +221,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     shipment.driver.picked_up:
       '{$request.body#/url}':
         post:
@@ -217,7 +241,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     shipment.driver.arrived_at_delivery:
       '{$request.body#/url}':
         post:
@@ -233,7 +261,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     shipment.driver.parcel_delivered:
       '{$request.body#/url}':
         post:
@@ -249,7 +281,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     shipment.completed:
       '{$request.body#/url}':
         post:
@@ -265,7 +301,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     shipment.cancelled:
       '{$request.body#/url}':
         post:
@@ -281,7 +321,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     shipment.driver.renounced:
       '{$request.body#/url}':
         post:
@@ -297,7 +341,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     shipment.on_hold:
       '{$request.body#/url}':
         post:
@@ -318,7 +366,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
 
     parcel.created:
       '{$request.body#/url}':
@@ -336,7 +388,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     parcel.updated:
       '{$request.body#/url}':
         post:
@@ -353,7 +409,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     parcel.deleted:
       '{$request.body#/url}':
         post:
@@ -370,7 +430,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     parcel.picked_up:
       '{$request.body#/url}':
         post:
@@ -387,7 +451,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     parcel.delivered:
       '{$request.body#/url}':
         post:
@@ -404,7 +472,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     parcel.returning:
       '{$request.body#/url}':
         post:
@@ -422,7 +494,11 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
     parcel.returned:
       '{$request.body#/url}':
         post:
@@ -439,4 +515,8 @@ post:
               application/json:
                 schema:
                   $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
-          responses: { '200': { description: Request successfully processed } }
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request

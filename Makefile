@@ -1,4 +1,4 @@
-override OPENAPI := node_modules/.bin/openapi
+override OPENAPI := node_modules/.bin/redocly
 override BUNDLED_SPECS := $(foreach dir,$(wildcard specs/*),dist/$(notdir $(dir)).json)
 
 VERSION = v1

@@ -20,6 +20,15 @@ get:
                 items:
                   $ref: ../../components/schemas/MerchantLocation.yaml
 
+    '400':
+      description: Bad Request
+      content:
+        application/json:
+          schema:
+            required: [error]
+            properties:
+              error:
+                type: string
     '500':
       description: An internal error has occurred and the request cannot be completed.
       content:
