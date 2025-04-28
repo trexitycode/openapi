@@ -31,31 +31,8 @@ post:
     content:
       application/json:
         schema:
-          $ref: ../../components/schemas/payloads/CreateDeliveryPayload.yaml
-        examples:
-          ImmediateInit:
-            value:
-              pickupAddress: '9 Slack Rd, Nepean ON K2G 0B7, CA'
-              pickupInstructions: 'Please be careful, since it may contain fragile things!'
-              requirements: {}
-              parcels:
-                - deliveryAddress: '207 Queen St, Ottawa ON K1P 6E5, CA'
-                  deliveryName: 'Srinivasa Ramanujan'
-                  description: 'Glasses, bifocals'
-                  orderId: 'BFG10K'
-                  parcelValue: 10000
-          ScheduledInit:
-            value:
-              pickupAddress: '207 Queen St, Ottawa ON K1P 6E5, CA'
-              pickupInstructions: 'Please be careful, since it may contain fragile things!'
-              requirements: {}
-              pickupStartAt: '2020-07-25T10:16:11.048Z'
-              parcels:
-                - deliveryAddress: '343 Booth St, Ottawa ON K1R 7K1, CA'
-                  deliveryName: 'Lagrange'
-                  description: 'Copy of Newtons Principia Mathematica'
-                  orderId: 'NWTNRULZ'
-                  parcelValue: 15000
+          $ref: ../../components/schemas/DeliveryDTO.yaml
+
   responses:
     '500':
       description: Unknown server problem

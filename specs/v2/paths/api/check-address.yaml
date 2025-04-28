@@ -28,12 +28,12 @@ post:
             delivery:
               type: object
               allOf:
-                - $ref: '../../components/schemas/payloads/AddressDetailsInput.yaml'
+                - $ref: '../../components/schemas/AddressDetailsDTO.yaml'
               description: The address to check.
             pickup:
               type: object
               allOf:
-                - $ref: '../../components/schemas/payloads/AddressDetailsInput.yaml'
+                - $ref: '../../components/schemas/AddressDetailsDTO.yaml'
               description: The pickup address from which to generate the tiered zones.
               example:
                 addressLine1: "123 Fake St"

@@ -4,8 +4,6 @@ delete:
   summary: Delete a shipment
   description: |
     Attempt to delete a shipment. Only draft shipments can be deleted.
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipments/delete-shipment.yaml
 
   ##############################################################################
 
@@ -32,8 +30,6 @@ patch:
   summary: Update a delivery
   description: |
     Updates the details of a delivery.
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/deliveries/update-delivery.yaml
 
   ##############################################################################
 
@@ -50,9 +46,8 @@ patch:
     content:
       application/json:
         schema:
-          $ref: ../../components/schemas/payloads/UpdateDeliveryPayload.yaml
-        example:
-          pickupInstructions: 'Needs to go out ASAP!'
+          $ref: ../../components/schemas/DeliveryDTO.yaml
+
   responses:
     '204':
       description: Success

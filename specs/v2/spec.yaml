@@ -290,9 +290,6 @@ components:
       $ref: components/securitySchemes/MerchantApiKeyAuth.yaml
     AccessTokenAuth:
       $ref: components/securitySchemes/AccessTokenAuth.yaml
-  schemas:
-    AddressDetailsInput:
-      $ref: './components/schemas/payloads/AddressDetailsInput.yaml'
 security:
   - MerchantApiKeyAuth: []
   - AccessTokenAuth: []
@@ -300,7 +297,7 @@ paths:
   /addresses/check:
     $ref: ./paths/api/check-address.yaml
   /rates:
-    $ref: ./paths/api/rate-create.yaml
+    $ref: ./paths/api/rates.yaml
   /batch-rate-requests:
     $ref: ./paths/api/batch-rate-request-create.yaml
   /batch-rate-requests/{id}:
@@ -315,14 +312,16 @@ paths:
     $ref: ./paths/api/service-city-zones.yaml
   /storage/delivery/images/delivery:
     $ref: ./paths/storage/get-delivery-image.yaml
-  /delivery/{deliveryId}:
-    $ref: ./paths/api/get-delivery.yaml
-  /delivery/{deliveryId}/delivery-status:
-    $ref: ./paths/api/get-delivery-status.yaml
-  /delivery/{deliveryId}/pod:
-    $ref: ./paths/api/get-delivery-pod.yaml
-  /delivery/{deliveryId}/label:
-    $ref: ./paths/api/get-delivery-label.yaml
+  /deliveries:
+    $ref: ./paths/api/deliveries.yaml
+  /deliveries/{deliveryId}:
+    $ref: ./paths/api/delivery.yaml
+  /deliveries/{deliveryId}/status:
+    $ref: ./paths/api/delivery-status.yaml
+  /deliveries/{deliveryId}/pod:
+    $ref: ./paths/api/delivery-pod.yaml
+  /deliveries/{deliveryId}/label:
+    $ref: ./paths/api/delivery-label.yaml
   /webhooks:
     $ref: ./paths/api/webhooks.yaml
   /webhooks/{webhookId}:

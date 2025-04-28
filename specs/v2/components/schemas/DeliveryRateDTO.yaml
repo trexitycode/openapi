@@ -1,0 +1,23 @@
+description: A minimal object that describes a direct shipment for rating
+allOf:
+  - $ref: './DeliveryWindowProps.yaml'
+  - type: object
+    required:
+      - deliveryAddress
+    properties:
+      pickupAddress:
+        $ref: ./AddressDetailsDTO.yaml
+      deliveryAddress:
+        $ref: ./AddressDetailsDTO.yaml
+      requirements:
+        $ref: ./ShipmentRequirements.yaml
+      deliveryValue:
+        type: number
+        minimum: 0
+        description: The order value, if any. Specified in cents.
+      numLabels:
+        type: number
+        minimum: 1
+        default: 1
+        description: |
+          The number of labels for the parcel (each separate package needs a label). 

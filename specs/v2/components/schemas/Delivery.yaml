@@ -1,124 +1,41 @@
 description: A order to be delivered in a shipment
 type: object
-properties:
-  id:
-    type: string
-    description: |
-      Unique identifier for this delivery.
-  numLabels:
-    type: number
-    minimum: 1
-    default: 1
-    description: |
-      The number of labels for the parcel (each separate package needs a label).
-  sortOrder:
-    type: number
-    minimum: 0
-    description: |
-      Represents the ascending order of this delivery in relation to other deliveries in a shipment.
-      Lower values are estimated to be delivered before higher values. The value of this property could change
-      depending on the information we have of the courier at the time of the request, and/or if deliveries are removed from the shipment.
-  sequence:
-    type: number
-    description: |
-      Represents the fixed ascending order of this delivery in relation to other deliveries in a shipment
-      as known at the time the delivery was created. This is the same sequence number that appears on the
-      label for this delivery and what couriers may ask for at pickup. *Only present if there is more than one delivery.*
-  routeId:
-    type: string
-    description: |
-      Route container ID. In the case of a return, this will be the route ID of the original route (not the newly created return route)
-  deliveryAddress:
-    $ref: ./Address.yaml
-  deliveryAddressLocation:
-    $ref: ./Location.yaml
-  deliveryAddressProvince:
-    type: string
-    nullable: true
-    description: |
-      The province of the deliveryAddress. Example: Ontario.
-  deliveryAddressCountry:
-    type: string
-    nullable: true
-    description: |
-      The country of the deliveryAddress. Example: Canada.
-  deliveryAddressCity:
-    type: string
-    nullable: true
-    description: |
-      The city of the pickupAddress. Example: Ottawa.
-  deliveryAddressServiceCity:
-    type: string
-    nullable: true
-    description: |
-      The service city of the pickupAddress. Example: Ottawa, ON.
-
-  deliveryAddressNotes:
-    type: string
-    description: Extra notes relating to the delivery address, such as apartment/unit number, reference, description of the location, etc.
-  deliveryInstructions:
-    type: string
-    description: |
-      Delivery instructions for drop off
-  deliveryName:
-    type: string
-    description: The name of the recipient
-  deliveryEmail:
-    type: string
-    format: email
-    description: The email address of the recipient
-  deliveryPhone:
-    type: string
-    description: The cell phone number of the recipient
-
-  description:
-    type: string
-    description: Description of the parcel being delivered
-  orderId:
-    type: string
-    maxLength: 20
-    description: The order ID that this parcel belongs to.
-  deliveryValue:
-    type: number
-    minimum: 0
-    description: The dollar value of the parcel in CDN as cents
-  requiresPersonHandoff:
-    type: boolean
-    description: Does this parcel require delivery PIN verification?
-  containsAlcohol:
-    type: boolean
-    description: |
-      Requires legal age verification by law
-  externalId:
-    type: string
-    maxLength: 256
-    description: |
-      The ID of the external entity that is associated to
-      this parcel (e.g. the external order or shipment ID).
-  scanId:
-    type: string
-    maxLength: 256
-    description: |
-      The ID embedded in your custom label’s QR code. If
-      not specified, you will be required to use our built-in labels. If
-      specified, you will not be able to request our built-in label for this
-      parcel.
-  load:
-    $ref: ./DeliveryLoad.yaml
-  metadata:
-    type: object
-    description: |
-      Object with metadata fields. If the intent is to
-      list shipments with this metadata field, then ensure the value is
-      saved as a string and not say a number.
-
-  driverDeliveredAt:
-    $ref: ./SimplifiedDateISOString.yaml
-  isDelivered:
-    type: boolean
-    description: |
-      Whether this delivery has been delivered.
-      If it has been, we store the timestamp in driverDeliveredAt.
-  secondsFromPickupToDelivery:
-    type: number
-    description: If a driver has accpeted, the estimated seconds it will take the driver to arrive at the pickup address.
+allOf:
+  - $ref: './DeliveryBase.yaml'
+  - type: object
+    properties:
+      id:
+        type: string
+        description: |
+          Unique identifier for this delivery.
+      sortOrder:
+        type: number
+        minimum: 0
+        description: |
+          Represents the ascending order of this delivery in relation to other deliveries in a shipment.
+          Lower values are estimated to be delivered before higher values. The value of this property could change
+          depending on the information we have of the courier at the time of the request, and/or if deliveries are removed from the shipment.
+      sequence:
+        type: number
+        description: |
+          Represents the fixed ascending order of this delivery in relation to other deliveries in a shipment
+          as known at the time the delivery was created. This is the same sequence number that appears on the
+          label for this delivery and what couriers may ask for at pickup. *Only present if there is more than one delivery.*
+      routeId:
+        type: string
+        description: |
+          Route container ID. In the case of a return, this will be the route ID of the original route (not the newly created return route)
+      pickupAddress:
+        $ref: ./AddressDetails.yaml
+      deliveryAddress:
+        $ref: ./AddressDetails.yaml
+      driverDeliveredAt:
+        $ref: ./SimplifiedDateISOString.yaml
+      isDelivered:
+        type: boolean
+        description: |
+          Whether this delivery has been delivered.
+          If it has been, we store the timestamp in driverDeliveredAt.
+      secondsFromPickupToDelivery:
+        type: number
+        description: If a driver has accpeted, the estimated seconds it will take the driver to arrive at the pickup address.
