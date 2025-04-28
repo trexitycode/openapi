@@ -1,6 +1,6 @@
 type: object
 allOf:
-  - { $ref: './Rate.yaml' }
+  - { $ref: './DeliveryRate.yaml' }
   - type: object
     properties:
       estimateScheduledPostAt:

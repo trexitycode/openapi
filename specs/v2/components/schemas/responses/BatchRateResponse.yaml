@@ -3,14 +3,17 @@ properties:
   rates:
     type: array
     items:
-      $ref: ../Rate.yaml
-  unservedOrderIds:
-    type: array
-    description: |
-      Array of order IDs that could not be assigned to a shipment due to
-      delivery constraints
-    items:
-      type: string
+      type: object
+      allOf:
+        - {  $ref: '../DeliveryRate.yaml' }
+        - type: object
+          properties:
+            orderIds:
+              type: array
+              description: |
+                The order IDs that this rate is for.
+              items:
+                type: string
   expiresAt:
     type: string
     format: date-time
