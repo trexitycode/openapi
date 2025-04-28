@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: '1.30'
+  version: '2.0.0'
   title: Trexity API
   license:
     name: MIT
@@ -16,8 +16,6 @@ info:
 
     # Usage Policy
 
-    **(ADDED IN v1.7)**
-
     By using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.
     The [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the Rate.
 
@@ -31,9 +29,11 @@ info:
 
     ## Concepts
 
-    **Parcels** represent an order, has customer information and a delivery address.
+    **Deliveries** represent an order, has pickup information and customer information.
 
-    **Shipments** represent a route, has one or more parcels, requirements, and a pickup address.
+    **Rates** represent a rate for completing a delivery.
+
+    **Complex Rates** represent an optimized set of rates for completing multiple deliveries.
 
     ## Preferred Workflow
 
@@ -291,37 +291,37 @@ security:
   - MerchantApiKeyAuth: []
   - AccessTokenAuth: []
 paths:
-  /addresses/check:
-    $ref: ./paths/api/check-address.yaml
-  /rates/simple:
-    $ref: ./paths/api/simple-rate.yaml
-  /rates/complex:
-    $ref: ./paths/api/complex-rate-request.yaml
-  /rates/complex/{requestId}:
-    $ref: ./paths/api/complex-rate-status.yaml
-  /rates/complex/{requestId}/result:
-    $ref: ./paths/api/complex-rate-result.yaml
-  /regions/service-city-zones:
-    $ref: ./paths/api/service-city-zones.yaml
-  /storage/get/shipment/images/pickup:
-    $ref: ./paths/storage/get-shipment-pickup-image.yaml
-  /storage/get/shipment/images/delivery:
-    $ref: ./paths/storage/get-shipment-delivery-image.yaml
-  /delivery/{deliveryId}:
-    $ref: ./paths/api/get-delivery.yaml
-  /delivery/{deliveryId}/delivery-status:
-    $ref: ./paths/api/get-delivery-delivery-status.yaml
-  /delivery/{deliveryId}/pod:
-    $ref: ./paths/api/get-delivery-pod.yaml
-  /delivery/{deliveryId}/label:
-    $ref: ./paths/api/get-delivery-label.yaml
-  /webhooks:
-    $ref: ./paths/api/webhooks.yaml
-  /webhooks/{webhookId}:
-    $ref: ./paths/api/delete-webhook.yaml
-  /locations:
-    $ref: ./paths/api/merchant-locations.yaml
-  /locations/by-query:
-    $ref: ./paths/api/merchant-location-by-query.yaml
-  /receipts/{yearMonth}:
-    $ref: ./paths/api/get-receipt.yaml
+  # /addresses/check:
+  #   $ref: ./paths/api/check-address.yaml
+  # /rates/simple:
+  #   $ref: ./paths/api/simple-rate.yaml
+  # /rates/complex:
+  #   $ref: ./paths/api/complex-rate-request.yaml
+  # /rates/complex/{requestId}:
+  #   $ref: ./paths/api/complex-rate-status.yaml
+  # /rates/complex/{requestId}/result:
+  #   $ref: ./paths/api/complex-rate-result.yaml
+  # /regions/service-city-zones:
+  #   $ref: ./paths/api/service-city-zones.yaml
+  # /storage/get/shipment/images/pickup:
+  #   $ref: ./paths/storage/get-shipment-pickup-image.yaml
+  # /storage/get/shipment/images/delivery:
+  #   $ref: ./paths/storage/get-shipment-delivery-image.yaml
+  # /delivery/{deliveryId}:
+  #   $ref: ./paths/api/get-delivery.yaml
+  # /delivery/{deliveryId}/delivery-status:
+  #   $ref: ./paths/api/get-delivery-delivery-status.yaml
+  # /delivery/{deliveryId}/pod:
+  #   $ref: ./paths/api/get-delivery-pod.yaml
+  # /delivery/{deliveryId}/label:
+  #   $ref: ./paths/api/get-delivery-label.yaml
+  # /webhooks:
+  #   $ref: ./paths/api/webhooks.yaml
+  # /webhooks/{webhookId}:
+  #   $ref: ./paths/api/delete-webhook.yaml
+  # /locations:
+  #   $ref: ./paths/api/merchant-locations.yaml
+  # /locations/by-query:
+  #   $ref: ./paths/api/merchant-location-by-query.yaml
+  # /receipts/{yearMonth}:
+  #   $ref: ./paths/api/get-receipt.yaml
