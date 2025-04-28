@@ -16,10 +16,10 @@ info:
 
     # Usage Policy
 
-    By using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.
+    By using this API to provide delivery rates to your customers you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.
     The [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the Rate.
 
-    This allows Trexity to ensure consistent messaging wherever Trexity delivery rates are shown.
+    This allows Trexity to ensure consistent messaging wherever Trexity delivery rates are displayed to your customers.
 
     ## Suspension & Termination
 
@@ -29,19 +29,28 @@ info:
 
     ## Concepts
 
-    **Deliveries** represent an order, has pickup information and customer information.
+    **Delivery** represents an order, has pickup information and customer information.
 
-    **Rates** represent a rate for completing a delivery.
+    **Rate** represents a price for completing a delivery.
 
-    **Complex Rates** represent an optimized set of rates for completing multiple deliveries.
+    **Batch Rate** represents an optimized set of rates for completing multiple deliveries from a single location.
 
-    ## Preferred Workflow
+    ## Typical Workflow
 
-    This workflow is the most common and preferred way to create a delivery. Just provide a delivery,
+    This workflow is the most common and typical way to create a delivery. Just provide delivery and pickup information,
     and optionally a pickup time to create a delivery.
 
-    1. [Create a delivery](#operation/createDelivery) specify the delivery, customer information and delivery address
+    1. [Create a delivery](#operation/createDelivery) specify the pickup information, customer information and delivery address
     2. [Get delivery label](#operation/getDeliveryLabel) for the delivery then affix to the delivery packaging
+
+    ## Batching Workflow
+
+    This workflow is used when you have **more than 20 deliveries to create from a single location and you will benefit from optimizing your egress operations**.
+    This is because the batch rate workflow will optimize the pickup and delivery of all the deliveries in multiple, optimially routed, trips.
+
+    1. [Create a batch rate](#operation/createBatchRate) specify the pickup information, customer information and delivery addresses
+    2. [Accept the batch rate](#operation/acceptBatchRate) and create the deliveries
+    3. [Get delivery labels](#operation/getDeliveryLabel) for each delivery then affix to the delivery packaging
 
     ## Delivery Status
 
