@@ -1,5 +1,11 @@
 type: object
 properties:
+  id:
+    type: string
+    description: The ID of the batch rate accept request.
+  batchRateId:
+    type: string
+    description: The ID of the batch rate.
   deliveryIds:
     type: array
     items:

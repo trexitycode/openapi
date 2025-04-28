@@ -24,7 +24,7 @@ get:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/responses/BatchRateResponse.yaml
+                $ref: ../../components/schemas/BatchRate.yaml
     '404':
       description: The batch rate does not exist
     '422':

@@ -1,11 +1,14 @@
 type: object
 properties:
+  id:
+    type: string
+    description: The ID of the batch rate.
   rates:
     type: array
     items:
       type: object
       allOf:
-        - {  $ref: '../DeliveryRate.yaml' }
+        - {  $ref: './DeliveryRate.yaml' }
         - type: object
           properties:
             orderIds:

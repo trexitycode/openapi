@@ -60,7 +60,7 @@ post:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/responses/BatchRateRequestResponse.yaml
+                $ref: ../../components/schemas/BatchRateRequest.yaml
     '400':
       description: Invalid input provided
       content:
