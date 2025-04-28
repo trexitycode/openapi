@@ -4,8 +4,22 @@ source: |
     -H 'Content-Type: application/json'\
     -H 'Authorization: Bearer <Trexity API Key>'\
     -d '{
-      "pickupAddress": AddressDetailsDto,
-      "deliveryAddress": AddressDetailsDto,
+      "pickupAddress": {
+        "addressLine1": "123 Fake St",
+        "addressLine2": "Apt 4",
+        "city": "Ottawa",
+        "provinceCode": "ON",
+        "postalCode": "K2G 8FT",
+        "countryCode": "CA"
+      },
+      "deliveryAddress": {
+        "addressLine1": "123 Fake St",
+        "addressLine2": "Apt 4",
+        "city": "Ottawa",
+        "provinceCode": "ON",
+        "postalCode": "K2G 8FT",
+        "countryCode": "CA"
+      },
       "requirements": {},
       "orderId": "BFG10K",
       "parcelValue": 10000

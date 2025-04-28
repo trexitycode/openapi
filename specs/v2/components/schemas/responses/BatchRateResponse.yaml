@@ -11,7 +11,7 @@ properties:
             orderIds:
               type: array
               description: |
-                The order IDs that this rate is for. Applicable only to complex rates.
+                The order IDs that this rate is for.
               items:
                 type: string
   expiresAt:
