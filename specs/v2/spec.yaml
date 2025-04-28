@@ -72,7 +72,7 @@ info:
 
     The sandbox environment is intended for development and testing purposes only.
     Expect latency to be higher than the production environment.
-  
+
     We use our sandbox environment as well when developing new features to ensure
     there are no breaking changes. So expect the occasional breaking change when
     using the sandbox environment.
@@ -102,41 +102,38 @@ tags:
     description: |
       Group of endpoints for handling addresses.
 
-      ### Address Formatting
+      ### Address Input Format
 
-      In general wherever an address is expected the format we accept is:
+      In general, whenever an endpoint expects an address, we expect the shape [AddressDetailsInput](#/components/schemas/AddressDetailsInput) to be provided.
 
       ```
-      STREET, CITY PROVINCE POSTAL_CODE, COUNTRY
+      ADDRESS LINE 1,
+      ADDRESS LINE 2,
+      CITY,
+      PROVINCE CODE,
+      POSTAL CODE,
+      COUNTRY CODE
       ```
 
-      However, we also accept newlines and/or commas delimiting each component.
-
-      **Good:**
+      An example of a full address would be:
       ```
-      123 Fake St, Ottawa ON, Canada
-      123 Fake St, Toronto, Ontario, Canada
-      123 Fake St, Toronto, Ontario, B4T 3F5, Canada
-      ```
-
-      **Better:**
-      ```
-      123 Fake St, Ottawa ON K2G 8F2, CA
-      123 Fake St, Toronto ON M4T 5F6, CA
-      123 Fake St, Toronto ON B4T 3F5, CA
+      Address line 1: 123 Fake St,
+      City: Ottawa
+      Province: ON
+      Postal code: K2G 8FT
+      Country: CA
       ```
 
       ## Apartment / Unit / Suite
 
-      To specify an apartment, unit or suite as part of the address use the following
-      format (for example if the apartment number was 4):
+      To specify an apartment, unit or suite as part of the address use the address line 2 field.
       ```
-      4-123 Fake St, Ottawa ON, K2G 8FT Canada
-      123 Fake St Apt 4, Ottawa ON, K2G 8FT Canada
-      123 Fake St Apartment 4, Ottawa ON, K2G 8FT Canada
-      123 Fake St Unit 4, Ottawa ON, K2G 8FT Canada
-      123 Fake St Suite 4, Ottawa ON, K2G 8FT Canada
-      123 Fake St #4, Ottawa ON, K2G 8FT Canada
+      Address line 1: 123 Fake St,
+      Address line 2: Apt 4
+      City: Ottawa
+      Province: ON
+      Postal code: K2G 8FT
+      Country: CA
       ```
   - name: Shipping Rates
     description: |
@@ -287,6 +284,9 @@ components:
       $ref: components/securitySchemes/MerchantApiKeyAuth.yaml
     AccessTokenAuth:
       $ref: components/securitySchemes/AccessTokenAuth.yaml
+  schemas:
+    AddressDetailsInput:
+      $ref: './components/schemas/payloads/AddressDetailsInput.yaml'
 security:
   - MerchantApiKeyAuth: []
   - AccessTokenAuth: []
