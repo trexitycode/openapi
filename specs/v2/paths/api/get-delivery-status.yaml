@@ -1,21 +1,21 @@
 get:
-  operationId: getParcelDeliveryStatus
-  tags: [Parcels]
-  summary: Get Parcel Delivery Status
+  operationId: getDeliveryStatus
+  tags: [Deliveries]
+  summary: Get Delivery Status
   description: |
-    **(ADDED IN v1.26)** Retrieve a parcel's delivery status
+    Retrieve a delivery's status
   x-codeSamples:
-    - $ref: ../../code_samples/Shell/parcels/get-parcel-delivery-status.yaml
+    - $ref: ../../code_samples/Shell/deliveries/get-delivery-status.yaml
 
   ##############################################################################
 
   parameters:
     - in: path
-      name: parcelId
+      name: deliveryId
       required: true
       schema:
         type: string
-      description: The id of the parcel (can be externalId or parcel ID)
+      description: The id of the delivery (can be externalId or delivery ID)
   responses:
     '200':
       description: Success
@@ -45,4 +45,4 @@ get:
                       - cancelled
 
     '404':
-      description: Parcel not found
+      description: Delivery not found

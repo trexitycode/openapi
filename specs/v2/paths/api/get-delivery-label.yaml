@@ -1,21 +1,21 @@
 get:
-  operationId: getParcelLabel
-  tags: [Parcels]
-  summary: Get Parcel Label
+  operationId: getDeliveryLabel
+  tags: [Deliveries]
+  summary: Get Delivery Label
   description: |
-    Get a parcel's shipping label
+    Get a delivery's shipping label
   x-codeSamples:
-    - $ref: ../../code_samples/Shell/parcels/get-parcel-label.yaml
+    - $ref: ../../code_samples/Shell/deliveries/get-delivery-label.yaml
 
   ##############################################################################
 
   parameters:
     - in: path
-      name: parcelId
+      name: deliveryId
       required: true
       schema:
         type: string
-      description: The id of the parcel (can be externalId or parcel ID)
+      description: The id of the delivery (can be externalId or delivery ID)
   responses:
     '200':
       description: Success
@@ -35,7 +35,7 @@ get:
             type: string
             format: jsonl
             description: |
-              **(ADDED IN v1.27)** JSONL text where each line represents a label encoded as a JSON object. Up to "numLabels" (from the parcel) labels are returned.
+              JSONL text where each line represents a label encoded as a JSON object. Up to "numLabels" (from the parcel) labels are returned.
 
               Each label is an encoded JSON object with the following fields:
 
@@ -52,8 +52,8 @@ get:
             {"label": "...base64encodedstring...", "mimeType": "image/png"}
     '400':
       description: |
-        Parcel does not have a label.
+        Delivery does not have a label.
         This means that the Merchant is responsible for creating the labels.
 
     '404':
-      description: Parcel not found
+      description: Delivery not found

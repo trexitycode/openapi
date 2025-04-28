@@ -11,46 +11,46 @@ delete:
 
   parameters:
     - in: path
-      name: shipmentId
+      name: deliveryId
       required: true
       schema:
         type: string
-      description: The id of the shipment to delete
+      description: The id of the delivery to delete
   responses:
     '204':
-      description: Successfully deleted shipment
+      description: Successfully deleted delivery
     '400':
-      description: Invalid shipment ID in path or don't have permission to delete shipment
+      description: Invalid delivery ID in path or don't have permission to delete delivery
     '404':
-      description: Shipment not found
+      description: Delivery not found
     '422':
-      description: Shipment cannot be deleted due to the shipment not being in deletable state
+      description: Delivery cannot be deleted due to the delivery not being in deletable state
 
 patch:
-  operationId: updateShipment
-  tags: [Shipments]
-  summary: Update a shipment
+  operationId: updateDelivery
+  tags: [Deliveries]
+  summary: Update a delivery
   description: |
-    Updates the details of a shipment.
+    Updates the details of a delivery.
   x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipments/update-shipment.yaml
+    - $ref: ../../code_samples/Shell/deliveries/update-delivery.yaml
 
   ##############################################################################
 
   parameters:
     - in: path
-      name: shipmentId
+      name: deliveryId
       required: true
       schema:
         type: string
-      description: The id of the shipment that needs to be updated
+      description: The id of the delivery that needs to be updated
   requestBody:
-    description: Payload describing the changes that need to be updated in your shipment
+    description: Payload describing the changes that need to be updated in your delivery
     required: true
     content:
       application/json:
         schema:
-          $ref: ../../components/schemas/payloads/UpdateShipmentPayload.yaml
+          $ref: ../../components/schemas/payloads/UpdateDeliveryPayload.yaml
         example:
           pickupInstructions: 'Needs to go out ASAP!'
   responses:
@@ -58,36 +58,36 @@ patch:
       description: Success
 
 get:
-  operationId: getShipment
-  tags: [Shipments]
-  summary: Get a shipment
+  operationId: getDelivery
+  tags: [Deliveries]
+  summary: Get a delivery
   description: |
-    Gets the details of a shipment
+    Gets the details of a delivery
   x-codeSamples:
-    - $ref: ../../code_samples/Shell/shipments/get-shipment.yaml
+    - $ref: ../../code_samples/Shell/deliveries/get-delivery.yaml
 
   ##############################################################################
 
   parameters:
     - in: path
-      name: shipmentId
+      name: deliveryId
       required: true
       schema:
         type: string
-      description: The id of the shipment
+      description: The id of the delivery
     - in: query
       name: select
       schema:
         type: string
       description: |
-        **(ADDED IN v1.22)** The comma-separated list of fields to include in the shipment response (if not specified or blank then all fields will be included).
+        The comma-separated list of fields to include in the delivery response (if not specified or blank then all fields will be included).
 
-        If a field is specified that is not defined by the Shipment object, then responds with HTTP 400. Only top-level fields are supported.
+        If a field is specified that is not defined by the Delivery object, then responds with HTTP 400. Only top-level fields are supported.
   responses:
     '500':
       description: Unknown server problem
     '400':
-      description: Invalid payload, select contains a field not in a Shipment object, or permission denied.
+      description: Invalid payload, select contains a field not in a Delivery object, or permission denied.
       content:
         application/json:
           schema:
@@ -105,4 +105,4 @@ get:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/Shipment.yaml
+                $ref: ../../components/schemas/Delivery.yaml

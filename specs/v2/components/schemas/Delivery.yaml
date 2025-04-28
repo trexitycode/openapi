@@ -1,13 +1,10 @@
-description: A delivery order to be delivered in a shipment
+description: A order to be delivered in a shipment
 type: object
 properties:
   id:
     type: string
     description: |
-      Unique identifier for this parcel.
-  routeId:
-    type: string
-    description: The ID of the route the delivery belongs to
+      Unique identifier for this delivery.
   numLabels:
     type: number
     minimum: 1
@@ -18,15 +15,15 @@ properties:
     type: number
     minimum: 0
     description: |
-      Represents the ascending order of this parcel in relation to other parcels in a shipment.
+      Represents the ascending order of this delivery in relation to other deliveries in a shipment.
       Lower values are estimated to be delivered before higher values. The value of this property could change
-      depending on the information we have of the courier at the time of the request, and/or if parcels are removed from the shipment.
+      depending on the information we have of the courier at the time of the request, and/or if deliveries are removed from the shipment.
   sequence:
     type: number
     description: |
-      Represents the fixed ascending order of this parcel in relation to other parcels in a shipment
-      as known at the time the shipment was created. This is the same sequence number that appears on the
-      label for this parcel and what couriers may ask for at pickup. *Only present if the shipment has more than one parcel.*
+      Represents the fixed ascending order of this delivery in relation to other deliveries in a shipment
+      as known at the time the delivery was created. This is the same sequence number that appears on the
+      label for this delivery and what couriers may ask for at pickup. *Only present if there is more than one delivery.*
   routeId:
     type: string
     description: |
@@ -81,7 +78,7 @@ properties:
     type: string
     maxLength: 20
     description: The order ID that this parcel belongs to.
-  parcelValue:
+  deliveryValue:
     type: number
     minimum: 0
     description: The dollar value of the parcel in CDN as cents
@@ -107,7 +104,7 @@ properties:
       specified, you will not be able to request our built-in label for this
       parcel.
   load:
-    $ref: ./ParcelLoad.yaml
+    $ref: ./DeliveryLoad.yaml
   metadata:
     type: object
     description: |
