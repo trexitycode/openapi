@@ -19,20 +19,23 @@ post:
 
   ##############################################################################
 
-  parameters:
-    - in: body
-      name: deliveryAddress
-      required: true
-      schema:
-        $ref: ../components/schemas/payloads/AddressDetailsInput.yaml
-      description: The address to check.
-    - in: body
-      name: pickupAddress
-      required: false
-      schema:
-        $ref: ../components/schemas/payloads/AddressDetailsInput.yaml
-      description: The pickup address from which to generate the tiered zones.
-      example: 123 Fake St, Ottawa ON K2G 6F2, CA
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            delivery:
+              type: object
+              properties:
+                $ref: ../components/schemas/payloads/AddressDetailsInput.yaml
+              description: The address to check.
+            pickup:
+              type: object
+              properties:
+                $ref: ../components/schemas/payloads/AddressDetailsInput.yaml
+              description: The pickup address from which to generate the tiered zones.
+              example: 123 Fake St, Ottawa ON K2G 6F2, CA
   responses:
     '200':
       description: Success
