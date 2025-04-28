@@ -27,15 +27,20 @@ post:
           properties:
             delivery:
               type: object
-              properties:
-                $ref: ../components/schemas/payloads/AddressDetailsInput.yaml
+              allOf:
+                - $ref: '../../components/schemas/payloads/AddressDetailsInput.yaml'
               description: The address to check.
             pickup:
               type: object
-              properties:
-                $ref: ../components/schemas/payloads/AddressDetailsInput.yaml
+              allOf:
+                - $ref: '../../components/schemas/payloads/AddressDetailsInput.yaml'
               description: The pickup address from which to generate the tiered zones.
-              example: 123 Fake St, Ottawa ON K2G 6F2, CA
+              example:
+                addressLine1: "123 Fake St"
+                city: "Ottawa"
+                provinceCode: "ON"
+                postalCode: "K2G 6F2"
+                countryCode: "CA"
   responses:
     '200':
       description: Success
