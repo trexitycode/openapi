@@ -300,7 +300,7 @@ paths:
   /addresses/check:
     $ref: ./paths/api/check-address.yaml
   /rates:
-    $ref: ./paths/api/rate.yaml
+    $ref: ./paths/api/rate-create.yaml
   /batch-rate-requests:
     $ref: ./paths/api/batch-rate-request-create.yaml
   /batch-rate-requests/{id}:
