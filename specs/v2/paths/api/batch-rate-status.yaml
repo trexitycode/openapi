@@ -1,6 +1,6 @@
 get:
   operationId: getBatchRateStatus
-  tags: [Shipping Rates]
+  tags: [Batching]
   summary: Get batch rate request status
   description: Get the status of an asynchronous batch rate request
 

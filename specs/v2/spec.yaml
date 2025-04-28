@@ -144,10 +144,14 @@ tags:
       Postal code: K2G 8FT
       Country: CA
       ```
-  - name: Shipping Rates
+  - name: Rating
     description: |
-      Prior to creating a Delivery, you can calculate the rates based on the pickup address and the number of stops the driver has to do.
-      See our [rates](/#operation/getSimpleRate) endpoint for more information.
+      Prior to creating a Delivery, you can calculate the rates based on the pickup and delivery addresses.
+      See our [rates](/#operation/getRate) endpoint for more information.
+  - name: Batching
+    description: |
+      Prior to creating a Delivery, you can calculate the rates based on the pickup and delivery addresses.
+      See our [batch rates](/#operation/createBatchRateRequest) endpoint for more information.
   - name: Deliveries
     description: |
       The most common approach to get a delivery on the road is to:
@@ -293,7 +297,7 @@ paths:
   /addresses/check:
     $ref: ./paths/api/check-address.yaml
   /rates:
-    $ref: ./paths/api/simple-rate.yaml
+    $ref: ./paths/api/rate.yaml
   /batch-rates:
     $ref: ./paths/api/batch-rate-request.yaml
   /batch-rates/{requestId}:

@@ -1,6 +1,6 @@
 get:
   operationId: getBatchRateResult
-  tags: [Shipping Rates]
+  tags: [Batching]
   summary: Get batch rate result
   description: Get the result of a completed asynchronous batch rate request
 

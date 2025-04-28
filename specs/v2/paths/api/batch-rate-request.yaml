@@ -1,6 +1,6 @@
 post:
   operationId: createBatchRateRequest
-  tags: [Shipping Rates]
+  tags: [Batching]
   summary: Create batch rate request
   description: |
     scheduledPostAt is considered deprecated. It is still supported, but at some point in the future, it will not be.
