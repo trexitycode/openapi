@@ -1,8 +1,8 @@
 get:
-  operationId: getComplexRateStatus
+  operationId: getBatchRateStatus
   tags: [Shipping Rates]
-  summary: Get complex rate request status
-  description: Get the status of an asynchronous complex rate request
+  summary: Get batch rate request status
+  description: Get the status of an asynchronous batch rate request
 
   ##############################################################################
 
@@ -12,16 +12,16 @@ get:
       required: true
       schema:
         type: string
-      description: The asynchronous complex rate request ID
+      description: The asynchronous batch rate request ID
   responses:
     '200':
-      description: The status of an asynchronous complex rate request
+      description: The status of an asynchronous batch rate request
       content:
         application/json:
           schema:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/responses/ComplexRateStatusResponse.yaml
+                $ref: ../../components/schemas/responses/BatchRateStatusResponse.yaml
     '500':
       description: Unknown server problem

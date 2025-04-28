@@ -1,7 +1,7 @@
 post:
-  operationId: createComplexRateRequest
+  operationId: createBatchRateRequest
   tags: [Shipping Rates]
-  summary: Create complex rate request
+  summary: Create batch rate request
   description: |
     scheduledPostAt is considered deprecated. It is still supported, but at some point in the future, it will not be.
     If you want to schedule a shipment, please use exactly one of:
@@ -17,8 +17,8 @@ post:
 
     The typical use case of this API is to provide multiple shipments (pickup &
     delivery) to this endpoint, which responds with a request ID to be polled
-    asynchronously using the [Complex Rate status](/#operation/getComplexRateStatus)
-    endpoint, and ultimately retrieving the rate using the [Complex Rate result](/#operation/getComplexRateResult)
+    asynchronously using the [Batch Rate status](/#operation/getBatchRateStatus)
+    endpoint, and ultimately retrieving the rate using the [Batch Rate result](/#operation/getBatchRateResult)
     endpoint.
 
     Optionally, you can then take the rate ID provided in the rate result and
@@ -53,14 +53,14 @@ post:
 
   responses:
     '200':
-      description: Successfully queued an asynchronous complex rate request
+      description: Successfully queued an asynchronous batch rate request
       content:
         application/json:
           schema:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/responses/ComplexRateStatusResponse.yaml
+                $ref: ../../components/schemas/responses/BatchRateStatusResponse.yaml
     '400':
       description: Invalid input provided
       content:

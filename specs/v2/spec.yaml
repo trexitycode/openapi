@@ -160,10 +160,6 @@ tags:
       Trexity guarantees that the scheduled Delivery will not be posted or broadcast prior to the time it was scheduled for.
       Please see the [details](/#operation/createDelivery) here.
 
-  - name: Parcels
-    description: |
-      Convenient API endpionts for managing delivery parcels.
-
   - name: Receipts
     description: |
       Retrieve receipt information
@@ -296,14 +292,14 @@ security:
 paths:
   /addresses/check:
     $ref: ./paths/api/check-address.yaml
-  /rates/simple:
+  /rates:
     $ref: ./paths/api/simple-rate.yaml
-  /rates/complex:
-    $ref: ./paths/api/complex-rate-request.yaml
-  /rates/complex/{requestId}:
-    $ref: ./paths/api/complex-rate-status.yaml
-  /rates/complex/{requestId}/result:
-    $ref: ./paths/api/complex-rate-result.yaml
+  /batch-rates:
+    $ref: ./paths/api/batch-rate-request.yaml
+  /batch-rates/{requestId}:
+    $ref: ./paths/api/batch-rate-status.yaml
+  /batch-rates/{requestId}/result:
+    $ref: ./paths/api/batch-rate-result.yaml
   /regions/service-city-zones:
     $ref: ./paths/api/service-city-zones.yaml
   /storage/delivery/images/delivery:
