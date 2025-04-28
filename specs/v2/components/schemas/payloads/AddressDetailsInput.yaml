@@ -1,4 +1,4 @@
-description: Addess input details
+description: Address input details
 type: object
 required:
   - addressLine1
