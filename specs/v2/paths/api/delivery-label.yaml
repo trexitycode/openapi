@@ -1,7 +1,7 @@
 get:
   operationId: getDeliveryLabel
   tags: [Deliveries]
-  summary: Get Delivery Label
+  summary: Get delivery label
   description: |
     Get a delivery's shipping label
   x-codeSamples:

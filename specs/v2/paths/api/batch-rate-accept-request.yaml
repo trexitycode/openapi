@@ -7,13 +7,13 @@ get:
 
   parameters:
     - in: path
-      name: id
+      name: batchRateId
       required: true
       schema:
         type: string
-      description: The ID of the rate accept request.
+      description: The ID of the batch rate.
     - in: path
-      name: requestId
+      name: batchRateAcceptRequestId
       required: true
       schema:
         type: string

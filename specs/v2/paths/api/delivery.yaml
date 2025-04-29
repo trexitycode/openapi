@@ -1,11 +1,9 @@
 delete:
-  operationId: deleteShipment
-  tags: [Shipments]
-  summary: Delete a shipment
+  operationId: deleteDelivery
+  tags: [Deliveries]
+  summary: Delete delivery
   description: |
-    Attempt to delete a shipment. Only draft shipments can be deleted.
-
-  ##############################################################################
+    Attempt to delete a delivery. Only draft deliveries can be deleted.
 
   parameters:
     - in: path
@@ -27,11 +25,9 @@ delete:
 patch:
   operationId: updateDelivery
   tags: [Deliveries]
-  summary: Update a delivery
+  summary: Update delivery
   description: |
     Updates the details of a delivery.
-
-  ##############################################################################
 
   parameters:
     - in: path
@@ -59,13 +55,11 @@ patch:
 get:
   operationId: getDelivery
   tags: [Deliveries]
-  summary: Get a delivery
+  summary: Get delivery
   description: |
     Gets the details of a delivery
   x-codeSamples:
     - $ref: ../../code_samples/Shell/deliveries/get-delivery.yaml
-
-  ##############################################################################
 
   parameters:
     - in: path

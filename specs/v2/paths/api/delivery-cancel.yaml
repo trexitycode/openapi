@@ -1,7 +1,7 @@
 post:
   operationId: cancelDelivery
   tags: [Deliveries]
-  summary: Cancel a Delivery
+  summary: Cancel delivery
   description: |
     Cancels a delivery. A cancelled delivery will no longer be able to be posted to drivers. 
     Additionally, the merchant will be charged a cancellation fee if a driver has already accepted the delivery.
@@ -25,7 +25,7 @@ post:
     '204':
       description: Success
     '400':
-      description: Invalid delivery ID in path or don't have permission to delete delivery
+      description: Invalid delivery ID in path or don't have permission to cancel delivery
     '404':
       description: Delivery not found
     '422':

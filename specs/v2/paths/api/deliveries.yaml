@@ -1,7 +1,7 @@
 post:
   operationId: createDelivery
   tags: [Deliveries]
-  summary: Create a delivery
+  summary: Create delivery
   description: |
     When the default service type is set to "Trexity Select" from the Merchant UI for a location
     then the following changes apply:
@@ -87,7 +87,7 @@ post:
                   deliveryId: '123e4567-e89b-12d3-a456-426614174000'
 
 get:
-  operationId: getDeliveries
+  operationId: listDeliveries
   tags: [Deliveries]
   summary: List deliveries
   description: |

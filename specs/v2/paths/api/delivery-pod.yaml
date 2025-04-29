@@ -1,7 +1,7 @@
 get:
   operationId: getDeliveryPod
   tags: [Deliveries]
-  summary: Get Delivery Proof of Delivery
+  summary: Get delivery proof of delivery
   description: |
     Get a delivery's proof of delivery
   x-codeSamples:

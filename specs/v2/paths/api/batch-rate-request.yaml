@@ -6,7 +6,7 @@ get:
 
   parameters:
     - in: path
-      name: id
+      name: batchRateRequestId
       required: true
       schema:
         type: string

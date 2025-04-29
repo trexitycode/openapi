@@ -1,7 +1,7 @@
 get:
-  operationId: getReceipt
+  operationId: listReceipts
   tags: [Receipts]
-  summary: Get Receipt
+  summary: List receipts
   description: |
     Retrieve the receipt items for all or one location from a receipt for a particular calendar month
 
@@ -27,7 +27,12 @@ get:
       content:
         application/json:
           schema:
-            $ref: ../../components/schemas/responses/ReceiptResponse.yaml
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: ../../components/schemas/Receipt.yaml
         text/csv:
           schema:
             description: The receipt items rendered as CSV

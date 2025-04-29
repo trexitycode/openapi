@@ -289,13 +289,13 @@ paths:
     $ref: ./paths/api/rates.yaml
   /batch-rate-requests:
     $ref: ./paths/api/batch-rate-request-create.yaml
-  /batch-rate-requests/{id}:
+  /batch-rate-requests/{batchRateRequestId}:
     $ref: ./paths/api/batch-rate-request.yaml
-  /batch-rates/{id}:
+  /batch-rates/{batchRateId}:
     $ref: ./paths/api/batch-rate.yaml
-  /batch-rates/{id}/accept-requests:
+  /batch-rates/{batchRateId}/accept-requests:
     $ref: ./paths/api/batch-rate-accept-request-create.yaml
-  /batch-rates/{id}/accept-requests/{requestId}:
+  /batch-rates/{batchRateId}/accept-requests/{batchRateAcceptRequestId}:
     $ref: ./paths/api/batch-rate-accept-request.yaml
   /regions/service-city-zones:
     $ref: ./paths/api/service-city-zones.yaml
@@ -309,13 +309,15 @@ paths:
     $ref: ./paths/api/delivery-pod.yaml
   /deliveries/{deliveryId}/label:
     $ref: ./paths/api/delivery-label.yaml
+  /deliveries/{deliveryId}/cancel:
+    $ref: ./paths/api/delivery-cancel.yaml
   /webhooks:
     $ref: ./paths/api/webhooks.yaml
   /webhooks/{webhookId}:
     $ref: ./paths/api/delete-webhook.yaml
   /locations:
-    $ref: ./paths/api/merchant-locations.yaml
-  /locations/by-query:
-    $ref: ./paths/api/merchant-location-by-query.yaml
+    $ref: ./paths/api/locations.yaml
+  /locations/find:
+    $ref: ./paths/api/locations-find.yaml
   /receipts/{yearMonth}:
     $ref: ./paths/api/get-receipt.yaml

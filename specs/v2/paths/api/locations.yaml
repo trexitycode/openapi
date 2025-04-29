@@ -1,11 +1,9 @@
 get:
-  operationId: getLocations
+  operationId: listLocations
   tags: [Locations]
-  summary: List locations for a Merchant
+  summary: List locations
   description: |
-    Gets all Locations. In order to manage Locations, you need to use the [Merchant Portal](https://merchant.trexity.com/).
-
-  ##############################################################################
+    List all your locations. In order to manage Locations, you need to use the [Merchant Portal](https://merchant.trexity.com/).
 
   responses:
     '200':

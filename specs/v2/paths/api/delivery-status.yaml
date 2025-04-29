@@ -1,7 +1,7 @@
 get:
   operationId: getDeliveryStatus
   tags: [Deliveries]
-  summary: Get Delivery Status
+  summary: Get delivery status
   description: |
     Retrieve a delivery's status
   x-codeSamples:

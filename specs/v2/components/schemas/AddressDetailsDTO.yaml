@@ -1,4 +1,3 @@
-description: Address details for write operations
 allOf:
   - $ref: './AddressDetailsBase.yaml' 
   - type: object

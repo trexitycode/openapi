@@ -1,9 +1,11 @@
 get:
-  operationId: serviceCityZones
+  operationId: listMarketZones
   tags: [Regions]
-  summary: Retrieve service city zones
+  summary: List market zones
   description: |
-    Returns all the service city zones that includes (for each city) their geoJSON geometry (polygons/multipolygons)
+    List all market zones or the market zone for a specific pickup address.
+
+    If a pickup address is provided then addresLine1, city, postalCode, provinceCode, and countryCode are required.
 
     ### Rate Limiting
 
@@ -16,16 +18,48 @@ get:
     - MerchantApiKeyAuth: []
     - AccessTokenAuth: []
 
-  ##############################################################################
-
   parameters:
     - in: query
-      name: pickupAddress
+      name: addressLine1
       required: false
       schema:
         type: string
-      description: The pickup address from which to generate the tiered zones.
-      example: 123 Fake St, Ottawa ON K2G 6F2, CA
+      example: 123 Fake St
+    - in: query
+      name: addressLine2
+      required: false
+      schema:
+        type: string
+      example: Unit 4
+    - in: query
+      name: city
+      required: false
+      schema:
+        type: string
+      description: The pickup address from which to generate the market zones.
+      example: Ottawa
+    - in: query
+      name: postalCode
+      required: false
+      schema:
+        type: string
+      description: The pickup address from which to generate the market zones.
+      example: K2G 6F2
+    - in: query
+      name: provinceCode
+      required: false
+      schema:
+        type: string
+      description: The pickup address from which to generate the market zones.
+      example: ON
+    - in: query
+      name: countryCode
+      required: false
+      schema:
+        type: string
+      description: The pickup address from which to generate the market zones.
+      example: CA
+
   responses:
     '200':
       description: Success

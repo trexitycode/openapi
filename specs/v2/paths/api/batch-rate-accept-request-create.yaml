@@ -9,7 +9,7 @@ post:
 
   parameters:
     - in: path
-      name: id
+      name: batchRateId
       required: true
       schema:
         type: string
