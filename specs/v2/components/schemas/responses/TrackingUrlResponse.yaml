@@ -1,8 +1,0 @@
-description: Tracking URL Response
-type: object
-properties:
-  data:
-    type: object
-    properties:
-      trackingUrl:
-        type: string

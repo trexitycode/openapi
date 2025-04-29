@@ -246,6 +246,8 @@ paths:
     $ref: ./paths/api/delivery-pod.yaml
   /deliveries/{deliveryId}/label:
     $ref: ./paths/api/delivery-label.yaml
+  /deliveries/{deliveryId}/tracking:
+    $ref: ./paths/api/delivery-tracking.yaml
   /deliveries/{deliveryId}/cancel:
     $ref: ./paths/api/delivery-cancel.yaml
   /webhooks:
@@ -257,4 +259,4 @@ paths:
   /locations/find:
     $ref: ./paths/api/locations-find.yaml
   /receipts/{yearMonth}:
-    $ref: ./paths/api/get-receipt.yaml
+    $ref: ./paths/api/receipts.yaml
