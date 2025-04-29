@@ -165,68 +165,9 @@ tags:
 
   - name: Webhooks
     description: |
-      Retrieve and manage webhooks for a Trexity Merchant.
+      Manage webhooks.
 
-      ## Parcel Events
-
-      A Delivery is a parcel with its own delivery address.
-      As activity occurs on a parcel the Delivery's `currentStatus` oscilates between `OUT_FOR_DELIVERY`,
-      `ARRIVED_AT_DELIVERY` and `DELIVERED`.
-
-      To listen to delivery events listen to the following webhooks:
-      - `parcel.created` The parcel has been created during shipment creation or update
-      - `parcel.updated` The parcel has been updated during shipment update
-      - `parcel.deleted` The parcel has been deleted during shipment udpate
-      - `parcel.picked_up` The driver has scanned and picked up a parcel
-      - `parcel.delivered` The driver has scanned and delivered a parcel
-      - `parcel.returning` The driver is returning a parcel
-      - `parcel.returned` The driver has returned a parcel to pickup address
-
-      The request payload of these webhook events indicate the delivery that is currently
-      being affected.
-
-      ## Storing The deliveryId
-
-      If you have the need to update pickup-related information such as the pickup address, POD settings,
-      or the pickup instructions, or you are polling the delivery endpoints for the status of the delivery
-      then you will need to store and reference the `deliveryId`. However, the `deliveryId` can change for
-      a parcel if the parcel is moved, cloned or bundled. You can re-map your orders/parcels by listening to
-      the `delivery.created` webhook.
-
-      > You will need to ensure that you provide a value for a delivery's `externalId` field when you create one.
-      > This field is intended to be an identifier that references back to your system.
-
-      ```js
-      // This sample code uses Nodejs with Express
-      function trexity_deliveryCreated (req, res, next) {
-        const deliveryId = req.body.data.id
-        const deliveries = body.deliveries
-        const promises = []
-
-        for (const delivery of deliveries) {
-          const orderId = delivery.externalId
-
-          // Generally this is where you would update the Trexity shipment ID associated to your order.
-          //
-          // For example update the metadata associated to your order where the orders_metadata table
-          // has at least the following columns: order_id, key, and value, and there is a unique constraint
-          // on the order_id:key column pair. The end result is that the metadata field will be upserted.
-          const promise = executeParameterizedSql(`
-            INSERT INTO orders_metadata (order_id, key, value)
-            VALUES ($1, 'trexity_shipment_id', $2)
-            ON CONFLICT
-            DO UPDATE set value = EXCLUDED.value
-          `, [orderId, shipmentId])
-
-          promises.push(promise)
-        }
-
-        Promise.allSettled(promises)
-          .then(() => res.status(200).json({}))
-      }
-      ```
-
-      ## Verifying Webhook Requests
+      ## Verifying Requests
 
       All webhook requests have a header that contains a signature signed with the Trexity Merchant's
       webhook secret as found in their "Trexity API" settings. To verify the signature take the raw
@@ -314,7 +255,7 @@ paths:
   /webhooks:
     $ref: ./paths/api/webhooks.yaml
   /webhooks/{webhookId}:
-    $ref: ./paths/api/delete-webhook.yaml
+    $ref: ./paths/api/webhook.yaml
   /locations:
     $ref: ./paths/api/locations.yaml
   /locations/find:

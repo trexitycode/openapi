@@ -1,11 +1,9 @@
 delete:
   operationId: deleteWebhook
   tags: [Webhooks]
-  summary: Delete a webhook
+  summary: Delete webhook
   description: |
     Delete a registered webhook.
-
-  ##############################################################################
 
   parameters:
     - in: path
