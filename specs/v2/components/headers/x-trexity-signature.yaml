@@ -1,5 +1,0 @@
-name: x-trexity-signature
-in: header
-description: The SHA256 HMAC signature for the request.
-schema:
-  type: string
