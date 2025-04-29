@@ -43,7 +43,7 @@ info:
     1. [Optionally get a delivery rate](#operation/getDeliveryRate) specify the pickup information, customer information and delivery address to get a rate to show your customer
     2. [Create a delivery](#operation/createDelivery) specify the pickup information, customer information and delivery address
     3. [Get delivery label](#operation/getDeliveryLabel) for the delivery then affix to the delivery packaging
-    4. [Listen for delivery events](#section/Delivery-Events) to track the delivery until it is delivered
+    4. [Listen for delivery events](#tag/Webhooks) to track the delivery until it is delivered
 
     ## Batching Workflow
 
@@ -53,11 +53,7 @@ info:
     1. [Create a batch rate](#operation/createBatchRateRequest) specify the pickup information, customer information and delivery addresses
     2. [Accept the batch rate](#operation/createBatchRateAcceptRequest) and create the deliveries
     3. [Get delivery labels](#operation/getDeliveryLabel) for each delivery then affix to the delivery packaging
-    4. [Listen for delivery events](#section/Delivery-Events) to track the deliveries until they are delivered
-
-    ## Delivery Status
-
-    Follow the [Delivery Events](#section/Delivery-Events) guide to understand what webhooks you will need to listen to.
+    4. [Listen for delivery events](#tag/Webhooks) to track the deliveries until they are delivered
 
     ## Sandbox Environment
 
