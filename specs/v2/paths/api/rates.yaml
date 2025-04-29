@@ -14,19 +14,13 @@ post:
 
     Review the [Usage Policy](/#section/Usage-Policy).
 
-    Use this endpoint for direct delivery rates (single pickup
-    address and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)
-    endpoint for multiple delivery addresses.
+    The rate response will include estimates for post, pickup, and delivery time.
 
-    The rate response will now include estimates for post, pickup, and delivery time.
-    Additionally, the new properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a
-    delivery window. Otheriwse the next available delivery window (i.e. ASAP) is assumed. Use the estimated values
-    in the response when creating the delivery.
+    Additionally, the properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a
+    pickup or delivery window. Otheriwse the next available pickup window (i.e. ASAP) is assumed.
 
   x-codeSamples:
-    - $ref: ../../code_samples/Shell/simple-rate/post.yaml
-
-  ##############################################################################
+    - $ref: ../../code_samples/Shell/rating/get-delivery-rate.yaml
 
   requestBody:
     description: Payload that minimally describes a direct delivery.
@@ -46,8 +40,7 @@ post:
             properties:
               data:
                 $ref: ../../components/schemas/DeliveryRateWithETA.yaml
-          examples:
-            $ref: ../../components/examples/rate1.yaml
+
     '400':
       description: Input error
       content:

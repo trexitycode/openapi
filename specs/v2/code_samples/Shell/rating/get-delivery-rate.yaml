@@ -1,26 +1,25 @@
 lang: Shell
 source: |
-  curl -X POST {server-url}/deliveries\
+  curl -X POST {server-url}/rates\
     -H 'Content-Type: application/json'\
     -H 'Authorization: Bearer <Trexity API Key>'\
     -d '{
       "pickupAddress": {
-        "addressLine1": "123 Fake St",
-        "addressLine2": "Apt 4",
+        "addressLine1": "456 Elgin St",
         "city": "Ottawa",
         "provinceCode": "ON",
-        "postalCode": "K2G 8FT",
+        "postalCode": "K2P 1N5",
         "countryCode": "CA"
       },
       "deliveryAddress": {
-        "addressLine1": "123 Fake St",
-        "addressLine2": "Apt 4",
+        "addressLine1": "225 Preston St",
         "city": "Ottawa",
         "provinceCode": "ON",
-        "postalCode": "K2G 8FT",
+        "postalCode": "K1R 7R1",
         "countryCode": "CA"
       },
-      "requirements": {},
-      "orderId": "BFG10K",
-      "parcelValue": 10000
+      "requirements": {
+        "legalAgeAlcohol": true
+      },
+      "deliveryValue": 2500
     }'

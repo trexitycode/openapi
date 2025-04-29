@@ -1,5 +1,0 @@
-lang: Shell
-source: |
-  curl -X GET {server-url}/delivery/bulk/{rateId}/{requestId}/result\
-    -H 'Content-Type: application/json'\
-    -H 'Authorization: Bearer <Trexity API Key>'

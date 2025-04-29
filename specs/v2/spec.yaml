@@ -114,38 +114,33 @@ tags:
     description: |
       Group of endpoints for handling addresses.
 
-      ### Address Input Format
+      ### Address Format
 
-      In general, whenever an endpoint expects an address, we expect the shape [AddressDetailsInput](#/components/schemas/AddressDetailsInput) to be provided.
+      In general, whenever an endpoint accepts an address, we expect the following shape:
 
       ```
-      ADDRESS LINE 1,
-      ADDRESS LINE 2,
-      CITY,
-      PROVINCE CODE,
-      POSTAL CODE,
-      COUNTRY CODE
-      ```
-
-      An example of a full address would be:
-      ```
-      Address line 1: 123 Fake St,
-      City: Ottawa
-      Province: ON
-      Postal code: K2G 8FT
-      Country: CA
+      {
+        "addressLine1": "123 Fake St",
+        "addressLine2": "Apt 4",
+        "city": "Ottawa",
+        "provinceCode": "ON",
+        "postalCode": "K2G 8FT",
+        "countryCode": "CA"
+      }
       ```
 
       ## Apartment / Unit / Suite
 
       To specify an apartment, unit or suite as part of the address use the address line 2 field.
       ```
-      Address line 1: 123 Fake St,
-      Address line 2: Apt 4
-      City: Ottawa
-      Province: ON
-      Postal code: K2G 8FT
-      Country: CA
+      {
+        "addressLine1": "123 Fake St",
+        "addressLine2": "Apt 4",
+        "city": "Ottawa",
+        "provinceCode": "ON",
+        "postalCode": "K2G 8FT",
+        "countryCode": "CA"
+      }
       ```
   - name: Rating
     description: |

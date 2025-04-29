@@ -1,4 +1,0 @@
-lang: Shell
-source: |
-  curl -X GET "{server-url}/driver/images/profile?driverId=03thXbWIHOYhyhAhqpTiZcg1NQy1"\
-    -H 'Authorization: Bearer <Trexity API Key>'
