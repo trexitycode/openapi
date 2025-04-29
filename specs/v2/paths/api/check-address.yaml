@@ -16,8 +16,7 @@ post:
     - {}
     - MerchantApiKeyAuth: []
     - AccessTokenAuth: []
-
-  ##############################################################################
+    - MerchantIdTokenAuth: []
 
   requestBody:
     content:

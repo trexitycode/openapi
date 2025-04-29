@@ -216,9 +216,12 @@ components:
       $ref: components/securitySchemes/MerchantApiKeyAuth.yaml
     AccessTokenAuth:
       $ref: components/securitySchemes/AccessTokenAuth.yaml
+    MerchantIdTokenAuth:
+      $ref: components/securitySchemes/MerchantIdTokenAuth.yaml
 security:
   - MerchantApiKeyAuth: []
   - AccessTokenAuth: []
+  - MerchantIdTokenAuth: []
 paths:
   /addresses/check:
     $ref: ./paths/api/check-address.yaml
