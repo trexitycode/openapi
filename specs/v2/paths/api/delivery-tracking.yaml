@@ -1,0 +1,56 @@
+get:
+  operationId: getDeliveryTracking
+  tags: [Deliveries]
+  summary: Get delivery tracking URL
+  description: |
+    Get the tracking URL for a delivery
+  # x-codeSamples:
+  #   - $ref: ../../code_samples/Shell/shipments/create-tracking-url-deliveryIndex.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: deliveryId
+      required: true
+      schema:
+        type: string
+      description: The ID of the delivery
+    - in: query
+      name: lifetime
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 2678400
+        default: 86400
+      examples:
+        '7 days':
+          summary: 'lifetime of 7 days'
+          value: 604800
+      description: The lifetime of the tracking URL in seconds. Default is 24 hours and maximum is 31 days. After the lifetime the tracking page will respond with 404.
+
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  trackingUrl:
+                    type: string
+          examples:
+            Valid Tracking Url:
+              value:
+                data:
+                  trackingUrl: "{tracking-server-url}?token=<jwt token goes here>"
+    '400':
+      description: Bad Request
+    '404':
+      description: Not Found
+    '500':
+      description: Internal Server Error

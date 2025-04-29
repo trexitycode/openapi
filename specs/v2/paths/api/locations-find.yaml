@@ -1,4 +1,4 @@
-get:
+post:
   operationId: findLocation
   tags: [Locations]
   summary: Find location
@@ -6,6 +6,8 @@ get:
     Find a location by name or address.
 
     **One of name or address or both must be provided.**
+
+    If both are provided, the name will be used to filter the results.
 
   requestBody:
     content:

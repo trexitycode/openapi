@@ -1,5 +1,0 @@
-name: x-trexity-event-name
-in: header
-description: Webhook event name.
-schema:
-  $ref: ../schemas/WebhookEventName.yaml

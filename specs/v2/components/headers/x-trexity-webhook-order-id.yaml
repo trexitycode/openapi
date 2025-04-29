@@ -1,5 +1,0 @@
-name: x-trexity-webhook-order-id
-in: header
-description: The webhook processing sort order. Webhooks may not be delivered in order, but this value can be used to determine processing order.
-schema:
-  type: integer

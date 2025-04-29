@@ -1,7 +1,7 @@
 get:
   operationId: getRateAcceptRequest
   tags: [Batching]
-  summary: Get a rate accept request
+  summary: Get rate accept request
   description: |
     Get the status of a rate accept request
 
