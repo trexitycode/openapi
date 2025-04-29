@@ -6,22 +6,22 @@ properties:
   description:
     type: string
     description: |
-      **(ADDED IN v1.7)** The description of the rate to show to the customer (if applicable)
+      The description of the rate to show to the customer (if applicable)
   total:
     type: number
     description: The total fee in cents for delivery with taxes.
   deliveryWithoutTaxes:
     type: number
     description: |
-      **(ADDED IN v1.12)** The total fee in cents for the delivery portion of the rate.
+      The total fee in cents for the delivery portion of the rate.
   fuelWithoutTaxes:
     type: number
     description: |
-      **(ADDED IN v1.12)** The total fee in cents for fuel cost portion of the rate.
+      The total fee in cents for fuel cost portion of the rate.
   surchargesWithoutTaxes:
     type: array
     description: |
-      **(ADDED IN v1.14)** The breakdown of each surcharge before taxes added to the rate
+      The breakdown of each surcharge before taxes added to the rate
     items:
       type: object
       properties:
@@ -49,7 +49,7 @@ properties:
   taxRates:
     type: object
     description: |
-      **(ADDED IN v1.1)** An object whos keys are tax rate codes and value is the tax rate.
+      An object whos keys are tax rate codes and value is the tax rate.
     additionalProperties:
       type: number
       minimum: 0
@@ -59,7 +59,7 @@ properties:
   taxAmounts:
     type: object
     description: |
-      **(ADDED IN v1.12)** An object whos keys are tax rate codes and value is the tax amount charged in cents.
+      An object whos keys are tax rate codes and value is the tax amount charged in cents.
     additionalProperties:
       type: number
       minimum: 0
@@ -69,7 +69,7 @@ properties:
   totalTaxes:
     type: number
     description: |
-      **(ADDED IN v1.12)** The total taxes charged in cents.
+      The total taxes charged in cents.
   directionsResult:
     $ref: ./GeoJSONDirectionsResult.yaml
   pickupDeliveryDistance:

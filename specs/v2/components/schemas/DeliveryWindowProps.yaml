@@ -2,7 +2,7 @@ type: object
 properties:
   pickupAfter:
     description: |
-      **(ADDED IN v1.12)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+      Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
 
       **If present then deliverAfter and deliverBefore are ignored.**
 
@@ -17,7 +17,7 @@ properties:
     type: string
   deliverAfter:
     description: |
-      **(ADDED IN v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+      Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
 
       If in the past then defaults to ASAP, and must be less than or equal to `deliverBefore` if `deliverBefore` is provided.
       Can be set to `new Date().toISOString()` or `"ASAP"` for ASAP.
@@ -30,7 +30,7 @@ properties:
     type: string
   deliverBefore:
     description: |
-      **(ADDED IN v1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+      Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
 
       Cannot be in the past.
 

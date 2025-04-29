@@ -5,7 +5,7 @@ allOf:
     properties:
       estimateScheduledPostAt:
         description: |
-          **(add in 1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+          Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
 
           Note that ISO date strings are always in UTC time.
 
@@ -13,7 +13,7 @@ allOf:
         type: string
       estimatePickupAt:
         description: |
-          **(add in 1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+          Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
 
           Note that ISO date strings are always in UTC time.
 
@@ -21,7 +21,7 @@ allOf:
         type: string
       estimateDeliverAt:
         description: |
-          **(add in 1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+          Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
 
           Note that ISO date strings are always in UTC time.
 
