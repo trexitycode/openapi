@@ -25,24 +25,7 @@ get:
             type: object
             properties:
               data:
-                type: object
-                properties:
-                  status:
-                    description: |
-                      The current delivery status of the parcel.
-
-                      - `pending`: The parcel is awaiting pickup or delivery.
-                      - `in-transit`: The parcel is in transit, either out for pickup or out for delivery.
-                      - `delivered`: The parcel has been delivered.
-                      - `undeliverable`: The delivery was attempted but failed and the parcel was returned to the sender.
-                      - `cancelled`: The parcel was cancelled.
-                    type: string
-                    enum:
-                      - pending
-                      - in-transit
-                      - delivered
-                      - undeliverable
-                      - cancelled
+                $ref: ../../components/schemas/DeliveryStatus.yaml
 
     '404':
       description: Delivery not found

@@ -1,5 +1,0 @@
-description: An empty success/fail response
-type: object
-properties:
-  success:
-    type: boolean

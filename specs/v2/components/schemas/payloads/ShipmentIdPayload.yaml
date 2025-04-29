@@ -1,7 +1,0 @@
-description: The shipment ID payload
-type: object
-required:
-  - shipmentId
-properties:
-  shipmentId:
-    type: string

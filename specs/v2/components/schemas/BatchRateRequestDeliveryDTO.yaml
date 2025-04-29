@@ -1,0 +1,14 @@
+type: object
+allOf:
+  - $ref: './DeliveryBase.yaml'
+  - type: object
+    properties:
+      deliveryAddress:
+        $ref: './AddressDetailsDTO.yaml'
+  - type: object
+    required:
+      - deliveryAddress
+      - deliveryName
+      - description
+      - orderId
+      - deliverylValue

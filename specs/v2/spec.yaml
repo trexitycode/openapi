@@ -168,12 +168,6 @@ tags:
     description: |
       Retrieve receipt information
 
-  - name: Storage
-    description: |
-      Storage related operations.
-
-      > IMPORTANT: These operations have a different server URL.
-
   - name: Webhooks
     description: |
       Retrieve and manage webhooks for a Trexity Merchant.
@@ -310,8 +304,6 @@ paths:
     $ref: ./paths/api/batch-rate-accept-request.yaml
   /regions/service-city-zones:
     $ref: ./paths/api/service-city-zones.yaml
-  /storage/delivery/images/delivery:
-    $ref: ./paths/storage/get-delivery-image.yaml
   /deliveries:
     $ref: ./paths/api/deliveries.yaml
   /deliveries/{deliveryId}:

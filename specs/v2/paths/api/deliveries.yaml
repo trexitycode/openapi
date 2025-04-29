@@ -77,22 +77,13 @@ post:
               data:
                 type: object
                 properties:
-                  shipmentId:
+                  deliveryId:
                     type: string
-                  parcels:
-                    type: array
-                    description: |
-                      The IDs of the parcels that were created as part of this delivery.
-                    items:
-                      type: object
-                      properties:
-                        id:
-                          type: string
+
           examples:
             Success:
               value:
                 data:
-                  routeId: 'TRX973036599-6KL'
                   deliveryId: '123e4567-e89b-12d3-a456-426614174000'
 
 get:

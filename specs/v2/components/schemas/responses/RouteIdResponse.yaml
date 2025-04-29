@@ -1,9 +1,0 @@
-description: The route ID response object
-type: object
-properties:
-  data:
-    type: object
-    description: Envelope
-    properties:
-      routeId:
-        type: string

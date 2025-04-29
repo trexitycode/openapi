@@ -51,6 +51,10 @@ patch:
   responses:
     '204':
       description: Success
+    '404':
+      description: Delivery not found
+    '422':
+      description: Delivery cannot be updated due to the delivery not being in updatable state
 
 get:
   operationId: getDelivery

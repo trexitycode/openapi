@@ -32,6 +32,8 @@ properties:
     type: string
     description: |
       Delivery instructions for drop off
+  requirements:
+    $ref: ./DeliveryRequirements.yaml
   requiresPersonHandoff:
     type: boolean
     description: Does this parcel require delivery PIN verification?

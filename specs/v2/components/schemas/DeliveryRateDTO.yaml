@@ -10,7 +10,7 @@ allOf:
       deliveryAddress:
         $ref: ./AddressDetailsDTO.yaml
       requirements:
-        $ref: ./ShipmentRequirements.yaml
+        $ref: ./DeliveryRequirements.yaml
       deliveryValue:
         type: number
         minimum: 0

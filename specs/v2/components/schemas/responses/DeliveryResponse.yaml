@@ -1,5 +1,0 @@
-description: The delivery reponse object
-type: object
-properties:
-  data:
-    $ref: ../Delivery.yaml
