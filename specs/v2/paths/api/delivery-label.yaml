@@ -7,8 +7,6 @@ get:
   x-codeSamples:
     - $ref: ../../code_samples/Shell/deliveries/get-delivery-label.yaml
 
-  ##############################################################################
-
   parameters:
     - in: path
       name: deliveryId
@@ -35,7 +33,7 @@ get:
             type: string
             format: jsonl
             description: |
-              JSONL text where each line represents a label encoded as a JSON object. Up to "numLabels" (from the parcel) labels are returned.
+              JSONL text where each line represents a label encoded as a JSON object. Up to "numLabels" (from the delivery) labels are returned.
 
               Each label is an encoded JSON object with the following fields:
 

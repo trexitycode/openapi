@@ -32,7 +32,7 @@ properties:
           description: The error code that identifies the error
         orderId:
           type: string
-          description: The "orderId" of the parcel this error relates to
+          description: The "orderId" of the delivery this error relates to
         params:
           type: object
           description: |

@@ -81,7 +81,7 @@ properties:
   lifetimeDeliveryCount:
     type: number
 
-  lifetimeShipmentsCount:
+  lifetimeBatchesCount:
     type: number
 
   lastDeliveredAt:

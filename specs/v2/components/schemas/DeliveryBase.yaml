@@ -1,23 +1,22 @@
-description: Base fields for a delivery
 type: object
 properties:
   description:
     type: string
-    description: Description of the parcel being delivered
+    description: Description of the contents being delivered
   orderId:
     type: string
     maxLength: 20
-    description: The order ID that this parcel belongs to.
+    description: The order ID that this delivery is associated with.
   numLabels:
     type: number
     minimum: 1
     default: 1
     description: |
-      The number of labels for the parcel (each separate package needs a label).
+      The number of labels for the delivery (each separate package needs a label).
   deliveryValue:
     type: number
     minimum: 0
-    description: The dollar value of the parcel in CDN as cents
+    description: The dollar value of the delivery in CAD as cents
   deliveryEmail:
     type: string
     format: email
@@ -34,7 +33,7 @@ properties:
       Delivery instructions for drop off
   requiresPersonHandoff:
     type: boolean
-    description: Does this parcel require delivery PIN verification?
+    description: Does this delivery require delivery PIN verification?
   containsAlcohol:
     type: boolean
     description: |
@@ -43,5 +42,5 @@ properties:
     type: object
     description: |
       Object with metadata fields. If the intent is to
-      list shipments with this metadata field, then ensure the value is
+      list deliveries with this metadata field, then ensure the value is
       saved as a string and not say a number.

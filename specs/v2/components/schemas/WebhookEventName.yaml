@@ -7,7 +7,7 @@ enum:
   - delivery.driver.arrived_at_pickup
   - delivery.driver.picked_up
   - delivery.driver.arrived_at_delivery
-  - delivery.driver.parcel_delivered
+  - delivery.driver.delivery_delivered
   - delivery.driver.renounced
   - delivery.cancelled
   - delivery.on_hold

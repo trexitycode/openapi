@@ -3,11 +3,11 @@ properties:
   status:
     type: string
     description: |
-      - `pending`: The parcel is awaiting pickup or delivery.
-      - `in-transit`: The parcel is in transit, either out for pickup or out for delivery.
-      - `delivered`: The parcel has been delivered.
-      - `undeliverable`: The delivery was attempted but failed and the parcel was returned to the sender.
-      - `cancelled`: The parcel was cancelled.
+      - `pending`: The delivery is awaiting pickup or delivery.
+      - `in-transit`: The delivery is in transit, either out for pickup or out for delivery.
+      - `delivered`: The delivery has been delivered.
+      - `undeliverable`: The delivery was attempted but failed and the delivery was returned to the sender.
+      - `cancelled`: The delivery was cancelled.
     enum:
       - pending
       - in-transit

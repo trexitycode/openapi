@@ -1,7 +1,7 @@
 post:
-  operationId: getDeliveryRate
+  operationId: calculateDeliveryRate
   tags: [Rating]
-  summary: Get delivery rate
+  summary: Calculate delivery rate
   description: |
     Calculate the rate for a direct delivery from a single pickup address to a
     single delivery address.

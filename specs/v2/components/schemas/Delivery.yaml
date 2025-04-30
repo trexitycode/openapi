@@ -1,4 +1,4 @@
-description: A order to be delivered in a shipment
+description: An order to be delivered
 type: object
 allOf:
   - $ref: './DeliveryBase.yaml'
@@ -13,19 +13,18 @@ allOf:
         type: number
         minimum: 0
         description: |
-          Represents the ascending order of this delivery in relation to other deliveries in a shipment.
+          Represents the visit ordering of this delivery in a batch.
           Lower values are estimated to be delivered before higher values. The value of this property could change
-          depending on the information we have of the courier at the time of the request, and/or if deliveries are removed from the shipment.
+          depending on the information we have of the courier at the time of the request, and/or if deliveries are removed from the batch.
       sequence:
         type: number
         description: |
-          Represents the fixed ascending order of this delivery in relation to other deliveries in a shipment
-          as known at the time the delivery was created. This is the same sequence number that appears on the
-          label for this delivery and what couriers may ask for at pickup. *Only present if there is more than one delivery.*
+          Represents the fixed ordering at the time the delivery was batched. This is the same sequence number that appears on the
+          label for this delivery and what couriers may ask for at pickup.
       routeId:
         type: string
         description: |
-          Route container ID. In the case of a return, this will be the route ID of the original route (not the newly created return route)
+          Route container ID. In the case of a return, this will be the route ID of the original route not the return route.
       pickupAddress:
         $ref: ./AddressDetails.yaml
       deliveryAddress:

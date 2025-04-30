@@ -1,4 +1,4 @@
-description: A minimal object that describes a direct shipment for rating
+description: A simple description of a delivery for rating purposes
 allOf:
   - $ref: './DeliveryWindowProps.yaml'
   - type: object
@@ -20,4 +20,4 @@ allOf:
         minimum: 1
         default: 1
         description: |
-          The number of labels for the parcel (each separate package needs a label). 
+          The number of labels for the delivery (each separate package needs a label). 

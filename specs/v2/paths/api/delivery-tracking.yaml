@@ -4,10 +4,6 @@ get:
   summary: Get delivery tracking URL
   description: |
     Get the tracking URL for a delivery
-  # x-codeSamples:
-  #   - $ref: ../../code_samples/Shell/shipments/create-tracking-url-deliveryIndex.yaml
-
-  ##############################################################################
 
   parameters:
     - in: path

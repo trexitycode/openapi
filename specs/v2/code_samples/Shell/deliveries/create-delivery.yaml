@@ -22,5 +22,5 @@ source: |
       },
       "requirements": {},
       "orderId": "BFG10K",
-      "parcelValue": 10000
+      "deliveryValue": 10000
     }'

@@ -1,4 +1,4 @@
-description: A order to be delivered in a shipment
+description: The fields that can be updated for a delivery
 type: object
 allOf:
   - $ref: './DeliveryBase.yaml'

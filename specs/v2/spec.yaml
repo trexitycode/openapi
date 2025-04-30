@@ -14,6 +14,10 @@ info:
 
     Please open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) requests in the [issues](https://github.com/trexitycode/openapi/issues) board.
 
+    # Migrating to v2
+
+    
+
     # Usage Policy
 
     By using this API to provide delivery rates to your customers you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.
@@ -40,7 +44,7 @@ info:
     This workflow is the most common and typical way to create a delivery. Just provide delivery and pickup information,
     and optionally a pickup time to create a delivery.
 
-    1. [Optionally get a delivery rate](#operation/getDeliveryRate) specify the pickup information, customer information and delivery address to get a rate to show your customer
+    1. [Optionally calculate a delivery rate](#operation/calculateDeliveryRate) specify the pickup information, customer information and delivery address to get a rate to show your customer
     2. [Create a delivery](#operation/createDelivery) specify the pickup information, customer information and delivery address
     3. [Get delivery label](#operation/getDeliveryLabel) for the delivery then affix to the delivery packaging
     4. [Listen for delivery events](#tag/Webhooks) to track the delivery until it is delivered
@@ -245,6 +249,8 @@ paths:
     $ref: ./paths/api/delivery.yaml
   /deliveries/{deliveryId}/status:
     $ref: ./paths/api/delivery-status.yaml
+  /deliveries/{deliveryId}/rate:
+    $ref: ./paths/api/delivery-rate.yaml
   /deliveries/{deliveryId}/pod:
     $ref: ./paths/api/delivery-pod.yaml
   /deliveries/{deliveryId}/label:

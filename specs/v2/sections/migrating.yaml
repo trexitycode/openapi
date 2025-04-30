@@ -1,0 +1,7 @@
+name: Migrating to v2
+description: |
+  This section contains information on how to migrate from v1 to v2 of the API.
+
+  ## Addresses
+
+  The `Address` type has been replaced with the `AddressDetailsDTO` type.

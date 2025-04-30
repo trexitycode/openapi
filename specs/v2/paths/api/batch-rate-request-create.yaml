@@ -3,31 +3,22 @@ post:
   tags: [Batching]
   summary: Create batch rate request
   description: |
-    If you want to schedule a shipment, please use exactly one of:
-      1) pickupStartAt and an optional pickupEndAt (when to pickup by)
-      2) deliverStartAt and an optional deliverEndAt (when to deliver by)
+    Queue a list of deliveries to be batched into one or more optimal routes.
 
-    ---
+    The  use case of this API is to take multiple deliveries that have the same pickup address,
+    pickup/delivery schedule then batch them into one or more optimal routes to simplify staging
+    packages for efficient courier pickup.
 
-    Queue a list of shipments for an optimally routed rate.
+    **Minimum Requirements**
 
-    The typical use case of this API is to provide multiple shipments (pickup &
-    delivery) to this endpoint, which responds with a request ID to be polled
-    asynchronously using the [Batch Rate status](/#operation/getBatchRateRequest)
-    endpoint, and ultimately retrieving the rate using the [Batch Rate](/#operation/getBatchRate)
-    endpoint.
+    - Each delivery must have the same pickup address.
+    - Each delivery must have the same pickup/delivery schedule.
+    - Each delivery must have a unique `orderId`.
+  
+    **Delivery Count**
 
-    Optionally, you can then take the rate ID provided in the rate result and
-    have the shipments created in bulk using the [Bulk Shipment Creation](/#operation/createCreateBulkShipmentsRequest)
-    endpoint.
-
-    **Order ID**
-
-    For each parcel across all shipments provided to this endpoint, the
-    `orderId` must be unique. This allows us to refer back to the parcel by
-    `orderId` in the result `errors` array.
-
-  ##############################################################################
+    To be eligible for batching, the number of deliveries must be at least 20.
+    Otherwise, the deliveries will be processed without batching.
 
   requestBody:
     required: true

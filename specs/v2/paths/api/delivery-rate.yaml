@@ -1,0 +1,31 @@
+get:
+  operationId: getDeliveryRate
+  tags: [Deliveries]
+  summary: Get delivery rate
+  description: |
+    Retrieve a delivery's rate.
+
+  parameters:
+    - in: path
+      name: deliveryId
+      required: true
+      schema:
+        type: string
+      description: The id of the delivery (can be externalId or delivery ID)
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: ../../components/schemas/DeliveryRate.yaml
+
+    '400':
+      $ref: ../../components/error-responses/400.yaml
+    '404':
+      $ref: ../../components/error-responses/404.yaml
+    '500':
+      $ref: ../../components/error-responses/500.yaml
