@@ -257,6 +257,8 @@ paths:
     $ref: ./paths/api/webhooks.yaml
   /webhooks/{webhookId}:
     $ref: ./paths/api/webhook.yaml
+  /webhooks/secret-key:
+    $ref: ./paths/api/webhooks-get-secret-key.yaml
   /locations:
     $ref: ./paths/api/locations.yaml
   /locations/find:

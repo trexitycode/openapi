@@ -58,7 +58,7 @@ post:
 
     All webhook requests will have the following payload:
     - timestamp = the date and time the event took place in Simplified ISO8601 format (e.g. 2020-07-25T10:48:08.987Z)
-    - data = the delivery object that changed like returned from the [get delivery endpoint](#tag/Deliveries/operation/getDelivery)
+    - data = the delivery object that changed in returned from the [get delivery endpoint](#tag/Deliveries/operation/getDelivery)
 
   requestBody:
     required: true
