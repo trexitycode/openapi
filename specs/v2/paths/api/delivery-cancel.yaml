@@ -12,8 +12,6 @@ post:
   x-codeSamples:
     - $ref: ../../code_samples/Shell/deliveries/cancel-delivery.yaml
 
-  ##############################################################################
-
   parameters:
     - in: path
       name: deliveryId
