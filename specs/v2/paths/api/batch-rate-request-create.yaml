@@ -3,13 +3,9 @@ post:
   tags: [Batching]
   summary: Create batch rate request
   description: |
-    scheduledPostAt is considered deprecated. It is still supported, but at some point in the future, it will not be.
     If you want to schedule a shipment, please use exactly one of:
       1) pickupStartAt and an optional pickupEndAt (when to pickup by)
       2) deliverStartAt and an optional deliverEndAt (when to deliver by)
-
-    If providing a value for `scheduledPostAt` then an approximate value for `pickupStartAt` will attempt to be calculated. If an appproximation
-    cannot be determined, then no complex rate will be returned and an error will be returned.
 
     ---
 
