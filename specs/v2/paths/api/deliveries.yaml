@@ -73,7 +73,7 @@ get:
 
     ## Filtering By Dates
 
-    When filtering by a date range both the `fromDate` and `toDate` query parameters must be provided.
+    When filtering by a date range both the `fromDate` and `toDate` query parameters must be provided. **The maximum date range is 90 days.**
 
     ## Filtering By External ID
 
