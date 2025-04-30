@@ -1,0 +1,8 @@
+description: A order to be delivered in a shipment
+type: object
+allOf:
+  - $ref: './DeliveryBase.yaml'
+  - type: object
+    properties:
+      deliveryAddress:
+        $ref: ./AddressDetailsDTO.yaml

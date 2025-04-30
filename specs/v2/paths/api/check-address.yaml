@@ -83,8 +83,8 @@ post:
                     description: |
                       Service city that the address is located. Provided in the format: "(city name), (2 letter abbreviation of province)" (may or may not be supported by Trexity)
     '400':
-      description: Address could not be recognized as a valid address. Make sure all address components are present and correct.
+      $ref: '../../components/error-responses/400.yaml'
     '429':
-      description: The request has been rate limited. Try making the request again after the rate limit window.
+      $ref: '../../components/error-responses/429.yaml'
     '500':
-      description: Server error. Try making the request again.
+      $ref: '../../components/error-responses/500.yaml'

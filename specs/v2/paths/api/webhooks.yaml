@@ -24,25 +24,9 @@ get:
                 items:
                   $ref: ../../components/schemas/Webhook.yaml
     '400':
-      description: Parameters or payload is invalid. Correct the parameters and try again.
-      content:
-        application/json:
-          schema:
-            required: [error]
-            properties:
-              error:
-                type:
-                  string
+      $ref: ../../components/error-responses/400.yaml
     '500':
-      description: An internal error has occurred and the request cannot be completed.
-      content:
-        application/json:
-          schema:
-            required: [error]
-            properties:
-              error:
-                type:
-                  string
+      $ref: ../../components/error-responses/500.yaml
 
 post:
   operationId: createWebhook
@@ -90,22 +74,6 @@ post:
                   webhookId:
                     type: string
     '400':
-      description: Parameters or payload is invalid. Correct the parameters and try again.
-      content:
-        application/json:
-          schema:
-            required: [error]
-            properties:
-              error:
-                type:
-                  string
+      $ref: ../../components/error-responses/400.yaml
     '500':
-      description: An internal error has occurred and the request cannot be completed.
-      content:
-        application/json:
-          schema:
-            required: [error]
-            properties:
-              error:
-                type:
-                  string
+      $ref: ../../components/error-responses/500.yaml

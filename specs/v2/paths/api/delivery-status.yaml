@@ -27,5 +27,9 @@ get:
               data:
                 $ref: ../../components/schemas/DeliveryStatus.yaml
 
+    '400':
+      $ref: ../../components/error-responses/400.yaml
     '404':
-      description: Delivery not found
+      $ref: ../../components/error-responses/404.yaml
+    '500':
+      $ref: ../../components/error-responses/500.yaml

@@ -10,6 +10,14 @@ properties:
     type: string
     description: |
       Special notes or instructions regarding pickup like the description of the location, what door to use, etc.
+  pickupStartAt:
+    $ref: './PickupStartAt.yaml'
+  pickupEndAt:
+    $ref: './PickupEndAt.yaml'
+  deliverStartAt:
+    $ref: './DeliverStartAt.yaml'
+  deliverEndAt:
+    $ref: './DeliverEndAt.yaml'
   deliveries:
     type: array
     minItems: 1

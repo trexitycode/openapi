@@ -87,23 +87,23 @@ info:
 
     # Responses
 
-    All endpoints will return an object and if there is actual data
-    to be returned, it is going to be named `data`, where `data` may
-    be an array or an object.
+    ### Successful Responses
 
-    If there is an `error` field present on the root JSON object, that
-    means something went wrong and that error message is all we know about it.
-    Additionally, in some cases, you may inspect the HTTP status codes to
-    gather more information.
+    All endpoints, when responding successfully, will return a JSON object with a `data` field when there is data to return.
+    ```
+    {
+      data: array | object
+    }
+    ```
 
-    Please check our payload/response examples in detail as well as the
-    curl examples that are a part of each section that documents an operation.
+    ### Error Responses
 
-    Example of a successful response:
-    `{ data: ... }`
-
-    Example of a response with an error:
-    `{ error: 'Some error message', data: null }`
+    All endpoints, when applicable and responding with a non 200 HTTP status code, will return a JSON object with an `errors` field.
+    ```
+    {
+      errors: { message: string, code: string }[]
+    }
+    ```
 
 tags:
   - name: Addresses

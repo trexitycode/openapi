@@ -16,11 +16,11 @@ delete:
     '204':
       description: Successfully deleted delivery
     '400':
-      description: Invalid delivery ID in path or don't have permission to delete delivery
+      $ref: ../../components/error-responses/400.yaml
     '404':
-      description: Delivery not found
+      $ref: ../../components/error-responses/404.yaml
     '422':
-      description: Delivery cannot be deleted due to the delivery not being in deletable state
+      $ref: ../../components/error-responses/422.yaml
 
 patch:
   operationId: updateDelivery
@@ -28,6 +28,25 @@ patch:
   summary: Update delivery
   description: |
     Updates the details of a delivery.
+
+    **Unexhaustive list of error codes.**
+
+    - `unauthorized-requirements` = When the requirements specified don't match the requirements granted to the merchant
+    - `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations
+    - `invalid-pickup-address` = When the pickup address is invalid
+    - `invalid-delivery-address` = When the delivery address is invalid
+    - `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area
+    - `invalid-input` = When there are issues with the input data provided
+    - `invalid-delivery-data` = When there are issues with the input data provided and the shipment entity cannot be instantiated
+    - `num-labels-too-large` = When numLabels is too large
+    - `invalid-scanids` = When the scanId specified is already in use
+    - `outside-operating-hours` = When the pickup or delivery time specified is outside the your delivery hours or Trexity's service hours
+    - `invalid-scheduled-posting-date` = The scheduling fields are invalid and do not describe a valid pickup window
+    - `unauthorized-numlabels` = When total numLabels for the entire shipment is too large
+    - `pickup-address-outsidetaxboundary` = The pickup address is outside the merchant's location province
+    - `merchant-disabled` = The merchant has been disabled
+    - `missing-profile-details` = The merchant has an incomplete profile
+    - `no-shipment-rate` = A delivery rate failed to be calculated due to delivery or pickup address geofencing error
 
   parameters:
     - in: path
@@ -42,15 +61,15 @@ patch:
     content:
       application/json:
         schema:
-          $ref: ../../components/schemas/DeliveryDTO.yaml
+          $ref: ../../components/schemas/DeliveryDTOUpdate.yaml
 
   responses:
     '204':
       description: Success
     '404':
-      description: Delivery not found
+      $ref: ../../components/error-responses/404.yaml
     '422':
-      description: Delivery cannot be updated due to the delivery not being in updatable state
+      $ref: ../../components/error-responses/422.yaml
 
 get:
   operationId: getDelivery
@@ -77,19 +96,6 @@ get:
 
         If a field is specified that is not defined by the Delivery object, then responds with HTTP 400. Only top-level fields are supported.
   responses:
-    '500':
-      description: Unknown server problem
-    '400':
-      description: Invalid payload, select contains a field not in a Delivery object, or permission denied.
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: string
-                description: The error message
-                example: Invalid data payload
     '200':
       description: Success
       content:
@@ -99,3 +105,9 @@ get:
             properties:
               data:
                 $ref: ../../components/schemas/Delivery.yaml
+    '400':
+      $ref: ../../components/error-responses/400.yaml
+    '404':
+      $ref: ../../components/error-responses/404.yaml
+    '500':
+      $ref: ../../components/error-responses/500.yaml

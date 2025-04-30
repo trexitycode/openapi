@@ -26,10 +26,8 @@ get:
             format: binary
             description: Photographic Proof of Delivery.
     '400':
-      description: |
-        Delivery does not have photographic Proof-Of-Delivery support.
-        This means that the Delivery is a part of a shipment that uses customer
-        PIN as a delivery verification mechanism.
-
+      $ref: ../../components/error-responses/400.yaml
     '404':
-      description: Delivery not found or delivery not delivered yet
+      $ref: ../../components/error-responses/404.yaml
+    '500':
+      $ref: ../../components/error-responses/500.yaml

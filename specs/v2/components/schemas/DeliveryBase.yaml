@@ -32,8 +32,6 @@ properties:
     type: string
     description: |
       Delivery instructions for drop off
-  requirements:
-    $ref: ./DeliveryRequirements.yaml
   requiresPersonHandoff:
     type: boolean
     description: Does this parcel require delivery PIN verification?
@@ -41,25 +39,9 @@ properties:
     type: boolean
     description: |
       Requires legal age verification by law
-  externalId:
-    type: string
-    maxLength: 256
-    description: |
-      The ID of the external entity that is associated to
-      this parcel (e.g. the external order or shipment ID).
-  scanId:
-    type: string
-    maxLength: 256
-    description: |
-      The ID embedded in your custom label's QR code. If
-      not specified, you will be required to use our built-in labels. If
-      specified, you will not be able to request our built-in label for this
-      parcel.
-  load:
-    $ref: ./DeliveryLoad.yaml
   metadata:
     type: object
     description: |
       Object with metadata fields. If the intent is to
       list shipments with this metadata field, then ensure the value is
-      saved as a string and not say a number. 
+      saved as a string and not say a number.

@@ -23,6 +23,6 @@ get:
               data:
                 $ref: ../../components/schemas/BatchRateRequest.yaml
     '404':
-      description: The batch rate request does not exist
+      $ref: ../../components/error-responses/404.yaml
     '500':
-      description: Unknown server problem
+      $ref: ../../components/error-responses/500.yaml

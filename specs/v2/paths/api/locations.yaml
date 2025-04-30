@@ -18,22 +18,7 @@ get:
                 items:
                   $ref: ../../components/schemas/MerchantLocation.yaml
 
-    '400':
-      description: Bad Request
-      content:
-        application/json:
-          schema:
-            required: [error]
-            properties:
-              error:
-                type: string
+    '404':
+      $ref: ../../components/error-responses/404.yaml
     '500':
-      description: An internal error has occurred and the request cannot be completed.
-      content:
-        application/json:
-          schema:
-            required: [error]
-            properties:
-              error:
-                type:
-                  string
+      $ref: ../../components/error-responses/500.yaml

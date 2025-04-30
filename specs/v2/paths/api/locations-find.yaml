@@ -42,35 +42,8 @@ post:
                 $ref: ../../components/schemas/MerchantLocation.yaml
 
     '400':
-      description: Input error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error: { type: string, nullable: true }
-              params: { type: object, nullable: true }
-              code:
-                type: string
-                nullable: true
-                description: |
-                  Unexhaustive list of codes.
-
-                  - `invalid-data-payload` = When there are issues with the input data provided
-
-    '401':
-      description: Unauthorized
-    '403':
-      description: Forbidden
+      $ref: ../../components/error-responses/400.yaml
     '404':
-      description: NotFound
+      $ref: ../../components/error-responses/404.yaml
     '500':
-      description: An internal error has occurred and the request cannot be completed.
-      content:
-        application/json:
-          schema:
-            required: [error]
-            properties:
-              error:
-                type:
-                  string
+      $ref: ../../components/error-responses/500.yaml

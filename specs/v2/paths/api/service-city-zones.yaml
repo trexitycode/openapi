@@ -166,6 +166,6 @@ get:
                       type: string
                       description: Reference to the zone type ("surcharge")
     '429':
-      description: The request has been rate limited. Try making the request again after the rate limit window.
+      $ref: ../../components/error-responses/429.yaml
     '500':
-      description: Server error. Try making the request again.
+      $ref: ../../components/error-responses/500.yaml

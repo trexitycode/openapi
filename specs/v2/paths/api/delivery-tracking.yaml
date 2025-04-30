@@ -49,8 +49,8 @@ get:
                 data:
                   trackingUrl: "{tracking-server-url}?token=<jwt token goes here>"
     '400':
-      description: Bad Request
+      $ref: ../../components/error-responses/400.yaml
     '404':
-      description: Not Found
+      $ref: ../../components/error-responses/404.yaml
     '500':
-      description: Internal Server Error
+      $ref: ../../components/error-responses/500.yaml

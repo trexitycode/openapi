@@ -1,5 +1,5 @@
 description: |
-  Specifies the start of the deliver window for the shipment (i.e. the earliest time that the driver can deliver the shipment).
+  Specifies the start of the delivery window (i.e. the earliest time that the courier can complete the delivery).
   The second and millsecond time components of the date will be ignored.
 
   When specified, this value must match the start of a suggested delivery window.

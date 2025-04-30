@@ -1,5 +1,5 @@
 description: |
-  Specifies the start of the pickup window for the shipment (i.e. the earliest time that the driver can arrive to pickup the shipment).
+  Specifies the start of the pickup window (i.e. the earliest time that the courier can arrive to pickup).
   The second and millsecond time components of the date will be ignored.
 
   When specified, this value must match the start of an available pickup window.

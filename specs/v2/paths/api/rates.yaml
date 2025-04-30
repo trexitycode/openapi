@@ -19,6 +19,25 @@ post:
     Additionally, the properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a
     pickup or delivery window. Otheriwse the next available pickup window (i.e. ASAP) is assumed.
 
+    **Unexhaustive list of error codes.**
+
+    - `invalid-merchant-requirements` = When the requirements specified don't match the requirements granted to the merchant
+    - `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations
+    - `invalid-pickup-address` = When the pickup address is invalid
+    - `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area
+    - `invalid-data-payload` = When there are issues with the input data provided
+    - `num-labels-too-large` = When numLabels is too large
+    - `time-constraint-violation` = When the delivery/pickup time constraints specified cannot be met
+    - `service-unavailable` = When API Service Availability Rules in merchant portal prevent rates from being returned
+    - `time-constraint-violation` = When the constraint specified by pickupAfter, or deliverAfter and/or deliverBefore cannot be met
+    - `post-date-outside-operating-hours` = When the estimated post date is outside Trexity's or the merchant's operating hours
+    - `delivery-date-outside-operating-hours` = When the estimated delivery date is outside Trexity's or the merchant's operating hours
+    - `pickup-address-outsidetaxboundary` = When the pickup address is outside the province/state of the merchant's location
+    - `merchant-disabled` = When the merchant account has been disabled
+    - `missing-profile-details` = When the merchant profile is incomplete
+    - `delivery-point-outside-zone` = When the delivery address is outside Trexity's service area
+    - `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area
+
   x-codeSamples:
     - $ref: ../../code_samples/Shell/rating/get-delivery-rate.yaml
 
@@ -42,70 +61,12 @@ post:
                 $ref: ../../components/schemas/DeliveryRateWithETA.yaml
 
     '400':
-      description: Input error
-      content:
-        application/json:
-          schema:
-            type: object
-            required: [data]
-            properties:
-              data:
-                type: object
-                required: [errors]
-                properties:
-                  errors:
-                    type: array
-                    items:
-                      type: object
-                      required: [message]
-                      properties:
-                        message: { type: string }
-                        code:
-                          type: string
-                          description: |
-                            Unexhaustive list of codes.
-
-                            - `invalid-merchant-requirements` = When the requirements specified don't match the requirements granted to the merchant
-                            - `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations
-                            - `invalid-pickup-address` = When the pickup address is invalid
-                            - `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area
-                            - `invalid-data-payload` = When there are issues with the input data provided
-                            - `num-labels-too-large` = When numLabels is too large
-                            - `time-constraint-violation` = When the delivery/pickup time constraints specified cannot be met
+      $ref: '../../components/error-responses/400.yaml'
     '401':
-      description: Unauthorized
+      $ref: '../../components/error-responses/401.yaml'
     '403':
-      description: Forbidden
+      $ref: '../../components/error-responses/403.yaml'
     '404':
-      description: No rates
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error:
-                type: object
-                properties:
-                  message: { type: string }
-                  code:
-                    type: string
-                    description: |
-                      Unexhaustive list of codes.
-
-                      - `service-unavailable` = When API Service Availability Rules in merchant portal prevent rates from being returned
-                      - `time-constraint-violation` = When the constraint specified by pickupAfter, or deliverAfter and/or deliverBefore cannot be met
-                      - `post-date-outside-operating-hours` = When the estimated post date is outside Trexity's or the merchant's operating hours
-                      - `delivery-date-outside-operating-hours` = When the estimated delivery date is outside Trexity's or the merchant's operating hours
-                      - `pickup-address-outsidetaxboundary` = When the pickup address is outside the province/state of the merchant's location
-                      - `merchant-disabled` = When the merchant account has been disabled
-                      - `missing-profile-details` = When the merchant profile is incomplete
-                      - `delivery-point-outside-zone` = When the delivery address is outside Trexity's service area
-                      - `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area
+      $ref: '../../components/error-responses/404.yaml'
     '500':
-      description: Internal server error
-      content:
-        application/json:
-          schema:
-            type: object
-            properties:
-              error: { type: string, nullable: true }
+      $ref: '../../components/error-responses/500.yaml'
