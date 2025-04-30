@@ -1,7 +1,6 @@
 type: object
 description: |
-  Optional dimensions and weight of the delivery. This
-  will inform the driver matching algorithm accordingly.
+  Optional dimensions and weight of the delivery.
 
   The maximums have changed from 130 cm length, 80 cm width
   and 80 cm height, to 91 cm for any dimension. The maximum for weight changed from

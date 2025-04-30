@@ -3,12 +3,11 @@ post:
   tags: [Deliveries]
   summary: Cancel delivery
   description: |
-    Cancels a delivery. A cancelled delivery will no longer be able to be posted to drivers. 
-    Additionally, the merchant will be charged a cancellation fee if a driver has already accepted the delivery.
+    Cancels a delivery. A cancelled delivery will no longer be able to be assigned to a courier. 
 
-    Can only cancel deliveries that have a `currentStatus` of
-    WAITING_FOR_ACCEPTANCE, EN_ROUTE_TO_PICKUP, OUT_FOR_DELIVERY,
-    RENOUNCED_BY_DRIVER, or ON_HOLD.
+    Can only cancel deliveries that are in the `draft`, `pending`, `assigned`, or `in-transit` status.
+    If cancelling a delivery while 'assigned' or 'in-transit' then a cancellation fee will be charged.
+
   x-codeSamples:
     - $ref: ../../code_samples/Shell/deliveries/cancel-delivery.yaml
 

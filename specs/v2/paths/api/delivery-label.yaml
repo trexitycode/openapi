@@ -22,12 +22,12 @@ get:
           schema:
             type: string
             format: binary
-            description: A label that needs to be scanned at pickup by a Trexity driver.
+            description: A label that needs to be scanned at pickup by a Trexity courier.
         image/png:
           schema:
             type: string
             format: binary
-            description: A label that needs to be scanned at pickup by a Trexity driver.
+            description: A label that needs to be scanned at pickup by a Trexity courier.
         application/jsonl:
           schema:
             type: string
