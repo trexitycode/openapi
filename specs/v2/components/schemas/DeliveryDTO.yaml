@@ -18,6 +18,9 @@ allOf:
       orderId: {}
   - type: object
     properties:
+      locationId:
+        type: string
+        description: The ID of the location that the delivery will be associated with for billing purposes. If not provided, the location will be inferred from the pickup address.
       pickupAddress:
         $ref: ./AddressDetailsDTO.yaml
       deliveryAddress:
