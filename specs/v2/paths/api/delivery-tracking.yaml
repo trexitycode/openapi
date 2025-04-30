@@ -28,7 +28,7 @@ get:
         '7 days':
           summary: 'lifetime of 7 days'
           value: 604800
-      description: The lifetime of the tracking URL in seconds. Default is 24 hours and maximum is 31 days. After the lifetime the tracking page will respond with 404.
+      description: The lifetime of the tracking URL in seconds. Default is 24 hours and maximum is 31 days. After the lifetime passes, the tracking page will respond with 404.
 
   responses:
     '200':

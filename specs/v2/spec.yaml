@@ -166,8 +166,8 @@ tags:
       ## Verifying Requests
 
       All webhook requests have a header that contains a signature signed with the Trexity Merchant's
-      webhook secret as found in their "Trexity API" settings. To verify the signature take the raw
-      request body as text and create a SHA256 HMAC signed with the merchant's webhook secret and covert to hex.
+      webhook secret as found in their "Trexity API" settings. Optionally, there is a [getSecretKey](#operation/getWebhookSecretKey) endpoint to retrieve the webhook secret programatically.
+      To verify the signature, take the raw request body as text and create a SHA256 HMAC signed with the merchant's webhook secret and convert to hex.
 
       Example:
       ```

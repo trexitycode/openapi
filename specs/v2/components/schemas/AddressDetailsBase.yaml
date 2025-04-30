@@ -17,4 +17,4 @@ properties:
     description: Postal code or ZIP code
   countryCode:
     type: string
-    description: Country code (e.g., CA, US) 
+    description: Country code (e.g., CA, US)
