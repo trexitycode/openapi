@@ -4,7 +4,7 @@ properties:
     type: string
     description: |
       - `pending`: The delivery is awaiting pickup or delivery.
-      - `in-transit`: The delivery is in transit to the destination address.
+      - `in-transit`: The delivery is in transit, either out for pickup or out for delivery.
       - `delivered`: The delivery has been delivered.
       - `undeliverable`: The delivery was attempted but failed and the delivery was returned to the sender.
       - `cancelled`: The delivery was cancelled.
