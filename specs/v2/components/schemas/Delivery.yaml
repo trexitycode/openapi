@@ -29,13 +29,10 @@ allOf:
         $ref: ./AddressDetails.yaml
       deliveryAddress:
         $ref: ./AddressDetails.yaml
-      driverDeliveredAt:
+      pickedUpAt:
         $ref: ./SimplifiedDateISOString.yaml
-      isDelivered:
-        type: boolean
-        description: |
-          Whether this delivery has been delivered.
-          If it has been, we store the timestamp in driverDeliveredAt.
-      secondsFromPickupToDelivery:
-        type: number
-        description: If a driver has accpeted, the estimated seconds it will take the driver to arrive at the pickup address.
+      deliveredAt:
+        $ref: ./SimplifiedDateISOString.yaml
+      rate:
+        $ref: ./DeliveryRate.yaml
+      
