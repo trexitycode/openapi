@@ -201,6 +201,26 @@ tags:
       // ...
       ```
 
+      ## Request Payload
+
+      All webhook requests will have the following headers:
+
+      - `x-trexity-event-name` the event name
+      - `x-trexity-signature` the SHA256 HMAC signature of the request
+      - `x-trexity-webhook-order-id` the processing order of the webhook used to determine what order webhooks should be processed in
+
+      All webhook requests will have the following payload shape. Where `data` is the delivery object changed,
+      like returned from the [get delivery endpoint](#tag/Deliveries/operation/getDelivery)
+
+      ```
+      {
+        "timestamp": "2020-07-25T10:48:08.987Z",
+        "data": {
+          ...the delivery object that changed...
+        }
+      }
+      ```
+
   - name: Locations
     description: |
       Retrieve and manage Locations for a Trexity Merchant.
