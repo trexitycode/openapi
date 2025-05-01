@@ -261,8 +261,8 @@ paths:
     $ref: ./paths/api/batch-rate-accept-request-create.yaml
   /batch-rates/{batchRateId}/accept-requests/{batchRateAcceptRequestId}:
     $ref: ./paths/api/batch-rate-accept-request.yaml
-  /regions/service-city-zones:
-    $ref: ./paths/api/service-city-zones.yaml
+  /regions/market-zones:
+    $ref: ./paths/api/market-zones.yaml
   /deliveries:
     $ref: ./paths/api/deliveries.yaml
   /deliveries/{deliveryId}:

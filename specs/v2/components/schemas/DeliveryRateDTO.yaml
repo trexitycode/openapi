@@ -11,10 +11,6 @@ allOf:
         $ref: ./AddressDetailsDTO.yaml
       requirements:
         $ref: ./DeliveryRequirements.yaml
-      deliveryValue:
-        type: number
-        minimum: 0
-        description: The order value, if any. Specified in cents.
       numLabels:
         type: number
         minimum: 1

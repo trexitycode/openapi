@@ -5,7 +5,7 @@ get:
   description: |
     List all market zones or the market zone for a specific pickup address.
 
-    If a pickup address is provided then addresLine1, city, postalCode, provinceCode, and countryCode are required.
+    If a pickup address is provided then `addressLine1`, `city`, `postalCode`, `provinceCode`, and `countryCode` are required.
 
     ### Rate Limiting
 
@@ -13,6 +13,15 @@ get:
     strict rate limit of 6 requests every 10 seconds.
 
     However, authenticated requests can request 12 times every 10 seconds.
+
+    **Possible error codes:**
+    - `invalid-address` = When the address cannot be recognized as a valid address
+    - `invalid-addressLine1` = When the addressLine1 is missing
+    - `invalid-city` = When the city is missing
+    - `invalid-postalCode` = When the postalCode is missing, invalid or not acceptedable
+    - `invalid-provinceCode` = When the province is missing, or is not acceptedable
+    - `invalid-countryCode` = When the country is missing, or is not acceptedable
+
   security:
     - {}
     - MerchantApiKeyAuth: []
