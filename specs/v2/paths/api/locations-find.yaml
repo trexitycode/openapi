@@ -9,6 +9,16 @@ post:
 
     If both are provided, the name will be used to filter the results.
 
+    **Possible error codes:**
+    - `missing-required-fields` = When both name and address are not provided
+    - `invalid-addressLine1` = When the addressLine1 is missing
+    - `invalid-city` = When the city is missing
+    - `invalid-provinceCode` = When the province is missing, or is not acceptedable
+    - `invalid-postalCode` = When the postalCode is missing, invalid or not acceptedable
+    - `invalid-countryCode` = When the country is not acceptedable
+    - `invalid-address` = When the address cannot be recognized as a valid address
+
+
   requestBody:
     content:
       application/json:
