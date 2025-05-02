@@ -6,8 +6,8 @@ get:
     Retrieve the receipt items for all or one location from a receipt for a particular calendar month
 
     **Possible error codes:**
-    - `invalid-year` = When the yearMonth is has an invalid year
-    - `invalid-month` = When the yearMonth is has an invalid month
+    - `invalid-year` = When the yearMonth has an invalid year
+    - `invalid-month` = When the yearMonth has an invalid month
 
   parameters:
     - in: path
