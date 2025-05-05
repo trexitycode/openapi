@@ -20,9 +20,10 @@ properties:
       properties:
         type:
           type: string
-          enum: [delivery, oversized, distance, large-vehicle]
+          enum: [delivery, fuel, oversized, distance, large-vehicle]
           description: |
             - `delivery` applied for the base delivery fee
+            - `fuel` applied for fuel surcharge
             - `oversized` applied for a surplus of labels
             - `distance` applied for long distance deliveries
             - `large-vehicle` applied for deliveries that require a medium or large vehicle
@@ -33,26 +34,20 @@ properties:
     type: number
     description: |
       The subtotal in cents before taxes.
-  taxRates:
-    type: object
-    description: |
-      An object whos keys are tax rate codes and value is the tax rate.
-    additionalProperties:
-      type: number
-      minimum: 0
-      maximum: 1
-      exclusiveMinimum: true
-      exclusiveMaximum: true
-  taxAmounts:
-    type: object
-    description: |
-      An object whos keys are tax rate codes and value is the tax amount charged in cents.
-    additionalProperties:
-      type: number
-      minimum: 0
-      maximum: 1
-      exclusiveMinimum: true
-      exclusiveMaximum: true
+  taxes:
+    type: array
+    items:
+      type: object
+      properties:
+        code:
+          type: string
+          description: The tax rate code (e.g. "HST", "GST", "PST", etc.)
+        amount:
+          type: number
+          description: The tax amount in cents.
+        rate:
+          type: number
+          description: The tax rate in decimal form (e.g. 0.13 for 13% tax).  
   totalTaxes:
     type: number
     description: |

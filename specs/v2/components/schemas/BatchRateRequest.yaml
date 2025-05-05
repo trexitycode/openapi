@@ -15,7 +15,7 @@ properties:
     items:
       type: object
       properties:
-        error:
+        message:
           type: string
           description: The message of the error
         code:
@@ -33,11 +33,6 @@ properties:
         orderId:
           type: string
           description: The "orderId" of the delivery this error relates to
-        params:
-          type: object
-          description: |
-            An object that contains extra information related to the error (i.e.
-            address, etc.)
   callbackInSeconds:
     type: integer
     description: |
