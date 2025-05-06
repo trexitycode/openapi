@@ -28,6 +28,20 @@ allOf:
         type: string
         description: |
           Route container ID. In the case of a return, this will be the route ID of the original route not the return route.
+      externalId:
+        type: string
+        maxLength: 256
+        description: |
+          The ID of the external entity that is associated to
+          this delivery (e.g. the external order or shipment ID).
+      scanId:
+        type: string
+        maxLength: 256
+        description: |
+          The ID embedded in your custom label's QR code. If
+          not specified, you will be required to use our built-in labels. If
+          specified, you will not be able to request our built-in label for this
+          delivery.
       pickupAddress:
         $ref: ./AddressDetails.yaml
       deliveryAddress:
