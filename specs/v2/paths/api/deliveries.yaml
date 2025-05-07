@@ -115,7 +115,9 @@ get:
           path:
             type: string
           value:
-            type: string|number
+            oneOf:
+              - type: string
+              - type: number
         description: |
           The configuration for the searching according to the fields in the order metadata.
           The key is the field name and the value is the value to search for.

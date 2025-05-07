@@ -34,6 +34,9 @@ properties:
   requiresPersonHandoff:
     type: boolean
     description: Does this delivery require delivery PIN verification?
+  requiresSignature:
+    type: boolean
+    description: Does this delivery require a signature?
   containsAlcohol:
     type: boolean
     description: |
