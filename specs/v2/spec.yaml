@@ -37,27 +37,12 @@ info:
 
     **Rate** represents a price for completing a delivery.
 
-    **Batch Rate** represents an optimized set of rates for completing multiple deliveries from a single location.
-
-    ## Typical Workflow
-
-    This workflow is the most common and typical way to create a delivery. Just provide delivery and pickup information,
-    and optionally a pickup time to create a delivery.
+    ## Workflow
 
     1. [Optionally calculate a delivery rate](#operation/calculateDeliveryRate) specify the pickup information, customer information and delivery address to get a rate to show your customer
     2. [Create a delivery](#operation/createDelivery) specify the pickup information, customer information and delivery address
     3. [Get delivery label](#operation/getDeliveryLabel) for the delivery then affix to the delivery packaging
     4. [Listen for delivery events](#tag/Webhooks) to track the delivery until it is delivered
-
-    ## Batching Workflow
-
-    This workflow is used when you have **more than 20 deliveries to create from a single location and you will benefit from optimizing your egress operations**.
-    This is because the batch rate workflow will optimize the pickup and delivery of all the deliveries in multiple, optimially routed, trips.
-
-    1. [Create a batch rate](#operation/createBatchRateRequest) specify the pickup information, customer information and delivery addresses
-    2. [Accept the batch rate](#operation/createBatchRateAcceptRequest) and create the deliveries
-    3. [Get delivery labels](#operation/getDeliveryLabel) for each delivery then affix to the delivery packaging
-    4. [Listen for delivery events](#tag/Webhooks) to track the deliveries until they are delivered
 
     ## Sandbox Environment
 
@@ -146,10 +131,6 @@ tags:
     description: |
       Prior to creating a Delivery, you can calculate the rates based on the pickup and delivery addresses.
       See our [rates](/#operation/getRate) endpoint for more information.
-  - name: Batching
-    description: |
-      Prior to creating a Delivery, you can calculate the rates based on the pickup and delivery addresses.
-      See our [batch rates](/#operation/createBatchRateRequest) endpoint for more information.
   - name: Deliveries
     description: |
       The most common approach to get a delivery on the road is to:
@@ -251,16 +232,6 @@ paths:
     $ref: ./paths/api/check-address.yaml
   /rates:
     $ref: ./paths/api/rates.yaml
-  /batch-rate-requests:
-    $ref: ./paths/api/batch-rate-request-create.yaml
-  /batch-rate-requests/{batchRateRequestId}:
-    $ref: ./paths/api/batch-rate-request.yaml
-  /batch-rates/{batchRateId}:
-    $ref: ./paths/api/batch-rate.yaml
-  /batch-rates/{batchRateId}/accept-requests:
-    $ref: ./paths/api/batch-rate-accept-request-create.yaml
-  /batch-rates/{batchRateId}/accept-requests/{batchRateAcceptRequestId}:
-    $ref: ./paths/api/batch-rate-accept-request.yaml
   /regions/market-zones:
     $ref: ./paths/api/market-zones.yaml
   /deliveries:
