@@ -13,8 +13,18 @@ delete:
         type: string
       description: The id of the delivery to delete
   responses:
-    '204':
+    '200':
       description: Successfully deleted delivery
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  success:
+                    type: boolean
     '400':
       $ref: ../../components/error-responses/400.yaml
     '404':
@@ -64,8 +74,20 @@ patch:
           $ref: ../../components/schemas/DeliveryDTOUpdate.yaml
 
   responses:
-    '204':
+    '200':
       description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+    '400':
+      $ref: ../../components/error-responses/400.yaml
     '404':
       $ref: ../../components/error-responses/404.yaml
     '422':
