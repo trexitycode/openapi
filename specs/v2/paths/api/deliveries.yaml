@@ -41,7 +41,7 @@ post:
         schema:
           $ref: ../../components/schemas/DeliveryDTO.yaml
 
-  responses:                
+  responses:
     '200':
       description: Success
       content:
