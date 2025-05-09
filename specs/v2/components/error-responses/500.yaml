@@ -1,0 +1,10 @@
+description: Internal Server Error
+content:
+  application/json:
+    schema:
+      type: object
+      properties:
+        errors:
+          type: array
+          items:
+            $ref: '../schemas/Error.yaml'

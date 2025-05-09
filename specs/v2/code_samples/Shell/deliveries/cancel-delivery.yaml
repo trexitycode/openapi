@@ -1,0 +1,5 @@
+lang: Shell
+source: |
+  curl -X PATCH {server-url}/deliveries/1234-5678-9012-3456/cancel\
+    -H 'Content-Type: application/json'\
+    -H 'Authorization: Bearer <Trexity API Key>'

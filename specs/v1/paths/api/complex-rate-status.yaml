@@ -23,5 +23,8 @@ get:
             properties:
               data:
                 $ref: ../../components/schemas/responses/ComplexRateStatusResponse.yaml
+
+    '400':
+      description: Bad Request
     '500':
       description: Unknown server problem

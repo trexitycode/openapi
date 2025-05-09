@@ -1,0 +1,90 @@
+post:
+  operationId: checkAddress
+  tags: [Addresses]
+  summary: Check an address
+  description: |
+    Checks whether an address is serviceable and returns a result that identifies if the address can be
+    used as a delivery address. Optionally, a pickup address can be provided to generate tiered zones.
+
+    ### Rate Limiting
+
+    This operation can be requested without authentication, however it will have a
+    strict rate limit of 3 requests every 10 seconds.
+
+    However, authenticated requests can request 12 times every 10 seconds.
+  security:
+    - {}
+    - MerchantApiKeyAuth: []
+    - AccessTokenAuth: []
+    - MerchantIdTokenAuth: []
+
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            delivery:
+              type: object
+              allOf:
+                - $ref: '../../components/schemas/AddressDetailsDTO.yaml'
+              description: The address to check.
+            pickup:
+              type: object
+              allOf:
+                - $ref: '../../components/schemas/AddressDetailsDTO.yaml'
+              description: The pickup address from which to generate the tiered zones.
+              example:
+                addressLine1: "123 Fake St"
+                city: "Ottawa"
+                provinceCode: "ON"
+                postalCode: "K2G 6F2"
+                countryCode: "CA"
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  pickup:
+                    type: boolean
+                    description: If `true` then the address can be used as a pickup address (or business address).
+                  delivery:
+                    type: string
+                    enum: [none, normal, extended, 'tier-1', 'tier-2', 'tier-3']
+                    description: |
+                      The delivery classification of the address.
+
+                      `none` = The address is outside a known delivery zone and is unserviceable.
+
+                      `normal` = The address is serviceable and normal delivery rates apply.
+
+                      `extended` = The address is serviceable and surcharges may apply.
+
+                      `tier-1, tier-2, tier-3, ...` = The address is serviceable and the address is in a tier-1, tier-2, tier-3, etc. zone.
+                  lngLat:
+                    type: object
+                    description: |
+                      The latitude and logitude of the checked address.
+                    properties:
+                      longitude:
+                        type: number
+                        description: Longitude of the address
+                      latitude:
+                        type: number
+                        description: Latitude of the address
+                  serviceCity:
+                    type: string
+                    description: |
+                      Service city that the address is located. Provided in the format: "(city name), (2 letter abbreviation of province)" (may or may not be supported by Trexity)
+    '400':
+      $ref: '../../components/error-responses/400.yaml'
+    '429':
+      $ref: '../../components/error-responses/429.yaml'
+    '500':
+      $ref: '../../components/error-responses/500.yaml'
