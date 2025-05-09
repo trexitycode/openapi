@@ -82,10 +82,7 @@ patch:
             type: object
             properties:
               data:
-                type: object
-                properties:
-                  success:
-                    type: boolean
+                $ref: ../../components/schemas/Delivery.yaml
     '400':
       $ref: ../../components/error-responses/400.yaml
     '404':

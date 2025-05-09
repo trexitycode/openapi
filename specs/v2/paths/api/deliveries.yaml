@@ -50,15 +50,12 @@ post:
             type: object
             properties:
               data:
-                type: object
-                properties:
-                  deliveryId:
-                    type: string
-          examples:
-            Success:
-              value:
-                data:
-                  deliveryId: '123e4567-e89b-12d3-a456-426614174000'
+                $ref: ../../components/schemas/Delivery.yaml
+          # examples:
+          #   Success:
+          #     value:
+          #       data:
+          #         deliveryId: '123e4567-e89b-12d3-a456-426614174000'
     '400':
       $ref: ../../components/error-responses/400.yaml
     '500':
