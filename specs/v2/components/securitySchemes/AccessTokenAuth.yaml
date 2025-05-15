@@ -7,14 +7,9 @@ description: |
 
   Example:
   ```
-  // nodejs
-  require('http').get('{server-url}/{endpoint}', {
-    headers: {
-      accept: 'application/json',
-      authorization: `Bearer ${process.env.ACCESS_TOKEN}`
-    }
-  }, (res) => {
-    // ... handle response
-  })
+  curl -X POST {server-url}/{path} \
+    -H 'Content-Type: application/json' \
+    -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+    -d '{ ...body... }'
   ```
 

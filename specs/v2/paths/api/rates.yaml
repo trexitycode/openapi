@@ -3,16 +3,12 @@ post:
   tags: [Rating]
   summary: Calculate delivery rate
   description: |
-    Calculate the rate for a direct delivery from a single pickup address to a
-    single delivery address.
+    Calculate a rate for a delivery.
 
-    Returns the estimated distance (in meters), estimated travel duration (in
-    seconds), and fee from the pickup address to the delivery address.
-
-    If no `pickupAddress` is specified then the merchant's business address will
+    If no `pickupAddress` is specified then your primary location's address will
     be used as the pickup address.
 
-    Review the [Usage Policy](/#section/Usage-Policy).
+    Please review our [Usage Policy](/#section/Usage-Policy) before displaying rates to your customers.
 
     The rate response will include estimates for post, pickup, and delivery time.
 
@@ -61,12 +57,12 @@ post:
                 $ref: ../../components/schemas/DeliveryRateWithETA.yaml
 
     '400':
-      $ref: '../../components/error-responses/400.yaml'
+      $ref: '../../components/responses/400.yaml'
     '401':
-      $ref: '../../components/error-responses/401.yaml'
+      $ref: '../../components/responses/401.yaml'
     '403':
-      $ref: '../../components/error-responses/403.yaml'
+      $ref: '../../components/responses/403.yaml'
     '404':
-      $ref: '../../components/error-responses/404.yaml'
+      $ref: '../../components/responses/404.yaml'
     '500':
-      $ref: '../../components/error-responses/500.yaml'
+      $ref: '../../components/responses/500.yaml'

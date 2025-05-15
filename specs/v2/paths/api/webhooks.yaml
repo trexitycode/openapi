@@ -35,16 +35,16 @@ post:
                   webhookId:
                     type: string
     '400':
-      $ref: ../../components/error-responses/400.yaml
+      $ref: ../../components/responses/400.yaml
     '500':
-      $ref: ../../components/error-responses/500.yaml
+      $ref: ../../components/responses/500.yaml
 
 get:
   operationId: listWebhooks
   tags: [Webhooks]
   summary: List webhooks
   description: |
-    List registered webhooks or registered webhooks for an event.
+    List all registered webhooks or registered webhooks for an event.
 
   parameters:
     - in: query
@@ -65,6 +65,6 @@ get:
                 items:
                   $ref: ../../components/schemas/Webhook.yaml
     '400':
-      $ref: ../../components/error-responses/400.yaml
+      $ref: ../../components/responses/400.yaml
     '500':
-      $ref: ../../components/error-responses/500.yaml
+      $ref: ../../components/responses/500.yaml

@@ -2,7 +2,7 @@ type: http
 scheme: bearer
 description: |
   This authentication strategy uses a Trexity Merchant API KEY. This API KEY is used
-  as a bearer token.
+  with the bearer scheme in the Authorization header.
 
   In order to obtain a Trexity Merchant API key, you need to sign-up as Merchant at https://merchant.trexity.com/
   and create an API KEY through your merchant portal.
@@ -11,16 +11,9 @@ description: |
 
   Example:
   ```
-  curl -X POST {server-url}/rates/simple \
+  curl -X POST {server-url}/{path} \
     -H 'Content-Type: application/json' \
     -H 'Authorization: Bearer <Merchant API Key>' \
-    -d '{
-      "pickupAddress": "9 Slack Rd, Nepean ON K2G 0B7, CA",
-      "deliveryAddress": "207 Queen St, Ottawa ON K1P 6E5, CA",
-      "requirements": {},
-      "orderValue": 2500
-    }'
+    -d '{ ...body... }'
   ```
-
-  Please check our [curl examples](/#operation/getSimpleRate) for more examples.
 

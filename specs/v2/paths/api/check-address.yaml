@@ -4,7 +4,8 @@ post:
   summary: Check an address
   description: |
     Checks whether an address is serviceable and returns a result that identifies if the address can be
-    used as a delivery address. Optionally, a pickup address can be provided to generate tiered zones.
+    used as a delivery address or a pickup address. If, a pickup address is provided, the result will
+    indicate if the delivery address is in a tiered zone.
 
     ### Rate Limiting
 
@@ -12,11 +13,26 @@ post:
     strict rate limit of 3 requests every 10 seconds.
 
     However, authenticated requests can request 12 times every 10 seconds.
+
+    **Unexhaustive list of error codes.**
+
+    - `invalid-delivery.addressLine1` = When the addressLine1 is missing
+    - `invalid-delivery.city` = When the city is missing
+    - `invalid-delivery.postalCode` = When the postalCode is missing, invalid or not acceptedable
+    - `invalid-delivery.provinceCode` = When the province is missing, or is not acceptedable
+    - `invalid-delivery.countryCode` = When the country is missing, or is not acceptedable
+    - `invalid-pickup.addressLine1` = When the addressLine1 is missing
+    - `invalid-pickup.city` = When the city is missing
+    - `invalid-pickup.postalCode` = When the postalCode is missing, invalid or not acceptedable
+    - `invalid-pickup.provinceCode` = When the province is missing, or is not acceptedable
+    - `invalid-pickup.countryCode` = When the country is missing, or is not acceptedable
+    - `unverified-delivery-address` = When the delivery address cannot be verified with a geocoded location
+    - `unverified-pickup-address` = When the pickup address cannot be verified with a geocoded location
+    
+    
   security:
     - {}
     - MerchantApiKeyAuth: []
-    - AccessTokenAuth: []
-    - MerchantIdTokenAuth: []
 
   requestBody:
     content:
@@ -83,10 +99,8 @@ post:
                     description: |
                       Service city that the address is located. Provided in the format: "(city name), (2 letter abbreviation of province)" (may or may not be supported by Trexity)
     '400':
-      $ref: '../../components/error-responses/400.yaml'
-    '422':
-      $ref: '../../components/error-responses/422.yaml'
+      $ref: '../../components/responses/400.yaml'
     '429':
-      $ref: '../../components/error-responses/429.yaml'
+      $ref: '../../components/responses/429.yaml'
     '500':
-      $ref: '../../components/error-responses/500.yaml'
+      $ref: '../../components/responses/500.yaml'

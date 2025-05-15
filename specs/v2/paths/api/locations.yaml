@@ -19,6 +19,6 @@ get:
                   $ref: ../../components/schemas/MerchantLocation.yaml
 
     '404':
-      $ref: ../../components/error-responses/404.yaml
+      $ref: ../../components/responses/404.yaml
     '500':
-      $ref: ../../components/error-responses/500.yaml
+      $ref: ../../components/responses/500.yaml

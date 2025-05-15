@@ -15,9 +15,9 @@ delete:
     '204':
       description: Successfully deleted a webhook or if the webhook ID does not exist.
     '400':
-      $ref: ../../components/error-responses/400.yaml
+      $ref: ../../components/responses/400.yaml
     '404':
-      $ref: ../../components/error-responses/404.yaml
+      $ref: ../../components/responses/404.yaml
     '500':
-      $ref: ../../components/error-responses/500.yaml
+      $ref: ../../components/responses/500.yaml
 

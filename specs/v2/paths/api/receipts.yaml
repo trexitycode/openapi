@@ -3,7 +3,7 @@ get:
   tags: [Receipts]
   summary: List receipts
   description: |
-    Retrieve the receipt items for all or one location from a receipt for a particular calendar month
+    Retrieve the receipts for all or one location for a particular calendar month
 
     **Possible error codes:**
     - `invalid-year` = When the yearMonth has an invalid year
@@ -46,8 +46,8 @@ get:
             description: The receipt items rendered as a PDF
 
     '400':
-      $ref: ../../components/error-responses/400.yaml
+      $ref: ../../components/responses/400.yaml
     '404':
-      $ref: ../../components/error-responses/404.yaml
+      $ref: ../../components/responses/404.yaml
     '500':
-      $ref: ../../components/error-responses/500.yaml
+      $ref: ../../components/responses/500.yaml

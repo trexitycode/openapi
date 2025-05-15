@@ -10,13 +10,11 @@ info:
     email: support@trexity.com
     url: 'http://trexity.com'
   description: |
-    # Issues
-
-    Please open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) requests in the [issues](https://github.com/trexitycode/openapi/issues) board.
-
     # Migrating to v2
 
-    
+    # Issues
+
+    Please open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) in the [issues](https://github.com/trexitycode/openapi/issues) board.
 
     # Usage Policy
 
@@ -39,9 +37,9 @@ info:
 
     ## Workflow
 
-    1. [Optionally calculate a delivery rate](#operation/calculateDeliveryRate) specify the pickup information, customer information and delivery address to get a rate to show your customer
-    2. [Create a delivery](#operation/createDelivery) specify the pickup information, customer information and delivery address
-    3. [Get delivery label](#operation/getDeliveryLabel) for the delivery then affix to the delivery packaging
+    1. [Calculate a delivery rate](#operation/calculateDeliveryRate) by specifying pickup information, customer information and the delivery address to get a rate to show your customer
+    2. [Create a delivery](#operation/createDelivery) by specifying pickup information, customer information and the delivery address
+    3. [Get delivery label](#operation/getDeliveryLabel) for a delivery then affix to the delivery packaging
     4. [Listen for delivery events](#tag/Webhooks) to track the delivery until it is delivered
 
     ## Sandbox Environment
@@ -80,8 +78,9 @@ info:
 
     All endpoints, when responding successfully, will return a JSON object with a `data` field when there is data to return.
     ```
-    {
-      data: array | object
+    // typescript interface
+    interface SuccessResponse<T = object | any[]> {
+      data: T
     }
     ```
 
@@ -89,7 +88,8 @@ info:
 
     All endpoints, when applicable and responding with a non 200 HTTP status code, will return a JSON object with an `errors` field.
     ```
-    {
+    // typescript interface
+    interface ErrorResponse {
       errors: { message: string, code: string }[]
     }
     ```
@@ -204,7 +204,7 @@ tags:
 
   - name: Locations
     description: |
-      Retrieve and manage Locations for a Trexity Merchant.
+      Retrieve your locations.
 
   - name: Regions
     description: |
@@ -219,14 +219,8 @@ components:
   securitySchemes:
     MerchantApiKeyAuth:
       $ref: components/securitySchemes/MerchantApiKeyAuth.yaml
-    AccessTokenAuth:
-      $ref: components/securitySchemes/AccessTokenAuth.yaml
-    MerchantIdTokenAuth:
-      $ref: components/securitySchemes/MerchantIdTokenAuth.yaml
 security:
   - MerchantApiKeyAuth: []
-  - AccessTokenAuth: []
-  - MerchantIdTokenAuth: []
 paths:
   /addresses/check:
     $ref: ./paths/api/check-address.yaml

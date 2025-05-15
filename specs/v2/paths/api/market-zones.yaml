@@ -25,8 +25,6 @@ get:
   security:
     - {}
     - MerchantApiKeyAuth: []
-    - AccessTokenAuth: []
-    - MerchantIdTokenAuth: []
 
   parameters:
     - in: query
@@ -175,6 +173,6 @@ get:
                       type: string
                       description: Reference to the zone type ("surcharge")
     '429':
-      $ref: ../../components/error-responses/429.yaml
+      $ref: ../../components/responses/429.yaml
     '500':
-      $ref: ../../components/error-responses/500.yaml
+      $ref: ../../components/responses/500.yaml

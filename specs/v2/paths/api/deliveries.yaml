@@ -3,13 +3,16 @@ post:
   tags: [Deliveries]
   summary: Create delivery
   description: |
-    If you want to schedule a delivery, please use exactly one of:
+    Create a delivery and optionally schedule it for pickup. A rate for the delivery will be calculated at the same time.
+
+    If you want to schedule for pickup, please use exactly one of:
       1) pickupStartAt and an optional pickupEndAt (when to pickup by)
       2) deliverStartAt and an optional deliverEndAt (when to deliver by)
 
-    Create a new delivery.
+    When scheduling please ensure that the start and/or end times specified match your market's
+    pickup windows as listed [here](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Trexity-Pickup-Windows).
 
-    If no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.
+    If no `pickupAddress` is specified then your primary location's address will be used as the pickup address.
 
     **Unexhaustive list of error codes.**
 
@@ -34,7 +37,6 @@ post:
     - $ref: ../../code_samples/Shell/deliveries/create-delivery.yaml
 
   requestBody:
-    description: Payload describing your delivery
     required: true
     content:
       application/json:
@@ -51,15 +53,10 @@ post:
             properties:
               data:
                 $ref: ../../components/schemas/Delivery.yaml
-          # examples:
-          #   Success:
-          #     value:
-          #       data:
-          #         deliveryId: '123e4567-e89b-12d3-a456-426614174000'
     '400':
-      $ref: ../../components/error-responses/400.yaml
+      $ref: ../../components/responses/400.yaml
     '500':
-      $ref: ../../components/error-responses/500.yaml
+      $ref: ../../components/responses/500.yaml
 
 get:
   operationId: listDeliveries
@@ -72,9 +69,13 @@ get:
 
     When filtering by a date range both the `fromDate` and `toDate` query parameters must be provided. **The maximum date range is 90 days.**
 
-    ## Filtering By External ID
+    ## Mutually exclusive filters
 
-    When filtering by a delivery's external ID you **cannot filter by dates**. Filtering by dates and external ID are mutually exclusive filters. If `externalId` is specified it will take precendence.    
+    The following filters are mutually exclusive:
+      - `fromDate` and `toDate`
+      - `externalId`
+      - `metaField1`, `metaField2`, `metaField3`
+  
   x-codeSamples:
     - $ref: ../../code_samples/Shell/deliveries/get-deliveries.yaml
 
@@ -108,21 +109,21 @@ get:
       name: metaField1
       schema:
         type: string
-        maxLength: 10239
+        maxLength: 1024
         description: |
           Can be a partial string to match the value of the first metadata field
     - in: query
       name: metaField2
       schema:
         type: string
-        maxLength: 10239
+        maxLength: 1024
         description: |
           Can be a partial string to match the value of the second metadata field 
     - in: query
       name: metaField3
       schema:
         type: string
-        maxLength: 10239
+        maxLength: 1024
         description: |
           Can be a partial string to match the value of the third metadata field   
   responses:
@@ -138,7 +139,7 @@ get:
                 items:
                   $ref: ../../components/schemas/Delivery.yaml
     '400':
-      $ref: ../../components/error-responses/400.yaml
+      $ref: ../../components/responses/400.yaml
     '500':
-      $ref: ../../components/error-responses/500.yaml
+      $ref: ../../components/responses/500.yaml
 

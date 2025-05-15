@@ -3,3 +3,11 @@ scheme: bearer
 description: |
   This authentication stratigy requires a merchant ID token in the Authorization header.
   This token is typically a short-lived token that is used granted to a user that accesses the Trexity Merchant Portal.
+
+  Example:
+  ```
+  curl -X POST {server-url}/{path} \
+    -H 'Content-Type: application/json' \
+    -H 'Authorization: Bearer <MERCHANT_ID_TOKEN>' \
+    -d '{...body...}'
+  ```

@@ -3,7 +3,12 @@ get:
   tags: [Deliveries]
   summary: Get delivery proof of delivery
   description: |
-    Get a delivery's proof of delivery
+    Get a delivery's proof of delivery photo.
+
+    If the delivery is not yet completed then a 404 will be returned.
+
+    If the delivery `requiresPersonHandoff` is false then a 404 will be returned.
+
   x-codeSamples:
     - $ref: ../../code_samples/Shell/deliveries/get-delivery-pod.yaml
 
@@ -26,8 +31,8 @@ get:
             format: binary
             description: Photographic Proof of Delivery.
     '400':
-      $ref: ../../components/error-responses/400.yaml
+      $ref: ../../components/responses/400.yaml
     '404':
-      $ref: ../../components/error-responses/404.yaml
+      $ref: ../../components/responses/404.yaml
     '500':
-      $ref: ../../components/error-responses/500.yaml
+      $ref: ../../components/responses/500.yaml
