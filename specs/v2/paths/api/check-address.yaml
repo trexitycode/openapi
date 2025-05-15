@@ -35,7 +35,7 @@ post:
                 - $ref: '../../components/schemas/AddressDetailsDTO.yaml'
               description: The pickup address from which to generate the tiered zones.
               example:
-                addressLine1: "123 Fake St"
+                addressLine1: "124 Fake Winding Rd"
                 city: "Ottawa"
                 provinceCode: "ON"
                 postalCode: "K2G 6F2"
@@ -84,6 +84,8 @@ post:
                       Service city that the address is located. Provided in the format: "(city name), (2 letter abbreviation of province)" (may or may not be supported by Trexity)
     '400':
       $ref: '../../components/error-responses/400.yaml'
+    '422':
+      $ref: '../../components/error-responses/422.yaml'
     '429':
       $ref: '../../components/error-responses/429.yaml'
     '500':
