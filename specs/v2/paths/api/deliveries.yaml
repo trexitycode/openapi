@@ -105,19 +105,26 @@ get:
         description: |
           The ID of the external entity that is associated to this delivery (e.g. the external order or shipment ID).
     - in: query
-      name: metaSearch
+      name: metaField1
       schema:
-        type: object
-        properties:
-          path:
-            type: string
-          value:
-            oneOf:
-              - type: string
-              - type: number
+        type: string
+        maxLength: 10239
         description: |
-          The configuration for the searching according to the fields in the order metadata.
-          The key is the field name and the value is the value to search for.
+          Can be a partial string to match the value of the first metadata field
+    - in: query
+      name: metaField2
+      schema:
+        type: string
+        maxLength: 10239
+        description: |
+          Can be a partial string to match the value of the second metadata field 
+    - in: query
+      name: metaField3
+      schema:
+        type: string
+        maxLength: 10239
+        description: |
+          Can be a partial string to match the value of the third metadata field   
   responses:
     '200':
       description: Success
