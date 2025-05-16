@@ -26,12 +26,14 @@ post:
           type: object
           oneOf:
             - type: object
+              description: Find a location by address
               required:
                 - address
               properties:
                 address:
                   $ref: ../../components/schemas/AddressDetailsDTO.yaml
             - type: object
+              description: Find a location by name
               required:
                 - name
               properties:
@@ -39,6 +41,19 @@ post:
                   type: string
                   description: The name of the location.
                   example: MyStore in Nepean
+            - type: object
+              description: Find a location by address and name
+              required:
+                - address
+                - name
+              properties:
+                address:
+                  $ref: ../../components/schemas/AddressDetailsDTO.yaml
+                name:
+                  type: string
+                  description: The name of the location.
+                  example: MyStore in Nepean
+                
 
   responses:
     '200':
