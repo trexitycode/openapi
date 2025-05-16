@@ -1,0 +1,8 @@
+description: The fields that can be updated for a delivery
+type: object
+allOf:
+  - $ref: './DeliveryBase.yaml'
+  - type: object
+    properties:
+      deliveryAddress:
+        $ref: ./AddressDetailsDTO.yaml

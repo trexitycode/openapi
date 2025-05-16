@@ -1,0 +1,20 @@
+# See https://docs.redoc.ly/cli/configuration/
+
+extends:
+  - recommended
+rules:
+  no-unused-components: error
+  no-ambiguous-paths: off
+theme:
+  openapi:
+    theme:
+      #htmlTemplate: ./templates/reference-doc.hbs -- not really supported this way in 1.34.2
+      colors:
+        primary:
+          main: "#32329f"
+      typography:
+        fontFamily: "canada-type-gibson, sans-serif"
+        headings:
+          "fontFamily": "canada-type-gibson, sans-serif"
+        links:
+          color: "#4076BA"

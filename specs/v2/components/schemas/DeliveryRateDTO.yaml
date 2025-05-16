@@ -1,0 +1,19 @@
+description: A simple description of a delivery for rating purposes
+allOf:
+  - $ref: './DeliveryWindowProps.yaml'
+  - type: object
+    required:
+      - deliveryAddress
+    properties:
+      pickupAddress:
+        $ref: ./AddressDetailsDTO.yaml
+      deliveryAddress:
+        $ref: ./AddressDetailsDTO.yaml
+      requirements:
+        $ref: ./DeliveryRequirements.yaml
+      numLabels:
+        type: number
+        minimum: 1
+        default: 1
+        description: |
+          The number of labels for the delivery (each separate package needs a label). 

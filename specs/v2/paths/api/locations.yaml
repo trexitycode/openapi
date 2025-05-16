@@ -1,0 +1,24 @@
+get:
+  operationId: listLocations
+  tags: [Locations]
+  summary: List locations
+  description: |
+    List all your locations. In order to manage Locations, you need to use the [Merchant Portal](https://merchant.trexity.com/).
+
+  responses:
+    '200':
+      description: List Locations for a Merchant
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                items:
+                  $ref: ../../components/schemas/MerchantLocation.yaml
+
+    '404':
+      $ref: ../../components/responses/404.yaml
+    '500':
+      $ref: ../../components/responses/500.yaml

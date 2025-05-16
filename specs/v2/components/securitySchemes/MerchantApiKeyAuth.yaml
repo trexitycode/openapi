@@ -1,0 +1,19 @@
+type: http
+scheme: bearer
+description: |
+  This authentication strategy uses a Trexity Merchant API KEY. This API KEY is used
+  with the bearer scheme in the Authorization header.
+
+  In order to obtain a Trexity Merchant API key, you need to sign-up as Merchant at https://merchant.trexity.com/
+  and create an API KEY through your merchant portal.
+
+  Feel free to contact support@trexity.com for any questions you may have.
+
+  Example:
+  ```
+  curl -X POST {server-url}/{path} \
+    -H 'Content-Type: application/json' \
+    -H 'Authorization: Bearer <Merchant API Key>' \
+    -d '{ ...body... }'
+  ```
+

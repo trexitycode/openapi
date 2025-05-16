@@ -1,0 +1,14 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+This rule describes the convention used when structuring files in an Open API schema.
+
+- Use YAML syntax that follows the Open API 3.1 specification when writing API documentation
+- Favour multi-files that can be referenced
+- Paths documented in an API spec file should be resource-centric, meaning the route should indicate the resource being operated on
+- Paths documented in an API spec file should reference files with a plural suffix for the create or list operation, and a suffixless file for operations on a resource by ID (e.g. deliveries.yaml to operate on the list of deliveries POST and GET, and delivery.yaml to operate on one delivery resource)
+- All model schemas should use the suffix of "DTO" to indicate the model is for write operations, and no suffix for the output or read operations (e.g. DeliveryDTO, and Delivery, or BatchRateRequestDTO, BatchRateRequest)
+- When breaking out model schemas, try to use models with a "Base" suffix that holds all common properties so properties can be reused with the "allOf" keyword
+- All model schema files should be saved under components/schemas 

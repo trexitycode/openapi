@@ -1,0 +1,65 @@
+description: An order to be delivered
+type: object
+allOf:
+  - $ref: './DeliveryBase.yaml'
+  - type: object
+    required:
+        - pickupAddress
+        - deliveryAddress
+        - deliveryName
+        - deliveryEmail
+        - orderId
+    properties:
+      pickupAddress: {}
+      deliveryAddress: {}
+      pickupStartAt: {}
+      deliveryName: {}
+      deliveryEmail: {}
+      orderId: {}
+  - type: object
+    properties:
+      locationId:
+        type: string
+        description: The ID of the location that the delivery will be associated with for billing purposes. If not provided, the location will be inferred from the pickup address.
+      pickupAddress:
+        $ref: ./AddressDetailsDTO.yaml
+      deliveryAddress:
+        $ref: ./AddressDetailsDTO.yaml
+      pickupStartAt:
+        $ref: './PickupStartAt.yaml'
+      pickupEndAt:
+        $ref: './PickupEndAt.yaml'
+      deliverStartAt:
+        $ref: './DeliverStartAt.yaml'
+      deliverEndAt:
+        $ref: './DeliverEndAt.yaml'
+      merchantPpid:
+        type: string
+        description: Partner-provided ID of the merchant. This ID can be used when querying for deliveries. Only used by Partner accounts.
+      merchantName:
+        type: string
+        description: Partner-provided name of the merchant. This will be displayed in place of the merchant name defined in the merchant profile. Only used by Partner accounts.
+      merchantPhone:
+        type: string
+        description: Partner-provided phone of the merchant. This will be displayed in place of the merchant phone defined in the merchant profile. Only used by Partner accounts.
+      merchantEmail:
+        type: string
+        description: Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts.
+      requirements:
+        $ref: ./DeliveryRequirements.yaml
+      externalId:
+        type: string
+        maxLength: 256
+        description: |
+          The ID of the external entity that is associated to
+          this delivery (e.g. the external order or shipment ID).
+      scanId:
+        type: string
+        maxLength: 256
+        description: |
+          The ID embedded in your custom label's QR code. If
+          not specified, you will be required to use our built-in labels. If
+          specified, you will not be able to request our built-in label for this
+          delivery.
+      load:
+        $ref: ./DeliveryLoad.yaml

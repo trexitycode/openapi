@@ -1,0 +1,38 @@
+get:
+  operationId: getDeliveryPod
+  tags: [Deliveries]
+  summary: Get delivery proof of delivery
+  description: |
+    Get a delivery's proof of delivery photo.
+
+    If the delivery is not yet completed then a 404 will be returned.
+
+    If the delivery `requiresPersonHandoff` is false then a 404 will be returned.
+
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/deliveries/get-delivery-pod.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: deliveryId
+      required: true
+      schema:
+        type: string
+      description: The id of the delivery (can be externalId or delivery ID)
+  responses:
+    '200':
+      description: Success
+      content:
+        image/png:
+          schema:
+            type: string
+            format: binary
+            description: Photographic Proof of Delivery.
+    '400':
+      $ref: ../../components/responses/400.yaml
+    '404':
+      $ref: ../../components/responses/404.yaml
+    '500':
+      $ref: ../../components/responses/500.yaml
