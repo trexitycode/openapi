@@ -1,4 +1,12 @@
 description: A registered webhook
+type: object
+required:
+  - id
+  - createdAt
+  - merchantId
+  - type
+  - eventName
+  - url
 properties:
   id:
     type: string

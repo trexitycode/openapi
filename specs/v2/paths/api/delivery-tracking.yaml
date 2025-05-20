@@ -46,6 +46,10 @@ get:
                   trackingUrl: "{tracking-server-url}?token=<jwt token goes here>"
     '400':
       $ref: ../../components/responses/400.yaml
+    '401':
+      $ref: ../../components/responses/401.yaml
+    '403':
+      $ref: ../../components/responses/403.yaml
     '404':
       $ref: ../../components/responses/404.yaml
     '500':

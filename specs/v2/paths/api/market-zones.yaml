@@ -172,6 +172,10 @@ get:
                     type:
                       type: string
                       description: Reference to the zone type ("surcharge")
+    '401':
+      $ref: ../../components/responses/401.yaml
+    '403':
+      $ref: ../../components/responses/403.yaml
     '429':
       $ref: ../../components/responses/429.yaml
     '500':
