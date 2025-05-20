@@ -27,8 +27,6 @@ allOf:
         $ref: ./AddressDetailsDTO.yaml
       pickupStartAt:
         $ref: './PickupStartAt.yaml'
-      pickupEndAt:
-        $ref: './PickupEndAt.yaml'
       deliverStartAt:
         $ref: './DeliverStartAt.yaml'
       deliverEndAt:
