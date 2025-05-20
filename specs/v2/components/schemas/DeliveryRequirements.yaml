@@ -16,19 +16,27 @@ properties:
     enum:
       - small
       - medium
-  legalAgeAlcohol:
-    type: boolean
+  proofOfDelivery:
+    type: string
+    enum:
+      - signature
+      - photo
+      - pin
     description: |
-      Contains any trace of alcohol.
+      The proof of delivery that must be provided by the courier.
+
+      - signature - A signature is required from the recipient.
+      - photo - A safe-dropp with a photo is required.
+      - pin - A PIN exchange given by the recipient is required.
+  containsAlcohol:
+    type: boolean
+    description: Contains any trace of alcohol.
+  requiresLegalAgeVerification:
+    type: boolean
+    description: Must be delivered by a courier who is equipped to deliver perishable items.
   perishable:
     type: boolean
-    description: |
-      Must be delivered by a courier who is equipped to deliver perishable items.
+    description: Must be delivered by a courier who is equipped to deliver perishable items.
   returnReusables:
     type: boolean
-    description: |
-      Must be delivered by a courier who will return collected reusables back to pickup.
-  "custom pricing":
-    type: boolean
-    description: |
-      Please contact a Trexity support agent for custom pricing options.
+    description: Must be delivered by a courier who will return collected reusables back to pickup.
