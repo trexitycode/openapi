@@ -11,24 +11,26 @@ properties:
     description: |
       Describe the type of vehicle that must be used for a delivery.
 
+      - any - Any vehicle type is allowed.
       - small - Sedan, hatchback, etc [example: Honda Civic]
       - medium - SUV or similar [example: Toyota Sienna]
     enum:
+      - any
       - small
       - medium
   proofOfDelivery:
     type: string
     enum:
       - pin+signature
-      - signature
       - pin
+      - signature
       - photo
     description: |
       The proof of delivery that must be provided by the courier.
 
       - pin+signature - A PIN exchange and signature given by the recipient are required.
-      - signature - A signature is required from the recipient.
       - pin - A PIN exchange given by the recipient is required.
+      - signature - A signature is required from the recipient.
       - photo - A safe-drop with a photo is required.
   containsAlcohol:
     type: boolean
