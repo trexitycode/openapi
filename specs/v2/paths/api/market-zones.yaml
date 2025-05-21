@@ -1,0 +1,182 @@
+get:
+  operationId: listMarketZones
+  tags: [Regions]
+  summary: List market zones
+  description: |
+    List all market zones or the market zone for a specific pickup address.
+
+    If a pickup address is provided then `addressLine1`, `city`, `postalCode`, `provinceCode`, and `countryCode` are required.
+
+    ### Rate Limiting
+
+    This operation can be requested without authentication, however it will have a
+    strict rate limit of 6 requests every 10 seconds.
+
+    However, authenticated requests can request 12 times every 10 seconds.
+
+    **Possible error codes:**
+    - `invalid-address` = When the address cannot be recognized as a valid address
+    - `invalid-addressLine1` = When the addressLine1 is missing
+    - `invalid-city` = When the city is missing
+    - `invalid-postalCode` = When the postalCode is missing, invalid or not acceptedable
+    - `invalid-provinceCode` = When the province is missing, or is not acceptedable
+    - `invalid-countryCode` = When the country is missing, or is not acceptedable
+
+  security:
+    - {}
+    - MerchantApiKeyAuth: []
+
+  parameters:
+    - in: query
+      name: addressLine1
+      required: false
+      schema:
+        type: string
+      example: 123 Fake St
+    - in: query
+      name: addressLine2
+      required: false
+      schema:
+        type: string
+      example: Unit 4
+    - in: query
+      name: city
+      required: false
+      schema:
+        type: string
+      description: The pickup address from which to generate the market zones.
+      example: Ottawa
+    - in: query
+      name: postalCode
+      required: false
+      schema:
+        type: string
+      description: The pickup address from which to generate the market zones.
+      example: K2G 6F2
+    - in: query
+      name: provinceCode
+      required: false
+      schema:
+        type: string
+      description: The pickup address from which to generate the market zones.
+      example: ON
+    - in: query
+      name: countryCode
+      required: false
+      schema:
+        type: string
+      description: The pickup address from which to generate the market zones.
+      example: CA
+
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              pickup:
+                type: array
+                description: Geographic areas that merchants can create deliveries for pickup from
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Id of service city zone
+                    geometry:
+                      type: object
+                      description: Geometry geoJSON
+                      properties:
+                        type:
+                          type: string
+                          enum: [Polygon,Multipolygon]
+                        coordinates:
+                          type: array
+                          description: Array of arrays containing longitude and latitude coordinates (in that order)
+                          items:
+                            type: array
+                            items: { type: number }
+                    metadata:
+                      type: object
+                      description: Object that can contain miscellaneous props, but will always contain "layer"
+                    serviceCity:
+                      type: string
+                      description: Service city name
+                    type:
+                      type: string
+                      description: Reference to the zone type ("pickup")
+              delivery:
+                type: array
+                description: |
+                  Geographic areas that merchants can deliver to according to the standard delivery fees
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Id of service city zone
+                    geometry:
+                      type: object
+                      description: Geometry geoJSON
+                      properties:
+                        type:
+                          type: string
+                          enum: [Polygon,Multipolygon]
+                        coordinates:
+                          type: array
+                          description: Array of arrays containing longitude and latitude coordinates (in that order)
+                          items:
+                            type: array
+                            items: { type: number }
+                    metadata:
+                      type: object
+                      description: Object that can contain miscellaneous props, but will always contain "layer"
+                    serviceCity:
+                      type: string
+                      description: Service city name
+                    type:
+                      type: string
+                      description: Reference to the zone type ("delivery")
+              surcharge:
+                type: array
+                description: |
+                  Geographic areas that are considered outside the standard delivery zone and could include a
+                  surcharge fee in addition to the standard delivery fee
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      description: Id of service city zone
+                    geometry:
+                      type: object
+                      description: Geometry geoJSON
+                      properties:
+                        type:
+                          type: string
+                          enum: [Polygon,Multipolygon]
+                        coordinates:
+                          type: array
+                          description: Array of arrays containing longitude and latitude coordinates (in that order)
+                          items:
+                            type: array
+                            items: { type: number }
+                    metadata:
+                      type: object
+                      description: Object that can contain miscellaneous props, but will always contain "layer"
+                    serviceCity:
+                      type: string
+                      description: Service city name
+                    type:
+                      type: string
+                      description: Reference to the zone type ("surcharge")
+    '401':
+      $ref: ../../components/responses/401.yaml
+    '403':
+      $ref: ../../components/responses/403.yaml
+    '429':
+      $ref: ../../components/responses/429.yaml
+    '500':
+      $ref: ../../components/responses/500.yaml

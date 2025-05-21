@@ -1,0 +1,110 @@
+post:
+  operationId: checkAddress
+  tags: [Addresses]
+  summary: Check an address
+  description: |
+    Checks whether an address is serviceable and returns a result that identifies if the address can be
+    used as a delivery address or a pickup address. If, a pickup address is provided, the result will
+    indicate if the delivery address is in a tiered zone.
+
+    ### Rate Limiting
+
+    This operation can be requested without authentication, however it will have a
+    strict rate limit of 3 requests every 10 seconds.
+
+    However, authenticated requests can request 12 times every 10 seconds.
+
+    **Unexhaustive list of error codes.**
+
+    - `invalid-delivery.addressLine1` = When the addressLine1 is missing
+    - `invalid-delivery.city` = When the city is missing
+    - `invalid-delivery.postalCode` = When the postalCode is missing, invalid or not acceptedable
+    - `invalid-delivery.provinceCode` = When the province is missing, or is not acceptedable
+    - `invalid-delivery.countryCode` = When the country is missing, or is not acceptedable
+    - `invalid-pickup.addressLine1` = When the addressLine1 is missing
+    - `invalid-pickup.city` = When the city is missing
+    - `invalid-pickup.postalCode` = When the postalCode is missing, invalid or not acceptedable
+    - `invalid-pickup.provinceCode` = When the province is missing, or is not acceptedable
+    - `invalid-pickup.countryCode` = When the country is missing, or is not acceptedable
+    - `unverified-delivery-address` = When the delivery address cannot be verified with a geocoded location
+    - `unverified-pickup-address` = When the pickup address cannot be verified with a geocoded location
+    
+    
+  security:
+    - {}
+    - MerchantApiKeyAuth: []
+
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            delivery:
+              type: object
+              allOf:
+                - $ref: '../../components/schemas/AddressDetailsDTO.yaml'
+              description: The address to check.
+            pickup:
+              type: object
+              allOf:
+                - $ref: '../../components/schemas/AddressDetailsDTO.yaml'
+              description: The pickup address from which to generate the tiered zones.
+              example:
+                addressLine1: "124 Fake Winding Rd"
+                city: "Ottawa"
+                provinceCode: "ON"
+                postalCode: "K2G 6F2"
+                countryCode: "CA"
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  pickup:
+                    type: boolean
+                    description: If `true` then the address can be used as a pickup address (or business address).
+                  delivery:
+                    type: string
+                    enum: [none, normal, extended, 'tier-1', 'tier-2', 'tier-3']
+                    description: |
+                      The delivery classification of the address.
+
+                      `none` = The address is outside a known delivery zone and is unserviceable.
+
+                      `normal` = The address is serviceable and normal delivery rates apply.
+
+                      `extended` = The address is serviceable and surcharges may apply.
+
+                      `tier-1, tier-2, tier-3, ...` = The address is serviceable and the address is in a tier-1, tier-2, tier-3, etc. zone.
+                  lngLat:
+                    type: object
+                    description: |
+                      The latitude and logitude of the checked address.
+                    properties:
+                      longitude:
+                        type: number
+                        description: Longitude of the address
+                      latitude:
+                        type: number
+                        description: Latitude of the address
+                  serviceCity:
+                    type: string
+                    description: |
+                      Service city that the address is located. Provided in the format: "(city name), (2 letter abbreviation of province)" (may or may not be supported by Trexity)
+    '400':
+      $ref: '../../components/responses/400.yaml'
+    '401':
+      $ref: '../../components/responses/401.yaml'
+    '403':
+      $ref: '../../components/responses/403.yaml'
+    '429':
+      $ref: '../../components/responses/429.yaml'
+    '500':
+      $ref: '../../components/responses/500.yaml'

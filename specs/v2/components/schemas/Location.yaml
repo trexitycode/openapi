@@ -1,0 +1,12 @@
+description: A location described by latitude and longitude
+type: object
+nullable: true
+properties:
+  latitude:
+    type: number
+    minimum: -90
+    maximum: 90
+  longitude:
+    type: number
+    minimum: -180
+    maximum: 90

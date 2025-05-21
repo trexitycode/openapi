@@ -1,0 +1,9 @@
+allOf:
+  - $ref: './AddressDetailsBase.yaml' 
+  - type: object
+    required:
+      - addressLine1
+      - city
+      - provinceCode
+      - postalCode
+      - countryCode
