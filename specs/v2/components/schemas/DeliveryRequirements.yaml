@@ -26,14 +26,14 @@ properties:
       The proof of delivery that must be provided by the courier.
 
       - signature - A signature is required from the recipient.
-      - photo - A safe-dropp with a photo is required.
+      - photo - A safe-drop with a photo is required.
       - pin - A PIN exchange given by the recipient is required.
   containsAlcohol:
     type: boolean
     description: Contains any trace of alcohol.
   requiresLegalAgeVerification:
     type: boolean
-    description: Must be delivered by a courier who is equipped to deliver perishable items.
+    description: Requires legal age verification.
   perishable:
     type: boolean
     description: Must be delivered by a courier who is equipped to deliver perishable items.

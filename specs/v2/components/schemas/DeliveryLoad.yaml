@@ -2,15 +2,7 @@ type: object
 description: |
   Optional dimensions and weight of the delivery.
 
-  The maximums have changed from 130 cm length, 80 cm width
-  and 80 cm height, to 91 cm for any dimension. The maximum for weight changed from
-  30000 grams to 15876.
-
-  The maximum weight changed from 15876 to 9072 grams to coincides
-  with our merchant code of conduct policy.
-
-  The maximum weight changed from 9072 back to 15876 grams to give
-  merchants time to adjust to the new weight limit.
+  The maximum dimensions are 91 cm for any dimension. The maximum for weight is 15876 grams.
 properties:
   length:
     type: integer
