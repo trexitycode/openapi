@@ -1,11 +1,17 @@
 type: object
 description: The operating hours for a location
+required:
+  - days
+  - calendarDays
 properties:
   days:
     type: array
     description: The days of the week the location is open
     items:
       type: object
+      required:
+        - day
+        - ranges
       properties:
         day:
           type: integer
@@ -18,6 +24,9 @@ properties:
           description: The time ranges the location is open on a given day. If empty, the location is closed on this day.
           items:
             type: object
+            required:
+              - fromTime
+              - toTime
             properties:
               fromTime:
                 type: string
@@ -34,6 +43,9 @@ properties:
     description: Calendar days during the year the location is open. These override any operating hours for days of the week.
     items:
       type: object
+      required:
+        - day
+        - ranges
       properties:
         day:
           type: string
@@ -45,6 +57,9 @@ properties:
           description: The time ranges the location is open on a given calendar day. If empty, the location is closed on this day.
           items:
             type: object
+            required:
+              - fromTime
+              - toTime
             properties:
               fromTime:
                 type: string
