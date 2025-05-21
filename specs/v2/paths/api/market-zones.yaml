@@ -75,103 +75,13 @@ get:
         application/json:
           schema:
             type: object
+            required:
+              - data
             properties:
-              pickup:
+              data:
                 type: array
-                description: Geographic areas that merchants can create deliveries for pickup from
                 items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                      description: Id of service city zone
-                    geometry:
-                      type: object
-                      description: Geometry geoJSON
-                      properties:
-                        type:
-                          type: string
-                          enum: [Polygon,Multipolygon]
-                        coordinates:
-                          type: array
-                          description: Array of arrays containing longitude and latitude coordinates (in that order)
-                          items:
-                            type: array
-                            items: { type: number }
-                    metadata:
-                      type: object
-                      description: Object that can contain miscellaneous props, but will always contain "layer"
-                    serviceCity:
-                      type: string
-                      description: Service city name
-                    type:
-                      type: string
-                      description: Reference to the zone type ("pickup")
-              delivery:
-                type: array
-                description: |
-                  Geographic areas that merchants can deliver to according to the standard delivery fees
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                      description: Id of service city zone
-                    geometry:
-                      type: object
-                      description: Geometry geoJSON
-                      properties:
-                        type:
-                          type: string
-                          enum: [Polygon,Multipolygon]
-                        coordinates:
-                          type: array
-                          description: Array of arrays containing longitude and latitude coordinates (in that order)
-                          items:
-                            type: array
-                            items: { type: number }
-                    metadata:
-                      type: object
-                      description: Object that can contain miscellaneous props, but will always contain "layer"
-                    serviceCity:
-                      type: string
-                      description: Service city name
-                    type:
-                      type: string
-                      description: Reference to the zone type ("delivery")
-              surcharge:
-                type: array
-                description: |
-                  Geographic areas that are considered outside the standard delivery zone and could include a
-                  surcharge fee in addition to the standard delivery fee
-                items:
-                  type: object
-                  properties:
-                    id:
-                      type: string
-                      description: Id of service city zone
-                    geometry:
-                      type: object
-                      description: Geometry geoJSON
-                      properties:
-                        type:
-                          type: string
-                          enum: [Polygon,Multipolygon]
-                        coordinates:
-                          type: array
-                          description: Array of arrays containing longitude and latitude coordinates (in that order)
-                          items:
-                            type: array
-                            items: { type: number }
-                    metadata:
-                      type: object
-                      description: Object that can contain miscellaneous props, but will always contain "layer"
-                    serviceCity:
-                      type: string
-                      description: Service city name
-                    type:
-                      type: string
-                      description: Reference to the zone type ("surcharge")
+                  $ref: ../../components/schemas/MarketZone.yaml
     '401':
       $ref: ../../components/responses/401.yaml
     '403':

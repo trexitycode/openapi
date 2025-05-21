@@ -1,5 +1,29 @@
 description: A Merchant Location
 type: object
+required:
+  - id
+  - createdAt
+  - updatedAt
+  - disabledAt
+  - disabledReason
+  - name
+  - address
+  - serviceCity
+  - contactEmail
+  - contactName
+  - contactPhone
+  - contactTitle
+  - availableRequirements
+  - billingContactEmail
+  - timezone
+  - defaultRequiresPersonHandoff
+  - defaultContainsAlcohol
+  - defaultDeliveryInstructions
+  - defaultPickupInstructions
+  - lifetimeDeliveryCount
+  - lifetimeBatchesCount
+  - lastDeliveredAt
+  - operatingHours
 properties:
   id:
     type: string

@@ -1,0 +1,24 @@
+type: object
+required:
+  - pickup
+  - delivery
+  - surcharge
+properties:
+  pickup:
+    type: array
+    description: Geographic areas that merchants can create deliveries for pickup from
+    items:
+      $ref: ../../components/schemas/Zone.yaml
+  delivery:
+    type: array
+    description: |
+      Geographic areas that merchants can deliver to according to the standard delivery fees
+    items:
+      $ref: ../../components/schemas/Zone.yaml
+  surcharge:
+    type: array
+    description: |
+      Geographic areas that are considered outside the standard delivery zone and could include a
+      surcharge fee in addition to the standard delivery fee
+    items:
+      $ref: ../../components/schemas/Zone.yaml
