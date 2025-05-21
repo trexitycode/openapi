@@ -30,12 +30,13 @@ post:
             required: [data]
             properties:
               data:
-                required: [webhookId]
-                properties:
-                  webhookId:
-                    type: string
+                $ref: ../../components/schemas/Webhook.yaml
     '400':
       $ref: ../../components/responses/400.yaml
+    '401':
+      $ref: ../../components/responses/401.yaml
+    '403':
+      $ref: ../../components/responses/403.yaml
     '500':
       $ref: ../../components/responses/500.yaml
 
@@ -59,6 +60,7 @@ get:
         application/json:
           schema:
             type: object
+            required: [data]
             properties:
               data:
                 type: array
@@ -66,5 +68,9 @@ get:
                   $ref: ../../components/schemas/Webhook.yaml
     '400':
       $ref: ../../components/responses/400.yaml
+    '401':
+      $ref: ../../components/responses/401.yaml
+    '403':
+      $ref: ../../components/responses/403.yaml
     '500':
       $ref: ../../components/responses/500.yaml
