@@ -19,17 +19,15 @@ properties:
   proofOfDelivery:
     type: string
     enum:
-      - pin+signature
       - signature
-      - pin
       - photo
+      - pin
     description: |
       The proof of delivery that must be provided by the courier.
 
       - pin+signature - A PIN exchange and signature given by the recipient are required.
-      - signature - A signature is required from the recipient.
       - pin - A PIN exchange given by the recipient is required.
-      - photo - A safe-drop with a photo is required.
+      - photo - A safe-drop is required with no proof of delivery.
   containsAlcohol:
     type: boolean
     description: Contains any trace of alcohol.

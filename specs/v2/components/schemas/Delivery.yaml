@@ -39,6 +39,8 @@ allOf:
         description: |
           The ID of the external entity that is associated to
           this delivery (e.g. the external order or shipment ID).
+      requirements:
+        $ref: ./DeliveryRequirements.yaml
       scanId:
         type: string
         maxLength: 256

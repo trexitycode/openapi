@@ -6,3 +6,5 @@ allOf:
     properties:
       deliveryAddress:
         $ref: ./AddressDetailsDTO.yaml
+      requirements:
+        $ref: ./DeliveryRequirements.yaml
