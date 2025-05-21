@@ -1,11 +1,9 @@
 get:
-  operationId: listMarketZones
+  operationId: getRegion
   tags: [Regions]
-  summary: List market zones
+  summary: Get region
   description: |
-    List all market zones or the market zone for a specific pickup address.
-
-    If a pickup address is provided then `addressLine1`, `city`, `postalCode`, `provinceCode`, and `countryCode` are required.
+    Get the region for a specific pickup address.
 
     ### Rate Limiting
 
@@ -29,40 +27,39 @@ get:
   parameters:
     - in: query
       name: addressLine1
-      required: false
+      required: true
       schema:
         type: string
       example: 123 Fake St
     - in: query
       name: addressLine2
-      required: false
       schema:
         type: string
       example: Unit 4
     - in: query
       name: city
-      required: false
+      required: true
       schema:
         type: string
       description: The pickup address from which to generate the market zones.
       example: Ottawa
     - in: query
       name: postalCode
-      required: false
+      required: true
       schema:
         type: string
       description: The pickup address from which to generate the market zones.
       example: K2G 6F2
     - in: query
       name: provinceCode
-      required: false
+      required: true
       schema:
         type: string
       description: The pickup address from which to generate the market zones.
       example: ON
     - in: query
       name: countryCode
-      required: false
+      required: true
       schema:
         type: string
       description: The pickup address from which to generate the market zones.
@@ -79,9 +76,9 @@ get:
               - data
             properties:
               data:
-                type: array
-                items:
-                  $ref: ../../components/schemas/MarketZone.yaml
+                $ref: ../../components/schemas/Region.yaml
+    '400':
+      $ref: ../../components/responses/400.yaml
     '401':
       $ref: ../../components/responses/401.yaml
     '403':

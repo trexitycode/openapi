@@ -317,150 +317,12 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "data"
+                  ],
                   "properties": {
-                    "pickup": {
-                      "type": "array",
-                      "description": "Geographic areas that merchants can create deliveries for pickup from",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "description": "Id of service city zone"
-                          },
-                          "geometry": {
-                            "type": "object",
-                            "description": "Geometry geoJSON",
-                            "properties": {
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "Polygon",
-                                  "Multipolygon"
-                                ]
-                              },
-                              "coordinates": {
-                                "type": "array",
-                                "description": "Array of arrays containing longitude and latitude coordinates (in that order)",
-                                "items": {
-                                  "type": "array",
-                                  "items": {
-                                    "type": "number"
-                                  }
-                                }
-                              }
-                            }
-                          },
-                          "metadata": {
-                            "type": "object",
-                            "description": "Object that can contain miscellaneous props, but will always contain \"layer\""
-                          },
-                          "serviceCity": {
-                            "type": "string",
-                            "description": "Service city name"
-                          },
-                          "type": {
-                            "type": "string",
-                            "description": "Reference to the zone type (\"pickup\")"
-                          }
-                        }
-                      }
-                    },
-                    "delivery": {
-                      "type": "array",
-                      "description": "Geographic areas that merchants can deliver to according to the standard delivery fees\n",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "description": "Id of service city zone"
-                          },
-                          "geometry": {
-                            "type": "object",
-                            "description": "Geometry geoJSON",
-                            "properties": {
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "Polygon",
-                                  "Multipolygon"
-                                ]
-                              },
-                              "coordinates": {
-                                "type": "array",
-                                "description": "Array of arrays containing longitude and latitude coordinates (in that order)",
-                                "items": {
-                                  "type": "array",
-                                  "items": {
-                                    "type": "number"
-                                  }
-                                }
-                              }
-                            }
-                          },
-                          "metadata": {
-                            "type": "object",
-                            "description": "Object that can contain miscellaneous props, but will always contain \"layer\""
-                          },
-                          "serviceCity": {
-                            "type": "string",
-                            "description": "Service city name"
-                          },
-                          "type": {
-                            "type": "string",
-                            "description": "Reference to the zone type (\"delivery\")"
-                          }
-                        }
-                      }
-                    },
-                    "surcharge": {
-                      "type": "array",
-                      "description": "Geographic areas that are considered outside the standard delivery zone and could include a\nsurcharge fee in addition to the standard delivery fee\n",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "id": {
-                            "type": "string",
-                            "description": "Id of service city zone"
-                          },
-                          "geometry": {
-                            "type": "object",
-                            "description": "Geometry geoJSON",
-                            "properties": {
-                              "type": {
-                                "type": "string",
-                                "enum": [
-                                  "Polygon",
-                                  "Multipolygon"
-                                ]
-                              },
-                              "coordinates": {
-                                "type": "array",
-                                "description": "Array of arrays containing longitude and latitude coordinates (in that order)",
-                                "items": {
-                                  "type": "array",
-                                  "items": {
-                                    "type": "number"
-                                  }
-                                }
-                              }
-                            }
-                          },
-                          "metadata": {
-                            "type": "object",
-                            "description": "Object that can contain miscellaneous props, but will always contain \"layer\""
-                          },
-                          "serviceCity": {
-                            "type": "string",
-                            "description": "Service city name"
-                          },
-                          "type": {
-                            "type": "string",
-                            "description": "Reference to the zone type (\"surcharge\")"
-                          }
-                        }
-                      }
+                    "data": {
+                      "$ref": "#/components/schemas/MarketZone"
                     }
                   }
                 }
@@ -1819,6 +1681,92 @@
           }
         ]
       },
+      "Zone": {
+        "type": "object",
+        "required": [
+          "id",
+          "geometry",
+          "metadata",
+          "serviceCity",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Id of service city zone"
+          },
+          "geometry": {
+            "type": "object",
+            "description": "Geometry geoJSON",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "Polygon",
+                  "Multipolygon"
+                ]
+              },
+              "coordinates": {
+                "type": "array",
+                "description": "Array of arrays containing longitude and latitude coordinates (in that order)",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "number"
+                  }
+                }
+              }
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "description": "Object that can contain miscellaneous props, but will always contain \"layer\""
+          },
+          "serviceCity": {
+            "type": "string",
+            "description": "Service city name"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "pickup",
+              "delivery",
+              "surcharge"
+            ]
+          }
+        }
+      },
+      "MarketZone": {
+        "type": "object",
+        "required": [
+          "pickup",
+          "delivery",
+          "surcharge"
+        ],
+        "properties": {
+          "pickup": {
+            "type": "array",
+            "description": "Geographic areas that merchants can create deliveries for pickup from",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
+          "delivery": {
+            "type": "array",
+            "description": "Geographic areas that merchants can deliver to according to the standard delivery fees\n",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          },
+          "surcharge": {
+            "type": "array",
+            "description": "Geographic areas that are considered outside the standard delivery zone and could include a\nsurcharge fee in addition to the standard delivery fee\n",
+            "items": {
+              "$ref": "#/components/schemas/Zone"
+            }
+          }
+        }
+      },
       "SimplifiedDateISOString": {
         "description": "Date time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
         "type": "string",
@@ -2309,6 +2257,31 @@
       "MerchantLocation": {
         "description": "A Merchant Location",
         "type": "object",
+        "required": [
+          "id",
+          "createdAt",
+          "updatedAt",
+          "disabledAt",
+          "disabledReason",
+          "name",
+          "address",
+          "serviceCity",
+          "contactEmail",
+          "contactName",
+          "contactPhone",
+          "contactTitle",
+          "availableRequirements",
+          "billingContactEmail",
+          "timezone",
+          "defaultRequiresPersonHandoff",
+          "defaultContainsAlcohol",
+          "defaultDeliveryInstructions",
+          "defaultPickupInstructions",
+          "lifetimeDeliveryCount",
+          "lifetimeBatchesCount",
+          "lastDeliveredAt",
+          "operatingHours"
+        ],
         "properties": {
           "id": {
             "type": "string",
@@ -2324,6 +2297,7 @@
           },
           "disabledAt": {
             "type": "string",
+            "nullable": true,
             "format": "date-time",
             "description": "The date and time the location was disabled",
             "example": "2021-01-01T00:00:00Z"
@@ -2361,6 +2335,7 @@
           },
           "contactTitle": {
             "type": "string",
+            "nullable": true,
             "description": "The title of the contact that is used for customer service and notifications"
           },
           "availableRequirements": {
@@ -2368,6 +2343,7 @@
           },
           "billingContactEmail": {
             "type": "string",
+            "nullable": true,
             "description": "The email address of the billing contact that is used for billing and invoicing",
             "format": "email"
           },
@@ -2386,10 +2362,12 @@
           },
           "defaultDeliveryInstructions": {
             "type": "string",
+            "nullable": true,
             "description": "The default `deliveryInstructions` that will apply to all deliveries associated to this location."
           },
           "defaultPickupInstructions": {
             "type": "string",
+            "nullable": true,
             "description": "The default `pickupInstructions` that will apply to all pickups associated to this location."
           },
           "lifetimeDeliveryCount": {
@@ -2402,6 +2380,7 @@
           },
           "lastDeliveredAt": {
             "type": "string",
+            "nullable": true,
             "format": "date-time",
             "description": "The date and time the last delivery was completed for this location."
           },

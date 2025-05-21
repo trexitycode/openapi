@@ -1,0 +1,7 @@
+type: array
+description: A single position, represented as [longitude, latitude] or [longitude, latitude, altitude].
+minItems: 2
+maxItems: 3
+items:
+  type: number
+

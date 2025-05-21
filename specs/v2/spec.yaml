@@ -242,8 +242,8 @@ paths:
     $ref: ./paths/api/check-address.yaml
   /rates:
     $ref: ./paths/api/rates.yaml
-  /regions/market-zones:
-    $ref: ./paths/api/market-zones.yaml
+  /regions:
+    $ref: ./paths/api/regions.yaml
   /deliveries:
     $ref: ./paths/api/deliveries.yaml
   /deliveries/{deliveryId}:
