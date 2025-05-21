@@ -15,12 +15,13 @@ properties:
 
   disabledAt:
     type: string
+    nullable: true
     format: date-time
     description: The date and time the location was disabled
     example: "2021-01-01T00:00:00Z"
 
   disabledReason:
-    type: string  
+    type: string
     description: The reason the location is disabled
     example: "Invoice payment failed"
 
@@ -52,6 +53,7 @@ properties:
 
   contactTitle:
     type: string
+    nullable: true
     description: The title of the contact that is used for customer service and notifications
 
   availableRequirements:
@@ -59,6 +61,7 @@ properties:
 
   billingContactEmail:
     type: string
+    nullable: true
     description: The email address of the billing contact that is used for billing and invoicing
     format: email
 
@@ -77,10 +80,12 @@ properties:
 
   defaultDeliveryInstructions:
     type: string
+    nullable: true
     description: The default `deliveryInstructions` that will apply to all deliveries associated to this location.
 
   defaultPickupInstructions:
     type: string
+    nullable: true
     description: The default `pickupInstructions` that will apply to all pickups associated to this location.
 
   lifetimeDeliveryCount:
@@ -93,9 +98,9 @@ properties:
 
   lastDeliveredAt:
     type: string
+    nullable: true
     format: date-time
     description: The date and time the last delivery was completed for this location.
 
   operatingHours:
     $ref: ./OperatingHours.yaml
-                  
