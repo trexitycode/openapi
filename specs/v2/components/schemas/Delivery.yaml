@@ -25,6 +25,7 @@ allOf:
           depending on the information we have of the courier at the time of the request, and/or if deliveries are removed from the batch.
       sequence:
         type: number
+        nullable: true
         description: |
           Represents the fixed ordering at the time the delivery was batched. This is the same sequence number that appears on the
           label for this delivery and what couriers may ask for at pickup.

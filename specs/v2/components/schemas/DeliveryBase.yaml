@@ -3,6 +3,8 @@ properties:
   description:
     type: string
     description: Description of the contents being delivered
+    nullable: true
+
   orderId:
     type: string
     maxLength: 20
@@ -30,20 +32,25 @@ properties:
     description: The name of the recipient
   deliveryInstructions:
     type: string
+    nullable: true
     description: |
       Delivery instructions for drop off
   giftSenderName:
     type: string
+    nullable: true
     description: If this delivery is a gift then use this field to set the gift sender's name to show to the recipient instead of "deliveryName". If not a gift, then set all gift fields to null or blank.
   giftRecipientName:
     type: string
+    nullable: true
     description: If this delivery is a gift then use this field to set the gift recipient's name that is receiving the gift. If not a gift, then set all gift fields to null or blank.
   giftRecipientEmail:
     type: string
+    nullable: true
     format: email
     description: If this delivery is a gift then use this field to set the gift recipient's email that is receiving the gift. If not a gift, then set all gift fields to null or blank.
   giftRecipientPhone:
     type: string
+    nullable: true
     description: If this delivery is a gift then use this field to set the gift recipient's phone number that is receiving the gift, use a comma (,) to separate the phone number from its extension. If not a gift, then set all gift fields to null or blank.
     example: "+1234567890,123"
   metaField1:

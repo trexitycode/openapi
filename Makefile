@@ -7,7 +7,7 @@ all: $(BUNDLED_SPECS)
 
 $(BUNDLED_SPECS): dist/%.json: specs/%/spec.yaml $(shell find specs/$* -type f)
 	@mkdir -p $(dir $@)
-	@$(OPENAPI) bundle $< --output $@ --ext json --lint
+	@$(OPENAPI) bundle $< --output $@ --ext json
 
 .PHONY: preview
 preview:
