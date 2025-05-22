@@ -5,6 +5,8 @@ post:
   description: |
     Create a new webhook for the specified event.
 
+    If a webhook with the same event name and url already exists, a 400 error will be returned.
+
   requestBody:
     required: true
     content:

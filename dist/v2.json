@@ -236,14 +236,14 @@
         }
       }
     },
-    "/regions/market-zones": {
+    "/regions": {
       "get": {
-        "operationId": "listMarketZones",
+        "operationId": "getRegion",
         "tags": [
           "Regions"
         ],
-        "summary": "List market zones",
-        "description": "List all market zones or the market zone for a specific pickup address.\n\nIf a pickup address is provided then `addressLine1`, `city`, `postalCode`, `provinceCode`, and `countryCode` are required.\n\n### Rate Limiting\n\nThis operation can be requested without authentication, however it will have a\nstrict rate limit of 6 requests every 10 seconds.\n\nHowever, authenticated requests can request 12 times every 10 seconds.\n\n**Possible error codes:**\n- `invalid-address` = When the address cannot be recognized as a valid address\n- `invalid-addressLine1` = When the addressLine1 is missing\n- `invalid-city` = When the city is missing\n- `invalid-postalCode` = When the postalCode is missing, invalid or not acceptedable\n- `invalid-provinceCode` = When the province is missing, or is not acceptedable\n- `invalid-countryCode` = When the country is missing, or is not acceptedable\n",
+        "summary": "Get region",
+        "description": "Get the region for a specific pickup address.\n\n### Rate Limiting\n\nThis operation can be requested without authentication, however it will have a\nstrict rate limit of 6 requests every 10 seconds.\n\nHowever, authenticated requests can request 12 times every 10 seconds.\n\n**Possible error codes:**\n- `invalid-address` = When the address cannot be recognized as a valid address\n- `invalid-addressLine1` = When the addressLine1 is missing\n- `invalid-city` = When the city is missing\n- `invalid-postalCode` = When the postalCode is missing, invalid or not acceptedable\n- `invalid-provinceCode` = When the province is missing, or is not acceptedable\n- `invalid-countryCode` = When the country is missing, or is not acceptedable\n",
         "security": [
           {},
           {
@@ -254,7 +254,7 @@
           {
             "in": "query",
             "name": "addressLine1",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string"
             },
@@ -263,7 +263,6 @@
           {
             "in": "query",
             "name": "addressLine2",
-            "required": false,
             "schema": {
               "type": "string"
             },
@@ -272,7 +271,7 @@
           {
             "in": "query",
             "name": "city",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string"
             },
@@ -282,7 +281,7 @@
           {
             "in": "query",
             "name": "postalCode",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string"
             },
@@ -292,7 +291,7 @@
           {
             "in": "query",
             "name": "provinceCode",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string"
             },
@@ -302,7 +301,7 @@
           {
             "in": "query",
             "name": "countryCode",
-            "required": false,
+            "required": true,
             "schema": {
               "type": "string"
             },
@@ -322,12 +321,15 @@
                   ],
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/MarketZone"
+                      "$ref": "#/components/schemas/Region"
                     }
                   }
                 }
               }
             }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
           },
           "401": {
             "$ref": "#/components/responses/401"
@@ -738,8 +740,8 @@
         "tags": [
           "Deliveries"
         ],
-        "summary": "Get delivery proof of delivery",
-        "description": "Get a delivery's proof of delivery photo.\n\nIf the delivery is not yet completed then a 404 will be returned.\n\nIf the delivery `requiresPersonHandoff` is false then a 404 will be returned.\n",
+        "summary": "Get proof of delivery",
+        "description": "Get a delivery's proof of delivery photo or signature.\n\nIf the delivery `requirements.proofOfDelivery` is not `photo+signature` or `signature` then a 404 will be returned.\n\nIf the delivery is not yet completed or not found then a 404 will be returned.\n\n**Possible error codes.**\n\n- `invalid-delivery-id` - The delivery id is invalid.\n- `delivery-not-found` - The delivery is not found.\n- `no-proof-of-delivery` - The delivery does not require a proof of delivery.\n- `delivery-not-completed` - The delivery is not yet completed.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -1001,7 +1003,7 @@
           "Webhooks"
         ],
         "summary": "Create webhook",
-        "description": "Create a new webhook for the specified event.\n",
+        "description": "Create a new webhook for the specified event.\n\nIf a webhook with the same event name and url already exists, a 400 error will be returned.\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -1212,6 +1214,9 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "data"
+                  ],
                   "properties": {
                     "data": {
                       "type": "array",
@@ -1309,6 +1314,9 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "data"
+                  ],
                   "properties": {
                     "data": {
                       "$ref": "#/components/schemas/MerchantLocation"
@@ -1517,8 +1525,9 @@
         "properties": {
           "vehicleType": {
             "type": "string",
-            "description": "Describe the type of vehicle that must be used for a delivery.\n\n- small - Sedan, hatchback, etc [example: Honda Civic]\n- medium - SUV or similar [example: Toyota Sienna]\n",
+            "description": "Describe the type of vehicle that must be used for a delivery.\n\n- any - Any vehicle type is allowed.\n- small - Sedan, hatchback, etc [example: Honda Civic]\n- medium - SUV or similar [example: Toyota Sienna]\n",
             "enum": [
+              "any",
               "small",
               "medium"
             ]
@@ -1526,11 +1535,12 @@
           "proofOfDelivery": {
             "type": "string",
             "enum": [
+              "pin+signature",
+              "pin",
               "signature",
-              "photo",
-              "pin"
+              "photo"
             ],
-            "description": "The proof of delivery that must be provided by the courier.\n\n- signature - A signature is required from the recipient.\n- photo - A safe-drop with a photo is required.\n- pin - A PIN exchange given by the recipient is required.\n"
+            "description": "The proof of delivery that must be provided by the courier.\n\n- pin+signature - A PIN exchange and signature given by the recipient are required.\n- pin - A PIN exchange given by the recipient is required.\n- signature - A signature is required from the recipient.\n- photo - A safe-drop with a photo is required.\n"
           },
           "containsAlcohol": {
             "type": "boolean",
@@ -1611,9 +1621,10 @@
                     "fuel",
                     "oversized",
                     "distance",
+                    "returnable-features",
                     "large-vehicle"
                   ],
-                  "description": "- `delivery` applied for the base delivery fee\n- `fuel` applied for fuel surcharge\n- `oversized` applied for a surplus of labels\n- `distance` applied for long distance deliveries\n- `large-vehicle` applied for deliveries that require a medium or large vehicle\n"
+                  "description": "- `delivery` applied for the base delivery fee\n- `fuel` applied for fuel surcharge\n- `oversized` applied for a surplus of labels\n- `distance` applied for long distance deliveries\n- `returnable-features` applied for returnable features such bags, or packaging\n- `large-vehicle` applied for deliveries that require a medium or large vehicle\n"
                 },
                 "amount": {
                   "type": "number",
@@ -1665,10 +1676,6 @@
           {
             "type": "object",
             "properties": {
-              "estimateScheduledPostAt": {
-                "description": "Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
-                "type": "string"
-              },
               "estimatePickupAt": {
                 "description": "Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
                 "type": "string"
@@ -1680,6 +1687,31 @@
             }
           }
         ]
+      },
+      "GeoJSONPosition": {
+        "type": "array",
+        "description": "A single position, represented as [longitude, latitude] or [longitude, latitude, altitude].",
+        "minItems": 2,
+        "maxItems": 3,
+        "items": {
+          "type": "number"
+        }
+      },
+      "GeoJSONLinearRing": {
+        "type": "array",
+        "description": "A closed linear ring, an array of four or more positions where the first and last positions are identical. Represents the boundary of a surface or a hole in a surface.",
+        "minItems": 4,
+        "items": {
+          "$ref": "#/components/schemas/GeoJSONPosition"
+        }
+      },
+      "GeoJSONPolygonCoordinates": {
+        "type": "array",
+        "description": "Array of linear rings",
+        "minItems": 1,
+        "items": {
+          "$ref": "#/components/schemas/GeoJSONLinearRing"
+        }
       },
       "Zone": {
         "type": "object",
@@ -1696,27 +1728,50 @@
             "description": "Id of service city zone"
           },
           "geometry": {
-            "type": "object",
-            "description": "Geometry geoJSON",
-            "properties": {
-              "type": {
-                "type": "string",
-                "enum": [
-                  "Polygon",
-                  "Multipolygon"
-                ]
+            "description": "A geoJSON [Polygon](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.6) or [MultiPolygon](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.7)\n",
+            "oneOf": [
+              {
+                "type": "object",
+                "required": [
+                  "type",
+                  "coordinates"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "Polygon"
+                    ]
+                  },
+                  "coordinates": {
+                    "$ref": "#/components/schemas/GeoJSONPolygonCoordinates"
+                  }
+                }
               },
-              "coordinates": {
-                "type": "array",
-                "description": "Array of arrays containing longitude and latitude coordinates (in that order)",
-                "items": {
-                  "type": "array",
-                  "items": {
-                    "type": "number"
+              {
+                "type": "object",
+                "required": [
+                  "type",
+                  "coordinates"
+                ],
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "MultiPolygon"
+                    ]
+                  },
+                  "coordinates": {
+                    "type": "array",
+                    "description": "Array of polygons",
+                    "minItems": 1,
+                    "items": {
+                      "$ref": "#/components/schemas/GeoJSONPolygonCoordinates"
+                    }
                   }
                 }
               }
-            }
+            ]
           },
           "metadata": {
             "type": "object",
@@ -1736,7 +1791,7 @@
           }
         }
       },
-      "MarketZone": {
+      "Region": {
         "type": "object",
         "required": [
           "pickup",
@@ -1814,28 +1869,6 @@
             "type": "string",
             "nullable": true,
             "description": "Delivery instructions for drop off\n"
-          },
-          "giftSenderName": {
-            "type": "string",
-            "nullable": true,
-            "description": "If this delivery is a gift then use this field to set the gift sender's name to show to the recipient instead of \"deliveryName\". If not a gift, then set all gift fields to null or blank."
-          },
-          "giftRecipientName": {
-            "type": "string",
-            "nullable": true,
-            "description": "If this delivery is a gift then use this field to set the gift recipient's name that is receiving the gift. If not a gift, then set all gift fields to null or blank."
-          },
-          "giftRecipientEmail": {
-            "type": "string",
-            "nullable": true,
-            "format": "email",
-            "description": "If this delivery is a gift then use this field to set the gift recipient's email that is receiving the gift. If not a gift, then set all gift fields to null or blank."
-          },
-          "giftRecipientPhone": {
-            "type": "string",
-            "nullable": true,
-            "description": "If this delivery is a gift then use this field to set the gift recipient's phone number that is receiving the gift, use a comma (,) to separate the phone number from its extension. If not a gift, then set all gift fields to null or blank.",
-            "example": "+1234567890,123"
           },
           "metaField1": {
             "type": "string",
@@ -1949,6 +1982,9 @@
                 "maxLength": 256,
                 "description": "The ID of the external entity that is associated to\nthis delivery (e.g. the external order or shipment ID).\n"
               },
+              "requirements": {
+                "$ref": "#/components/schemas/DeliveryRequirements"
+              },
               "scanId": {
                 "type": "string",
                 "maxLength": 256,
@@ -1959,6 +1995,28 @@
               },
               "deliveryAddress": {
                 "$ref": "#/components/schemas/AddressDetails"
+              },
+              "giftSenderName": {
+                "type": "string",
+                "nullable": true,
+                "description": "If this delivery is a gift then shows to the recipient instead of \"deliveryName\".\n"
+              },
+              "giftRecipientName": {
+                "type": "string",
+                "nullable": true,
+                "description": "If this delivery is a gift then shows the recipient's name that is receiving the gift.\n"
+              },
+              "giftRecipientEmail": {
+                "type": "string",
+                "nullable": true,
+                "format": "email",
+                "description": "If this delivery is a gift, then shows the recipient's email that is receiving the gift.\n"
+              },
+              "giftRecipientPhone": {
+                "type": "string",
+                "nullable": true,
+                "description": "If this delivery is a gift then shows the recipient's phone number that is receiving the gift, uses a comma (,) to separate the phone number from its extension.\n",
+                "example": "+1234567890,123"
               },
               "pickedUpAt": {
                 "$ref": "#/components/schemas/SimplifiedDateISOString"
@@ -1987,6 +2045,46 @@
         "description": "Specifies the end of the delivery window (i.e. the latest time that the courier can complete the delivery).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the end of the suggested delivery window indicated by the value of `deliverStartAt`.\n\nThe delivery windows are unique to each of your locations within Trexity because they are determined by the market's pickup windows and each of your location's delivery SLA. A delivery SLA is the maximum amount of time a delivery can take (.e.g. 2 hours). The general formula for computing a delivery window for each pickup window is the following.\n\n```\ndeliveryWindowStart = pickupWindowStart\ndeliveryWindowEnd = pickupWindowEnd + deliverySLA\n```\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).\nReview your suggested [delivery windows](https://merchant.trexity.com/api).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
         "type": "string",
         "nullable": true
+      },
+      "DeliveryRequirementsDto": {
+        "type": "object",
+        "description": "Object representing the requirements that must be met by a courier in order\nfor them to be considered eligible for delivery.\n\nIf no requirements object is specified then the merchant location's default requirements\nwill be used.\n",
+        "properties": {
+          "vehicleType": {
+            "type": "string",
+            "description": "Describe the type of vehicle that must be used for a delivery.\n\n- any - Any vehicle type is allowed.\n- small - Sedan, hatchback, etc [example: Honda Civic]\n- medium - SUV or similar [example: Toyota Sienna]\n",
+            "enum": [
+              "any",
+              "small",
+              "medium"
+            ]
+          },
+          "proofOfDelivery": {
+            "type": "string",
+            "enum": [
+              "pin+signature",
+              "pin",
+              "photo"
+            ],
+            "description": "The proof of delivery that must be provided by the courier.\n\n- pin+signature - A PIN exchange and signature given by the recipient are required.\n- pin - A PIN exchange given by the recipient is required.\n- photo - A safe-drop is required with no proof of delivery.\n"
+          },
+          "containsAlcohol": {
+            "type": "boolean",
+            "description": "Contains any trace of alcohol."
+          },
+          "requiresLegalAgeVerification": {
+            "type": "boolean",
+            "description": "Requires legal age verification."
+          },
+          "perishable": {
+            "type": "boolean",
+            "description": "Must be delivered by a courier who is equipped to deliver perishable items."
+          },
+          "returnReusables": {
+            "type": "boolean",
+            "description": "Must be delivered by a courier who will return collected reusables back to pickup."
+          }
+        }
       },
       "DeliveryLoad": {
         "type": "object",
@@ -2056,6 +2154,28 @@
               "deliveryAddress": {
                 "$ref": "#/components/schemas/AddressDetailsDTO"
               },
+              "giftSenderName": {
+                "type": "string",
+                "nullable": true,
+                "description": "If this delivery is a gift then use this field to set the gift sender's name to show to the recipient instead of \"deliveryName\".\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n"
+              },
+              "giftRecipientName": {
+                "type": "string",
+                "nullable": true,
+                "description": "If this delivery is a gift then use this field to set the gift recipient's name that is receiving the gift.\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n"
+              },
+              "giftRecipientEmail": {
+                "type": "string",
+                "nullable": true,
+                "format": "email",
+                "description": "If this delivery is a gift then use this field to set the gift recipient's email that is receiving the gift.\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n"
+              },
+              "giftRecipientPhone": {
+                "type": "string",
+                "nullable": true,
+                "description": "If this delivery is a gift then use this field to set the gift recipient's phone number that is receiving the gift, use a comma (,) to separate the phone number from its extension.\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n",
+                "example": "+1234567890,123"
+              },
               "pickupStartAt": {
                 "$ref": "#/components/schemas/PickupStartAt"
               },
@@ -2082,7 +2202,7 @@
                 "description": "Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts."
               },
               "requirements": {
-                "$ref": "#/components/schemas/DeliveryRequirements"
+                "$ref": "#/components/schemas/DeliveryRequirementsDto"
               },
               "externalId": {
                 "type": "string",
@@ -2113,6 +2233,31 @@
             "properties": {
               "deliveryAddress": {
                 "$ref": "#/components/schemas/AddressDetailsDTO"
+              },
+              "giftSenderName": {
+                "type": "string",
+                "nullable": true,
+                "description": "If this delivery is a gift then use this field to set the gift sender's name to show to the recipient instead of \"deliveryName\".\n\n***If updating to not a gift, then set all gift fields to null or blank.***\n"
+              },
+              "giftRecipientName": {
+                "type": "string",
+                "nullable": true,
+                "description": "If this delivery is a gift then use this field to set the gift recipient's name that is receiving the gift.\n\n***If updating to not a gift, then set all gift fields to null or blank.***\n"
+              },
+              "giftRecipientEmail": {
+                "type": "string",
+                "nullable": true,
+                "format": "email",
+                "description": "If this delivery is a gift then use this field to set the gift recipient's email that is receiving the gift.\n\n***If updating to not a gift, then set all gift fields to null or blank.***\n"
+              },
+              "giftRecipientPhone": {
+                "type": "string",
+                "nullable": true,
+                "description": "If this delivery is a gift then use this field to set the gift recipient's phone number that is receiving the gift, use a comma (,) to separate the phone number from its extension.\n\n***If updating to not a gift, then set all gift fields to null or blank.***\n",
+                "example": "+1234567890,123"
+              },
+              "requirements": {
+                "$ref": "#/components/schemas/DeliveryRequirements"
               }
             }
           }
@@ -2178,12 +2323,20 @@
       "OperatingHours": {
         "type": "object",
         "description": "The operating hours for a location",
+        "required": [
+          "days",
+          "calendarDays"
+        ],
         "properties": {
           "days": {
             "type": "array",
             "description": "The days of the week the location is open",
             "items": {
               "type": "object",
+              "required": [
+                "day",
+                "ranges"
+              ],
               "properties": {
                 "day": {
                   "type": "integer",
@@ -2197,6 +2350,10 @@
                   "description": "The time ranges the location is open on a given day. If empty, the location is closed on this day.",
                   "items": {
                     "type": "object",
+                    "required": [
+                      "fromTime",
+                      "toTime"
+                    ],
                     "properties": {
                       "fromTime": {
                         "type": "string",
@@ -2221,6 +2378,10 @@
             "description": "Calendar days during the year the location is open. These override any operating hours for days of the week.",
             "items": {
               "type": "object",
+              "required": [
+                "day",
+                "ranges"
+              ],
               "properties": {
                 "day": {
                   "type": "string",
@@ -2233,6 +2394,10 @@
                   "description": "The time ranges the location is open on a given calendar day. If empty, the location is closed on this day.",
                   "items": {
                     "type": "object",
+                    "required": [
+                      "fromTime",
+                      "toTime"
+                    ],
                     "properties": {
                       "fromTime": {
                         "type": "string",
@@ -2513,6 +2678,9 @@
           "application/json": {
             "schema": {
               "type": "object",
+              "required": [
+                "errors"
+              ],
               "properties": {
                 "errors": {
                   "type": "array",
@@ -2531,6 +2699,9 @@
           "application/json": {
             "schema": {
               "type": "object",
+              "required": [
+                "errors"
+              ],
               "properties": {
                 "errors": {
                   "type": "array",
@@ -2548,15 +2719,7 @@
         "content": {
           "application/json": {
             "schema": {
-              "type": "object",
-              "properties": {
-                "errors": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Error"
-                  }
-                }
-              }
+              "type": "object"
             }
           }
         }
@@ -2567,6 +2730,9 @@
           "application/json": {
             "schema": {
               "type": "object",
+              "required": [
+                "errors"
+              ],
               "properties": {
                 "errors": {
                   "type": "array",
