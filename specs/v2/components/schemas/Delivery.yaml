@@ -53,6 +53,28 @@ allOf:
         $ref: ./AddressDetails.yaml
       deliveryAddress:
         $ref: ./AddressDetails.yaml
+      giftSenderName:
+        type: string
+        nullable: true
+        description: |
+          If this delivery is a gift then shows to the recipient instead of "deliveryName".
+      giftRecipientName:
+        type: string
+        nullable: true
+        description: |
+          If this delivery is a gift then shows the recipient's name that is receiving the gift.
+      giftRecipientEmail:
+        type: string
+        nullable: true
+        format: email
+        description: |
+          If this delivery is a gift, then shows the recipient's email that is receiving the gift.
+      giftRecipientPhone:
+        type: string
+        nullable: true
+        description: |
+          If this delivery is a gift then shows the recipient's phone number that is receiving the gift, uses a comma (,) to separate the phone number from its extension.
+        example: "+1234567890,123"
       pickedUpAt:
         $ref: ./SimplifiedDateISOString.yaml
       deliveredAt:
