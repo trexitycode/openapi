@@ -1,5 +1,18 @@
 description: A receipt item that is part of a receipt
 type: object
+required:
+  - type
+  - locationName
+  - locationTimeZone
+  - createdAt
+  - description
+  - note
+  - orderIds
+  - cost
+  - additions
+  - subtotal
+  - taxesPaid
+  - totalPaid
 properties:
   type:
     type: string
