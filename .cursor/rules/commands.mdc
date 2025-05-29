@@ -1,0 +1,10 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+This rule describes a list of common commands that the project has.
+
+- lint api documenation: `make lint VERSION={version}` (e.g. `make lint VERSION=v2`)
+
+- build api documentation for publishing: `make`

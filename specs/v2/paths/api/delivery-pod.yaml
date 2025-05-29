@@ -1,0 +1,49 @@
+get:
+  operationId: getDeliveryPod
+  tags: [Deliveries]
+  summary: Get proof of delivery
+  description: |
+    Get a delivery's proof of delivery photo or signature.
+
+    If the delivery `requirements.proofOfDelivery` is not `photo+signature` or `signature` then a 404 will be returned.
+
+    If the delivery is not yet completed or not found then a 404 will be returned.
+
+    **Possible error codes.**
+
+    - `invalid-delivery-id` - The delivery id is invalid.
+    - `delivery-not-found` - The delivery is not found.
+    - `no-proof-of-delivery` - The delivery does not require a proof of delivery.
+    - `delivery-not-completed` - The delivery is not yet completed.
+
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/deliveries/get-delivery-pod.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: deliveryId
+      required: true
+      schema:
+        type: string
+      description: The id of the delivery (can be externalId or delivery ID)
+  responses:
+    '200':
+      description: Success
+      content:
+        image/png:
+          schema:
+            type: string
+            format: binary
+            description: Photographic Proof of Delivery.
+    '400':
+      $ref: ../../components/responses/400.yaml
+    '401':
+      $ref: ../../components/responses/401.yaml
+    '403':
+      $ref: ../../components/responses/403.yaml
+    '404':
+      $ref: ../../components/responses/404.yaml
+    '500':
+      $ref: ../../components/responses/500.yaml

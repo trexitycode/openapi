@@ -1,0 +1,80 @@
+post:
+  operationId: findLocation
+  tags: [Locations]
+  summary: Find location
+  description: |
+    Find a location by name or address.
+
+    **One of name or address or both must be provided.**
+
+    If both are provided, the name will be used to filter the results.
+
+    **Possible error codes:**
+    - `missing-required-fields` = When both name and address are not provided
+    - `invalid-addressLine1` = When the addressLine1 is missing
+    - `invalid-city` = When the city is missing
+    - `invalid-provinceCode` = When the province is missing, or is not acceptedable
+    - `invalid-postalCode` = When the postalCode is missing, invalid or not acceptedable
+    - `invalid-countryCode` = When the country is not acceptedable
+    - `invalid-address` = When the address cannot be recognized as a valid address
+
+
+  requestBody:
+    content:
+      application/json:
+        schema:
+          type: object
+          oneOf:
+            - type: object
+              description: Find a location by address
+              required:
+                - address
+              properties:
+                address:
+                  $ref: ../../components/schemas/AddressDetailsDTO.yaml
+            - type: object
+              description: Find a location by name
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+                  description: The name of the location.
+                  example: MyStore in Nepean
+            - type: object
+              description: Find a location by address and name
+              required:
+                - address
+                - name
+              properties:
+                address:
+                  $ref: ../../components/schemas/AddressDetailsDTO.yaml
+                name:
+                  type: string
+                  description: The name of the location.
+                  example: MyStore in Nepean
+                
+
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                $ref: ../../components/schemas/MerchantLocation.yaml
+
+    '400':
+      $ref: ../../components/responses/400.yaml
+    '401':
+      $ref: ../../components/responses/401.yaml
+    '403':
+      $ref: ../../components/responses/403.yaml
+    '404':
+      $ref: ../../components/responses/404.yaml
+    '500':
+      $ref: ../../components/responses/500.yaml

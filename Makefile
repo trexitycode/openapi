@@ -1,4 +1,4 @@
-override OPENAPI := node_modules/.bin/openapi
+override OPENAPI := node_modules/.bin/redocly
 override BUNDLED_SPECS := $(foreach dir,$(wildcard specs/*),dist/$(notdir $(dir)).json)
 
 VERSION = v1
@@ -7,7 +7,7 @@ all: $(BUNDLED_SPECS)
 
 $(BUNDLED_SPECS): dist/%.json: specs/%/spec.yaml $(shell find specs/$* -type f)
 	@mkdir -p $(dir $@)
-	@$(OPENAPI) bundle $< --output $@ --ext json --lint
+	@$(OPENAPI) bundle $< --output $@ --ext json
 
 .PHONY: preview
 preview:

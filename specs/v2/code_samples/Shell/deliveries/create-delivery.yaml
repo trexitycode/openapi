@@ -1,0 +1,26 @@
+lang: Shell
+source: |
+  curl -X POST {server-url}/deliveries\
+    -H 'Content-Type: application/json'\
+    -H 'Authorization: Bearer <Trexity API Key>'\
+    -d '{
+      "pickupAddress": {
+        "addressLine1": "123 Fake St",
+        "addressLine2": "Apt 4",
+        "city": "Ottawa",
+        "provinceCode": "ON",
+        "postalCode": "K2G 8FT",
+        "countryCode": "CA"
+      },
+      "deliveryAddress": {
+        "addressLine1": "123 Fake St",
+        "addressLine2": "Apt 4",
+        "city": "Ottawa",
+        "provinceCode": "ON",
+        "postalCode": "K2G 8FT",
+        "countryCode": "CA"
+      },
+      "requirements": {},
+      "orderId": "BFG10K",
+      "deliveryValue": 10000
+    }'

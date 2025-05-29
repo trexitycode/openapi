@@ -1,0 +1,25 @@
+lang: Shell
+source: |
+  curl -X POST {server-url}/rates\
+    -H 'Content-Type: application/json'\
+    -H 'Authorization: Bearer <Trexity API Key>'\
+    -d '{
+      "pickupAddress": {
+        "addressLine1": "456 Elgin St",
+        "city": "Ottawa",
+        "provinceCode": "ON",
+        "postalCode": "K2P 1N5",
+        "countryCode": "CA"
+      },
+      "deliveryAddress": {
+        "addressLine1": "225 Preston St",
+        "city": "Ottawa",
+        "provinceCode": "ON",
+        "postalCode": "K1R 7R1",
+        "countryCode": "CA"
+      },
+      "requirements": {
+        "legalAgeAlcohol": true
+      },
+      "deliveryValue": 2500
+    }'

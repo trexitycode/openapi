@@ -65,3 +65,7 @@ post:
             type: string
             format: binary
             description: Response if `deliveryIndex` is not specified.
+    '400':
+      description: Bad Request
+    '500':
+      description: Unknown server problem

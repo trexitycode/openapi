@@ -1,0 +1,20 @@
+type: object
+properties:
+  status:
+    type: string
+    description: |
+      - `draft`: The delivery is not currently scheduled.
+      - `pending`: The delivery is scheduled and waiting for courier assignment.
+      - `assigned`: The delivery is assigned to a courier.
+      - `in-transit`: The delivery is in transit to the destination address.
+      - `delivered`: The delivery has been delivered.
+      - `undeliverable`: The delivery was attempted but could not be completed, and the delivery was returned.
+      - `cancelled`: The delivery was cancelled.
+    enum:
+      - draft
+      - pending
+      - assigned
+      - in-transit
+      - delivered
+      - undeliverable
+      - cancelled

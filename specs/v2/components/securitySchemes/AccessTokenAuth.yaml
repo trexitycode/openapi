@@ -1,0 +1,15 @@
+type: http
+scheme: bearer
+description: |
+  This authentication stratigy requires an access token used as a 'Bearer' token.
+
+  Currently access tokens are only obtained and used by trusted services.
+
+  Example:
+  ```
+  curl -X POST {server-url}/{path} \
+    -H 'Content-Type: application/json' \
+    -H 'Authorization: Bearer <ACCESS_TOKEN>' \
+    -d '{ ...body... }'
+  ```
+

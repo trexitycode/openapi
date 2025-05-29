@@ -1,0 +1,48 @@
+type: object
+required:
+  - id
+  - geometry
+  - metadata
+  - serviceCity
+  - type
+properties:
+  id:
+    type: string
+    description: Id of service city zone
+  geometry:
+    description: |
+      A geoJSON [Polygon](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.6) or [MultiPolygon](https://datatracker.ietf.org/doc/html/rfc7946#section-3.1.7)
+    oneOf:
+      - type: object
+        required:
+          - type
+          - coordinates
+        properties:
+          type:
+            type: string
+            enum: [Polygon]
+          coordinates:
+            $ref: GeoJSONPolygonCoordinates.yaml
+      - type: object
+        required:
+          - type
+          - coordinates
+        properties:
+          type:
+            type: string
+            enum: [MultiPolygon]
+          coordinates:
+            type: array
+            description: Array of polygons
+            minItems: 1
+            items:
+              $ref: GeoJSONPolygonCoordinates.yaml
+  metadata:
+    type: object
+    description: Object that can contain miscellaneous props, but will always contain "layer"
+  serviceCity:
+    type: string
+    description: Service city name
+  type:
+    type: string
+    enum: [pickup,delivery,surcharge]

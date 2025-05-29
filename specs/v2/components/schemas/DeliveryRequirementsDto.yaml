@@ -1,0 +1,44 @@
+type: object
+description: |
+  Object representing the requirements that must be met by a courier in order
+  for them to be considered eligible for delivery.
+
+  If no requirements object is specified then the merchant location's default requirements
+  will be used.
+properties:
+  vehicleType:
+    type: string
+    description: |
+      Describe the type of vehicle that must be used for a delivery.
+
+      - any - Any vehicle type is allowed.
+      - small - Sedan, hatchback, etc [example: Honda Civic]
+      - medium - SUV or similar [example: Toyota Sienna]
+    enum:
+      - any
+      - small
+      - medium
+  proofOfDelivery:
+    type: string
+    enum:
+      - pin+signature
+      - pin
+      - photo
+    description: |
+      The proof of delivery that must be provided by the courier.
+
+      - pin+signature - A PIN exchange and signature given by the recipient are required.
+      - pin - A PIN exchange given by the recipient is required.
+      - photo - A safe-drop is required with no proof of delivery.
+  containsAlcohol:
+    type: boolean
+    description: Contains any trace of alcohol.
+  requiresLegalAgeVerification:
+    type: boolean
+    description: Requires legal age verification.
+  perishable:
+    type: boolean
+    description: Must be delivered by a courier who is equipped to deliver perishable items.
+  returnReusables:
+    type: boolean
+    description: Must be delivered by a courier who will return collected reusables back to pickup.

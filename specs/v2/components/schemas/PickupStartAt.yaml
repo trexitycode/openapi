@@ -1,0 +1,17 @@
+description: |
+  Specifies the start of the pickup window (i.e. the earliest time that the courier can arrive to pickup).
+  The second and millsecond time components of the date will be ignored.
+
+  When specified, this value must match the start of an available pickup window.
+
+  Review the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).
+
+  **Data type**
+
+  Date time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`
+
+  Note that ISO date strings are always in UTC time.
+
+  An example: `2020-07-25T10:48:08.987Z`
+type: string
+nullable: true
