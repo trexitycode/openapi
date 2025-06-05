@@ -16,7 +16,9 @@ properties:
       - $ref: ./DeliveryRate.yaml
       - type: object
         description: The effective rate to complete all the deliveries in the batch
-  batchedDeliveries:
+  orderIds:
     type: array
+    description: The IDs of the orders within the batch
     items:
-      $ref: ../../components/schemas/BatchedDelivery.yaml
+      type: string
+      description: The ID of the order within the batch
