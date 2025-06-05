@@ -3,7 +3,7 @@ required:
   - id
   - locationId
   - effectiveRate
-  - batchedDeliveries
+  - orderIds
 properties:
   id:
     type: string
