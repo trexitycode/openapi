@@ -266,8 +266,10 @@ paths:
     $ref: ./paths/api/batching-optimizations.yaml
   /batching-optimizations/{batchingOptimizationId}:
     $ref: ./paths/api/batching-optimization.yaml
-  /batching-optimizations/{batchingOptimizationId}/create-deliveries:
+  /batching-optimizations/{batchingOptimizationId}/create-deliveries-operation:
     $ref: ./paths/api/batching-optimization-deliveries.yaml
+  /batching-optimizations/{batchingOptimizationId}/create-deliveries-operation/{batchingCreateDeliveriesOperationId}:
+    $ref: ./paths/api/batching-optimization-deliveries-get.yaml
   /webhooks:
     $ref: ./paths/api/webhooks.yaml
   /webhooks/{webhookId}:
