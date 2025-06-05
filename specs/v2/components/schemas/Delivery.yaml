@@ -18,19 +18,18 @@ allOf:
       locationId:
         type: string
         description: The ID of the location that the delivery will be associated with for billing purposes.
-      sortOrder:
+      pickupSequence:
         type: number
         minimum: 0
         description: |
-          Represents the visit ordering of this delivery in a batch.
-          Lower values are estimated to be delivered before higher values. The value of this property could change
-          depending on the information we have of the courier at the time of the request, and/or if deliveries are removed from the batch.
-      sequence:
+          If this delivery is part of a batch, then this represents the *estimated* pickup sequence of this delivery depending on courier information,
+          and/or if deliveries have been removed from the batch.
+      pickupSequenceWhenBatched:
         type: number
         nullable: true
         description: |
-          Represents the fixed ordering at the time the delivery was batched. This is the same sequence number that appears on the
-          label for this delivery and what couriers may ask for at pickup.
+          If this delivery is part of a batch, then this represents the pickup sequence of this delivery at the time the batch was created.
+          This is the same sequence number that appears on the label for this delivery and what couriers will ask for at pickup.
       routeId:
         type: string
         description: |

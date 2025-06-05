@@ -43,6 +43,10 @@
       "description": "The most common approach to get a delivery on the road is to:\n  * [Create a Delivery](/#operation/createDelivery)\n\nYou can schedule the posting of the Delivery in the future.\nTrexity guarantees that the scheduled Delivery will not be posted or broadcast prior to the time it was scheduled for.\nPlease see the [details](/#operation/createDelivery) here.\n"
     },
     {
+      "name": "Batching",
+      "description": "Batching is the process of optimizing a large set of deliveries from the same pickup location into efficient batches.\n"
+    },
+    {
       "name": "Receipts",
       "description": "Retrieve receipt information\n"
     },
@@ -509,12 +513,12 @@
     },
     "/deliveries/{deliveryId}": {
       "delete": {
-        "operationId": "deleteDelivery",
+        "operationId": "deleteDraftDelivery",
         "tags": [
           "Deliveries"
         ],
-        "summary": "Delete delivery",
-        "description": "Attempt to delete a delivery. Only draft deliveries can be deleted.\n",
+        "summary": "Delete draft delivery",
+        "description": "Attempt to delete delivery with `draft` status.\n",
         "parameters": [
           {
             "in": "path",
@@ -992,6 +996,198 @@
           },
           "500": {
             "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/batching-optimizations": {
+      "post": {
+        "operationId": "createBatchingOptimization",
+        "tags": [
+          "Batching"
+        ],
+        "summary": "Create batching optimization",
+        "description": "Create a batching optimization operation that optimizes a large set of deliveries from the same pickup location into efficient batches.\n\n**All order IDs must be unique.**\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchingOptimizationDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/BatchingOptimization"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/batching-optimizations/{batchingOptimizationId}": {
+      "get": {
+        "operationId": "getBatchingOptimization",
+        "tags": [
+          "Batching"
+        ],
+        "summary": "Get batching optimization",
+        "description": "Get a batching optimization.\n",
+        "parameters": [
+          {
+            "name": "batchingOptimizationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/BatchingOptimization"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/batching-optimizations/{batchingOptimizationId}/create-deliveries-operation": {
+      "post": {
+        "operationId": "createDeliveriesFromBatchingOptimization",
+        "tags": [
+          "Batching"
+        ],
+        "summary": "Create \"create deliveries\" operation",
+        "description": "Create deliveries from a batching optimization. This will create deliveries for each batch in the batching optimization.\n",
+        "parameters": [
+          {
+            "name": "batchingOptimizationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/BatchingCreateDeliveriesOperation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          }
+        }
+      }
+    },
+    "/batching-optimizations/{batchingOptimizationId}/create-deliveries-operation/{batchingCreateDeliveriesOperationId}": {
+      "get": {
+        "operationId": "getBatchingOptimizationCreateDeliveriesOperation",
+        "tags": [
+          "Batching"
+        ],
+        "summary": "Get \"create deliveries\" operation",
+        "description": "Get the \"create deliveries\" operation.\n",
+        "parameters": [
+          {
+            "name": "batchingOptimizationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "batchingCreateDeliveriesOperationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/BatchingCreateDeliveriesOperation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
           }
         }
       }
@@ -1830,6 +2026,21 @@
         "type": "string",
         "nullable": true
       },
+      "PickupStartAt": {
+        "description": "Specifies the start of the pickup window (i.e. the earliest time that the courier can arrive to pickup).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the start of an available pickup window.\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
+        "type": "string",
+        "nullable": true
+      },
+      "DeliverStartAt": {
+        "description": "Specifies the start of the delivery window (i.e. the earliest time that the courier can complete the delivery).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the start of a suggested delivery window.\n\nThe delivery windows are unique to each of your locations within Trexity because they are determined by the market's pickup windows and each location's delivery SLA. A delivery SLA is the maximum amount of time a delivery can take (.e.g. 2 hours). The general formula for computing a delivery window for each pickup window is the following.\n\n```\ndeliveryWindowStart = pickupWindowStart\ndeliveryWindowEnd = pickupWindowEnd + deliverySLA\n```\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).\nReview your suggested [delivery windows](https://merchant.trexity.com/api).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
+        "type": "string",
+        "nullable": true
+      },
+      "DeliverEndAt": {
+        "description": "Specifies the end of the delivery window (i.e. the latest time that the courier can complete the delivery).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the end of the suggested delivery window indicated by the value of `deliverStartAt`.\n\nThe delivery windows are unique to each of your locations within Trexity because they are determined by the market's pickup windows and each of your location's delivery SLA. A delivery SLA is the maximum amount of time a delivery can take (.e.g. 2 hours). The general formula for computing a delivery window for each pickup window is the following.\n\n```\ndeliveryWindowStart = pickupWindowStart\ndeliveryWindowEnd = pickupWindowEnd + deliverySLA\n```\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).\nReview your suggested [delivery windows](https://merchant.trexity.com/api).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
+        "type": "string",
+        "nullable": true
+      },
       "DeliveryBase": {
         "type": "object",
         "properties": {
@@ -1842,6 +2053,15 @@
             "type": "string",
             "maxLength": 20,
             "description": "The order ID that this delivery is associated with."
+          },
+          "pickupStartAt": {
+            "$ref": "#/components/schemas/PickupStartAt"
+          },
+          "deliverStartAt": {
+            "$ref": "#/components/schemas/DeliverStartAt"
+          },
+          "deliverEndAt": {
+            "$ref": "#/components/schemas/DeliverEndAt"
           },
           "numLabels": {
             "type": "number",
@@ -1908,6 +2128,11 @@
           }
         }
       },
+      "PickupEndAt": {
+        "description": "Specifies the end of the pickup window (i.e. the latest time that the courier can arrive to pickup).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the end of the available pickup window indicated by the value of `pickupStartAt`.\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
+        "type": "string",
+        "nullable": true
+      },
       "AddressDetails": {
         "description": "Address details for read operations",
         "allOf": [
@@ -1962,19 +2187,22 @@
               "updatedAt": {
                 "$ref": "#/components/schemas/SimplifiedDateISOString"
               },
+              "pickupEndAt": {
+                "$ref": "#/components/schemas/PickupEndAt"
+              },
               "locationId": {
                 "type": "string",
                 "description": "The ID of the location that the delivery will be associated with for billing purposes."
               },
-              "sortOrder": {
+              "pickupSequence": {
                 "type": "number",
                 "minimum": 0,
-                "description": "Represents the visit ordering of this delivery in a batch.\nLower values are estimated to be delivered before higher values. The value of this property could change\ndepending on the information we have of the courier at the time of the request, and/or if deliveries are removed from the batch.\n"
+                "description": "If this delivery is part of a batch, then this represents the *estimated* pickup sequence of this delivery depending on courier information,\nand/or if deliveries have been removed from the batch.\n"
               },
-              "sequence": {
+              "pickupSequenceWhenBatched": {
                 "type": "number",
                 "nullable": true,
-                "description": "Represents the fixed ordering at the time the delivery was batched. This is the same sequence number that appears on the\nlabel for this delivery and what couriers may ask for at pickup.\n"
+                "description": "If this delivery is part of a batch, then this represents the pickup sequence of this delivery at the time the batch was created.\nThis is the same sequence number that appears on the label for this delivery and what couriers will ask for at pickup.\n"
               },
               "routeId": {
                 "type": "string",
@@ -2033,21 +2261,6 @@
             }
           }
         ]
-      },
-      "PickupStartAt": {
-        "description": "Specifies the start of the pickup window (i.e. the earliest time that the courier can arrive to pickup).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the start of an available pickup window.\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
-        "type": "string",
-        "nullable": true
-      },
-      "DeliverStartAt": {
-        "description": "Specifies the start of the delivery window (i.e. the earliest time that the courier can complete the delivery).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the start of a suggested delivery window.\n\nThe delivery windows are unique to each of your locations within Trexity because they are determined by the market's pickup windows and each location's delivery SLA. A delivery SLA is the maximum amount of time a delivery can take (.e.g. 2 hours). The general formula for computing a delivery window for each pickup window is the following.\n\n```\ndeliveryWindowStart = pickupWindowStart\ndeliveryWindowEnd = pickupWindowEnd + deliverySLA\n```\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).\nReview your suggested [delivery windows](https://merchant.trexity.com/api).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
-        "type": "string",
-        "nullable": true
-      },
-      "DeliverEndAt": {
-        "description": "Specifies the end of the delivery window (i.e. the latest time that the courier can complete the delivery).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the end of the suggested delivery window indicated by the value of `deliverStartAt`.\n\nThe delivery windows are unique to each of your locations within Trexity because they are determined by the market's pickup windows and each of your location's delivery SLA. A delivery SLA is the maximum amount of time a delivery can take (.e.g. 2 hours). The general formula for computing a delivery window for each pickup window is the following.\n\n```\ndeliveryWindowStart = pickupWindowStart\ndeliveryWindowEnd = pickupWindowEnd + deliverySLA\n```\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).\nReview your suggested [delivery windows](https://merchant.trexity.com/api).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
-        "type": "string",
-        "nullable": true
       },
       "DeliveryRequirementsDto": {
         "type": "object",
@@ -2138,7 +2351,6 @@
             "properties": {
               "pickupAddress": {},
               "deliveryAddress": {},
-              "pickupStartAt": {},
               "deliveryName": {},
               "deliveryEmail": {},
               "orderId": {}
@@ -2178,15 +2390,6 @@
                 "nullable": true,
                 "description": "If this delivery is a gift then use this field to set the gift recipient's phone number that is receiving the gift, use a comma (,) to separate the phone number from its extension.\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n",
                 "example": "+1234567890,123"
-              },
-              "pickupStartAt": {
-                "$ref": "#/components/schemas/PickupStartAt"
-              },
-              "deliverStartAt": {
-                "$ref": "#/components/schemas/DeliverStartAt"
-              },
-              "deliverEndAt": {
-                "$ref": "#/components/schemas/DeliverEndAt"
               },
               "merchantPpid": {
                 "type": "string",
@@ -2265,6 +2468,338 @@
             }
           }
         ]
+      },
+      "BatchableDeliveryDTO": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DeliveryBase"
+          },
+          {
+            "type": "object",
+            "required": [
+              "deliveryAddress",
+              "deliveryName",
+              "deliveryEmail",
+              "orderId"
+            ],
+            "properties": {
+              "deliveryAddress": {},
+              "pickupStartAt": {},
+              "deliveryName": {},
+              "deliveryEmail": {},
+              "orderId": {}
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "locationId": {
+                "type": "string",
+                "description": "The ID of the location that the delivery will be associated with for billing purposes. If not provided, the location will be inferred from the pickup address."
+              },
+              "deliveryAddress": {
+                "$ref": "#/components/schemas/AddressDetailsDTO"
+              },
+              "giftSenderName": {
+                "type": "string",
+                "nullable": true,
+                "description": "If this delivery is a gift then use this field to set the gift sender's name to show to the recipient instead of \"deliveryName\".\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n"
+              },
+              "giftRecipientName": {
+                "type": "string",
+                "nullable": true,
+                "description": "If this delivery is a gift then use this field to set the gift recipient's name that is receiving the gift.\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n"
+              },
+              "giftRecipientEmail": {
+                "type": "string",
+                "nullable": true,
+                "format": "email",
+                "description": "If this delivery is a gift then use this field to set the gift recipient's email that is receiving the gift.\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n"
+              },
+              "giftRecipientPhone": {
+                "type": "string",
+                "nullable": true,
+                "description": "If this delivery is a gift then use this field to set the gift recipient's phone number that is receiving the gift, use a comma (,) to separate the phone number from its extension.\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n",
+                "example": "+1234567890,123"
+              },
+              "pickupStartAt": {
+                "$ref": "#/components/schemas/PickupStartAt"
+              },
+              "deliverStartAt": {
+                "$ref": "#/components/schemas/DeliverStartAt"
+              },
+              "deliverEndAt": {
+                "$ref": "#/components/schemas/DeliverEndAt"
+              },
+              "merchantPpid": {
+                "type": "string",
+                "description": "Partner-provided ID of the merchant. This ID can be used when querying for deliveries. Only used by Partner accounts."
+              },
+              "merchantName": {
+                "type": "string",
+                "description": "Partner-provided name of the merchant. This will be displayed in place of the merchant name defined in the merchant profile. Only used by Partner accounts."
+              },
+              "merchantPhone": {
+                "type": "string",
+                "description": "Partner-provided phone of the merchant. This will be displayed in place of the merchant phone defined in the merchant profile. Only used by Partner accounts."
+              },
+              "merchantEmail": {
+                "type": "string",
+                "description": "Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts."
+              },
+              "requirements": {
+                "$ref": "#/components/schemas/DeliveryRequirementsDto"
+              },
+              "externalId": {
+                "type": "string",
+                "maxLength": 256,
+                "description": "The ID of the external entity that is associated to\nthis delivery (e.g. the external order or shipment ID).\n"
+              },
+              "scanId": {
+                "type": "string",
+                "maxLength": 256,
+                "description": "The ID embedded in your custom label's QR code. If\nnot specified, you will be required to use our built-in labels. If\nspecified, you will not be able to request our built-in label for this\ndelivery.\n"
+              },
+              "load": {
+                "$ref": "#/components/schemas/DeliveryLoad"
+              }
+            }
+          }
+        ]
+      },
+      "BatchingOptimizationDTO": {
+        "type": "object",
+        "required": [
+          "pickupAddress",
+          "deliveries"
+        ],
+        "properties": {
+          "locationId": {
+            "type": "string",
+            "description": "Optionally associate a location, otherwise your default location will be used. This is used for billing purposes. See [Locations](/#tag/Locations) for more information."
+          },
+          "pickupAddress": {
+            "$ref": "#/components/schemas/AddressDetailsDTO"
+          },
+          "deliveries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BatchableDeliveryDTO"
+            },
+            "minItems": 20,
+            "maxItems": 400,
+            "description": "The deliveries to optimize."
+          }
+        }
+      },
+      "BatchedDelivery": {
+        "description": "An order to be delivered",
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DeliveryBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "pickupEndAt": {
+                "$ref": "#/components/schemas/PickupEndAt"
+              },
+              "locationId": {
+                "type": "string",
+                "description": "The ID of the location that the delivery will be associated with for billing purposes."
+              },
+              "externalId": {
+                "type": "string",
+                "maxLength": 256,
+                "description": "The ID of the external entity that is associated to\nthis delivery (e.g. the external order or shipment ID).\n"
+              },
+              "requirements": {
+                "$ref": "#/components/schemas/DeliveryRequirements"
+              },
+              "scanId": {
+                "type": "string",
+                "maxLength": 256,
+                "description": "The ID embedded in your custom label's QR code. If\nnot specified, you will be required to use our built-in labels. If\nspecified, you will not be able to request our built-in label for this\ndelivery.\n"
+              },
+              "pickupAddress": {
+                "$ref": "#/components/schemas/AddressDetails"
+              },
+              "deliveryAddress": {
+                "$ref": "#/components/schemas/AddressDetails"
+              },
+              "giftSenderName": {
+                "type": "string",
+                "nullable": true,
+                "description": "If this delivery is a gift then shows to the recipient instead of \"deliveryName\".\n"
+              },
+              "giftRecipientName": {
+                "type": "string",
+                "nullable": true,
+                "description": "If this delivery is a gift then shows the recipient's name that is receiving the gift.\n"
+              },
+              "giftRecipientEmail": {
+                "type": "string",
+                "nullable": true,
+                "format": "email",
+                "description": "If this delivery is a gift, then shows the recipient's email that is receiving the gift.\n"
+              },
+              "giftRecipientPhone": {
+                "type": "string",
+                "nullable": true,
+                "description": "If this delivery is a gift then shows the recipient's phone number that is receiving the gift, uses a comma (,) to separate the phone number from its extension.\n",
+                "example": "+1234567890,123"
+              }
+            }
+          }
+        ]
+      },
+      "Batch": {
+        "type": "object",
+        "required": [
+          "id",
+          "locationId",
+          "effectiveRate",
+          "batchedDeliveries"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the batch"
+          },
+          "locationId": {
+            "type": "string",
+            "description": "The ID of the location the batch is associated to"
+          },
+          "effectiveRate": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/DeliveryRate"
+              },
+              {
+                "type": "object",
+                "description": "The effective rate to complete all the deliveries in the batch"
+              }
+            ]
+          },
+          "batchedDeliveries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BatchedDelivery"
+            }
+          }
+        }
+      },
+      "BatchingOptimization": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "errors",
+          "batches"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the batching optimization"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "completed",
+              "failed"
+            ]
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "code",
+                "message",
+                "orderId"
+              ],
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "The error code"
+                },
+                "message": {
+                  "type": "string",
+                  "description": "The error message"
+                },
+                "orderId": {
+                  "type": "string",
+                  "description": "The ID of the order this error is associated to"
+                }
+              }
+            }
+          },
+          "batches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Batch"
+            }
+          }
+        }
+      },
+      "BatchingCreateDeliveriesOperation": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "errors",
+          "deliveryIds"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the create deliveries operation"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "completed",
+              "failed"
+            ]
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "code",
+                "message",
+                "orderId"
+              ],
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "The error code"
+                },
+                "message": {
+                  "type": "string",
+                  "description": "The error message"
+                },
+                "orderId": {
+                  "type": "string",
+                  "description": "The ID of the order this error is associated to"
+                }
+              }
+            }
+          },
+          "deliveryIds": {
+            "type": "array",
+            "description": "The IDs of the deliveries created",
+            "items": {
+              "type": "string",
+              "description": "The ID of the delivery created"
+            }
+          }
+        }
       },
       "WebhookEventName": {
         "type": "string",

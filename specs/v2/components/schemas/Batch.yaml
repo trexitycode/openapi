@@ -2,7 +2,7 @@ type: object
 required:
   - id
   - locationId
-  - rate
+  - effectiveRate
   - batchedDeliveries
 properties:
   id:
@@ -11,8 +11,11 @@ properties:
   locationId:
     type: string
     description: The ID of the location the batch is associated to
-  rate:
-    $ref: ./DeliveryRate.yaml
+  effectiveRate:
+    allOf:
+      - $ref: ./DeliveryRate.yaml
+      - type: object
+        description: The effective rate to complete all the deliveries in the batch
   batchedDeliveries:
     type: array
     items:

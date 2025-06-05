@@ -1,9 +1,9 @@
 delete:
-  operationId: deleteDelivery
+  operationId: deleteDraftDelivery
   tags: [Deliveries]
-  summary: Delete delivery
+  summary: Delete draft delivery
   description: |
-    Attempt to delete a delivery. Only draft deliveries can be deleted.
+    Attempt to delete delivery with `draft` status.
 
   parameters:
     - in: path
