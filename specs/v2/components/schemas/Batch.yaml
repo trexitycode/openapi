@@ -1,0 +1,19 @@
+type: object
+required:
+  - id
+  - locationId
+  - rate
+  - batchedDeliveries
+properties:
+  id:
+    type: string
+    description: The ID of the batch
+  locationId:
+    type: string
+    description: The ID of the location the batch is associated to
+  rate:
+    $ref: ./DeliveryRate.yaml
+  batchedDeliveries:
+    type: array
+    items:
+      $ref: ../../components/schemas/BatchedDelivery.yaml

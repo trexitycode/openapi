@@ -1,17 +1,15 @@
-description: An order to be delivered
 type: object
 allOf:
   - $ref: './DeliveryBase.yaml'
   - type: object
     required:
-        - pickupAddress
         - deliveryAddress
         - deliveryName
         - deliveryEmail
         - orderId
     properties:
-      pickupAddress: {}
       deliveryAddress: {}
+      pickupStartAt: {}
       deliveryName: {}
       deliveryEmail: {}
       orderId: {}
@@ -20,8 +18,6 @@ allOf:
       locationId:
         type: string
         description: The ID of the location that the delivery will be associated with for billing purposes. If not provided, the location will be inferred from the pickup address.
-      pickupAddress:
-        $ref: ./AddressDetailsDTO.yaml
       deliveryAddress:
         $ref: ./AddressDetailsDTO.yaml
       giftSenderName:
@@ -53,7 +49,13 @@ allOf:
           If this delivery is a gift then use this field to set the gift recipient's phone number that is receiving the gift, use a comma (,) to separate the phone number from its extension.
           
           ***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***
-        example: "+1234567890,123"
+        example: "+1234567890,123"  
+      pickupStartAt:
+        $ref: './PickupStartAt.yaml'
+      deliverStartAt:
+        $ref: './DeliverStartAt.yaml'
+      deliverEndAt:
+        $ref: './DeliverEndAt.yaml'
       merchantPpid:
         type: string
         description: Partner-provided ID of the merchant. This ID can be used when querying for deliveries. Only used by Partner accounts.

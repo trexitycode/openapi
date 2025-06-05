@@ -1,0 +1,40 @@
+type: object
+required:
+  - id
+  - status
+  - errors
+  - deliveryIds
+properties:
+  id:
+    type: string
+    description: The ID of the create deliveries operation
+  status:
+    type: string
+    enum:
+      - pending
+      - completed
+      - failed
+  errors:
+    type: array
+    items:
+      type: object
+      required:
+        - code
+        - message
+        - orderId
+      properties:
+        code:
+          type: string
+          description: The error code
+        message:
+          type: string
+          description: The error message
+        orderId:
+          type: string
+          description: The ID of the order this error is associated to
+  deliveryIds:
+    type: array
+    description: The IDs of the deliveries created
+    items:
+      type: string
+      description: The ID of the delivery created

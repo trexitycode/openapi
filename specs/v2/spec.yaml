@@ -156,6 +156,10 @@ tags:
       Trexity guarantees that the scheduled Delivery will not be posted or broadcast prior to the time it was scheduled for.
       Please see the [details](/#operation/createDelivery) here.
 
+  - name: Batching
+    description: |
+      Batching is the process of optimizing a large set of deliveries from the same pickup location into efficient batches.
+
   - name: Receipts
     description: |
       Retrieve receipt information
@@ -258,6 +262,12 @@ paths:
     $ref: ./paths/api/delivery-tracking.yaml
   /deliveries/{deliveryId}/cancel:
     $ref: ./paths/api/delivery-cancel.yaml
+  /batching-optimizations:
+    $ref: ./paths/api/batching-optimizations.yaml
+  /batching-optimizations/{batchingOptimizationId}:
+    $ref: ./paths/api/batching-optimization.yaml
+  /batching-optimizations/{batchingOptimizationId}/create-deliveries:
+    $ref: ./paths/api/batching-optimization-deliveries.yaml
   /webhooks:
     $ref: ./paths/api/webhooks.yaml
   /webhooks/{webhookId}:
