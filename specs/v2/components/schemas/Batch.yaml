@@ -1,13 +1,9 @@
 type: object
 required:
-  - id
   - locationId
   - effectiveRate
   - orderIds
 properties:
-  id:
-    type: string
-    description: The ID of the batch
   locationId:
     type: string
     description: The ID of the location the batch is associated to

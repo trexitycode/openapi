@@ -10,10 +10,6 @@ properties:
     description: The order ID that this delivery is associated with.
   pickupStartAt:
     $ref: './PickupStartAt.yaml'
-  deliverStartAt:
-    $ref: './DeliverStartAt.yaml'
-  deliverEndAt:
-    $ref: './DeliverEndAt.yaml'
   numLabels:
     type: number
     minimum: 1
