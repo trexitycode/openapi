@@ -1,15 +1,15 @@
 get:
-  operationId: getDeliveryLabel
-  tags: [Deliveries]
-  summary: Get delivery label
+  operationId: getShipmentLabel
+  tags: [Shipments]
+  summary: Get shipment label
   description: |
-    Get a delivery's shipping label
+    Get a shipment's shipping label
   x-codeSamples:
     - $ref: ../../code_samples/Shell/deliveries/get-delivery-label.yaml
 
   parameters:
     - in: path
-      name: deliveryId
+      name: shipmentId
       required: true
       schema:
         type: string

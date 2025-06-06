@@ -1,13 +1,11 @@
 post:
-  operationId: createDelivery
-  tags: [Deliveries]
-  summary: Create delivery
+  operationId: createShipment
+  tags: [Shipments]
+  summary: Create shipment
   description: |
-    Create a delivery and optionally schedule it for pickup. A rate for the delivery will be calculated at the same time.
+    Create a shipment and optionally schedule it for pickup. A rate for the shipment will be calculated at the same time.
 
-    If you want to schedule for pickup, please use exactly one of:
-      1) pickupStartAt (when to pickup by) must match your market's pickup windows as listed [here](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Trexity-Pickup-Windows).
-      2) deliverStartAt and an optional deliverEndAt (when to deliver by) must match your recommended delivery windows as listed [here](https://merchant.trexity.com/api).
+    If you want to schedule for pickup use `pickupStartAt` and ensure it matches your market's pickup windows as listed [here](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Trexity-Pickup-Windows).
 
     If no `pickupAddress` is specified then your primary location's address will be used as the pickup address.
 
@@ -38,7 +36,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: ../../components/schemas/DeliveryDTO.yaml
+          $ref: ../../components/schemas/ShipmentDTO.yaml
 
   responses:
     '200':
@@ -49,7 +47,7 @@ post:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/Delivery.yaml
+                $ref: ../../components/schemas/Shipment.yaml
     '400':
       $ref: ../../components/responses/400.yaml
     '401':
@@ -138,7 +136,7 @@ get:
               data:
                 type: array
                 items:
-                  $ref: ../../components/schemas/Delivery.yaml
+                  $ref: ../../components/schemas/Shipment.yaml
     '400':
       $ref: ../../components/responses/400.yaml
     '401':

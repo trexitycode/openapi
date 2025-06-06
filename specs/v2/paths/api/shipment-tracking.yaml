@@ -1,17 +1,16 @@
 get:
-  operationId: getDeliveryTracking
-  tags: [Deliveries]
-  summary: Get delivery tracking URL
+  operationId: getShipmentTracking
+  tags: [Shipments]
+  summary: Get shipment tracking URL
   description: |
-    Get the tracking URL for a delivery
+    Get the tracking URL for a shipment
 
   parameters:
     - in: path
-      name: deliveryId
+      name: shipmentId
       required: true
       schema:
         type: string
-      description: The ID of the delivery
     - in: query
       name: lifetime
       required: false

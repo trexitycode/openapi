@@ -18,14 +18,27 @@ info:
 
     **Breaking Changes**
 
-    - the complex rate endpoints have been removed in favour of auotmated delivery batching
+    - the concepts of a "shipment" and a "parcel" have been merged together into a [shipment](#tag/Shipments)
+    - shipment IDs from v1 will work when performing shipment read operations, but the shipment ID returned will be different
+    - the complex rate endpoints have been replaced with a new set of [batching endpoints](#tag/Batching) that will perform the same tasks
+    - [addressing](#tag/Addresses) has been changed from a single address string with a format, to a structured [address object](#tag/Addresses)
+    - the following webhook events have been replaced:
+      - `parcel.picked_up` with `shipment.picked_up`
+      - `parcel.delivered` with `shipment.delivered`
+      - `parcel.returning` with `shipment.returning`
+      - `parcel.returned` with `shipment.returned`
+      - `shipment.driver.accepted` with `shipment.courier.accepted`
+      - `shipment.driver.arrived_at_pickup` with `shipment.courier.arrived_at_pickup`
+      - `shipment.driver.arrived_at_delivery` with `shipment.courier.arrived_at_delivery`
+      - `shipment.driver.renounced` with `shipment.courier.renounced`
+    - the following webhook events have been removed:
+      - `shipment.completed` use `shipment.delivered` or `shipment.undeliverable` instead
+      - `shipment.driver.parcel_delivered` use `shipment.delivered` instead
+      - `shipment.driver.picked_up` use `shipment.picked_up` instead
+      - `shipment.posted` use `shipment.courier.accepted` instead
 
     **Updates**
 
-    - addressing has been changed from a single address string with a format, to a structured [address object](#tag/Addresses)
-    - the concepts of a "shipment" and a "parcel" has been replaced with the unified concept of a [delivery](#tag/Deliveries)
-    - **in v2 the delivery ID is interchangable with a parcel ID from v1**
-    - all webhook events have been renamed to be relative to a delivery
     - a new endpiont has been added to retrieve your [webhook secret](/#operation/getWebhookSecretKey)
 
     # Issues
@@ -145,16 +158,12 @@ tags:
       ```
   - name: Rating
     description: |
-      Prior to creating a Delivery, you can calculate the rates based on the pickup and delivery addresses.
+      Prior to creating a Shipment, you can calculate the rates based on the pickup and delivery addresses.
       See our [rates](/#operation/getRate) endpoint for more information.
-  - name: Deliveries
-    description: |
-      The most common approach to get a delivery on the road is to:
-        * [Create a Delivery](/#operation/createDelivery)
 
-      You can schedule the posting of the Delivery in the future.
-      Trexity guarantees that the scheduled Delivery will not be posted or broadcast prior to the time it was scheduled for.
-      Please see the [details](/#operation/createDelivery) here.
+  - name: Shipments
+    description: |
+      A shipment is a central concept in the API. It contains a pickup address, delivery address and order information and will be completed by a courier.
 
   - name: Batching
     description: |
@@ -248,28 +257,28 @@ paths:
     $ref: ./paths/api/rates.yaml
   /regions:
     $ref: ./paths/api/regions.yaml
-  /deliveries:
-    $ref: ./paths/api/deliveries.yaml
-  /deliveries/{deliveryId}:
-    $ref: ./paths/api/delivery.yaml
-  /deliveries/{deliveryId}/status:
-    $ref: ./paths/api/delivery-status.yaml
-  /deliveries/{deliveryId}/pod:
-    $ref: ./paths/api/delivery-pod.yaml
-  /deliveries/{deliveryId}/label:
-    $ref: ./paths/api/delivery-label.yaml
-  /deliveries/{deliveryId}/tracking:
-    $ref: ./paths/api/delivery-tracking.yaml
-  /deliveries/{deliveryId}/cancel:
-    $ref: ./paths/api/delivery-cancel.yaml
+  /shipments:
+    $ref: ./paths/api/shipments.yaml
+  /shipments/{shipmentId}:
+    $ref: ./paths/api/shipment.yaml
+  /shipments/{shipmentId}/status:
+    $ref: ./paths/api/shipment-status.yaml
+  /shipments/{shipmentId}/pod:
+    $ref: ./paths/api/shipment-pod.yaml
+  /shipments/{shipmentId}/label:
+    $ref: ./paths/api/shipment-label.yaml
+  /shipments/{shipmentId}/tracking:
+    $ref: ./paths/api/shipment-tracking.yaml
+  /shipments/{shipmentId}/cancel:
+    $ref: ./paths/api/shipment-cancel.yaml
   /batching-operations:
     $ref: ./paths/api/batching-operations.yaml
   /batching-operations/{batchingOperationId}:
     $ref: ./paths/api/batching-operation.yaml
-  /batching-operations/{batchingOperationId}/create-deliveries-operation:
-    $ref: ./paths/api/batching-operation-deliveries.yaml
-  /batching-operations/{batchingOperationId}/create-deliveries-operation/{batchingCreateDeliveriesOperationId}:
-    $ref: ./paths/api/batching-operation-deliveries-get.yaml
+  /batching-operations/{batchingOperationId}/create-shipments-operation:
+    $ref: ./paths/api/batching-create-shipments-operations.yaml
+  /batching-operations/{batchingOperationId}/create-shipments-operation/{batchingCreateShipmentsOperationId}:
+    $ref: ./paths/api/batching-create-shipments-operation.yaml
   /webhooks:
     $ref: ./paths/api/webhooks.yaml
   /webhooks/{webhookId}:

@@ -1,17 +1,17 @@
 type: object
 required:
   - pickupAddress
-  - deliveries
+  - shipments
 properties:
   locationId:
     type: string
     description: Optionally associate a location, otherwise your default location will be used. This is used for billing purposes. See [Locations](/#tag/Locations) for more information.
   pickupAddress:
     $ref: ./AddressDetailsDTO.yaml
-  deliveries:
+  shipments:
     type: array
     items:
-      $ref: ./BatchableDeliveryDTO.yaml
+      $ref: ./BatchableShipmentDTO.yaml
     minItems: 20
     maxItems: 400
     description: The deliveries to optimize.

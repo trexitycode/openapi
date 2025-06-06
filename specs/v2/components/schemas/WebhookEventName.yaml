@@ -1,17 +1,16 @@
 type: string
 enum:
-  - delivery.created
-  - delivery.updated
-  - delivery.deleted
-  - delivery.courier.accepted
-  - delivery.courier.arrived_at_pickup
-  - delivery.courier.picked_up
-  - delivery.courier.arrived_at_delivery
-  - delivery.courier.delivery_delivered
-  - delivery.courier.renounced
-  - delivery.cancelled
-  - delivery.on_hold
-  - delivery.picked_up
-  - delivery.delivered
-  - delivery.returning
-  - delivery.returned
+  - shipment.created
+  - shipment.updated
+  - shipment.deleted
+  - shipment.courier.accepted
+  - shipment.courier.arrived_at_pickup
+  - shipment.courier.arrived_at_delivery
+  - shipment.courier.renounced
+  - shipment.cancelled
+  - shipment.on_hold
+  - shipment.picked_up
+  - shipment.delivered
+  - shipment.undeliverable
+  - shipment.returning
+  - shipment.returned

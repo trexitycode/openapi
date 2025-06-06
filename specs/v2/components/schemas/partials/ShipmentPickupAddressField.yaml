@@ -1,0 +1,4 @@
+type: object
+properties:
+  pickupAddress:
+    $ref: ./../AddressDetailsDTO.yaml

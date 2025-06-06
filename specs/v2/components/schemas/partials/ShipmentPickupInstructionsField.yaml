@@ -1,0 +1,6 @@
+type: object
+properties:
+  pickupInstructions:
+    type: string
+    description: Special instructions the courier should follow when picking up the shipment.
+    nullable: true

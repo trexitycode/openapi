@@ -1,7 +1,7 @@
 type: object
 description: |
   Object representing the requirements that must be met by a courier in order
-  for them to be considered eligible for delivery.
+  for them to be considered eligible for shipment.
 
   If no requirements object is specified then the merchant location's default requirements
   will be used.
@@ -9,7 +9,7 @@ properties:
   vehicleType:
     type: string
     description: |
-      Describe the type of vehicle that must be used for a delivery.
+      Describe the type of vehicle that must be used for a shipment.
 
       - any - Any vehicle type is allowed.
       - small - Sedan, hatchback, etc [example: Honda Civic]

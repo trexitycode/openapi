@@ -1,13 +1,13 @@
 get:
-  operationId: getDeliveryPod
-  tags: [Deliveries]
+  operationId: getShipmentPod
+  tags: [Shipments]
   summary: Get proof of delivery
   description: |
-    Get a delivery's proof of delivery photo or signature.
+    Get a shipment's proof of delivery photo or signature.
 
-    If the delivery `requirements.proofOfDelivery` is not `photo+signature` or `signature` then a 404 will be returned.
+    If the shipment `requirements.proofOfDelivery` is not `photo+signature` or `signature` then a 404 will be returned.
 
-    If the delivery is not yet completed or not found then a 404 will be returned.
+    If the shipment is not yet completed or not found then a 404 will be returned.
 
     **Possible error codes.**
 
@@ -19,11 +19,9 @@ get:
   x-codeSamples:
     - $ref: ../../code_samples/Shell/deliveries/get-delivery-pod.yaml
 
-  ##############################################################################
-
   parameters:
     - in: path
-      name: deliveryId
+      name: shipmentId
       required: true
       schema:
         type: string

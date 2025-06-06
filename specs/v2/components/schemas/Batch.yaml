@@ -9,9 +9,9 @@ properties:
     description: The ID of the location the batch is associated to
   effectiveRate:
     allOf:
-      - $ref: ./DeliveryRate.yaml
+      - $ref: ./ShipmentRate.yaml
       - type: object
-        description: The effective rate to complete all the deliveries in the batch
+        description: The effective rate to complete all the orders in the batch
   orderIds:
     type: array
     description: The IDs of the orders within the batch in the order they will be picked up

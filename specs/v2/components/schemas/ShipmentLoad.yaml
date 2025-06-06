@@ -1,6 +1,6 @@
 type: object
 description: |
-  Optional dimensions and weight of the delivery.
+  Optional dimensions and weight of the shipment.
 
   The maximum dimensions are 91 cm for any dimension. The maximum for weight is 15876 grams.
 properties:

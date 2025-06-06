@@ -1,17 +1,15 @@
 get:
-  operationId: getDeliveryStatus
-  tags: [Deliveries]
-  summary: Get delivery status
+  operationId: getShipmentStatus
+  tags: [Shipments]
+  summary: Get shipment status
   description: |
-    Retrieve a delivery's status
+    Retrieve a shipment's status
   x-codeSamples:
     - $ref: ../../code_samples/Shell/deliveries/get-delivery-status.yaml
 
-  ##############################################################################
-
   parameters:
     - in: path
-      name: deliveryId
+      name: shipmentId
       required: true
       schema:
         type: string
@@ -25,7 +23,7 @@ get:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/DeliveryStatus.yaml
+                $ref: ../../components/schemas/ShipmentStatus.yaml
 
     '400':
       $ref: ../../components/responses/400.yaml

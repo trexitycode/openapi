@@ -1,6 +1,6 @@
 type: object
 allOf:
-  - { $ref: './DeliveryRate.yaml' }
+  - { $ref: './ShipmentRate.yaml' }
   - type: object
     properties:
       estimatePickupAt:

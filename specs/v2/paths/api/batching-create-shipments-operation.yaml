@@ -1,9 +1,9 @@
 get:
-  operationId: getBatchingOptimizationCreateDeliveriesOperation
+  operationId: getBatchingCreateShipmentsOperation
   tags: [Batching]
-  summary: Get "create deliveries" operation
+  summary: Get "create shipments" operation
   description: |
-    Get the "create deliveries" operation.
+    Get the "create shipments" operation.
 
   parameters:
     - name: batchingOperationId
@@ -11,7 +11,7 @@ get:
       required: true
       schema:
         type: string
-    - name: batchingCreateDeliveriesOperationId
+    - name: batchingCreateShipmentsOperationId
       in: path
       required: true
       schema:
@@ -26,7 +26,7 @@ get:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/BatchingCreateDeliveriesOperation.yaml
+                $ref: ../../components/schemas/BatchingCreateShipmentsOperation.yaml
     '400':
       $ref: ../../components/responses/400.yaml
     '401':

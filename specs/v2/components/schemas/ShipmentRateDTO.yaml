@@ -1,4 +1,4 @@
-description: A simple description of a delivery for rating purposes
+description: A simple description of a shipment for rating purposes
 allOf:
   - $ref: './DeliveryWindowProps.yaml'
   - type: object
@@ -10,10 +10,10 @@ allOf:
       deliveryAddress:
         $ref: ./AddressDetailsDTO.yaml
       requirements:
-        $ref: ./DeliveryRequirements.yaml
+        $ref: ./ShipmentRequirements.yaml
       numLabels:
         type: number
         minimum: 1
         default: 1
         description: |
-          The number of labels for the delivery (each separate package needs a label). 
+          The number of labels for the shipment (each separate package needs a label). 

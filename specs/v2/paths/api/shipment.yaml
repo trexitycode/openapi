@@ -1,17 +1,17 @@
 delete:
-  operationId: deleteDraftDelivery
-  tags: [Deliveries]
-  summary: Delete draft delivery
+  operationId: deleteDraftShipment
+  tags: [Shipments]
+  summary: Delete draft shipment
   description: |
-    Attempt to delete delivery with `draft` status.
+    Attempt to delete shipment with `draft` status.
 
   parameters:
     - in: path
-      name: deliveryId
+      name: shipmentId
       required: true
       schema:
         type: string
-      description: The id of the delivery to delete
+      description: The id of the shipment to delete
   responses:
     '204':
       description: Success
@@ -27,11 +27,11 @@ delete:
       $ref: ../../components/responses/422.yaml
 
 patch:
-  operationId: updateDelivery
-  tags: [Deliveries]
-  summary: Update delivery
+  operationId: updateShipment
+  tags: [Shipments]
+  summary: Update shipment
   description: |
-    Updates the details of a delivery.
+    Updates the details of a shipment.
 
     **Unexhaustive list of error codes.**
 
@@ -54,18 +54,18 @@ patch:
 
   parameters:
     - in: path
-      name: deliveryId
+      name: shipmentId
       required: true
       schema:
         type: string
-      description: The id of the delivery that needs to be updated
+      description: The id of the shipment that needs to be updated
   requestBody:
-    description: Payload describing the changes that need to be updated in your delivery
+    description: Payload describing the changes that need to be updated in your shipment
     required: true
     content:
       application/json:
         schema:
-          $ref: ../../components/schemas/DeliveryDTOUpdate.yaml
+          $ref: ../../components/schemas/ShipmentDTOUpdate.yaml
 
   responses:
     '200':
@@ -76,7 +76,7 @@ patch:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/Delivery.yaml
+                $ref: ../../components/schemas/Shipment.yaml
     '400':
       $ref: ../../components/responses/400.yaml
     '401':
@@ -89,17 +89,17 @@ patch:
       $ref: ../../components/responses/422.yaml
 
 get:
-  operationId: getDelivery
-  tags: [Deliveries]
-  summary: Get delivery
+  operationId: getShipment
+  tags: [Shipments]
+  summary: Get shipment
   description: |
-    Gets the details of a delivery
+    Gets the details of a shipment
   x-codeSamples:
     - $ref: ../../code_samples/Shell/deliveries/get-delivery.yaml
 
   parameters:
     - in: path
-      name: deliveryId
+      name: shipmentId
       required: true
       schema:
         type: string
@@ -121,7 +121,7 @@ get:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/Delivery.yaml
+                $ref: ../../components/schemas/Shipment.yaml
     '400':
       $ref: ../../components/responses/400.yaml
     '401':

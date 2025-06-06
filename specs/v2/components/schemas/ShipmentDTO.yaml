@@ -1,0 +1,28 @@
+type: object
+allOf:
+  - type: object
+    properties:
+      locationId:
+        type: string
+        description: The ID of the location that the shipment will be associated with for billing purposes. If not provided, the location will be inferred from the pickup address.
+  - $ref: './partials/ShipmentAddressingFields.yaml'
+  - $ref: './partials/ShipmentPickupFields.yaml'
+  - $ref: './partials/ShipmentOrderFields.yaml'
+  - $ref: './partials/ShipmentRecipientFields.yaml'
+  - $ref: './partials/ShipmentGiftFields.yaml'
+  - $ref: './partials/ShipmentCustomLabelFields.yaml'
+  - $ref: './partials/ShpmentMetaFields.yaml'
+  - $ref: './partials/ShipmentPartnerFields.yaml'
+  - type: object
+    required:
+        - pickupAddress
+        - deliveryAddress
+        - deliveryName
+        - deliveryEmail
+        - orderId
+    properties:
+      pickupAddress: {}
+      deliveryAddress: {}
+      deliveryName: {}
+      deliveryEmail: {}
+      orderId: {}

@@ -1,9 +1,9 @@
 post:
-  operationId: calculateDeliveryRate
+  operationId: calculateShipmentRate
   tags: [Rating]
-  summary: Calculate delivery rate
+  summary: Calculate shipment rate
   description: |
-    Calculate a rate for a delivery.
+    Calculate a rate for a shipment.
 
     If no `pickupAddress` is specified then your primary location's address will
     be used as the pickup address.
@@ -38,12 +38,11 @@ post:
     - $ref: ../../code_samples/Shell/rating/get-delivery-rate.yaml
 
   requestBody:
-    description: Payload that minimally describes a direct delivery.
     required: true
     content:
       application/json:
         schema:
-          $ref: ../../components/schemas/DeliveryRateDTO.yaml
+          $ref: ../../components/schemas/ShipmentRateDTO.yaml
 
   responses:
     '200':
@@ -54,7 +53,7 @@ post:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/DeliveryRateWithETA.yaml
+                $ref: ../../components/schemas/ShipmentRateWithETA.yaml
 
     '400':
       $ref: '../../components/responses/400.yaml'
