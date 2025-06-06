@@ -1,9 +1,9 @@
 post:
-  operationId: createBatchingOptimization
+  operationId: createBatchingOperation
   tags: [Batching]
-  summary: Create batching optimization
+  summary: Create batching operation
   description: |
-    Create a batching optimization operation that optimizes a large set of deliveries from the same pickup location into efficient batches.
+    Create a batching operation that optimizes a large set of deliveries from the same pickup location into efficient route plans.
 
     **All order IDs must be unique.**
 
@@ -12,7 +12,7 @@ post:
     content:
       application/json:
         schema:
-          $ref: ../../components/schemas/BatchingOptimizationDTO.yaml
+          $ref: ../../components/schemas/BatchingOperationDTO.yaml
 
   responses:
     '200':
@@ -23,7 +23,7 @@ post:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/BatchingOptimization.yaml
+                $ref: ../../components/schemas/BatchingOperation.yaml
     '400':
       $ref: ../../components/responses/400.yaml
     '401':

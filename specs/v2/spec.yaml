@@ -262,14 +262,14 @@ paths:
     $ref: ./paths/api/delivery-tracking.yaml
   /deliveries/{deliveryId}/cancel:
     $ref: ./paths/api/delivery-cancel.yaml
-  /batching-optimizations:
-    $ref: ./paths/api/batching-optimizations.yaml
-  /batching-optimizations/{batchingOptimizationId}:
-    $ref: ./paths/api/batching-optimization.yaml
-  /batching-optimizations/{batchingOptimizationId}/create-deliveries-operation:
-    $ref: ./paths/api/batching-optimization-deliveries.yaml
-  /batching-optimizations/{batchingOptimizationId}/create-deliveries-operation/{batchingCreateDeliveriesOperationId}:
-    $ref: ./paths/api/batching-optimization-deliveries-get.yaml
+  /batching-operations:
+    $ref: ./paths/api/batching-operations.yaml
+  /batching-operations/{batchingOperationId}:
+    $ref: ./paths/api/batching-operation.yaml
+  /batching-operations/{batchingOperationId}/create-deliveries-operation:
+    $ref: ./paths/api/batching-operation-deliveries.yaml
+  /batching-operations/{batchingOperationId}/create-deliveries-operation/{batchingCreateDeliveriesOperationId}:
+    $ref: ./paths/api/batching-operation-deliveries-get.yaml
   /webhooks:
     $ref: ./paths/api/webhooks.yaml
   /webhooks/{webhookId}:

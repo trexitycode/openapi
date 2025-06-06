@@ -1,17 +1,12 @@
-get:
-  operationId: getBatchingOptimizationCreateDeliveriesOperation
+post:
+  operationId: createDeliveriesFromBatchingOptimization
   tags: [Batching]
-  summary: Get "create deliveries" operation
+  summary: Create "create deliveries" operation
   description: |
-    Get the "create deliveries" operation.
+    Create deliveries from a batching optimization. This will create deliveries for each batch in the batching optimization.
 
   parameters:
-    - name: batchingOptimizationId
-      in: path
-      required: true
-      schema:
-        type: string
-    - name: batchingCreateDeliveriesOperationId
+    - name: batchingOperationId
       in: path
       required: true
       schema:

@@ -14,7 +14,6 @@ properties:
         description: The effective rate to complete all the deliveries in the batch
   orderIds:
     type: array
-    description: The IDs of the orders within the batch
+    description: The IDs of the orders within the batch in the order they will be picked up
     items:
       type: string
-      description: The ID of the order within the batch

@@ -1,12 +1,12 @@
-post:
-  operationId: createDeliveriesFromBatchingOptimization
+get:
+  operationId: getBatchingOperation
   tags: [Batching]
-  summary: Create "create deliveries" operation
+  summary: Get batching operation
   description: |
-    Create deliveries from a batching optimization. This will create deliveries for each batch in the batching optimization.
+    Get a batching operation.
 
   parameters:
-    - name: batchingOptimizationId
+    - name: batchingOperationId
       in: path
       required: true
       schema:
@@ -21,8 +21,12 @@ post:
             type: object
             properties:
               data:
-                $ref: ../../components/schemas/BatchingCreateDeliveriesOperation.yaml
+                $ref: ../../components/schemas/BatchingOperation.yaml
     '400':
       $ref: ../../components/responses/400.yaml
     '401':
       $ref: ../../components/responses/401.yaml
+    '403':
+      $ref: ../../components/responses/403.yaml
+    '500':
+      $ref: ../../components/responses/500.yaml
