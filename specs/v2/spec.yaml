@@ -19,7 +19,8 @@ info:
     **Breaking Changes**
 
     - the concepts of a "shipment" and a "parcel" have been merged together into a [shipment](#tag/Shipments)
-    - shipment IDs from v1 will work when performing shipment read operations, but the shipment ID returned will be different
+    - shipment IDs from v1 that were created from the "Create a shipment" endpoint will work when performing shipment read operations in v2, but the shipment ID returned will be different
+    - parcel IDs from v1 will work as-is for shipment IDs in v2 with no exceptions
     - the complex rate endpoints have been replaced with a new set of [batching endpoints](#tag/Batching) that will perform the same tasks
     - [addressing](#tag/Addresses) has been changed from a single address string with a format, to a structured [address object](#tag/Addresses)
     - the following webhook events have been replaced:
