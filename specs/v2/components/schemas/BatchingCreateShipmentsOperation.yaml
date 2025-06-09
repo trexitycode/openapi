@@ -3,11 +3,11 @@ required:
   - id
   - status
   - errors
-  - deliveryIds
+  - shipmentIds
 properties:
   id:
     type: string
-    description: The ID of the create deliveries operation
+    description: The ID of the "create shipments" operation
   status:
     type: string
     enum:
@@ -32,9 +32,9 @@ properties:
         orderId:
           type: string
           description: The ID of the order this error is associated to
-  deliveryIds:
+  shipmentIds:
     type: array
-    description: The IDs of the deliveries created
+    description: The IDs of the shipments created
     items:
       type: string
-      description: The ID of the delivery created
+      description: The ID of the shipment created
