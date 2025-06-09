@@ -58,11 +58,11 @@ post:
       $ref: ../../components/responses/500.yaml
 
 get:
-  operationId: listDeliveries
-  tags: [Deliveries]
-  summary: List deliveries
+  operationId: listShipments
+  tags: [Shipments]
+  summary: List shipments
   description: |
-    List deliveries that match the specified filters.
+    List shipments that match the specified filters.
 
     ## Filtering By Dates
 
@@ -78,7 +78,6 @@ get:
   x-codeSamples:
     - $ref: ../../code_samples/Shell/deliveries/get-deliveries.yaml
 
-  ##############################################################################
 
   parameters:
     - in: query
