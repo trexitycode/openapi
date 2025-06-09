@@ -2,6 +2,8 @@ post:
   operationId: createBatchingOperation
   tags: [Batching]
   summary: Create batching operation
+  x-codeSamples:
+    - $ref: '../../code_samples/batching/createBatchingOperation.shell.yaml'
   description: |
     Create a batching operation that optimizes a large set of deliveries from the same pickup location into efficient route plans.
 

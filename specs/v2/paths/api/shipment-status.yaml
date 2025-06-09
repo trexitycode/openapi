@@ -2,10 +2,10 @@ get:
   operationId: getShipmentStatus
   tags: [Shipments]
   summary: Get shipment status
+  x-codeSamples:
+    - $ref: '../../code_samples/shipments/getShipmentStatus.shell.yaml'
   description: |
     Retrieve a shipment's status
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/deliveries/get-delivery-status.yaml
 
   parameters:
     - in: path

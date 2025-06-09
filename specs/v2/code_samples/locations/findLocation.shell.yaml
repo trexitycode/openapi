@@ -1,0 +1,16 @@
+lang: shell
+label: cURL
+source: |
+  curl -X POST "https://trexity.app/api/v2/locations/find" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer YOUR_API_KEY" \
+    -d '{
+      "address": {
+        "addressLine1": "123 Store St",
+        "city": "Ottawa",
+        "provinceCode": "ON",
+        "postalCode": "K2G 6F2",
+        "countryCode": "CA"
+      },
+      "name": "MyStore in Nepean"
+    }' 

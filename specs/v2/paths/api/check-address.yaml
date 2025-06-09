@@ -2,6 +2,8 @@ post:
   operationId: checkAddress
   tags: [Addresses]
   summary: Check an address
+  x-codeSamples:
+    - $ref: '../../code_samples/addresses/checkAddress.shell.yaml'
   description: |
     Checks whether an address is serviceable and returns a result that identifies if the address can be
     used as a delivery address or a pickup address. If, a pickup address is provided, the result will

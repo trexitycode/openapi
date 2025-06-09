@@ -19,7 +19,8 @@ info:
     **Breaking Changes**
 
     - the concepts of a "shipment" and a "parcel" have been merged together into a [shipment](#tag/Shipments)
-    - shipment IDs from v1 will work when performing shipment read operations, but the shipment ID returned will be different
+    - shipment IDs from v1 that were created from the "Create a shipment" endpoint will work when performing shipment read operations in v2, but the shipment ID returned will be different
+    - parcel IDs from v1 will work as-is for shipment IDs in v2 with no exceptions
     - the complex rate endpoints have been replaced with a new set of [batching endpoints](#tag/Batching) that will perform the same tasks
     - [addressing](#tag/Addresses) has been changed from a single address string with a format, to a structured [address object](#tag/Addresses)
     - the following webhook events have been replaced:
@@ -163,11 +164,23 @@ tags:
 
   - name: Shipments
     description: |
-      A shipment is a central concept in the API. It contains a pickup address, delivery address and order information and will be completed by a courier.
+      A shipment is a central concept in the API. It contains a pickup address, delivery address with customer information, and represents a delivery that will be completed by a courier.
 
   - name: Batching
     description: |
       Batching is the process of optimizing a large set of deliveries from the same pickup location into efficient batches.
+  
+  - name: Custom Labels
+    description: |
+      All shipments come with a label that must be downloaded and affixed to the delivery packaging. To specify a custom label for your shipment do the following:
+
+      1. Create a shipment with the `externalId` and `scanId` values specified in the request body
+      2. Ensure that the `scanId` value is encoded as a QR code or 1D barcode on your label
+      3. Affix your label to the delivery packaging before a courier picks it up
+
+      We always recommend providing us a sample label to test with to confirm that the label is scanable by our Courier App.
+
+      > **Note:** If a custom label is specified, it is your responsibility to ensure that the label is affixed to the delivery packaging before a courier picks it up. Additionally, you will not be able to download a label from the Trexity API or your Trexity portal.
 
   - name: Receipts
     description: |
@@ -275,9 +288,9 @@ paths:
     $ref: ./paths/api/batching-operations.yaml
   /batching-operations/{batchingOperationId}:
     $ref: ./paths/api/batching-operation.yaml
-  /batching-operations/{batchingOperationId}/create-shipments-operation:
+  /batching-operations/{batchingOperationId}/create-shipments-operations:
     $ref: ./paths/api/batching-create-shipments-operations.yaml
-  /batching-operations/{batchingOperationId}/create-shipments-operation/{batchingCreateShipmentsOperationId}:
+  /batching-operations/{batchingOperationId}/create-shipments-operations/{batchingCreateShipmentsOperationId}:
     $ref: ./paths/api/batching-create-shipments-operation.yaml
   /webhooks:
     $ref: ./paths/api/webhooks.yaml

@@ -2,6 +2,8 @@ post:
   operationId: createBatchingCreateShipmentsOperation
   tags: [Batching]
   summary: Create "create shipments" operation
+  x-codeSamples:
+    - $ref: '../../code_samples/batching/createBatchingCreateShipmentsOperation.shell.yaml'
   description: |
     Create shipments from a batching optimization. This will create shipments for each batch in the batching optimization.
 

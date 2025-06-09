@@ -2,6 +2,8 @@ get:
   operationId: getRegion
   tags: [Regions]
   summary: Get region
+  x-codeSamples:
+    - $ref: '../../code_samples/regions/getRegion.shell.yaml'
   description: |
     Get the region for a specific pickup address.
 

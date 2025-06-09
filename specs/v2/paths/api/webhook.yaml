@@ -2,6 +2,8 @@ delete:
   operationId: deleteWebhook
   tags: [Webhooks]
   summary: Delete webhook
+  x-codeSamples:
+    - $ref: '../../code_samples/webhooks/deleteWebhook.shell.yaml'
   description: |
     Delete a registered webhook.
 

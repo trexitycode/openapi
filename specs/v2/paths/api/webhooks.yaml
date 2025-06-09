@@ -2,6 +2,8 @@ post:
   operationId: createWebhook
   tags: [Webhooks]
   summary: Create webhook
+  x-codeSamples:
+    - $ref: '../../code_samples/webhooks/createWebhook.shell.yaml'
   description: |
     Create a new webhook for the specified event.
 
@@ -46,6 +48,8 @@ get:
   operationId: listWebhooks
   tags: [Webhooks]
   summary: List webhooks
+  x-codeSamples:
+    - $ref: '../../code_samples/webhooks/listWebhooks.shell.yaml'
   description: |
     List all registered webhooks or registered webhooks for an event.
 

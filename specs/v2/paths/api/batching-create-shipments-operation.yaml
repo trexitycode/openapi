@@ -2,6 +2,8 @@ get:
   operationId: getBatchingCreateShipmentsOperation
   tags: [Batching]
   summary: Get "create shipments" operation
+  x-codeSamples:
+    - $ref: '../../code_samples/batching/getBatchingCreateShipmentsOperation.shell.yaml'
   description: |
     Get the "create shipments" operation.
 

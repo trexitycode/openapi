@@ -2,6 +2,8 @@ delete:
   operationId: deleteDraftShipment
   tags: [Shipments]
   summary: Delete draft shipment
+  x-codeSamples:
+    - $ref: '../../code_samples/shipments/deleteDraftShipment.shell.yaml'
   description: |
     Attempt to delete shipment with `draft` status.
 
@@ -30,6 +32,8 @@ patch:
   operationId: updateShipment
   tags: [Shipments]
   summary: Update shipment
+  x-codeSamples:
+    - $ref: '../../code_samples/shipments/updateShipment.shell.yaml'
   description: |
     Updates the details of a shipment.
 
@@ -92,10 +96,10 @@ get:
   operationId: getShipment
   tags: [Shipments]
   summary: Get shipment
+  x-codeSamples:
+    - $ref: '../../code_samples/shipments/getShipment.shell.yaml'
   description: |
     Gets the details of a shipment
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/deliveries/get-delivery.yaml
 
   parameters:
     - in: path

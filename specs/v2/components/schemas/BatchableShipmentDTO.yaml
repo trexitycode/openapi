@@ -14,8 +14,3 @@ allOf:
         - deliveryName
         - deliveryEmail
         - orderId
-    properties:      
-      deliveryAddress: {}
-      deliveryName: {}
-      deliveryEmail: {}
-      orderId: {}

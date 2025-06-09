@@ -1,0 +1,5 @@
+lang: shell
+label: cURL
+source: |
+  curl -X GET "https://trexity.app/api/v2/shipments?fromDate=2024-01-01&toDate=2024-01-31" \
+    -H "Authorization: Bearer YOUR_API_KEY" 

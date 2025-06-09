@@ -1,0 +1,10 @@
+lang: shell
+label: cURL
+source: |
+  curl -X POST "https://trexity.app/api/v2/webhooks" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer YOUR_API_KEY" \
+    -d '{
+      "eventName": "shipment.delivered",
+      "url": "https://example.com/trexity/webhook-handler"
+    }' 

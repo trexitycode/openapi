@@ -2,6 +2,8 @@ post:
   operationId: createShipment
   tags: [Shipments]
   summary: Create shipment
+  x-codeSamples:
+    - $ref: '../../code_samples/shipments/createShipment.shell.yaml'
   description: |
     Create a shipment and optionally schedule it for pickup. A rate for the shipment will be calculated at the same time.
 
@@ -27,9 +29,6 @@ post:
     - `merchant-disabled` = The merchant has been disabled
     - `missing-profile-details` = The merchant has an incomplete profile
     - `no-shipment-rate` = A delivery rate failed to be calculated due to delivery or pickup address geofencing error
-
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/deliveries/create-delivery.yaml
 
   requestBody:
     required: true
@@ -61,6 +60,11 @@ get:
   operationId: listShipments
   tags: [Shipments]
   summary: List shipments
+<<<<<<< HEAD
+=======
+  x-codeSamples:
+    - $ref: '../../code_samples/shipments/listShipments.shell.yaml'
+>>>>>>> caf33e142f7cb123c14345209609a1a0286ef39a
   description: |
     List shipments that match the specified filters.
 
@@ -74,11 +78,7 @@ get:
       - `fromDate` and `toDate`
       - `externalId`
       - `metaField1`, `metaField2`, `metaField3`
-  
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/deliveries/get-deliveries.yaml
 
-  ##############################################################################
 
   parameters:
     - in: query
