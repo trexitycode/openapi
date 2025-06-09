@@ -164,7 +164,7 @@ tags:
 
   - name: Shipments
     description: |
-      A shipment is a central concept in the API. It contains a pickup address, delivery address and order information and will be completed by a courier.
+      A shipment is a central concept in the API. It contains a pickup address, delivery address with customer information, and represents a delivery that will be completed by a courier.
 
   - name: Batching
     description: |
