@@ -169,6 +169,18 @@ tags:
   - name: Batching
     description: |
       Batching is the process of optimizing a large set of deliveries from the same pickup location into efficient batches.
+  
+  - name: Custom Labels
+    description: |
+      All shipments come with a label that must be downloaded and affixed to the delivery packaging. To specify a custom label for your shipment do the following:
+
+      1. Create a shipment with the `externalId` and `scanId` values specified in the request body
+      2. Ensure that the `scanId` value is encoded as a QR code or 1D barcode on your label
+      3. Affix your label to the delivery packaging before a courier picks it up
+
+      We always recommend providing us a sample label to test with to confirm that the label is scanable by our Courier App.
+
+      > **Note:** If a custom label is specified, it is your responsibility to ensure that the label is affixed to the delivery packaging before a courier picks it up. Additionally, you will not be able to download a label from the Trexity API or your Trexity portal.
 
   - name: Receipts
     description: |
@@ -276,9 +288,9 @@ paths:
     $ref: ./paths/api/batching-operations.yaml
   /batching-operations/{batchingOperationId}:
     $ref: ./paths/api/batching-operation.yaml
-  /batching-operations/{batchingOperationId}/create-shipments-operation:
+  /batching-operations/{batchingOperationId}/create-shipments-operations:
     $ref: ./paths/api/batching-create-shipments-operations.yaml
-  /batching-operations/{batchingOperationId}/create-shipments-operation/{batchingCreateShipmentsOperationId}:
+  /batching-operations/{batchingOperationId}/create-shipments-operations/{batchingCreateShipmentsOperationId}:
     $ref: ./paths/api/batching-create-shipments-operation.yaml
   /webhooks:
     $ref: ./paths/api/webhooks.yaml

@@ -1,0 +1,10 @@
+lang: shell
+label: cURL
+source: |
+  curl -X PATCH "https://trexity.app/api/v2/shipments/{SHIPMENT_ID}" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer YOUR_API_KEY" \
+    -d '{
+      "deliveryName": "Jane Doe",
+      "deliveryPhone": "+1-613-555-0124"
+    }' 

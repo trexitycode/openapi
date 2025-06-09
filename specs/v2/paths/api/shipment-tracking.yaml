@@ -2,6 +2,8 @@ get:
   operationId: getShipmentTracking
   tags: [Shipments]
   summary: Get shipment tracking URL
+  x-codeSamples:
+    - $ref: '../../code_samples/shipments/getShipmentTracking.shell.yaml'
   description: |
     Get the tracking URL for a shipment
 

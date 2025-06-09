@@ -1,11 +1,15 @@
-Code samples
-=====
+# Code samples
 
-This is our recommended convention for organizing `code_samples`:
+In this directory stores [code samples](https://github.com/Redocly/redoc/blob/main/docs/redoc-vendor-extensions.md#code-sample-object).
+Each file should have the following naming convention: `<tag>/<operationId>.<lang>.yaml` where:
+- `<tag>` is the name of the tag the operation is associated with as lowercase
+- `<lang>` is the name of the language from [this](https://github.com/github/linguist/blob/master/lib/linguist/popular.yml) list
 
-[x-code-samples](https://github.com/Rebilly/ReDoc/blob/master/docs/redoc-vendor-extensions.md#x-code-samples)
-Path `<lang>/<path>/<HTTP verb>.<extension>` where:
-  * `<lang>` - name of the language from [this](https://github.com/github/linguist/blob/master/lib/linguist/popular.yml) list.
-  * `<path>` - path of the target method, where all `/` are replaced with `@`.
-  * `<HTTP verb>` - verb of target method.
-  * `<extension>` - ignored.
+For example a `cURL` sample would be saved in a file like `shipments/getShipment.shell.yaml` and then referenced by an OpenAPI path spec like this:
+
+```yaml
+get:
+  x-codeSamples:
+    - $ref: '../../code_samples/shipments/getShipment.shell.yaml'
+  # ...rest of the fields
+```

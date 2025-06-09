@@ -20,9 +20,3 @@ allOf:
         - deliveryName
         - deliveryEmail
         - orderId
-    properties:
-      pickupAddress: {}
-      deliveryAddress: {}
-      deliveryName: {}
-      deliveryEmail: {}
-      orderId: {}

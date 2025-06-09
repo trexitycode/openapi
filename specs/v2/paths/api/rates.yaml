@@ -2,6 +2,8 @@ post:
   operationId: calculateShipmentRate
   tags: [Rating]
   summary: Calculate shipment rate
+  x-codeSamples:
+    - $ref: '../../code_samples/rating/calculateShipmentRate.shell.yaml'
   description: |
     Calculate a rate for a shipment.
 
@@ -33,9 +35,6 @@ post:
     - `missing-profile-details` = When the merchant profile is incomplete
     - `delivery-point-outside-zone` = When the delivery address is outside Trexity's service area
     - `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area
-
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/rating/get-delivery-rate.yaml
 
   requestBody:
     required: true

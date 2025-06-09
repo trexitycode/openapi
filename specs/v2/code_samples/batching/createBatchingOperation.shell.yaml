@@ -1,0 +1,30 @@
+lang: shell
+label: cURL
+source: |
+  curl -X POST "https://trexity.app/api/v2/batching-operations" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer YOUR_API_KEY" \
+    -d '{
+      "pickupAddress": {
+        "addressLine1": "123 Warehouse St",
+        "city": "Ottawa",
+        "provinceCode": "ON",
+        "postalCode": "K2G 6F2",
+        "countryCode": "CA"
+      },
+      "shipments": [
+        {
+          "orderId": "order-001",
+          "deliveryAddress": {
+            "addressLine1": "456 Customer Ave",
+            "city": "Ottawa",
+            "provinceCode": "ON",
+            "postalCode": "K1A 0A6",
+            "countryCode": "CA"
+          },
+          "deliveryName": "John Doe",
+          "deliveryEmail": "john.doe@example.com",
+          "deliveryPhone": "+1-613-555-0123"
+        }
+      ]
+    }' 

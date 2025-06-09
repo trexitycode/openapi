@@ -2,6 +2,8 @@ get:
   operationId: listLocations
   tags: [Locations]
   summary: List locations
+  x-codeSamples:
+    - $ref: '../../code_samples/locations/listLocations.shell.yaml'
   description: |
     List all your locations. In order to manage Locations, you need to use the [Merchant Portal](https://merchant.trexity.com/).
 

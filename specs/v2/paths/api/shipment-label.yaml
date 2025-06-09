@@ -2,10 +2,10 @@ get:
   operationId: getShipmentLabel
   tags: [Shipments]
   summary: Get shipment label
+  x-codeSamples:
+    - $ref: '../../code_samples/shipments/getShipmentLabel.shell.yaml'
   description: |
     Get a shipment's shipping label
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/deliveries/get-delivery-label.yaml
 
   parameters:
     - in: path
