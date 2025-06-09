@@ -58,11 +58,11 @@ post:
       $ref: ../../components/responses/500.yaml
 
 get:
-  operationId: listDeliveries
-  tags: [Deliveries]
-  summary: List deliveries
+  operationId: listShipments
+  tags: [Shipments]
+  summary: List shipments
   description: |
-    List deliveries that match the specified filters.
+    List shipments that match the specified filters.
 
     ## Filtering By Dates
 
@@ -86,9 +86,9 @@ get:
       schema:
         type: string
       description: |
-        The comma-separated list of fields to include in the delivery response (if not specified or blank then all fields will be included).
+        The comma-separated list of fields to include in the shipment response (if not specified or blank then all fields will be included).
 
-        If a field is specified that is not defined by the Delivery object, then responds with HTTP 400. Only top-level fields are supported.
+        If a field is specified that is not defined by the Shipment object, then responds with HTTP 400. Only top-level fields are supported.
     - in: query
       name: fromDate
       schema:
@@ -103,7 +103,7 @@ get:
         type: string
         maxLength: 256
         description: |
-          The ID of the external entity that is associated to this delivery (e.g. the external order or shipment ID).
+          The ID of the external entity that is associated to this shipment (e.g. the external order or shipment ID).
     - in: query
       name: metaField1
       schema:
