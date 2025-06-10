@@ -4,9 +4,6 @@ required:
   - effectiveRate
   - orderIds
 properties:
-  locationId:
-    type: string
-    description: The ID of the location the batch is associated to
   effectiveRate:
     allOf:
       - $ref: ./ShipmentRate.yaml
