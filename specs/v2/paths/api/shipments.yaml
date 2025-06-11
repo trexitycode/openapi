@@ -60,11 +60,8 @@ get:
   operationId: listShipments
   tags: [Shipments]
   summary: List shipments
-<<<<<<< HEAD
-=======
   x-codeSamples:
     - $ref: '../../code_samples/shipments/listShipments.shell.yaml'
->>>>>>> caf33e142f7cb123c14345209609a1a0286ef39a
   description: |
     List shipments that match the specified filters.
 
