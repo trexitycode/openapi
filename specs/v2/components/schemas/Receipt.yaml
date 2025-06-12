@@ -54,6 +54,9 @@ properties:
     description: Array of surcharges and discounts, where discounts will have a negative amount
     items:
       type: object
+      required:
+        - description
+        - amount
       properties:
         description:
           type: string

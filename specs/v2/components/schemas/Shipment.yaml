@@ -51,3 +51,23 @@ allOf:
   - $ref: './partials/ShipmentCustomLabelFields.yaml'
   - $ref: './partials/ShpmentMetaFields.yaml'
   - $ref: './partials/ShipmentPartnerFields.yaml'
+  - type: object
+    required:
+      - id
+      - locationId
+      - status
+      - createdAt
+      - updatedAt
+      - pickupSequence
+      - rate
+      - pickupAddress
+      - deliveryAddress
+      - orderId
+      - description
+      - numLabels
+      - deliveryValue
+      - requirements
+      - pickupInstructions
+      - deliveryName
+      - deliveryEmail
+      

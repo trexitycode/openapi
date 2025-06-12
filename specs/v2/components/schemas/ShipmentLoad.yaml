@@ -1,4 +1,9 @@
 type: object
+required:
+  - length
+  - width
+  - height
+  - weight
 description: |
   Optional dimensions and weight of the shipment.
 

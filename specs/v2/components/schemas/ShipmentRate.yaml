@@ -1,4 +1,13 @@
 type: object
+required:
+  - name
+  - description
+  - currency
+  - fees
+  - subtotal
+  - taxes
+  - totalTaxes
+  - total
 properties:
   name:
     type: string
@@ -17,6 +26,9 @@ properties:
       The breakdown of each fee in the rate.
     items:
       type: object
+      required:
+        - type
+        - amount
       properties:
         type:
           type: string
@@ -39,6 +51,10 @@ properties:
     type: array
     items:
       type: object
+      required:
+        - code
+        - amount
+        - rate
       properties:
         code:
           type: string

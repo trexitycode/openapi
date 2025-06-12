@@ -34,9 +34,13 @@ get:
         application/json:
           schema:
             type: object
+            required:
+              - data
             properties:
               data:
                 type: object
+                required:
+                  - trackingUrl
                 properties:
                   trackingUrl:
                     type: string

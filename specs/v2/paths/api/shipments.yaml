@@ -44,6 +44,8 @@ post:
         application/json:
           schema:
             type: object
+            required:
+              - data
             properties:
               data:
                 $ref: ../../components/schemas/Shipment.yaml
@@ -129,6 +131,8 @@ get:
         application/json:
           schema:
             type: object
+            required:
+              - data
             properties:
               data:
                 type: array

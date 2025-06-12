@@ -21,9 +21,15 @@ get:
         application/json:
           schema:
             type: object
+            required:
+              - data
             properties:
               data:
-                $ref: ../../components/schemas/ShipmentStatus.yaml
+                allOf:
+                  - $ref: ../../components/schemas/ShipmentStatus.yaml
+                  - type: object
+                    required:
+                      - status
 
     '400':
       $ref: ../../components/responses/400.yaml
