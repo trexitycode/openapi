@@ -1,10 +1,6 @@
 type: object
 allOf:
   - $ref: './partials/ShipmentDeliveryAddressField.yaml'
-  - type: object
-    properties:
-      pickupStartAt:
-        $ref: './PickupStartAt.yaml'
   - $ref: './partials/ShipmentOrderFields.yaml'
   - $ref: './partials/ShipmentRecipientFields.yaml'
   - $ref: './partials/ShipmentGiftFields.yaml'
