@@ -67,7 +67,6 @@ allOf:
       - numLabels
       - deliveryValue
       - requirements
-      - pickupInstructions
       - deliveryName
       - deliveryEmail
       
