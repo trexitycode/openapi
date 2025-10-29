@@ -2,6 +2,7 @@ type: object
 required:
   - name
   - description
+  - serviceType
   - currency
   - fees
   - subtotal
@@ -16,6 +17,11 @@ properties:
     type: string
     description: |
       The description of the rate to show to the customer (if applicable)
+  serviceType:
+    type: string
+    example: default
+    description: |
+      The shipment service type associated to the shipment rate
   currency:
     type: string
     enum:

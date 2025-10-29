@@ -7,6 +7,10 @@ allOf:
         type: string
         description: |
           Unique identifier for this shipment.
+      serviceType:
+        type: string
+        description: The service type of the shipment
+        example: default
       locationId:
         type: string
         description: The ID of the location that the shipment will be associated with for billing purposes.

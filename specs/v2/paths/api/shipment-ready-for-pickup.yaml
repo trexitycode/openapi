@@ -1,0 +1,33 @@
+post:
+  operationId: shipmentReadyForPickup
+  tags: [Shipments]
+  summary: Shipment ready for pickup
+  x-codeSamples:
+    - $ref: '../../code_samples/shipments/shipmentReadyForPickup.shell.yaml'
+  description: |
+    Marks a shipment as ready for pickup. A shipment marked as ready for pickup will be dispatched to the first available courier. 
+
+    Can only mark shipments with the service type `direct` that are in the `draft` status as ready for pickup.
+
+  parameters:
+    - in: path
+      name: shipmentId
+      required: true
+      schema:
+        type: string
+      description: The id of the shipment that needs to be marked as ready for pickup
+  responses:
+    '204':
+      description: Success
+    '400':
+      $ref: ../../components/responses/400.yaml
+    '401':
+      $ref: ../../components/responses/401.yaml
+    '403':
+      $ref: ../../components/responses/403.yaml
+    '404':
+      $ref: ../../components/responses/404.yaml
+    '422':
+      $ref: ../../components/responses/422.yaml
+    '500':
+      $ref: ../../components/responses/500.yaml

@@ -1,5 +1,25 @@
 type: object
 allOf:
+  - type: object
+    properties:
+      id:
+        type: string
+        description: |
+          **(ADDED IN v1.31)** The ID of the rate. This can be used when creating a shipment
+          to use this exact rate. This rate is only valid until it expires and can only be used once
+          in a request to create a shipment.
+      createdAt:
+        type: string
+        description: |
+          **(ADDED IN v1.31)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+
+          The date and time when the rate was created.
+      expiresAt:
+        type: string
+        description: |
+          **(ADDED IN v1.31)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+
+          The date and time when the rate will expire.
   - { $ref: './Rate.yaml' }
   - type: object
     properties:

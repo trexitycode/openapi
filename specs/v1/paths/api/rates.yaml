@@ -1,15 +1,12 @@
 post:
-  operationId: getSimpleRate
+  operationId: getRates
   tags: [Shipping Rates]
-  summary: Simple rate
-  deprecated: true
+  summary: Get rates
   description: |
-    **(DEPRECATED IN v1.31)** Use the [Rates](/#operation/getRates) endpoint instead.
-
-    Calculate the rate for a shipment with a single pickup address and a
+    **(ADDED IN v1.31)** Calculate rates for a shipment with a single pickup address and a
     single delivery address.
 
-    **NOTE** This endpoint will return a single `default` rate for the shipment.
+    **NOTE** This endpoint will return all available rates for a shipment.
 
     Returns the estimated distance (in meters), estimated travel duration (in
     seconds), and fee from the pickup address to the delivery address.
@@ -29,12 +26,12 @@ post:
     in the response when creating the shipment.
 
   x-codeSamples:
-    - $ref: ../../code_samples/Shell/simple-rate/post.yaml
+    - $ref: ../../code_samples/Shell/rates/post.yaml
 
   ##############################################################################
 
   requestBody:
-    description: Payload that minimally describes a direct shipment.
+    description: Payload that minimally describes a shipment with a single pickup address and a single delivery address.
     required: true
     content:
       application/json:

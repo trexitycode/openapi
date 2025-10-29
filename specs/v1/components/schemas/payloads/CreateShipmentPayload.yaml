@@ -6,11 +6,27 @@ properties:
   locationId:
     type: string
     description: Optionally set Location that this Shipment will belong to. Please see [Locations](#tag/Locations)
+  serviceTypeOrRateId:
+    oneOf:
+      - type: string
+        enum:
+          - default
+          - direct
+        description: |
+          **(ADDED IN v1.31)** The optional service type to use when creating the shipment.
+          If not provided, the `default` service type will be used.
+      - type: string
+        format: uuid
+        description: |
+          **(ADDED IN v1.31)** The optional rate ID to use when creating the shipment. The rate ID must be valid and not expired.
+          A rate ID can only be used once in a request to create a shipment. The service type will be inferred from the associated rate.
+
+          The exact same address information must be provided as the rate was calculated with.
   scheduledPostAt:
     type: 'string'
     deprecated: true
     description: |
-      **DEPRECATED AS OF v1.21**. 
+      **DEPRECATED AS OF v1.21**.
       If provided, then an approximate pickup time will be determined based on the pickup windows and the scheduledPostAt time.
       If a pickup time cannot be determined, then the shipment will be created as a draft and an email will be sent off to
       the merchant asking them to schedule the shipment for pickup.

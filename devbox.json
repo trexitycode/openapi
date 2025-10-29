@@ -1,0 +1,21 @@
+{
+    "packages": {
+      "nodejs":  "18",
+      "git":     "latest",
+      "gnumake": "latest"
+    },
+    "env": {
+      "NODE_ENV":                "development",
+      "DEVBOX_COREPACK_ENABLED": "true",
+      "NX_SOCKET_DIR":           "${DEVBOX_PROJECT_ROOT}/.devbox/nx-tmp",
+      "NPM_PREFIX":              "${DEVBOX_PROJECT_ROOT}/.devbox/global_npm_packages"
+    },
+    "shell": {
+      "init_hook": [
+        "${DEVBOX_CONFIG_DIR}/init_hook/ensure-node-dependencies || (printf '\nFAIL: Failed to install node dependencies.\n' && exit 1)"
+      ],
+      "scripts": {
+        "clear-garbage": "nix-collect-garbage"
+      }
+    }
+  }

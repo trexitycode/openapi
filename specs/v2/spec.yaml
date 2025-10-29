@@ -12,9 +12,9 @@ info:
   description: |
     # Migrating to v2
 
-    This version of the API is a major departure from v1. We normalize around the concept of a delivery
-    and provide a more consistent API. All endpoints are now delivery centric, and all webhook events
-    are relative to a delivery.
+    This version of the API is a major departure from v1. We normalize around the concept of a shipment
+    and provide a more consistent API. All endpoints are now shipment centric, and all webhook events
+    are relative to a shipment.
 
     **Breaking Changes**
 
@@ -48,10 +48,10 @@ info:
 
     # Usage Policy
 
-    By using this API to provide delivery rates to your customers you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.
+    By using this API to provide shipment rates to your customers you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.
     The [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the Rate.
 
-    This allows Trexity to ensure consistent messaging wherever Trexity delivery rates are displayed to your customers.
+    This allows Trexity to ensure consistent messaging wherever Trexity shipment rates are displayed to your customers.
 
     ## Suspension & Termination
 
@@ -61,16 +61,16 @@ info:
 
     ## Concepts
 
-    **Delivery** represents an order, has pickup information and customer information.
+    **Shipment** represents an order, has pickup information and customer information.
 
-    **Rate** represents a price for completing a delivery.
+    **Rate** represents a price for completing a shipment.
 
     ## Workflow
 
-    1. [Calculate a delivery rate](#operation/calculateDeliveryRate) by specifying pickup information, customer information and the delivery address to get a rate to show your customer and obtain an estimate for a pickup time
-    2. [Create a delivery](#operation/createDelivery) by specifying pickup information, customer information and the delivery address
-    3. [Get delivery label](#operation/getDeliveryLabel) for a delivery then affix to the delivery packaging
-    4. [Listen for delivery events](#tag/Webhooks) to track the delivery until it is delivered
+    1. [Calculate a shipment rate](#operation/calculateShipmentRates) by specifying pickup information, customer information and the delivery address to get a rate to show your customer and obtain an estimate for a pickup time
+    2. [Create a shipment](#operation/createShipment) by specifying pickup information, customer information and the delivery address
+    3. [Get shipment label](#operation/getShipmentLabel) for a shipment then affix to the shipment packaging
+    4. [Listen for shipment events](#tag/Webhooks) to track the shipment until it is delivered
 
     ## Sandbox Environment
 
@@ -164,7 +164,7 @@ tags:
 
   - name: Shipments
     description: |
-      A shipment is a central concept in the API. It contains a pickup address, delivery address with customer information, and represents a delivery that will be completed by a courier.
+      A shipment is a central concept in the API. It contains a pickup address, delivery address with customer information, and represents a shipment that will be completed by a courier.
 
   - name: Batching
     description: |
@@ -172,15 +172,15 @@ tags:
   
   - name: Custom Labels
     description: |
-      All shipments come with a label that must be downloaded and affixed to the delivery packaging. To specify a custom label for your shipment do the following:
+      All shipments come with a label that must be downloaded and affixed to the shipment packaging. To specify a custom label for your shipment do the following:
 
       1. Create a shipment with the `externalId` and `scanId` values specified in the request body
       2. Ensure that the `scanId` value is encoded as a QR code or 1D barcode on your label
-      3. Affix your label to the delivery packaging before a courier picks it up
+      3. Affix your label to the shipment packaging before a courier picks it up
 
       We always recommend providing us a sample label to test with to confirm that the label is scanable by our Courier App.
 
-      > **Note:** If a custom label is specified, it is your responsibility to ensure that the label is affixed to the delivery packaging before a courier picks it up. Additionally, you will not be able to download a label from the Trexity API or your Trexity portal.
+      > **Note:** If a custom label is specified, it is your responsibility to ensure that the label is affixed to the shipment packaging before a courier picks it up. Additionally, you will not be able to download a label from the Trexity API or your Trexity portal.
 
   - name: Receipts
     description: |
@@ -232,14 +232,14 @@ tags:
       - `x-trexity-signature` the SHA256 HMAC signature of the request
       - `x-trexity-webhook-order-id` the processing order of the webhook used to determine what order webhooks should be processed in
 
-      All webhook requests will have the following payload shape. Where `data` is the delivery object changed,
-      like returned from the [get delivery endpoint](#tag/Deliveries/operation/getDelivery)
+      All webhook requests will have the following payload shape. Where `data` is the shipment object changed,
+      like returned from the [get shipment endpoint](#tag/Shipments/operation/getShipment)
 
       ```
       {
         "timestamp": "2020-07-25T10:48:08.987Z",
         "data": {
-          ...the delivery object that changed...
+          ...the shipment object that changed...
         }
       }
       ```
@@ -284,6 +284,8 @@ paths:
     $ref: ./paths/api/shipment-tracking.yaml
   /shipments/{shipmentId}/cancel:
     $ref: ./paths/api/shipment-cancel.yaml
+  /shipments/{shipmentId}/ready-for-pickup:
+    $ref: ./paths/api/shipment-ready-for-pickup.yaml
   /batching-operations:
     $ref: ./paths/api/batching-operations.yaml
   /batching-operations/{batchingOperationId}:
