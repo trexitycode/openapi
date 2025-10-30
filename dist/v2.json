@@ -201,7 +201,7 @@
         "tags": [
           "Rating"
         ],
-        "summary": "Calculate shipment rate",
+        "summary": "Calculate shipment rates",
         "x-codeSamples": [
           {
             "lang": "shell",
@@ -209,7 +209,7 @@
             "source": "curl -X POST \"https://trexity.app/api/v2/rates\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n  -d '{\n    \"deliveryAddress\": {\n      \"addressLine1\": \"456 Delivery St\",\n      \"city\": \"Ottawa\",\n      \"provinceCode\": \"ON\",\n      \"postalCode\": \"K1A 0A6\",\n      \"countryCode\": \"CA\"\n    },\n    \"pickupAddress\": {\n      \"addressLine1\": \"123 Pickup Ave\",\n      \"city\": \"Ottawa\", \n      \"provinceCode\": \"ON\",\n      \"postalCode\": \"K2G 6F2\",\n      \"countryCode\": \"CA\"\n    },\n    \"numLabels\": 1\n  }' \n"
           }
         ],
-        "description": "Calculate a rate for a shipment.\n\nIf no `pickupAddress` is specified then your primary location's address will\nbe used as the pickup address.\n\nPlease review our [Usage Policy](/#section/Usage-Policy) before displaying rates to your customers.\n\nThe rate response will include estimates for post, pickup, and delivery time.\n\nAdditionally, the properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a\npickup or delivery window. Otheriwse the next available pickup window (i.e. ASAP) is assumed.\n\n**Unexhaustive list of error codes.**\n\n- `invalid-merchant-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-data-payload` = When there are issues with the input data provided\n- `num-labels-too-large` = When numLabels is too large\n- `time-constraint-violation` = When the delivery/pickup time constraints specified cannot be met\n- `service-unavailable` = When API Service Availability Rules in merchant portal prevent rates from being returned\n- `time-constraint-violation` = When the constraint specified by pickupAfter, or deliverAfter and/or deliverBefore cannot be met\n- `post-date-outside-operating-hours` = When the estimated post date is outside Trexity's or the merchant's operating hours\n- `delivery-date-outside-operating-hours` = When the estimated delivery date is outside Trexity's or the merchant's operating hours\n- `pickup-address-outsidetaxboundary` = When the pickup address is outside the province/state of the merchant's location\n- `merchant-disabled` = When the merchant account has been disabled\n- `missing-profile-details` = When the merchant profile is incomplete\n- `delivery-point-outside-zone` = When the delivery address is outside Trexity's service area\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n",
+        "description": "Calculate the rates available for a shipment.\n\nIf no `pickupAddress` is specified then your primary location's address will\nbe used as the pickup address.\n\nPlease review our [Usage Policy](/#section/Usage-Policy) before displaying rates to your customers.\n\nThe rate response will include estimates for post, pickup, and delivery time.\n\nAdditionally, the properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a\npickup or delivery window. Otheriwse the next available pickup window (i.e. ASAP) is assumed.\n\n**Unexhaustive list of error codes.**\n\n- `invalid-merchant-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-data-payload` = When there are issues with the input data provided\n- `num-labels-too-large` = When numLabels is too large\n- `time-constraint-violation` = When the delivery/pickup time constraints specified cannot be met\n- `service-unavailable` = When API Service Availability Rules in merchant portal prevent rates from being returned\n- `time-constraint-violation` = When the constraint specified by pickupAfter, or deliverAfter and/or deliverBefore cannot be met\n- `post-date-outside-operating-hours` = When the estimated post date is outside Trexity's or the merchant's operating hours\n- `delivery-date-outside-operating-hours` = When the estimated delivery date is outside Trexity's or the merchant's operating hours\n- `pickup-address-outsidetaxboundary` = When the pickup address is outside the province/state of the merchant's location\n- `merchant-disabled` = When the merchant account has been disabled\n- `missing-profile-details` = When the merchant profile is incomplete\n- `delivery-point-outside-zone` = When the delivery address is outside Trexity's service area\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n",
         "requestBody": {
           "required": true,
           "content": {
@@ -732,6 +732,129 @@
         }
       }
     },
+    "/shipments/{shipmentId}/ready-for-pickup": {
+      "post": {
+        "operationId": "shipmentReadyForPickup",
+        "tags": [
+          "Shipments"
+        ],
+        "summary": "Shipment ready for pickup",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X POST \"https://trexity.app/api/v2/shipments/{SHIPMENT_ID}/ready-for-pickup\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
+          }
+        ],
+        "description": "Marks a shipment as ready for pickup. A shipment marked as ready for pickup will be dispatched to the first available courier. \n\nCan only mark shipments with the service type `direct` that are in the `draft` status as ready for pickup.\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "shipmentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the shipment that needs to be marked as ready for pickup"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/shipments/{shipmentId}/label": {
+      "get": {
+        "operationId": "getShipmentLabel",
+        "tags": [
+          "Shipments"
+        ],
+        "summary": "Get shipment label",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X GET \"https://trexity.app/api/v2/shipments/{SHIPMENT_ID}/label\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n  -H \"Accept: application/pdf\" \n"
+          }
+        ],
+        "description": "Get a shipment's shipping label\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "shipmentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the delivery (can be externalId or delivery ID)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/pdf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "A label that needs to be scanned at pickup by a Trexity courier."
+                }
+              },
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "A label that needs to be scanned at pickup by a Trexity courier."
+                }
+              },
+              "application/jsonl": {
+                "schema": {
+                  "type": "string",
+                  "format": "jsonl",
+                  "description": "JSONL text where each line represents a label encoded as a JSON object. Up to \"numLabels\" (from the delivery) labels are returned.\n\nEach label is an encoded JSON object with the following fields:\n\n- `label`: The label as a base64 encoded string with PNG format.\n- `mimeType`: The MIME type of the label. Default is `image/png`.\n\n**NOTE:** The example shows the response as a JSON encoded string, but in practice\nthe response is actually JSON encoded objects separated by newline characters. This is\na limitation of our OpenAPI renderer.\n\nSee: https://jsonlines.org/\n"
+                },
+                "example": "{\"label\": \"...base64encodedstring...\", \"mimeType\": \"image/png\"}\n{\"label\": \"...base64encodedstring...\", \"mimeType\": \"image/png\"}\n"
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
     "/shipments/{shipmentId}/status": {
       "get": {
         "operationId": "getShipmentStatus",
@@ -841,78 +964,6 @@
                   "format": "binary",
                   "description": "Photographic Proof of Delivery."
                 }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "403": {
-            "$ref": "#/components/responses/403"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    },
-    "/shipments/{shipmentId}/label": {
-      "get": {
-        "operationId": "getShipmentLabel",
-        "tags": [
-          "Shipments"
-        ],
-        "summary": "Get shipment label",
-        "x-codeSamples": [
-          {
-            "lang": "shell",
-            "label": "cURL",
-            "source": "curl -X GET \"https://trexity.app/api/v2/shipments/{SHIPMENT_ID}/label\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n  -H \"Accept: application/pdf\" \n"
-          }
-        ],
-        "description": "Get a shipment's shipping label\n",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "shipmentId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The id of the delivery (can be externalId or delivery ID)"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/pdf": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary",
-                  "description": "A label that needs to be scanned at pickup by a Trexity courier."
-                }
-              },
-              "image/png": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary",
-                  "description": "A label that needs to be scanned at pickup by a Trexity courier."
-                }
-              },
-              "application/jsonl": {
-                "schema": {
-                  "type": "string",
-                  "format": "jsonl",
-                  "description": "JSONL text where each line represents a label encoded as a JSON object. Up to \"numLabels\" (from the delivery) labels are returned.\n\nEach label is an encoded JSON object with the following fields:\n\n- `label`: The label as a base64 encoded string with PNG format.\n- `mimeType`: The MIME type of the label. Default is `image/png`.\n\n**NOTE:** The example shows the response as a JSON encoded string, but in practice\nthe response is actually JSON encoded objects separated by newline characters. This is\na limitation of our OpenAPI renderer.\n\nSee: https://jsonlines.org/\n"
-                },
-                "example": "{\"label\": \"...base64encodedstring...\", \"mimeType\": \"image/png\"}\n{\"label\": \"...base64encodedstring...\", \"mimeType\": \"image/png\"}\n"
               }
             }
           },
@@ -1055,57 +1106,6 @@
               "type": "string"
             },
             "description": "The id of the delivery that needs to be cancelled"
-          }
-        ],
-        "responses": {
-          "204": {
-            "description": "Success"
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "403": {
-            "$ref": "#/components/responses/403"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
-          },
-          "422": {
-            "$ref": "#/components/responses/422"
-          },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    },
-    "/shipments/{shipmentId}/ready-for-pickup": {
-      "post": {
-        "operationId": "shipmentReadyForPickup",
-        "tags": [
-          "Shipments"
-        ],
-        "summary": "Shipment ready for pickup",
-        "x-codeSamples": [
-          {
-            "lang": "shell",
-            "label": "cURL",
-            "source": "curl -X POST \"https://trexity.app/api/v2/shipments/{SHIPMENT_ID}/ready-for-pickup\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
-          }
-        ],
-        "description": "Marks a shipment as ready for pickup. A shipment marked as ready for pickup will be dispatched to the first available courier. \n\nCan only mark shipments with the service type `direct` that are in the `draft` status as ready for pickup.\n",
-        "parameters": [
-          {
-            "in": "path",
-            "name": "shipmentId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The id of the shipment that needs to be marked as ready for pickup"
           }
         ],
         "responses": {
@@ -2072,9 +2072,10 @@
                     "oversized",
                     "distance",
                     "returnable-features",
-                    "large-vehicle"
+                    "large-vehicle",
+                    "timewindows-surge"
                   ],
-                  "description": "- `delivery` applied for the base delivery fee\n- `fuel` applied for fuel surcharge\n- `oversized` applied for a surplus of labels\n- `distance` applied for long distance deliveries\n- `returnable-features` applied for returnable features such bags, or packaging\n- `large-vehicle` applied for deliveries that require a medium or large vehicle\n"
+                  "description": "- `delivery` applied for the base delivery fee\n- `fuel` applied for fuel surcharge\n- `oversized` applied for a surplus of labels\n- `distance` applied for long distance deliveries\n- `returnable-features` applied for returnable features such bags, or packaging\n- `large-vehicle` applied for deliveries that require a medium or large vehicle\n- `timewindows-surge` applied for a surcharge fee based on peak time windows\n"
                 },
                 "amount": {
                   "type": "number",
@@ -2126,10 +2127,12 @@
         "type": "object",
         "allOf": [
           {
-            "$ref": "#/components/schemas/ShipmentRate"
-          },
-          {
             "type": "object",
+            "required": [
+              "id",
+              "createdAt",
+              "expiresAt"
+            ],
             "properties": {
               "id": {
                 "type": "string",
@@ -2142,7 +2145,15 @@
               "expiresAt": {
                 "type": "string",
                 "description": "Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nThe date and time when the shipment rate will expire.\n"
-              },
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentRate"
+          },
+          {
+            "type": "object",
+            "properties": {
               "estimatePickupAt": {
                 "description": "Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
                 "type": "string"
@@ -2638,6 +2649,7 @@
             "type": "object",
             "required": [
               "id",
+              "serviceType",
               "locationId",
               "status",
               "createdAt",

@@ -274,18 +274,18 @@ paths:
     $ref: ./paths/api/shipments.yaml
   /shipments/{shipmentId}:
     $ref: ./paths/api/shipment.yaml
+  /shipments/{shipmentId}/ready-for-pickup:
+    $ref: ./paths/api/shipment-ready-for-pickup.yaml
+  /shipments/{shipmentId}/label:
+    $ref: ./paths/api/shipment-label.yaml
   /shipments/{shipmentId}/status:
     $ref: ./paths/api/shipment-status.yaml
   /shipments/{shipmentId}/pod:
     $ref: ./paths/api/shipment-pod.yaml
-  /shipments/{shipmentId}/label:
-    $ref: ./paths/api/shipment-label.yaml
   /shipments/{shipmentId}/tracking:
     $ref: ./paths/api/shipment-tracking.yaml
   /shipments/{shipmentId}/cancel:
     $ref: ./paths/api/shipment-cancel.yaml
-  /shipments/{shipmentId}/ready-for-pickup:
-    $ref: ./paths/api/shipment-ready-for-pickup.yaml
   /batching-operations:
     $ref: ./paths/api/batching-operations.yaml
   /batching-operations/{batchingOperationId}:

@@ -58,6 +58,7 @@ allOf:
   - type: object
     required:
       - id
+      - serviceType
       - locationId
       - status
       - createdAt

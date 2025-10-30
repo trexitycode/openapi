@@ -1,7 +1,10 @@
 type: object
 allOf:
-  - { $ref: './ShipmentRate.yaml' }
   - type: object
+    required:
+      - id
+      - createdAt
+      - expiresAt
     properties:
       id:
         type: string
@@ -21,6 +24,9 @@ allOf:
           Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
 
           The date and time when the shipment rate will expire.
+  - { $ref: './ShipmentRate.yaml' }
+  - type: object
+    properties:
       estimatePickupAt:
         description: |
           Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
