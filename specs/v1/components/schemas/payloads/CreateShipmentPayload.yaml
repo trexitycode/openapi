@@ -22,6 +22,9 @@ properties:
           A rate ID can only be used once in a request to create a shipment. The service type will be inferred from the associated rate.
 
           The exact same address information must be provided as the rate was calculated with.
+
+          When using a rate ID, the `pickupStartAt`, `pickupEndAt`, `deliverStartAt`, and `deliverEndAt` fields cannot be provided.
+          Since a scheduled time could change the rate.
   scheduledPostAt:
     type: 'string'
     deprecated: true

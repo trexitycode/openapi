@@ -4720,7 +4720,7 @@
         }
       },
       "PickupStartAt": {
-        "description": "Specifies the start of the pickup window for the shipment (i.e. the earliest time that the driver can arrive to pickup the shipment).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the start of an available pickup window.\n\n**(ADDED IN v1.31)** If the shipment is a Direct shipment, then hourly pickup windows that start at the\ntop of each hour are available.\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows)\nfor Everyday (default) shipments.\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
+        "description": "Specifies the start of the pickup window for the shipment (i.e. the earliest time that the driver can arrive to pickup the shipment).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the start of an available pickup window.\n\n**(ADDED IN v1.31)** If the shipment is a Direct shipment, then any pickup start time in the future\nis available. It will be implied that the pickup window is 2 hours long from the start time.\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows)\nfor Everyday (default) shipments.\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
         "type": "string",
         "nullable": true
       },
@@ -5571,7 +5571,7 @@
               {
                 "type": "string",
                 "format": "uuid",
-                "description": "**(ADDED IN v1.31)** The optional rate ID to use when creating the shipment. The rate ID must be valid and not expired.\nA rate ID can only be used once in a request to create a shipment. The service type will be inferred from the associated rate.\n\nThe exact same address information must be provided as the rate was calculated with.\n"
+                "description": "**(ADDED IN v1.31)** The optional rate ID to use when creating the shipment. The rate ID must be valid and not expired.\nA rate ID can only be used once in a request to create a shipment. The service type will be inferred from the associated rate.\n\nThe exact same address information must be provided as the rate was calculated with.\n\nWhen using a rate ID, the `pickupStartAt`, `pickupEndAt`, `deliverStartAt`, and `deliverEndAt` fields cannot be provided.\nSince a scheduled time could change the rate.\n"
               }
             ]
           },

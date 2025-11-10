@@ -4,8 +4,8 @@ description: |
 
   When specified, this value must match the start of an available pickup window.
 
-  **(ADDED IN v1.31)** If the shipment is a Direct shipment, then hourly pickup windows that start at the
-  top of each hour are available.
+  **(ADDED IN v1.31)** If the shipment is a Direct shipment, then any pickup start time in the future
+  is available. It will be implied that the pickup window is 2 hours long from the start time.
 
   Review the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows)
   for Everyday (default) shipments.
