@@ -2,6 +2,8 @@ get:
   operationId: listReceipts
   tags: [Receipts]
   summary: List receipts
+  x-codeSamples:
+    - $ref: '../../code_samples/receipts/listReceipts.shell.yaml'
   description: |
     Retrieve the receipts for all or one location for a particular calendar month
 

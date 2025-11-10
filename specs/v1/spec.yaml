@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: '1.30'
+  version: '1.31'
   title: Trexity API
   license:
     name: MIT
@@ -31,18 +31,32 @@ info:
 
     ## Concepts
 
+    **Shipments** represent a route, has one or more parcels, requirements, and a pickup address.
+
     **Parcels** represent an order, has customer information and a delivery address.
 
-    **Shipments** represent a route, has one or more parcels, requirements, and a pickup address.
+    **Service Types** represent a type of service used to rate a shipment.
+
+    **Rates** represent a price for completing a shipment.
+
+    
 
     ## Preferred Workflow
 
     This workflow is the most common and preferred way to create a shipment for delivery. Just provide a parcel,
     and optionally a pickup time to create a shipment.
 
-    1. [Create a shipment](#operation/createShipment) specify the parcels, customer information and delivery address
-    2. [Get parcel label](#operation/getParcelLabel) for the parcel then affix to the parcel packaging
+    1. [Optionally calculate rates](#operation/getRates) by specifying pickup information, customer information and the delivery address
+    2. [Create a shipment](#operation/createShipment) specify the parcels, customer information and delivery address, and optionally a rate ID or a shipment service type
+    3. [Optionally schedule for pickup](#operation/updateShipment) to set a pickup time of the shipment, or for Direct shipments indicate the shipment is [ready for pickup](#operation/shipmentReadyForPickup)
+    4. [Get parcel label](#operation/getParcelLabel) for the parcel then affix to your packaging
 
+    ## Rating and Service Types
+
+    The following service types are available and have different rating rules:
+    - `default` = The default service type known in the product as Everyday. This service type is always available.
+    - `direct` = A direct service type known in the product as Direct. This service type is only available in select markets.
+    
     ## Parcel Status
 
     Follow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.
@@ -293,6 +307,8 @@ security:
 paths:
   /addresses/check:
     $ref: ./paths/api/check-address.yaml
+  /rates:
+    $ref: ./paths/api/rates.yaml
   /rates/simple:
     $ref: ./paths/api/simple-rate.yaml
   /rates/complex:
@@ -315,6 +331,8 @@ paths:
     $ref: ./paths/api/post-shipment.yaml
   /shipments/{shipmentId}/cancel:
     $ref: ./paths/api/cancel-shipment.yaml
+  /shipments/{shipmentId}/ready-for-pickup:
+    $ref: ./paths/api/shipment-ready-for-pickup.yaml
   /shipments/{shipmentId}/parcels/{deliveryIndex}:
     $ref: ./paths/api/update-shipment-parcel.yaml
   /shipments/{shipmentId}/tracking/{deliveryIndex}:

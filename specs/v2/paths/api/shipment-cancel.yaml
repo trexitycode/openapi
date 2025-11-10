@@ -1,0 +1,35 @@
+post:
+  operationId: cancelShipment
+  tags: [Shipments]
+  summary: Cancel shipment
+  x-codeSamples:
+    - $ref: '../../code_samples/shipments/cancelShipment.shell.yaml'
+  description: |
+    Cancels a shipment. A cancelled shipment will no longer be able to be assigned to a courier. 
+
+    Can only cancel shipments that are in the `draft`, `pending`, `assigned`, or `in-transit` status.
+    
+    **If cancelling a delivery while `assigned` or `in-transit` then a cancellation fee will be charged.**
+
+  parameters:
+    - in: path
+      name: shipmentId
+      required: true
+      schema:
+        type: string
+      description: The id of the delivery that needs to be cancelled
+  responses:
+    '204':
+      description: Success
+    '400':
+      $ref: ../../components/responses/400.yaml
+    '401':
+      $ref: ../../components/responses/401.yaml
+    '403':
+      $ref: ../../components/responses/403.yaml
+    '404':
+      $ref: ../../components/responses/404.yaml
+    '422':
+      $ref: ../../components/responses/422.yaml
+    '500':
+      $ref: ../../components/responses/500.yaml

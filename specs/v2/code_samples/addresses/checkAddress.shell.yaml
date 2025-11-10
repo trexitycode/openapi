@@ -1,0 +1,22 @@
+lang: shell
+label: cURL
+source: |
+  curl -X POST "https://trexity.app/api/v2/addresses/check" \
+    -H "Content-Type: application/json" \
+    -H "Authorization: Bearer YOUR_API_KEY" \
+    -d '{
+      "delivery": {
+        "addressLine1": "456 Delivery St",
+        "city": "Ottawa",
+        "provinceCode": "ON",
+        "postalCode": "K1A 0A6",
+        "countryCode": "CA"
+      },
+      "pickup": {
+        "addressLine1": "123 Pickup Ave",
+        "city": "Ottawa",
+        "provinceCode": "ON", 
+        "postalCode": "K2G 6F2",
+        "countryCode": "CA"
+      }
+    }' 

@@ -1,9 +1,11 @@
 post:
-  operationId: calculateDeliveryRate
+  operationId: calculateShipmentRates
   tags: [Rating]
-  summary: Calculate delivery rate
+  summary: Calculate shipment rates
+  x-codeSamples:
+    - $ref: '../../code_samples/rating/calculateShipmentRates.shell.yaml'
   description: |
-    Calculate a rate for a delivery.
+    Calculate the rates available for a shipment.
 
     If no `pickupAddress` is specified then your primary location's address will
     be used as the pickup address.
@@ -34,16 +36,12 @@ post:
     - `delivery-point-outside-zone` = When the delivery address is outside Trexity's service area
     - `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area
 
-  x-codeSamples:
-    - $ref: ../../code_samples/Shell/rating/get-delivery-rate.yaml
-
   requestBody:
-    description: Payload that minimally describes a direct delivery.
     required: true
     content:
       application/json:
         schema:
-          $ref: ../../components/schemas/DeliveryRateDTO.yaml
+          $ref: ../../components/schemas/ShipmentRateDTO.yaml
 
   responses:
     '200':
@@ -52,9 +50,13 @@ post:
         application/json:
           schema:
             type: object
+            required:
+              - data
             properties:
               data:
-                $ref: ../../components/schemas/DeliveryRateWithETA.yaml
+                type: array
+                items:
+                  $ref: ../../components/schemas/ShipmentRateWithETA.yaml
 
     '400':
       $ref: '../../components/responses/400.yaml'

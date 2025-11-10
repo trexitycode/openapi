@@ -1,0 +1,60 @@
+get:
+  operationId: getShipmentLabel
+  tags: [Shipments]
+  summary: Get shipment label
+  x-codeSamples:
+    - $ref: '../../code_samples/shipments/getShipmentLabel.shell.yaml'
+  description: |
+    Get a shipment's shipping label
+
+  parameters:
+    - in: path
+      name: shipmentId
+      required: true
+      schema:
+        type: string
+      description: The id of the delivery (can be externalId or delivery ID)
+  responses:
+    '200':
+      description: Success
+      content:
+        application/pdf:
+          schema:
+            type: string
+            format: binary
+            description: A label that needs to be scanned at pickup by a Trexity courier.
+        image/png:
+          schema:
+            type: string
+            format: binary
+            description: A label that needs to be scanned at pickup by a Trexity courier.
+        application/jsonl:
+          schema:
+            type: string
+            format: jsonl
+            description: |
+              JSONL text where each line represents a label encoded as a JSON object. Up to "numLabels" (from the delivery) labels are returned.
+
+              Each label is an encoded JSON object with the following fields:
+
+              - `label`: The label as a base64 encoded string with PNG format.
+              - `mimeType`: The MIME type of the label. Default is `image/png`.
+
+              **NOTE:** The example shows the response as a JSON encoded string, but in practice
+              the response is actually JSON encoded objects separated by newline characters. This is
+              a limitation of our OpenAPI renderer.
+
+              See: https://jsonlines.org/
+          example: |
+            {"label": "...base64encodedstring...", "mimeType": "image/png"}
+            {"label": "...base64encodedstring...", "mimeType": "image/png"}
+    '400':
+      $ref: ../../components/responses/400.yaml
+    '401':
+      $ref: ../../components/responses/401.yaml
+    '403':
+      $ref: ../../components/responses/403.yaml
+    '404':
+      $ref: ../../components/responses/404.yaml
+    '500':
+      $ref: ../../components/responses/500.yaml

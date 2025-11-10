@@ -1,0 +1,38 @@
+type: object
+allOf:
+  - type: object
+    properties:
+      locationId:
+        type: string
+        description: The ID of the location that the shipment will be associated with for billing purposes. If not provided, the location will be inferred from the pickup address.
+      serviceTypeOrRateId:
+        oneOf:
+          - type: string
+            enum:
+              - default
+              - direct
+            description: |
+              The optional service type to use when creating the shipment.
+              If not provided, the `default` service type will be used.
+          - type: string
+            format: uuid
+            description: |
+              The optional rate ID to use when creating the shipment. The rate ID must be valid and not expired.
+              A rate ID can only be used once in a request to create a shipment. The service type will be inferred from the associated rate.
+
+              The exact same address information must be provided as the rate was calculated with.
+  - $ref: './partials/ShipmentAddressingFields.yaml'
+  - $ref: './partials/ShipmentPickupFields.yaml'
+  - $ref: './partials/ShipmentOrderFields.yaml'
+  - $ref: './partials/ShipmentRecipientFields.yaml'
+  - $ref: './partials/ShipmentGiftFields.yaml'
+  - $ref: './partials/ShipmentCustomLabelFields.yaml'
+  - $ref: './partials/ShpmentMetaFields.yaml'
+  - $ref: './partials/ShipmentPartnerFields.yaml'
+  - type: object
+    required:
+        - pickupAddress
+        - deliveryAddress
+        - deliveryName
+        - deliveryEmail
+        - orderId

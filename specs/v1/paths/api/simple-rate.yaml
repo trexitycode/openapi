@@ -2,9 +2,14 @@ post:
   operationId: getSimpleRate
   tags: [Shipping Rates]
   summary: Simple rate
+  deprecated: true
   description: |
-    Calculate the rate for a direct shipment from a single pickup address to a
+    **(DEPRECATED IN v1.31)** Use the [Rates](/#operation/getRates) endpoint instead.
+
+    Calculate the rate for a shipment with a single pickup address and a
     single delivery address.
+
+    **NOTE** This endpoint will return a single `default` rate for the shipment.
 
     Returns the estimated distance (in meters), estimated travel duration (in
     seconds), and fee from the pickup address to the delivery address.
@@ -14,7 +19,7 @@ post:
 
     **(ADDED IN v1.7)** Review the [Usage Policy](/#section/Usage-Policy).
 
-    **(ADDED IN v1.8)** Use this endpoint for direct shipment rates (single pickup
+    **(ADDED IN v1.8)** Use this endpoint for shipment rates (single pickup
     address and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)
     endpoint for multiple delivery addresses.
 

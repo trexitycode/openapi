@@ -12,20 +12,34 @@ info:
   description: |
     # Migrating to v2
 
-    This version of the API is a major departure from v1. We normalize around the concept of a delivery
-    and provide a more consistent API. All endpoints are now delivery centric, and all webhook events
-    are relative to a delivery.
+    This version of the API is a major departure from v1. We normalize around the concept of a shipment
+    and provide a more consistent API. All endpoints are now shipment centric, and all webhook events
+    are relative to a shipment.
 
     **Breaking Changes**
 
-    - the complex rate endpoints have been removed in favour of auotmated delivery batching
+    - the concepts of a "shipment" and a "parcel" have been merged together into a [shipment](#tag/Shipments)
+    - shipment IDs from v1 that were created from the "Create a shipment" endpoint will work when performing shipment read operations in v2, but the shipment ID returned will be different
+    - parcel IDs from v1 will work as-is for shipment IDs in v2 with no exceptions
+    - the complex rate endpoints have been replaced with a new set of [batching endpoints](#tag/Batching) that will perform the same tasks
+    - [addressing](#tag/Addresses) has been changed from a single address string with a format, to a structured [address object](#tag/Addresses)
+    - the following webhook events have been replaced:
+      - `parcel.picked_up` with `shipment.picked_up`
+      - `parcel.delivered` with `shipment.delivered`
+      - `parcel.returning` with `shipment.returning`
+      - `parcel.returned` with `shipment.returned`
+      - `shipment.driver.accepted` with `shipment.courier.accepted`
+      - `shipment.driver.arrived_at_pickup` with `shipment.courier.arrived_at_pickup`
+      - `shipment.driver.arrived_at_delivery` with `shipment.courier.arrived_at_delivery`
+      - `shipment.driver.renounced` with `shipment.courier.renounced`
+    - the following webhook events have been removed:
+      - `shipment.completed` use `shipment.delivered` or `shipment.undeliverable` instead
+      - `shipment.driver.parcel_delivered` use `shipment.delivered` instead
+      - `shipment.driver.picked_up` use `shipment.picked_up` instead
+      - `shipment.posted` use `shipment.courier.accepted` instead
 
     **Updates**
 
-    - addressing has been changed from a single address string with a format, to a structured [address object](#tag/Addresses)
-    - the concepts of a "shipment" and a "parcel" has been replaced with the unified concept of a [delivery](#tag/Deliveries)
-    - **in v2 the delivery ID is interchangable with a parcel ID from v1**
-    - all webhook events have been renamed to be relative to a delivery
     - a new endpiont has been added to retrieve your [webhook secret](/#operation/getWebhookSecretKey)
 
     # Issues
@@ -34,10 +48,10 @@ info:
 
     # Usage Policy
 
-    By using this API to provide delivery rates to your customers you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.
+    By using this API to provide shipment rates to your customers you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.
     The [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the Rate.
 
-    This allows Trexity to ensure consistent messaging wherever Trexity delivery rates are displayed to your customers.
+    This allows Trexity to ensure consistent messaging wherever Trexity shipment rates are displayed to your customers.
 
     ## Suspension & Termination
 
@@ -47,16 +61,16 @@ info:
 
     ## Concepts
 
-    **Delivery** represents an order, has pickup information and customer information.
+    **Shipment** represents an order, has pickup information and customer information.
 
-    **Rate** represents a price for completing a delivery.
+    **Rate** represents a price for completing a shipment.
 
     ## Workflow
 
-    1. [Calculate a delivery rate](#operation/calculateDeliveryRate) by specifying pickup information, customer information and the delivery address to get a rate to show your customer and obtain an estimate for a pickup time
-    2. [Create a delivery](#operation/createDelivery) by specifying pickup information, customer information and the delivery address
-    3. [Get delivery label](#operation/getDeliveryLabel) for a delivery then affix to the delivery packaging
-    4. [Listen for delivery events](#tag/Webhooks) to track the delivery until it is delivered
+    1. [Calculate a shipment rate](#operation/calculateShipmentRates) by specifying pickup information, customer information and the delivery address to get a rate to show your customer and obtain an estimate for a pickup time
+    2. [Create a shipment](#operation/createShipment) by specifying pickup information, customer information and the delivery address
+    3. [Get shipment label](#operation/getShipmentLabel) for a shipment then affix to the shipment packaging
+    4. [Listen for shipment events](#tag/Webhooks) to track the shipment until it is delivered
 
     ## Sandbox Environment
 
@@ -145,16 +159,28 @@ tags:
       ```
   - name: Rating
     description: |
-      Prior to creating a Delivery, you can calculate the rates based on the pickup and delivery addresses.
+      Prior to creating a Shipment, you can calculate the rates based on the pickup and delivery addresses.
       See our [rates](/#operation/getRate) endpoint for more information.
-  - name: Deliveries
-    description: |
-      The most common approach to get a delivery on the road is to:
-        * [Create a Delivery](/#operation/createDelivery)
 
-      You can schedule the posting of the Delivery in the future.
-      Trexity guarantees that the scheduled Delivery will not be posted or broadcast prior to the time it was scheduled for.
-      Please see the [details](/#operation/createDelivery) here.
+  - name: Shipments
+    description: |
+      A shipment is a central concept in the API. It contains a pickup address, delivery address with customer information, and represents a shipment that will be completed by a courier.
+
+  - name: Batching
+    description: |
+      Batching is the process of optimizing a large set of deliveries from the same pickup location into efficient batches.
+  
+  - name: Custom Labels
+    description: |
+      All shipments come with a label that must be downloaded and affixed to the shipment packaging. To specify a custom label for your shipment do the following:
+
+      1. Create a shipment with the `externalId` and `scanId` values specified in the request body
+      2. Ensure that the `scanId` value is encoded as a QR code or 1D barcode on your label
+      3. Affix your label to the shipment packaging before a courier picks it up
+
+      We always recommend providing us a sample label to test with to confirm that the label is scanable by our Courier App.
+
+      > **Note:** If a custom label is specified, it is your responsibility to ensure that the label is affixed to the shipment packaging before a courier picks it up. Additionally, you will not be able to download a label from the Trexity API or your Trexity portal.
 
   - name: Receipts
     description: |
@@ -206,14 +232,14 @@ tags:
       - `x-trexity-signature` the SHA256 HMAC signature of the request
       - `x-trexity-webhook-order-id` the processing order of the webhook used to determine what order webhooks should be processed in
 
-      All webhook requests will have the following payload shape. Where `data` is the delivery object changed,
-      like returned from the [get delivery endpoint](#tag/Deliveries/operation/getDelivery)
+      All webhook requests will have the following payload shape. Where `data` is the shipment object changed,
+      like returned from the [get shipment endpoint](#tag/Shipments/operation/getShipment)
 
       ```
       {
         "timestamp": "2020-07-25T10:48:08.987Z",
         "data": {
-          ...the delivery object that changed...
+          ...the shipment object that changed...
         }
       }
       ```
@@ -244,20 +270,30 @@ paths:
     $ref: ./paths/api/rates.yaml
   /regions:
     $ref: ./paths/api/regions.yaml
-  /deliveries:
-    $ref: ./paths/api/deliveries.yaml
-  /deliveries/{deliveryId}:
-    $ref: ./paths/api/delivery.yaml
-  /deliveries/{deliveryId}/status:
-    $ref: ./paths/api/delivery-status.yaml
-  /deliveries/{deliveryId}/pod:
-    $ref: ./paths/api/delivery-pod.yaml
-  /deliveries/{deliveryId}/label:
-    $ref: ./paths/api/delivery-label.yaml
-  /deliveries/{deliveryId}/tracking:
-    $ref: ./paths/api/delivery-tracking.yaml
-  /deliveries/{deliveryId}/cancel:
-    $ref: ./paths/api/delivery-cancel.yaml
+  /shipments:
+    $ref: ./paths/api/shipments.yaml
+  /shipments/{shipmentId}:
+    $ref: ./paths/api/shipment.yaml
+  /shipments/{shipmentId}/ready-for-pickup:
+    $ref: ./paths/api/shipment-ready-for-pickup.yaml
+  /shipments/{shipmentId}/label:
+    $ref: ./paths/api/shipment-label.yaml
+  /shipments/{shipmentId}/status:
+    $ref: ./paths/api/shipment-status.yaml
+  /shipments/{shipmentId}/pod:
+    $ref: ./paths/api/shipment-pod.yaml
+  /shipments/{shipmentId}/tracking:
+    $ref: ./paths/api/shipment-tracking.yaml
+  /shipments/{shipmentId}/cancel:
+    $ref: ./paths/api/shipment-cancel.yaml
+  /batching-operations:
+    $ref: ./paths/api/batching-operations.yaml
+  /batching-operations/{batchingOperationId}:
+    $ref: ./paths/api/batching-operation.yaml
+  /batching-operations/{batchingOperationId}/create-shipments-operations:
+    $ref: ./paths/api/batching-create-shipments-operations.yaml
+  /batching-operations/{batchingOperationId}/create-shipments-operations/{batchingCreateShipmentsOperationId}:
+    $ref: ./paths/api/batching-create-shipments-operation.yaml
   /webhooks:
     $ref: ./paths/api/webhooks.yaml
   /webhooks/{webhookId}:

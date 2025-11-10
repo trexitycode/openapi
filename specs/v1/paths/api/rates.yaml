@@ -1,0 +1,119 @@
+post:
+  operationId: getRates
+  tags: [Shipping Rates]
+  summary: Get rates
+  description: |
+    **(ADDED IN v1.31)** Calculate rates for a shipment with a single pickup address and a
+    single delivery address.
+
+    **NOTE** This endpoint will return all available rates for a shipment.
+
+    Returns the estimated distance (in meters), estimated travel duration (in
+    seconds), and fee from the pickup address to the delivery address.
+
+    If no `pickupAddress` is specified then the merchant's business address will
+    be used as the pickup address.
+
+    **(ADDED IN v1.7)** Review the [Usage Policy](/#section/Usage-Policy).
+
+    **(ADDED IN v1.8)** Use this endpoint for shipment rates (single pickup
+    address and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)
+    endpoint for multiple delivery addresses.
+
+    The rate response will now include estimates for post, pickup, and delivery time.
+    Additionally, the new properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a
+    delivery window. Otheriwse the next available delivery window (i.e. ASAP) is assumed. Use the estimated values
+    in the response when creating the shipment.
+
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/rates/post.yaml
+
+  ##############################################################################
+
+  requestBody:
+    description: Payload that minimally describes a shipment with a single pickup address and a single delivery address.
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/payloads/SimpleRatePayload.yaml
+        example:
+          pickupAddress: '456 Elgin Street, Ottawa ON K2P 1N5, CA'
+          deliveryAddress: '225 Preston St, Ottawa ON K1R 7R1, CA'
+          requirements:
+            legalAgeAlcohol: true
+          orderValue: 2500
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            $ref: ../../components/schemas/responses/SimpleRateResponse.yaml
+          examples:
+            $ref: ../../components/examples/rate1.yaml
+    '400':
+      description: Input error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string, nullable: true }
+              params: { type: object, nullable: true }
+              code:
+                type: string
+                nullable: true
+                description: |
+                  Unexhaustive list of codes.
+
+                  - `invalid-merchant-requirements` = When the requirements specified don't match the requirements granted to the merchant
+                  - `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations
+                  - `invalid-pickup-address` = When the pickup address is invalid
+                  - `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area
+                  - `invalid-data-payload` = When there are issues with the input data provided
+                  - `num-labels-too-large` = When numLabels is too large
+                  - `time-constraint-violation` = When the delivery/pickup time constraints specified cannot be met
+    '401':
+      description: Unauthorized
+    '403':
+      description: Forbidden
+    '404':
+      description: No rates
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: array
+                minItems: 0
+                maxItems: 0
+                items:
+                  $ref: ../../components/schemas/SimpleRate.yaml
+              error:
+                type: object
+                properties:
+                  message: { type: string }
+                  code:
+                    type: string
+                    description: |
+                      Unexhaustive list of codes.
+
+                      - `service-unavailable` = When API Service Availability Rules in merchant portal prevent rates from being returned
+                      - `time-constraint-violation` = When the constraint specified by pickupAfter, or deliverAfter and/or deliverBefore cannot be met
+                      - `post-date-outside-operating-hours` = When the estimated post date is outside Trexity's or the merchant's operating hours
+                      - `delivery-date-outside-operating-hours` = When the estimated delivery date is outside Trexity's or the merchant's operating hours
+                      - `pickup-address-outsidetaxboundary` = When the pickup address is outside the province/state of the merchant's location
+                      - `merchant-disabled` = When the merchant account has been disabled
+                      - `missing-profile-details` = When the merchant profile is incomplete
+                      - `delivery-point-outside-zone` = When the delivery address is outside Trexity's service area
+                      - `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area
+    '500':
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string, nullable: true }

@@ -12,7 +12,7 @@
       "email": "support@trexity.com",
       "url": "http://trexity.com"
     },
-    "description": "# Migrating to v2\n\nThis version of the API is a major departure from v1. We normalize around the concept of a delivery\nand provide a more consistent API. All endpoints are now delivery centric, and all webhook events\nare relative to a delivery.\n\n**Breaking Changes**\n\n- the complex rate endpoints have been removed in favour of auotmated delivery batching\n\n**Updates**\n\n- addressing has been changed from a single address string with a format, to a structured [address object](#tag/Addresses)\n- the concepts of a \"shipment\" and a \"parcel\" has been replaced with the unified concept of a [delivery](#tag/Deliveries)\n- **in v2 the delivery ID is interchangable with a parcel ID from v1**\n- all webhook events have been renamed to be relative to a delivery\n- a new endpiont has been added to retrieve your [webhook secret](/#operation/getWebhookSecretKey)\n\n# Issues\n\nPlease open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) in the [issues](https://github.com/trexitycode/openapi/issues) board.\n\n# Usage Policy\n\nBy using this API to provide delivery rates to your customers you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.\nThe [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the Rate.\n\nThis allows Trexity to ensure consistent messaging wherever Trexity delivery rates are displayed to your customers.\n\n## Suspension & Termination\n\nFailure to comply with this Usage Policy may result in suspension of your Trexity merchant account and/or API Keys. Continued failure to comply may result in the termination of your Trexity merchant account.\n\n# Concepts & Workflows\n\n## Concepts\n\n**Delivery** represents an order, has pickup information and customer information.\n\n**Rate** represents a price for completing a delivery.\n\n## Workflow\n\n1. [Calculate a delivery rate](#operation/calculateDeliveryRate) by specifying pickup information, customer information and the delivery address to get a rate to show your customer and obtain an estimate for a pickup time\n2. [Create a delivery](#operation/createDelivery) by specifying pickup information, customer information and the delivery address\n3. [Get delivery label](#operation/getDeliveryLabel) for a delivery then affix to the delivery packaging\n4. [Listen for delivery events](#tag/Webhooks) to track the delivery until it is delivered\n\n## Sandbox Environment\n\nAll API operations have an alternate base URL available in the sandbox environment.\n\nTo use the sandbox environment:\n1. Create an account on the [Sandbox Merchant Portal](https://merchant.beta.trexity.com/signup)\n2. Navigate to the [API Keys page](https://merchant.beta.trexity.com/api/keys) in the Advanced area.\n3. Create a new API Key\n4. Use the new API Key and the sandbox base URL in your API requests\n\n> Use the dropdown in the top right of an API operation page to select the sandbox environment server.\n\n### Credit Cards\n\nWhen signing up for the sandbox environment you can use the  following\ncredit card with any 3-digit CVC and a future expiration date.\n\n```\n4000 0012 4000 0000\n```\n\n### Expectations\n\nThe sandbox environment is intended for development and testing purposes only.\nExpect latency to be higher than the production environment.\n\nWe use our sandbox environment as well when developing new features to ensure\nthere are no breaking changes. So expect the occasional breaking change when\nusing the sandbox environment.\n\n# Responses\n\n### Successful Responses\n\nAll endpoints, when responding successfully, will return a JSON object with a `data` field when there is data to return.\n```\n// typescript interface\ninterface SuccessResponse<T = object | any[]> {\n  data: T\n}\n```\n\n### Error Responses\n\nAll endpoints, when applicable and responding with a non 200 HTTP status code, will return a JSON object with an `errors` field.\n```\n// typescript interface\ninterface ErrorResponse {\n  errors: { message: string, code: string }[]\n}\n```\n"
+    "description": "# Migrating to v2\n\nThis version of the API is a major departure from v1. We normalize around the concept of a shipment\nand provide a more consistent API. All endpoints are now shipment centric, and all webhook events\nare relative to a shipment.\n\n**Breaking Changes**\n\n- the concepts of a \"shipment\" and a \"parcel\" have been merged together into a [shipment](#tag/Shipments)\n- shipment IDs from v1 that were created from the \"Create a shipment\" endpoint will work when performing shipment read operations in v2, but the shipment ID returned will be different\n- parcel IDs from v1 will work as-is for shipment IDs in v2 with no exceptions\n- the complex rate endpoints have been replaced with a new set of [batching endpoints](#tag/Batching) that will perform the same tasks\n- [addressing](#tag/Addresses) has been changed from a single address string with a format, to a structured [address object](#tag/Addresses)\n- the following webhook events have been replaced:\n  - `parcel.picked_up` with `shipment.picked_up`\n  - `parcel.delivered` with `shipment.delivered`\n  - `parcel.returning` with `shipment.returning`\n  - `parcel.returned` with `shipment.returned`\n  - `shipment.driver.accepted` with `shipment.courier.accepted`\n  - `shipment.driver.arrived_at_pickup` with `shipment.courier.arrived_at_pickup`\n  - `shipment.driver.arrived_at_delivery` with `shipment.courier.arrived_at_delivery`\n  - `shipment.driver.renounced` with `shipment.courier.renounced`\n- the following webhook events have been removed:\n  - `shipment.completed` use `shipment.delivered` or `shipment.undeliverable` instead\n  - `shipment.driver.parcel_delivered` use `shipment.delivered` instead\n  - `shipment.driver.picked_up` use `shipment.picked_up` instead\n  - `shipment.posted` use `shipment.courier.accepted` instead\n\n**Updates**\n\n- a new endpiont has been added to retrieve your [webhook secret](/#operation/getWebhookSecretKey)\n\n# Issues\n\nPlease open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) in the [issues](https://github.com/trexitycode/openapi/issues) board.\n\n# Usage Policy\n\nBy using this API to provide shipment rates to your customers you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.\nThe [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same-day, etc.) or displayed as-is from the Rate.\n\nThis allows Trexity to ensure consistent messaging wherever Trexity shipment rates are displayed to your customers.\n\n## Suspension & Termination\n\nFailure to comply with this Usage Policy may result in suspension of your Trexity merchant account and/or API Keys. Continued failure to comply may result in the termination of your Trexity merchant account.\n\n# Concepts & Workflows\n\n## Concepts\n\n**Shipment** represents an order, has pickup information and customer information.\n\n**Rate** represents a price for completing a shipment.\n\n## Workflow\n\n1. [Calculate a shipment rate](#operation/calculateShipmentRates) by specifying pickup information, customer information and the delivery address to get a rate to show your customer and obtain an estimate for a pickup time\n2. [Create a shipment](#operation/createShipment) by specifying pickup information, customer information and the delivery address\n3. [Get shipment label](#operation/getShipmentLabel) for a shipment then affix to the shipment packaging\n4. [Listen for shipment events](#tag/Webhooks) to track the shipment until it is delivered\n\n## Sandbox Environment\n\nAll API operations have an alternate base URL available in the sandbox environment.\n\nTo use the sandbox environment:\n1. Create an account on the [Sandbox Merchant Portal](https://merchant.beta.trexity.com/signup)\n2. Navigate to the [API Keys page](https://merchant.beta.trexity.com/api/keys) in the Advanced area.\n3. Create a new API Key\n4. Use the new API Key and the sandbox base URL in your API requests\n\n> Use the dropdown in the top right of an API operation page to select the sandbox environment server.\n\n### Credit Cards\n\nWhen signing up for the sandbox environment you can use the  following\ncredit card with any 3-digit CVC and a future expiration date.\n\n```\n4000 0012 4000 0000\n```\n\n### Expectations\n\nThe sandbox environment is intended for development and testing purposes only.\nExpect latency to be higher than the production environment.\n\nWe use our sandbox environment as well when developing new features to ensure\nthere are no breaking changes. So expect the occasional breaking change when\nusing the sandbox environment.\n\n# Responses\n\n### Successful Responses\n\nAll endpoints, when responding successfully, will return a JSON object with a `data` field when there is data to return.\n```\n// typescript interface\ninterface SuccessResponse<T = object | any[]> {\n  data: T\n}\n```\n\n### Error Responses\n\nAll endpoints, when applicable and responding with a non 200 HTTP status code, will return a JSON object with an `errors` field.\n```\n// typescript interface\ninterface ErrorResponse {\n  errors: { message: string, code: string }[]\n}\n```\n"
   },
   "servers": [
     {
@@ -36,11 +36,19 @@
     },
     {
       "name": "Rating",
-      "description": "Prior to creating a Delivery, you can calculate the rates based on the pickup and delivery addresses.\nSee our [rates](/#operation/getRate) endpoint for more information.\n"
+      "description": "Prior to creating a Shipment, you can calculate the rates based on the pickup and delivery addresses.\nSee our [rates](/#operation/getRate) endpoint for more information.\n"
     },
     {
-      "name": "Deliveries",
-      "description": "The most common approach to get a delivery on the road is to:\n  * [Create a Delivery](/#operation/createDelivery)\n\nYou can schedule the posting of the Delivery in the future.\nTrexity guarantees that the scheduled Delivery will not be posted or broadcast prior to the time it was scheduled for.\nPlease see the [details](/#operation/createDelivery) here.\n"
+      "name": "Shipments",
+      "description": "A shipment is a central concept in the API. It contains a pickup address, delivery address with customer information, and represents a shipment that will be completed by a courier.\n"
+    },
+    {
+      "name": "Batching",
+      "description": "Batching is the process of optimizing a large set of deliveries from the same pickup location into efficient batches.\n"
+    },
+    {
+      "name": "Custom Labels",
+      "description": "All shipments come with a label that must be downloaded and affixed to the shipment packaging. To specify a custom label for your shipment do the following:\n\n1. Create a shipment with the `externalId` and `scanId` values specified in the request body\n2. Ensure that the `scanId` value is encoded as a QR code or 1D barcode on your label\n3. Affix your label to the shipment packaging before a courier picks it up\n\nWe always recommend providing us a sample label to test with to confirm that the label is scanable by our Courier App.\n\n> **Note:** If a custom label is specified, it is your responsibility to ensure that the label is affixed to the shipment packaging before a courier picks it up. Additionally, you will not be able to download a label from the Trexity API or your Trexity portal.\n"
     },
     {
       "name": "Receipts",
@@ -48,7 +56,7 @@
     },
     {
       "name": "Webhooks",
-      "description": "Manage webhooks.\n\n## Verifying Requests\n\nAll webhook requests have a header that contains a signature signed with the Trexity Merchant's\nwebhook secret as found in their \"Trexity API\" settings. Optionally, there is a [getSecretKey](#operation/getWebhookSecretKey) endpoint to retrieve the webhook secret programatically.\nTo verify the signature, take the raw request body as text and create a SHA256 HMAC signed with the merchant's webhook secret and convert to hex.\n\nExample:\n```\n// nodejs\nconst text = await new Promise((resolve, reject) => {\n  const buff = []\n  req.setEncoding('utf8')\n  req.on('data', chunk => (buff.push(chunk)))\n  req.once('end', resolve(buff.join('')))\n  req.once('error', reject)\n})\n\nconst sig = require('crypto')\n  .createHmac('sha256', process.env.TRX_MERCH_WEBHOOK_SECRET)\n  .update(text)\n  .digest('hex')\n\nconst isValid = req.headers['x-trexity-signature'] === sig\n\nif (!isValid) {\n  res.statusCode = 403\n  res.end('Forbidden', 'utf8')\n  return\n}\n\nconst body = JSON.parse(body)\n// ...\n```\n\n## Request Payload\n\nAll webhook requests will have the following headers:\n\n- `x-trexity-event-name` the event name\n- `x-trexity-signature` the SHA256 HMAC signature of the request\n- `x-trexity-webhook-order-id` the processing order of the webhook used to determine what order webhooks should be processed in\n\nAll webhook requests will have the following payload shape. Where `data` is the delivery object changed,\nlike returned from the [get delivery endpoint](#tag/Deliveries/operation/getDelivery)\n\n```\n{\n  \"timestamp\": \"2020-07-25T10:48:08.987Z\",\n  \"data\": {\n    ...the delivery object that changed...\n  }\n}\n```\n"
+      "description": "Manage webhooks.\n\n## Verifying Requests\n\nAll webhook requests have a header that contains a signature signed with the Trexity Merchant's\nwebhook secret as found in their \"Trexity API\" settings. Optionally, there is a [getSecretKey](#operation/getWebhookSecretKey) endpoint to retrieve the webhook secret programatically.\nTo verify the signature, take the raw request body as text and create a SHA256 HMAC signed with the merchant's webhook secret and convert to hex.\n\nExample:\n```\n// nodejs\nconst text = await new Promise((resolve, reject) => {\n  const buff = []\n  req.setEncoding('utf8')\n  req.on('data', chunk => (buff.push(chunk)))\n  req.once('end', resolve(buff.join('')))\n  req.once('error', reject)\n})\n\nconst sig = require('crypto')\n  .createHmac('sha256', process.env.TRX_MERCH_WEBHOOK_SECRET)\n  .update(text)\n  .digest('hex')\n\nconst isValid = req.headers['x-trexity-signature'] === sig\n\nif (!isValid) {\n  res.statusCode = 403\n  res.end('Forbidden', 'utf8')\n  return\n}\n\nconst body = JSON.parse(body)\n// ...\n```\n\n## Request Payload\n\nAll webhook requests will have the following headers:\n\n- `x-trexity-event-name` the event name\n- `x-trexity-signature` the SHA256 HMAC signature of the request\n- `x-trexity-webhook-order-id` the processing order of the webhook used to determine what order webhooks should be processed in\n\nAll webhook requests will have the following payload shape. Where `data` is the shipment object changed,\nlike returned from the [get shipment endpoint](#tag/Shipments/operation/getShipment)\n\n```\n{\n  \"timestamp\": \"2020-07-25T10:48:08.987Z\",\n  \"data\": {\n    ...the shipment object that changed...\n  }\n}\n```\n"
     },
     {
       "name": "Locations",
@@ -67,6 +75,13 @@
           "Addresses"
         ],
         "summary": "Check an address",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X POST \"https://trexity.app/api/v2/addresses/check\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n  -d '{\n    \"delivery\": {\n      \"addressLine1\": \"456 Delivery St\",\n      \"city\": \"Ottawa\",\n      \"provinceCode\": \"ON\",\n      \"postalCode\": \"K1A 0A6\",\n      \"countryCode\": \"CA\"\n    },\n    \"pickup\": {\n      \"addressLine1\": \"123 Pickup Ave\",\n      \"city\": \"Ottawa\",\n      \"provinceCode\": \"ON\", \n      \"postalCode\": \"K2G 6F2\",\n      \"countryCode\": \"CA\"\n    }\n  }' \n"
+          }
+        ],
         "description": "Checks whether an address is serviceable and returns a result that identifies if the address can be\nused as a delivery address or a pickup address. If, a pickup address is provided, the result will\nindicate if the delivery address is in a tiered zone.\n\n### Rate Limiting\n\nThis operation can be requested without authentication, however it will have a\nstrict rate limit of 3 requests every 10 seconds.\n\nHowever, authenticated requests can request 12 times every 10 seconds.\n\n**Unexhaustive list of error codes.**\n\n- `invalid-delivery.addressLine1` = When the addressLine1 is missing\n- `invalid-delivery.city` = When the city is missing\n- `invalid-delivery.postalCode` = When the postalCode is missing, invalid or not acceptedable\n- `invalid-delivery.provinceCode` = When the province is missing, or is not acceptedable\n- `invalid-delivery.countryCode` = When the country is missing, or is not acceptedable\n- `invalid-pickup.addressLine1` = When the addressLine1 is missing\n- `invalid-pickup.city` = When the city is missing\n- `invalid-pickup.postalCode` = When the postalCode is missing, invalid or not acceptedable\n- `invalid-pickup.provinceCode` = When the province is missing, or is not acceptedable\n- `invalid-pickup.countryCode` = When the country is missing, or is not acceptedable\n- `unverified-delivery-address` = When the delivery address cannot be verified with a geocoded location\n- `unverified-pickup-address` = When the pickup address cannot be verified with a geocoded location\n",
         "security": [
           {},
@@ -182,25 +197,25 @@
     },
     "/rates": {
       "post": {
-        "operationId": "calculateDeliveryRate",
+        "operationId": "calculateShipmentRates",
         "tags": [
           "Rating"
         ],
-        "summary": "Calculate delivery rate",
-        "description": "Calculate a rate for a delivery.\n\nIf no `pickupAddress` is specified then your primary location's address will\nbe used as the pickup address.\n\nPlease review our [Usage Policy](/#section/Usage-Policy) before displaying rates to your customers.\n\nThe rate response will include estimates for post, pickup, and delivery time.\n\nAdditionally, the properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a\npickup or delivery window. Otheriwse the next available pickup window (i.e. ASAP) is assumed.\n\n**Unexhaustive list of error codes.**\n\n- `invalid-merchant-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-data-payload` = When there are issues with the input data provided\n- `num-labels-too-large` = When numLabels is too large\n- `time-constraint-violation` = When the delivery/pickup time constraints specified cannot be met\n- `service-unavailable` = When API Service Availability Rules in merchant portal prevent rates from being returned\n- `time-constraint-violation` = When the constraint specified by pickupAfter, or deliverAfter and/or deliverBefore cannot be met\n- `post-date-outside-operating-hours` = When the estimated post date is outside Trexity's or the merchant's operating hours\n- `delivery-date-outside-operating-hours` = When the estimated delivery date is outside Trexity's or the merchant's operating hours\n- `pickup-address-outsidetaxboundary` = When the pickup address is outside the province/state of the merchant's location\n- `merchant-disabled` = When the merchant account has been disabled\n- `missing-profile-details` = When the merchant profile is incomplete\n- `delivery-point-outside-zone` = When the delivery address is outside Trexity's service area\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n",
+        "summary": "Calculate shipment rates",
         "x-codeSamples": [
           {
-            "lang": "Shell",
-            "source": "curl -X POST {server-url}/rates\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\\\n  -d '{\n    \"pickupAddress\": {\n      \"addressLine1\": \"456 Elgin St\",\n      \"city\": \"Ottawa\",\n      \"provinceCode\": \"ON\",\n      \"postalCode\": \"K2P 1N5\",\n      \"countryCode\": \"CA\"\n    },\n    \"deliveryAddress\": {\n      \"addressLine1\": \"225 Preston St\",\n      \"city\": \"Ottawa\",\n      \"provinceCode\": \"ON\",\n      \"postalCode\": \"K1R 7R1\",\n      \"countryCode\": \"CA\"\n    },\n    \"requirements\": {\n      \"legalAgeAlcohol\": true\n    },\n    \"deliveryValue\": 2500\n  }'\n"
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X POST \"https://trexity.app/api/v2/rates\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n  -d '{\n    \"deliveryAddress\": {\n      \"addressLine1\": \"456 Delivery St\",\n      \"city\": \"Ottawa\",\n      \"provinceCode\": \"ON\",\n      \"postalCode\": \"K1A 0A6\",\n      \"countryCode\": \"CA\"\n    },\n    \"pickupAddress\": {\n      \"addressLine1\": \"123 Pickup Ave\",\n      \"city\": \"Ottawa\", \n      \"provinceCode\": \"ON\",\n      \"postalCode\": \"K2G 6F2\",\n      \"countryCode\": \"CA\"\n    },\n    \"numLabels\": 1\n  }' \n"
           }
         ],
+        "description": "Calculate the rates available for a shipment.\n\nIf no `pickupAddress` is specified then your primary location's address will\nbe used as the pickup address.\n\nPlease review our [Usage Policy](/#section/Usage-Policy) before displaying rates to your customers.\n\nThe rate response will include estimates for post, pickup, and delivery time.\n\nAdditionally, the properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a\npickup or delivery window. Otheriwse the next available pickup window (i.e. ASAP) is assumed.\n\n**Unexhaustive list of error codes.**\n\n- `invalid-merchant-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-data-payload` = When there are issues with the input data provided\n- `num-labels-too-large` = When numLabels is too large\n- `time-constraint-violation` = When the delivery/pickup time constraints specified cannot be met\n- `service-unavailable` = When API Service Availability Rules in merchant portal prevent rates from being returned\n- `time-constraint-violation` = When the constraint specified by pickupAfter, or deliverAfter and/or deliverBefore cannot be met\n- `post-date-outside-operating-hours` = When the estimated post date is outside Trexity's or the merchant's operating hours\n- `delivery-date-outside-operating-hours` = When the estimated delivery date is outside Trexity's or the merchant's operating hours\n- `pickup-address-outsidetaxboundary` = When the pickup address is outside the province/state of the merchant's location\n- `merchant-disabled` = When the merchant account has been disabled\n- `missing-profile-details` = When the merchant profile is incomplete\n- `delivery-point-outside-zone` = When the delivery address is outside Trexity's service area\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n",
         "requestBody": {
-          "description": "Payload that minimally describes a direct delivery.",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DeliveryRateDTO"
+                "$ref": "#/components/schemas/ShipmentRateDTO"
               }
             }
           }
@@ -212,9 +227,15 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "data"
+                  ],
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/DeliveryRateWithETA"
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/ShipmentRateWithETA"
+                      }
                     }
                   }
                 }
@@ -243,6 +264,13 @@
           "Regions"
         ],
         "summary": "Get region",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X GET \"https://trexity.app/api/v2/regions?addressLine1=123%20Fake%20St&city=Ottawa&provinceCode=ON&postalCode=K2G%206F2&countryCode=CA\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
+          }
+        ],
         "description": "Get the region for a specific pickup address.\n\n### Rate Limiting\n\nThis operation can be requested without authentication, however it will have a\nstrict rate limit of 6 requests every 10 seconds.\n\nHowever, authenticated requests can request 12 times every 10 seconds.\n\n**Possible error codes:**\n- `invalid-address` = When the address cannot be recognized as a valid address\n- `invalid-addressLine1` = When the addressLine1 is missing\n- `invalid-city` = When the city is missing\n- `invalid-postalCode` = When the postalCode is missing, invalid or not acceptedable\n- `invalid-provinceCode` = When the province is missing, or is not acceptedable\n- `invalid-countryCode` = When the country is missing, or is not acceptedable\n",
         "security": [
           {},
@@ -346,26 +374,27 @@
         }
       }
     },
-    "/deliveries": {
+    "/shipments": {
       "post": {
-        "operationId": "createDelivery",
+        "operationId": "createShipment",
         "tags": [
-          "Deliveries"
+          "Shipments"
         ],
-        "summary": "Create delivery",
-        "description": "Create a delivery and optionally schedule it for pickup. A rate for the delivery will be calculated at the same time.\n\nIf you want to schedule for pickup, please use exactly one of:\n  1) pickupStartAt (when to pickup by) must match your market's pickup windows as listed [here](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Trexity-Pickup-Windows).\n  2) deliverStartAt and an optional deliverEndAt (when to deliver by) must match your recommended delivery windows as listed [here](https://merchant.trexity.com/api).\n\nIf no `pickupAddress` is specified then your primary location's address will be used as the pickup address.\n\n**Unexhaustive list of error codes.**\n\n- `unauthorized-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `invalid-delivery-address` = When the delivery address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-input` = When there are issues with the input data provided\n- `invalid-delivery-data` = When there are issues with the data provided and the delivery cannot be created\n- `num-labels-too-large` = When numLabels is too large\n- `invalid-scanids` = When the scanId specified is already in use\n- `outside-operating-hours` = When the pickup or delivery time specified is outside the your delivery hours or Trexity's service hours\n- `invalid-scheduled-posting-date` = The scheduling fields are invalid and do not describe a valid pickup window\n- `unauthorized-numlabels` = When total numLabels for the delivery is too large\n- `pickup-address-outsidetaxboundary` = The pickup address is outside the merchant's location province\n- `merchant-disabled` = The merchant has been disabled\n- `missing-profile-details` = The merchant has an incomplete profile\n- `no-shipment-rate` = A delivery rate failed to be calculated due to delivery or pickup address geofencing error\n",
+        "summary": "Create shipment",
         "x-codeSamples": [
           {
-            "lang": "Shell",
-            "source": "curl -X POST {server-url}/deliveries\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\\\n  -d '{\n    \"pickupAddress\": {\n      \"addressLine1\": \"123 Fake St\",\n      \"addressLine2\": \"Apt 4\",\n      \"city\": \"Ottawa\",\n      \"provinceCode\": \"ON\",\n      \"postalCode\": \"K2G 8FT\",\n      \"countryCode\": \"CA\"\n    },\n    \"deliveryAddress\": {\n      \"addressLine1\": \"123 Fake St\",\n      \"addressLine2\": \"Apt 4\",\n      \"city\": \"Ottawa\",\n      \"provinceCode\": \"ON\",\n      \"postalCode\": \"K2G 8FT\",\n      \"countryCode\": \"CA\"\n    },\n    \"requirements\": {},\n    \"orderId\": \"BFG10K\",\n    \"deliveryValue\": 10000\n  }'\n"
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X POST \"https://trexity.app/api/v2/shipments\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n  -d '{\n    \"externalId\": \"order-12345\",\n    \"deliveryAddress\": {\n      \"addressLine1\": \"456 Delivery St\",\n      \"city\": \"Ottawa\",\n      \"provinceCode\": \"ON\",\n      \"postalCode\": \"K1A 0A6\", \n      \"countryCode\": \"CA\"\n    },\n    \"pickupAddress\": {\n      \"addressLine1\": \"123 Pickup Ave\",\n      \"city\": \"Ottawa\",\n      \"provinceCode\": \"ON\",\n      \"postalCode\": \"K2G 6F2\",\n      \"countryCode\": \"CA\"\n    },\n    \"deliveryName\": \"John Doe\",\n    \"deliveryEmail\": \"john.doe@example.com\",\n    \"deliveryPhone\": \"+1-613-555-0123\",\n    \"numLabels\": 1\n  }' \n"
           }
         ],
+        "description": "Create a shipment and optionally schedule it for pickup. A rate for the shipment will be calculated at the same time.\n\nIf you want to schedule for pickup use `pickupStartAt` and ensure it matches your market's pickup windows as listed [here](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Trexity-Pickup-Windows).\n\nIf no `pickupAddress` is specified then your primary location's address will be used as the pickup address.\n\n**Unexhaustive list of error codes.**\n\n- `unauthorized-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `invalid-delivery-address` = When the delivery address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-input` = When there are issues with the input data provided\n- `invalid-delivery-data` = When there are issues with the data provided and the delivery cannot be created\n- `num-labels-too-large` = When numLabels is too large\n- `invalid-scanids` = When the scanId specified is already in use\n- `outside-operating-hours` = When the pickup or delivery time specified is outside the your delivery hours or Trexity's service hours\n- `invalid-scheduled-posting-date` = The scheduling fields are invalid and do not describe a valid pickup window\n- `unauthorized-numlabels` = When total numLabels for the delivery is too large\n- `pickup-address-outsidetaxboundary` = The pickup address is outside the merchant's location province\n- `merchant-disabled` = The merchant has been disabled\n- `missing-profile-details` = The merchant has an incomplete profile\n- `no-shipment-rate` = A delivery rate failed to be calculated due to delivery or pickup address geofencing error\n",
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DeliveryDTO"
+                "$ref": "#/components/schemas/ShipmentDTO"
               }
             }
           }
@@ -377,9 +406,12 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "data"
+                  ],
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Delivery"
+                      "$ref": "#/components/schemas/Shipment"
                     }
                   }
                 }
@@ -401,18 +433,19 @@
         }
       },
       "get": {
-        "operationId": "listDeliveries",
+        "operationId": "listShipments",
         "tags": [
-          "Deliveries"
+          "Shipments"
         ],
-        "summary": "List deliveries",
-        "description": "List deliveries that match the specified filters.\n\n## Filtering By Dates\n\nWhen filtering by a date range both the `fromDate` and `toDate` query parameters must be provided. **The maximum date range is 90 days.**\n\n## Mutually exclusive filters\n\nThe following filters are mutually exclusive:\n  - `fromDate` and `toDate`\n  - `externalId`\n  - `metaField1`, `metaField2`, `metaField3`\n",
+        "summary": "List shipments",
         "x-codeSamples": [
           {
-            "lang": "Shell",
-            "source": "curl -X GET {server-url}/deliveries\n  -H 'Content-Type: application/json'\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X GET \"https://trexity.app/api/v2/shipments?fromDate=2024-01-01&toDate=2024-01-31\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
           }
         ],
+        "description": "List shipments that match the specified filters.\n\n## Filtering By Dates\n\nWhen filtering by a date range both the `fromDate` and `toDate` query parameters must be provided. **The maximum date range is 90 days.**\n\n## Mutually exclusive filters\n\nThe following filters are mutually exclusive:\n  - `fromDate` and `toDate`\n  - `externalId`\n  - `metaField1`, `metaField2`, `metaField3`\n",
         "parameters": [
           {
             "in": "query",
@@ -420,7 +453,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "The comma-separated list of fields to include in the delivery response (if not specified or blank then all fields will be included).\n\nIf a field is specified that is not defined by the Delivery object, then responds with HTTP 400. Only top-level fields are supported.\n"
+            "description": "The comma-separated list of fields to include in the shipment response (if not specified or blank then all fields will be included).\n\nIf a field is specified that is not defined by the Shipment object, then responds with HTTP 400. Only top-level fields are supported.\n"
           },
           {
             "in": "query",
@@ -442,7 +475,7 @@
             "schema": {
               "type": "string",
               "maxLength": 256,
-              "description": "The ID of the external entity that is associated to this delivery (e.g. the external order or shipment ID).\n"
+              "description": "The ID of the external entity that is associated to this shipment (e.g. the external order or shipment ID).\n"
             }
           },
           {
@@ -480,11 +513,14 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "data"
+                  ],
                   "properties": {
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/Delivery"
+                        "$ref": "#/components/schemas/Shipment"
                       }
                     }
                   }
@@ -507,23 +543,30 @@
         }
       }
     },
-    "/deliveries/{deliveryId}": {
+    "/shipments/{shipmentId}": {
       "delete": {
-        "operationId": "deleteDelivery",
+        "operationId": "deleteDraftShipment",
         "tags": [
-          "Deliveries"
+          "Shipments"
         ],
-        "summary": "Delete delivery",
-        "description": "Attempt to delete a delivery. Only draft deliveries can be deleted.\n",
+        "summary": "Delete draft shipment",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X DELETE \"https://trexity.app/api/v2/shipments/{SHIPMENT_ID}\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
+          }
+        ],
+        "description": "Attempt to delete shipment with `draft` status.\n",
         "parameters": [
           {
             "in": "path",
-            "name": "deliveryId",
+            "name": "shipmentId",
             "required": true,
             "schema": {
               "type": "string"
             },
-            "description": "The id of the delivery to delete"
+            "description": "The id of the shipment to delete"
           }
         ],
         "responses": {
@@ -548,30 +591,37 @@
         }
       },
       "patch": {
-        "operationId": "updateDelivery",
+        "operationId": "updateShipment",
         "tags": [
-          "Deliveries"
+          "Shipments"
         ],
-        "summary": "Update delivery",
-        "description": "Updates the details of a delivery.\n\n**Unexhaustive list of error codes.**\n\n- `unauthorized-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `invalid-delivery-address` = When the delivery address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-input` = When there are issues with the input data provided\n- `invalid-delivery-data` = When there are issues with the data provided and the delivery cannot be updated\n- `num-labels-too-large` = When numLabels is too large\n- `invalid-scanids` = When the scanId specified is already in use\n- `outside-operating-hours` = When the pickup or delivery time specified is outside the your delivery hours or Trexity's service hours\n- `invalid-scheduled-posting-date` = The scheduling fields are invalid and do not describe a valid pickup window\n- `unauthorized-numlabels` = When total numLabels for the entire delivery is too large\n- `pickup-address-outsidetaxboundary` = The pickup address is outside the merchant's location province\n- `merchant-disabled` = The merchant has been disabled\n- `missing-profile-details` = The merchant has an incomplete profile\n- `no-shipment-rate` = A delivery rate failed to be calculated due to delivery or pickup address geofencing error\n",
+        "summary": "Update shipment",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X PATCH \"https://trexity.app/api/v2/shipments/{SHIPMENT_ID}\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n  -d '{\n    \"deliveryName\": \"Jane Doe\",\n    \"deliveryPhone\": \"+1-613-555-0124\"\n  }' \n"
+          }
+        ],
+        "description": "Updates the details of a shipment.\n\n**Unexhaustive list of error codes.**\n\n- `unauthorized-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `invalid-delivery-address` = When the delivery address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-input` = When there are issues with the input data provided\n- `invalid-delivery-data` = When there are issues with the data provided and the delivery cannot be updated\n- `num-labels-too-large` = When numLabels is too large\n- `invalid-scanids` = When the scanId specified is already in use\n- `outside-operating-hours` = When the pickup or delivery time specified is outside the your delivery hours or Trexity's service hours\n- `invalid-scheduled-posting-date` = The scheduling fields are invalid and do not describe a valid pickup window\n- `unauthorized-numlabels` = When total numLabels for the entire delivery is too large\n- `pickup-address-outsidetaxboundary` = The pickup address is outside the merchant's location province\n- `merchant-disabled` = The merchant has been disabled\n- `missing-profile-details` = The merchant has an incomplete profile\n- `no-shipment-rate` = A delivery rate failed to be calculated due to delivery or pickup address geofencing error\n",
         "parameters": [
           {
             "in": "path",
-            "name": "deliveryId",
+            "name": "shipmentId",
             "required": true,
             "schema": {
               "type": "string"
             },
-            "description": "The id of the delivery that needs to be updated"
+            "description": "The id of the shipment that needs to be updated"
           }
         ],
         "requestBody": {
-          "description": "Payload describing the changes that need to be updated in your delivery",
+          "description": "Payload describing the changes that need to be updated in your shipment",
           "required": true,
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/DeliveryDTOUpdate"
+                "$ref": "#/components/schemas/ShipmentDTOUpdate"
               }
             }
           }
@@ -583,9 +633,12 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "data"
+                  ],
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Delivery"
+                      "$ref": "#/components/schemas/Shipment"
                     }
                   }
                 }
@@ -610,22 +663,23 @@
         }
       },
       "get": {
-        "operationId": "getDelivery",
+        "operationId": "getShipment",
         "tags": [
-          "Deliveries"
+          "Shipments"
         ],
-        "summary": "Get delivery",
-        "description": "Gets the details of a delivery\n",
+        "summary": "Get shipment",
         "x-codeSamples": [
           {
-            "lang": "Shell",
-            "source": "curl -X GET {server-url}/deliveries/1234-4321-1234-4321\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X GET \"https://trexity.app/api/v2/shipments/{SHIPMENT_ID}\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
           }
         ],
+        "description": "Gets the details of a shipment\n",
         "parameters": [
           {
             "in": "path",
-            "name": "deliveryId",
+            "name": "shipmentId",
             "required": true,
             "schema": {
               "type": "string"
@@ -648,9 +702,12 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "data"
+                  ],
                   "properties": {
                     "data": {
-                      "$ref": "#/components/schemas/Delivery"
+                      "$ref": "#/components/schemas/Shipment"
                     }
                   }
                 }
@@ -675,46 +732,35 @@
         }
       }
     },
-    "/deliveries/{deliveryId}/status": {
-      "get": {
-        "operationId": "getDeliveryStatus",
+    "/shipments/{shipmentId}/ready-for-pickup": {
+      "post": {
+        "operationId": "shipmentReadyForPickup",
         "tags": [
-          "Deliveries"
+          "Shipments"
         ],
-        "summary": "Get delivery status",
-        "description": "Retrieve a delivery's status\n",
+        "summary": "Shipment ready for pickup",
         "x-codeSamples": [
           {
-            "lang": "Shell",
-            "source": "curl -X GET {server-url}/deliveries/1234-5678-9012-3456/status\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X POST \"https://trexity.app/api/v2/shipments/{SHIPMENT_ID}/ready-for-pickup\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
           }
         ],
+        "description": "Marks a shipment as ready for pickup. A shipment marked as ready for pickup will be dispatched to the first available courier. \n\nCan only mark shipments with the service type `direct` that are in the `draft` status as ready for pickup.\n",
         "parameters": [
           {
             "in": "path",
-            "name": "deliveryId",
+            "name": "shipmentId",
             "required": true,
             "schema": {
               "type": "string"
             },
-            "description": "The id of the delivery (can be externalId or delivery ID)"
+            "description": "The id of the shipment that needs to be marked as ready for pickup"
           }
         ],
         "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/DeliveryStatus"
-                    }
-                  }
-                }
-              }
-            }
+          "204": {
+            "description": "Success"
           },
           "400": {
             "$ref": "#/components/responses/400"
@@ -728,61 +774,8 @@
           "404": {
             "$ref": "#/components/responses/404"
           },
-          "500": {
-            "$ref": "#/components/responses/500"
-          }
-        }
-      }
-    },
-    "/deliveries/{deliveryId}/pod": {
-      "get": {
-        "operationId": "getDeliveryPod",
-        "tags": [
-          "Deliveries"
-        ],
-        "summary": "Get proof of delivery",
-        "description": "Get a delivery's proof of delivery photo or signature.\n\nIf the delivery `requirements.proofOfDelivery` is not `photo+signature` or `signature` then a 404 will be returned.\n\nIf the delivery is not yet completed or not found then a 404 will be returned.\n\n**Possible error codes.**\n\n- `invalid-delivery-id` - The delivery id is invalid.\n- `delivery-not-found` - The delivery is not found.\n- `no-proof-of-delivery` - The delivery does not require a proof of delivery.\n- `delivery-not-completed` - The delivery is not yet completed.\n",
-        "x-codeSamples": [
-          {
-            "lang": "Shell",
-            "source": "curl -X GET {server-url}/deliveries/1234-4321-1234-4321/pod\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
-          }
-        ],
-        "parameters": [
-          {
-            "in": "path",
-            "name": "deliveryId",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "The id of the delivery (can be externalId or delivery ID)"
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "image/png": {
-                "schema": {
-                  "type": "string",
-                  "format": "binary",
-                  "description": "Photographic Proof of Delivery."
-                }
-              }
-            }
-          },
-          "400": {
-            "$ref": "#/components/responses/400"
-          },
-          "401": {
-            "$ref": "#/components/responses/401"
-          },
-          "403": {
-            "$ref": "#/components/responses/403"
-          },
-          "404": {
-            "$ref": "#/components/responses/404"
+          "422": {
+            "$ref": "#/components/responses/422"
           },
           "500": {
             "$ref": "#/components/responses/500"
@@ -790,24 +783,25 @@
         }
       }
     },
-    "/deliveries/{deliveryId}/label": {
+    "/shipments/{shipmentId}/label": {
       "get": {
-        "operationId": "getDeliveryLabel",
+        "operationId": "getShipmentLabel",
         "tags": [
-          "Deliveries"
+          "Shipments"
         ],
-        "summary": "Get delivery label",
-        "description": "Get a delivery's shipping label\n",
+        "summary": "Get shipment label",
         "x-codeSamples": [
           {
-            "lang": "Shell",
-            "source": "curl -X GET {server-url}/deliveries/1234-4321-1234-4321/label\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X GET \"https://trexity.app/api/v2/shipments/{SHIPMENT_ID}/label\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n  -H \"Accept: application/pdf\" \n"
           }
         ],
+        "description": "Get a shipment's shipping label\n",
         "parameters": [
           {
             "in": "path",
-            "name": "deliveryId",
+            "name": "shipmentId",
             "required": true,
             "schema": {
               "type": "string"
@@ -861,23 +855,159 @@
         }
       }
     },
-    "/deliveries/{deliveryId}/tracking": {
+    "/shipments/{shipmentId}/status": {
       "get": {
-        "operationId": "getDeliveryTracking",
+        "operationId": "getShipmentStatus",
         "tags": [
-          "Deliveries"
+          "Shipments"
         ],
-        "summary": "Get delivery tracking URL",
-        "description": "Get the tracking URL for a delivery\n",
+        "summary": "Get shipment status",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X GET \"https://trexity.app/api/v2/shipments/{SHIPMENT_ID}/status\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
+          }
+        ],
+        "description": "Retrieve a shipment's status\n",
         "parameters": [
           {
             "in": "path",
-            "name": "deliveryId",
+            "name": "shipmentId",
             "required": true,
             "schema": {
               "type": "string"
             },
-            "description": "The ID of the delivery"
+            "description": "The id of the delivery (can be externalId or delivery ID)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/ShipmentStatus"
+                        },
+                        {
+                          "type": "object",
+                          "required": [
+                            "status"
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/shipments/{shipmentId}/pod": {
+      "get": {
+        "operationId": "getShipmentPod",
+        "tags": [
+          "Shipments"
+        ],
+        "summary": "Get proof of delivery",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X GET \"https://trexity.app/api/v2/shipments/{SHIPMENT_ID}/pod\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n  -H \"Accept: image/png\" \n"
+          }
+        ],
+        "description": "Get a shipment's proof of delivery photo or signature.\n\nIf the shipment `requirements.proofOfDelivery` is not `photo+signature` or `signature` then a 404 will be returned.\n\nIf the shipment is not yet completed or not found then a 404 will be returned.\n\n**Possible error codes.**\n\n- `invalid-delivery-id` - The delivery id is invalid.\n- `delivery-not-found` - The delivery is not found.\n- `no-proof-of-delivery` - The delivery does not require a proof of delivery.\n- `delivery-not-completed` - The delivery is not yet completed.\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "shipmentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The id of the delivery (can be externalId or delivery ID)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "image/png": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "Photographic Proof of Delivery."
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "500": {
+            "$ref": "#/components/responses/500"
+          }
+        }
+      }
+    },
+    "/shipments/{shipmentId}/tracking": {
+      "get": {
+        "operationId": "getShipmentTracking",
+        "tags": [
+          "Shipments"
+        ],
+        "summary": "Get shipment tracking URL",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X GET \"https://trexity.app/api/v2/shipments/{SHIPMENT_ID}/tracking?lifetime=604800\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
+          }
+        ],
+        "description": "Get the tracking URL for a shipment\n",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "shipmentId",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
           },
           {
             "in": "query",
@@ -905,9 +1035,15 @@
               "application/json": {
                 "schema": {
                   "type": "object",
+                  "required": [
+                    "data"
+                  ],
                   "properties": {
                     "data": {
                       "type": "object",
+                      "required": [
+                        "trackingUrl"
+                      ],
                       "properties": {
                         "trackingUrl": {
                           "type": "string"
@@ -946,24 +1082,25 @@
         }
       }
     },
-    "/deliveries/{deliveryId}/cancel": {
+    "/shipments/{shipmentId}/cancel": {
       "post": {
-        "operationId": "cancelDelivery",
+        "operationId": "cancelShipment",
         "tags": [
-          "Deliveries"
+          "Shipments"
         ],
-        "summary": "Cancel delivery",
-        "description": "Cancels a delivery. A cancelled delivery will no longer be able to be assigned to a courier. \n\nCan only cancel deliveries that are in the `draft`, `pending`, `assigned`, or `in-transit` status.\n\n**If cancelling a delivery while `assigned` or `in-transit` then a cancellation fee will be charged.**\n",
+        "summary": "Cancel shipment",
         "x-codeSamples": [
           {
-            "lang": "Shell",
-            "source": "curl -X PATCH {server-url}/deliveries/1234-5678-9012-3456/cancel\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\n"
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X POST \"https://trexity.app/api/v2/shipments/{SHIPMENT_ID}/cancel\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
           }
         ],
+        "description": "Cancels a shipment. A cancelled shipment will no longer be able to be assigned to a courier. \n\nCan only cancel shipments that are in the `draft`, `pending`, `assigned`, or `in-transit` status.\n\n**If cancelling a delivery while `assigned` or `in-transit` then a cancellation fee will be charged.**\n",
         "parameters": [
           {
             "in": "path",
-            "name": "deliveryId",
+            "name": "shipmentId",
             "required": true,
             "schema": {
               "type": "string"
@@ -996,6 +1133,247 @@
         }
       }
     },
+    "/batching-operations": {
+      "post": {
+        "operationId": "createBatchingOperation",
+        "tags": [
+          "Batching"
+        ],
+        "summary": "Create batching operation",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X POST \"https://trexity.app/api/v2/batching-operations\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n  -d '{\n    \"pickupAddress\": {\n      \"addressLine1\": \"123 Warehouse St\",\n      \"city\": \"Ottawa\",\n      \"provinceCode\": \"ON\",\n      \"postalCode\": \"K2G 6F2\",\n      \"countryCode\": \"CA\"\n    },\n    \"shipments\": [\n      {\n        \"orderId\": \"order-001\",\n        \"deliveryAddress\": {\n          \"addressLine1\": \"456 Customer Ave\",\n          \"city\": \"Ottawa\",\n          \"provinceCode\": \"ON\",\n          \"postalCode\": \"K1A 0A6\",\n          \"countryCode\": \"CA\"\n        },\n        \"deliveryName\": \"John Doe\",\n        \"deliveryEmail\": \"john.doe@example.com\",\n        \"deliveryPhone\": \"+1-613-555-0123\"\n      }\n    ]\n  }' \n"
+          }
+        ],
+        "description": "Create a batching operation that optimizes a large set of deliveries from the same pickup location into efficient route plans.\n\n### Pickup location and pickup window\nA thing to note is that shipments provided to a batching operation must all have the **same pickup location**, and **cannot have a pickup window specified**.\nTo schedule for a pickup window, you can update any shipment that was created after a [Create \"create shipments\" operation](#operation/createBatchingCreateShipmentsOperation) has completed. This will set the pickup window for all shipments created from a batching operation.\n\n**All order IDs must be unique.**\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchingOperationDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/BatchingOperation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          }
+        }
+      }
+    },
+    "/batching-operations/{batchingOperationId}": {
+      "get": {
+        "operationId": "getBatchingOperation",
+        "tags": [
+          "Batching"
+        ],
+        "summary": "Get batching operation",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X GET \"https://trexity.app/api/v2/batching-operations/{BATCHING_OPERATION_ID}\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
+          }
+        ],
+        "description": "Get a batching operation.\n",
+        "parameters": [
+          {
+            "name": "batchingOperationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/BatchingOperation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
+    "/batching-operations/{batchingOperationId}/create-shipments-operations": {
+      "post": {
+        "operationId": "createBatchingCreateShipmentsOperation",
+        "tags": [
+          "Batching"
+        ],
+        "summary": "Create \"create shipments\" operation",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X POST \"https://trexity.app/api/v2/batching-operations/{BATCHING_OPERATION_ID}/create-shipments-operations\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
+          }
+        ],
+        "description": "Create shipments from a batching optimization. This will create shipments for each batch in the batching optimization.\n",
+        "parameters": [
+          {
+            "name": "batchingOperationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/BatchingCreateShipmentsOperation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "422": {
+            "$ref": "#/components/responses/422"
+          }
+        }
+      }
+    },
+    "/batching-operations/{batchingOperationId}/create-shipments-operations/{batchingCreateShipmentsOperationId}": {
+      "get": {
+        "operationId": "getBatchingCreateShipmentsOperation",
+        "tags": [
+          "Batching"
+        ],
+        "summary": "Get \"create shipments\" operation",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X GET \"https://trexity.app/api/v2/batching-operations/{BATCHING_OPERATION_ID}/create-shipments-operations/{CREATE_SHIPMENTS_OPERATION_ID}\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
+          }
+        ],
+        "description": "Get the \"create shipments\" operation.\n",
+        "parameters": [
+          {
+            "name": "batchingOperationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "batchingCreateShipmentsOperationId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/BatchingCreateShipmentsOperation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          }
+        }
+      }
+    },
     "/webhooks": {
       "post": {
         "operationId": "createWebhook",
@@ -1003,6 +1381,13 @@
           "Webhooks"
         ],
         "summary": "Create webhook",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X POST \"https://trexity.app/api/v2/webhooks\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n  -d '{\n    \"eventName\": \"shipment.delivered\",\n    \"url\": \"https://example.com/trexity/webhook-handler\"\n  }' \n"
+          }
+        ],
         "description": "Create a new webhook for the specified event.\n\nIf a webhook with the same event name and url already exists, a 400 error will be returned.\n",
         "requestBody": {
           "required": true,
@@ -1068,6 +1453,13 @@
           "Webhooks"
         ],
         "summary": "List webhooks",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X GET \"https://trexity.app/api/v2/webhooks\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
+          }
+        ],
         "description": "List all registered webhooks or registered webhooks for an event.\n",
         "parameters": [
           {
@@ -1122,6 +1514,13 @@
           "Webhooks"
         ],
         "summary": "Delete webhook",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X DELETE \"https://trexity.app/api/v2/webhooks/{WEBHOOK_ID}\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
+          }
+        ],
         "description": "Delete a registered webhook.\n",
         "parameters": [
           {
@@ -1162,6 +1561,13 @@
           "Webhooks"
         ],
         "summary": "Get secret key",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X GET \"https://trexity.app/api/v2/webhooks/secret-key\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
+          }
+        ],
         "description": "Get the secret key for the webhook signature verification.\n",
         "responses": {
           "200": {
@@ -1206,6 +1612,13 @@
           "Locations"
         ],
         "summary": "List locations",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X GET \"https://trexity.app/api/v2/locations\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \n"
+          }
+        ],
         "description": "List all your locations. In order to manage Locations, you need to use the [Merchant Portal](https://merchant.trexity.com/).\n",
         "responses": {
           "200": {
@@ -1251,6 +1664,13 @@
           "Locations"
         ],
         "summary": "Find location",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X POST \"https://trexity.app/api/v2/locations/find\" \\\n  -H \"Content-Type: application/json\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n  -d '{\n    \"address\": {\n      \"addressLine1\": \"123 Store St\",\n      \"city\": \"Ottawa\",\n      \"provinceCode\": \"ON\",\n      \"postalCode\": \"K2G 6F2\",\n      \"countryCode\": \"CA\"\n    },\n    \"name\": \"MyStore in Nepean\"\n  }' \n"
+          }
+        ],
         "description": "Find a location by name or address.\n\n**One of name or address or both must be provided.**\n\nIf both are provided, the name will be used to filter the results.\n\n**Possible error codes:**\n- `missing-required-fields` = When both name and address are not provided\n- `invalid-addressLine1` = When the addressLine1 is missing\n- `invalid-city` = When the city is missing\n- `invalid-provinceCode` = When the province is missing, or is not acceptedable\n- `invalid-postalCode` = When the postalCode is missing, invalid or not acceptedable\n- `invalid-countryCode` = When the country is not acceptedable\n- `invalid-address` = When the address cannot be recognized as a valid address\n",
         "requestBody": {
           "content": {
@@ -1351,6 +1771,13 @@
           "Receipts"
         ],
         "summary": "List receipts",
+        "x-codeSamples": [
+          {
+            "lang": "shell",
+            "label": "cURL",
+            "source": "curl -X GET \"https://trexity.app/api/v2/receipts/2024-01\" \\\n  -H \"Authorization: Bearer YOUR_API_KEY\" \\\n  -H \"Accept: application/json\" \n"
+          }
+        ],
         "description": "Retrieve the receipts for all or one location for a particular calendar month\n\n**Possible error codes:**\n- `invalid-year` = When the yearMonth has an invalid year\n- `invalid-month` = When the yearMonth has an invalid month\n",
         "parameters": [
           {
@@ -1522,13 +1949,13 @@
           }
         }
       },
-      "DeliveryRequirements": {
+      "ShipmentRequirements": {
         "type": "object",
-        "description": "Object representing the requirements that must be met by a courier in order\nfor them to be considered eligible for delivery.\n\nIf no requirements object is specified then the merchant location's default requirements\nwill be used.\n",
+        "description": "Object representing the requirements that must be met by a courier in order\nfor them to be considered eligible for shipment.\n\nIf no requirements object is specified then the merchant location's default requirements\nwill be used.\n",
         "properties": {
           "vehicleType": {
             "type": "string",
-            "description": "Describe the type of vehicle that must be used for a delivery.\n\n- any - Any vehicle type is allowed.\n- small - Sedan, hatchback, etc [example: Honda Civic]\n- medium - SUV or similar [example: Toyota Sienna]\n",
+            "description": "Describe the type of vehicle that must be used for a shipment.\n\n- any - Any vehicle type is allowed.\n- small - Sedan, hatchback, etc [example: Honda Civic]\n- medium - SUV or similar [example: Toyota Sienna]\n",
             "enum": [
               "any",
               "small",
@@ -1563,8 +1990,8 @@
           }
         }
       },
-      "DeliveryRateDTO": {
-        "description": "A simple description of a delivery for rating purposes",
+      "ShipmentRateDTO": {
+        "description": "A simple description of a shipment for rating purposes",
         "allOf": [
           {
             "$ref": "#/components/schemas/DeliveryWindowProps"
@@ -1582,20 +2009,31 @@
                 "$ref": "#/components/schemas/AddressDetailsDTO"
               },
               "requirements": {
-                "$ref": "#/components/schemas/DeliveryRequirements"
+                "$ref": "#/components/schemas/ShipmentRequirements"
               },
               "numLabels": {
                 "type": "number",
                 "minimum": 1,
                 "default": 1,
-                "description": "The number of labels for the delivery (each separate package needs a label). \n"
+                "description": "The number of labels for the shipment (each separate package needs a label). \n"
               }
             }
           }
         ]
       },
-      "DeliveryRate": {
+      "ShipmentRate": {
         "type": "object",
+        "required": [
+          "name",
+          "description",
+          "serviceType",
+          "currency",
+          "fees",
+          "subtotal",
+          "taxes",
+          "totalTaxes",
+          "total"
+        ],
         "properties": {
           "name": {
             "type": "string",
@@ -1604,6 +2042,11 @@
           "description": {
             "type": "string",
             "description": "The description of the rate to show to the customer (if applicable)\n"
+          },
+          "serviceType": {
+            "type": "string",
+            "example": "default",
+            "description": "The shipment service type associated to the shipment rate\n"
           },
           "currency": {
             "type": "string",
@@ -1616,6 +2059,10 @@
             "description": "The breakdown of each fee in the rate.\n",
             "items": {
               "type": "object",
+              "required": [
+                "type",
+                "amount"
+              ],
               "properties": {
                 "type": {
                   "type": "string",
@@ -1625,9 +2072,10 @@
                     "oversized",
                     "distance",
                     "returnable-features",
-                    "large-vehicle"
+                    "large-vehicle",
+                    "timewindows-surge"
                   ],
-                  "description": "- `delivery` applied for the base delivery fee\n- `fuel` applied for fuel surcharge\n- `oversized` applied for a surplus of labels\n- `distance` applied for long distance deliveries\n- `returnable-features` applied for returnable features such bags, or packaging\n- `large-vehicle` applied for deliveries that require a medium or large vehicle\n"
+                  "description": "- `delivery` applied for the base delivery fee\n- `fuel` applied for fuel surcharge\n- `oversized` applied for a surplus of labels\n- `distance` applied for long distance deliveries\n- `returnable-features` applied for returnable features such bags, or packaging\n- `large-vehicle` applied for deliveries that require a medium or large vehicle\n- `timewindows-surge` applied for a surcharge fee based on peak time windows\n"
                 },
                 "amount": {
                   "type": "number",
@@ -1644,6 +2092,11 @@
             "type": "array",
             "items": {
               "type": "object",
+              "required": [
+                "code",
+                "amount",
+                "rate"
+              ],
               "properties": {
                 "code": {
                   "type": "string",
@@ -1670,11 +2123,33 @@
           }
         }
       },
-      "DeliveryRateWithETA": {
+      "ShipmentRateWithETA": {
         "type": "object",
         "allOf": [
           {
-            "$ref": "#/components/schemas/DeliveryRate"
+            "type": "object",
+            "required": [
+              "id",
+              "createdAt",
+              "expiresAt"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "The ID of the shipment rate. This can be used when creating a shipment\nto use this exact rate. This rate is only valid until it expires and can only be used once\nin a request to create a shipment.\n"
+              },
+              "createdAt": {
+                "type": "string",
+                "description": "Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nThe date and time when the shipment rate was created.\n"
+              },
+              "expiresAt": {
+                "type": "string",
+                "description": "Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nThe date and time when the shipment rate will expire.\n"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentRate"
           },
           {
             "type": "object",
@@ -1830,72 +2305,12 @@
         "type": "string",
         "nullable": true
       },
-      "DeliveryBase": {
-        "type": "object",
-        "properties": {
-          "description": {
-            "type": "string",
-            "description": "Description of the contents being delivered",
-            "nullable": true
-          },
-          "orderId": {
-            "type": "string",
-            "maxLength": 20,
-            "description": "The order ID that this delivery is associated with."
-          },
-          "numLabels": {
-            "type": "number",
-            "minimum": 1,
-            "default": 1,
-            "description": "The number of labels for the delivery (each separate package needs a label).\n"
-          },
-          "deliveryValue": {
-            "type": "number",
-            "minimum": 0,
-            "description": "The dollar value of the delivery in CAD as cents"
-          },
-          "deliveryEmail": {
-            "type": "string",
-            "format": "email",
-            "description": "The email address of the recipient"
-          },
-          "deliveryPhone": {
-            "type": "string",
-            "description": "The cell phone number of the recipient, use a comma (,) to separate the phone number from its extension",
-            "example": "+1234567890,123"
-          },
-          "deliveryName": {
-            "type": "string",
-            "description": "The name of the recipient"
-          },
-          "deliveryInstructions": {
-            "type": "string",
-            "nullable": true,
-            "description": "Delivery instructions for drop off\n"
-          },
-          "metaField1": {
-            "type": "string",
-            "maxLength": 1024,
-            "description": "Optional metadata field to store arbitrary data\n"
-          },
-          "metaField2": {
-            "type": "string",
-            "maxLength": 1024,
-            "description": "Optional metadata field to store arbitrary data\n"
-          },
-          "metaField3": {
-            "type": "string",
-            "maxLength": 1024,
-            "description": "Optional metadata field to store arbitrary data\n"
-          }
-        }
-      },
-      "DeliveryStatus": {
+      "ShipmentStatus": {
         "type": "object",
         "properties": {
           "status": {
             "type": "string",
-            "description": "- `draft`: The delivery is not currently scheduled.\n- `pending`: The delivery is scheduled and waiting for courier assignment.\n- `assigned`: The delivery is assigned to a courier.\n- `in-transit`: The delivery is in transit to the destination address.\n- `delivered`: The delivery has been delivered.\n- `undeliverable`: The delivery was attempted but could not be completed, and the delivery was returned.\n- `cancelled`: The delivery was cancelled.\n",
+            "description": "- `draft`: The shipment is not currently scheduled.\n- `pending`: The shipment is scheduled and waiting for courier assignment.\n- `assigned`: The shipment is assigned to a courier.\n- `in-transit`: The shipment is in transit to the destination address.\n- `delivered`: The shipment has been delivered.\n- `undeliverable`: The shipment was attempted but could not be delivered, and the shipment was returned.\n- `cancelled`: The shipment was cancelled.\n",
             "enum": [
               "draft",
               "pending",
@@ -1908,190 +2323,61 @@
           }
         }
       },
-      "AddressDetails": {
-        "description": "Address details for read operations",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/AddressDetailsBase"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "province": {
-                "type": "string",
-                "description": "Full province or state name (e.g., Ontario, British Columbia, California)"
-              },
-              "country": {
-                "type": "string",
-                "description": "Full country name (e.g., Canada, United States)"
-              },
-              "latitude": {
-                "type": "number",
-                "format": "double",
-                "description": "Latitude coordinate of the address"
-              },
-              "longitude": {
-                "type": "number",
-                "format": "double",
-                "description": "Longitude coordinate of the address"
-              }
-            }
-          }
-        ]
-      },
-      "Delivery": {
-        "description": "An order to be delivered",
-        "type": "object",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/DeliveryBase"
-          },
-          {
-            "$ref": "#/components/schemas/DeliveryStatus"
-          },
-          {
-            "type": "object",
-            "properties": {
-              "id": {
-                "type": "string",
-                "description": "Unique identifier for this delivery.\n"
-              },
-              "createdAt": {
-                "$ref": "#/components/schemas/SimplifiedDateISOString"
-              },
-              "updatedAt": {
-                "$ref": "#/components/schemas/SimplifiedDateISOString"
-              },
-              "locationId": {
-                "type": "string",
-                "description": "The ID of the location that the delivery will be associated with for billing purposes."
-              },
-              "sortOrder": {
-                "type": "number",
-                "minimum": 0,
-                "description": "Represents the visit ordering of this delivery in a batch.\nLower values are estimated to be delivered before higher values. The value of this property could change\ndepending on the information we have of the courier at the time of the request, and/or if deliveries are removed from the batch.\n"
-              },
-              "sequence": {
-                "type": "number",
-                "nullable": true,
-                "description": "Represents the fixed ordering at the time the delivery was batched. This is the same sequence number that appears on the\nlabel for this delivery and what couriers may ask for at pickup.\n"
-              },
-              "routeId": {
-                "type": "string",
-                "description": "Route container ID. In the case of a return, this will be the route ID of the original route not the return route.\n"
-              },
-              "externalId": {
-                "type": "string",
-                "maxLength": 256,
-                "description": "The ID of the external entity that is associated to\nthis delivery (e.g. the external order or shipment ID).\n"
-              },
-              "requirements": {
-                "$ref": "#/components/schemas/DeliveryRequirements"
-              },
-              "scanId": {
-                "type": "string",
-                "maxLength": 256,
-                "description": "The ID embedded in your custom label's QR code. If\nnot specified, you will be required to use our built-in labels. If\nspecified, you will not be able to request our built-in label for this\ndelivery.\n"
-              },
-              "pickupAddress": {
-                "$ref": "#/components/schemas/AddressDetails"
-              },
-              "deliveryAddress": {
-                "$ref": "#/components/schemas/AddressDetails"
-              },
-              "giftSenderName": {
-                "type": "string",
-                "nullable": true,
-                "description": "If this delivery is a gift then shows to the recipient instead of \"deliveryName\".\n"
-              },
-              "giftRecipientName": {
-                "type": "string",
-                "nullable": true,
-                "description": "If this delivery is a gift then shows the recipient's name that is receiving the gift.\n"
-              },
-              "giftRecipientEmail": {
-                "type": "string",
-                "nullable": true,
-                "format": "email",
-                "description": "If this delivery is a gift, then shows the recipient's email that is receiving the gift.\n"
-              },
-              "giftRecipientPhone": {
-                "type": "string",
-                "nullable": true,
-                "description": "If this delivery is a gift then shows the recipient's phone number that is receiving the gift, uses a comma (,) to separate the phone number from its extension.\n",
-                "example": "+1234567890,123"
-              },
-              "pickedUpAt": {
-                "$ref": "#/components/schemas/SimplifiedDateISOString"
-              },
-              "deliveredAt": {
-                "$ref": "#/components/schemas/SimplifiedDateISOString"
-              },
-              "rate": {
-                "$ref": "#/components/schemas/DeliveryRate"
-              }
-            }
-          }
-        ]
-      },
       "PickupStartAt": {
-        "description": "Specifies the start of the pickup window (i.e. the earliest time that the courier can arrive to pickup).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the start of an available pickup window.\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
+        "description": "Specifies the start of the pickup window (i.e. the earliest time that the courier can arrive to pickup).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the start of an available pickup window.\n\nIf the shipment is a Direct shipment, then hourly pickup windows that start at the\ntop of each hour are available.\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows)\nfor Everyday (default) shipments.\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
+        "type": "string",
+        "nullable": true
+      },
+      "PickupEndAt": {
+        "description": "Specifies the end of the pickup window (i.e. the latest time that the courier can arrive to pickup).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the end of the available pickup window indicated by the value of `pickupStartAt`.\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
         "type": "string",
         "nullable": true
       },
       "DeliverStartAt": {
-        "description": "Specifies the start of the delivery window (i.e. the earliest time that the courier can complete the delivery).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the start of a suggested delivery window.\n\nThe delivery windows are unique to each of your locations within Trexity because they are determined by the market's pickup windows and each location's delivery SLA. A delivery SLA is the maximum amount of time a delivery can take (.e.g. 2 hours). The general formula for computing a delivery window for each pickup window is the following.\n\n```\ndeliveryWindowStart = pickupWindowStart\ndeliveryWindowEnd = pickupWindowEnd + deliverySLA\n```\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).\nReview your suggested [delivery windows](https://merchant.trexity.com/api).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
+        "description": "The estimated time the delivery work will start. This will always match one\nof your suggested [delivery windows](https://merchant.trexity.com/api).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
         "type": "string",
         "nullable": true
       },
       "DeliverEndAt": {
-        "description": "Specifies the end of the delivery window (i.e. the latest time that the courier can complete the delivery).\nThe second and millsecond time components of the date will be ignored.\n\nWhen specified, this value must match the end of the suggested delivery window indicated by the value of `deliverStartAt`.\n\nThe delivery windows are unique to each of your locations within Trexity because they are determined by the market's pickup windows and each of your location's delivery SLA. A delivery SLA is the maximum amount of time a delivery can take (.e.g. 2 hours). The general formula for computing a delivery window for each pickup window is the following.\n\n```\ndeliveryWindowStart = pickupWindowStart\ndeliveryWindowEnd = pickupWindowEnd + deliverySLA\n```\n\nReview the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).\nReview your suggested [delivery windows](https://merchant.trexity.com/api).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
+        "description": "The estimated time the delivery work will end. This will always match one\nof your suggested [delivery windows](https://merchant.trexity.com/api).\n\n**Data type**\n\nDate time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`\n\nNote that ISO date strings are always in UTC time.\n\nAn example: `2020-07-25T10:48:08.987Z`\n",
         "type": "string",
         "nullable": true
       },
-      "DeliveryRequirementsDto": {
+      "ShipmentPickupAddressField": {
         "type": "object",
-        "description": "Object representing the requirements that must be met by a courier in order\nfor them to be considered eligible for delivery.\n\nIf no requirements object is specified then the merchant location's default requirements\nwill be used.\n",
         "properties": {
-          "vehicleType": {
-            "type": "string",
-            "description": "Describe the type of vehicle that must be used for a delivery.\n\n- any - Any vehicle type is allowed.\n- small - Sedan, hatchback, etc [example: Honda Civic]\n- medium - SUV or similar [example: Toyota Sienna]\n",
-            "enum": [
-              "any",
-              "small",
-              "medium"
-            ]
-          },
-          "proofOfDelivery": {
-            "type": "string",
-            "enum": [
-              "pin+signature",
-              "pin",
-              "photo"
-            ],
-            "description": "The proof of delivery that must be provided by the courier.\n\n- pin+signature - A PIN exchange and signature given by the recipient are required.\n- pin - A PIN exchange given by the recipient is required.\n- photo - A safe-drop is required with no proof of delivery.\n"
-          },
-          "containsAlcohol": {
-            "type": "boolean",
-            "description": "Contains any trace of alcohol."
-          },
-          "requiresLegalAgeVerification": {
-            "type": "boolean",
-            "description": "Requires legal age verification."
-          },
-          "perishable": {
-            "type": "boolean",
-            "description": "Must be delivered by a courier who is equipped to deliver perishable items."
-          },
-          "returnReusables": {
-            "type": "boolean",
-            "description": "Must be delivered by a courier who will return collected reusables back to pickup."
+          "pickupAddress": {
+            "$ref": "#/components/schemas/AddressDetailsDTO"
           }
         }
       },
-      "DeliveryLoad": {
+      "ShipmentDeliveryAddressField": {
         "type": "object",
-        "description": "Optional dimensions and weight of the delivery.\n\nThe maximum dimensions are 91 cm for any dimension. The maximum for weight is 15876 grams.\n",
+        "properties": {
+          "deliveryAddress": {
+            "$ref": "#/components/schemas/AddressDetailsDTO"
+          }
+        }
+      },
+      "ShipmentAddressingFields": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ShipmentPickupAddressField"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentDeliveryAddressField"
+          }
+        ]
+      },
+      "ShipmentLoad": {
+        "type": "object",
+        "required": [
+          "length",
+          "width",
+          "height",
+          "weight"
+        ],
+        "description": "Optional dimensions and weight of the shipment.\n\nThe maximum dimensions are 91 cm for any dimension. The maximum for weight is 15876 grams.\n",
         "properties": {
           "length": {
             "type": "integer",
@@ -2119,12 +2405,337 @@
           }
         }
       },
-      "DeliveryDTO": {
+      "ShipmentOrderFields": {
+        "type": "object",
+        "properties": {
+          "orderId": {
+            "type": "string",
+            "maxLength": 20,
+            "description": "The order ID that this shipment is associated with."
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the contents being delivered",
+            "nullable": true
+          },
+          "numLabels": {
+            "type": "number",
+            "minimum": 1,
+            "default": 1,
+            "description": "The number of labels for the shipment (each separate package needs a label).\n"
+          },
+          "deliveryValue": {
+            "type": "number",
+            "minimum": 0,
+            "description": "The dollar value of the shipment in CAD as cents"
+          },
+          "requirements": {
+            "$ref": "#/components/schemas/ShipmentRequirements"
+          },
+          "load": {
+            "$ref": "#/components/schemas/ShipmentLoad"
+          }
+        }
+      },
+      "ShipmentPickupInstructionsField": {
+        "type": "object",
+        "properties": {
+          "pickupInstructions": {
+            "type": "string",
+            "description": "Special instructions the courier should follow when picking up the shipment.",
+            "nullable": true
+          }
+        }
+      },
+      "ShipmentRecipientFields": {
+        "type": "object",
+        "properties": {
+          "deliveryName": {
+            "type": "string",
+            "description": "The name of the recipient"
+          },
+          "deliveryEmail": {
+            "type": "string",
+            "format": "email",
+            "description": "The email address of the recipient"
+          },
+          "deliveryPhone": {
+            "type": "string",
+            "description": "The cell phone number of the recipient, use a comma (,) to separate the phone number from its extension",
+            "example": "+1234567890,123"
+          },
+          "deliveryInstructions": {
+            "type": "string",
+            "nullable": true,
+            "description": "Delivery instructions for drop off\n"
+          }
+        }
+      },
+      "ShipmentGiftFields": {
+        "type": "object",
+        "properties": {
+          "giftSenderName": {
+            "type": "string",
+            "nullable": true,
+            "description": "If this shipment is a gift then use this field to set the gift sender's name to show to the recipient instead of \"deliveryName\".\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n"
+          },
+          "giftRecipientName": {
+            "type": "string",
+            "nullable": true,
+            "description": "If this shipment is a gift then use this field to set the gift recipient's name that is receiving the gift.\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n"
+          },
+          "giftRecipientEmail": {
+            "type": "string",
+            "nullable": true,
+            "format": "email",
+            "description": "If this shipment is a gift then use this field to set the gift recipient's email that is receiving the gift.\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n"
+          },
+          "giftRecipientPhone": {
+            "type": "string",
+            "nullable": true,
+            "description": "If this shipment is a gift then use this field to set the gift recipient's phone number that is receiving the gift, use a comma (,) to separate the phone number from its extension.\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n",
+            "example": "+1234567890,123"
+          }
+        }
+      },
+      "ShipmentCustomLabelFields": {
+        "type": "object",
+        "properties": {
+          "externalId": {
+            "type": "string",
+            "maxLength": 256,
+            "description": "The ID of the external entity that is associated to\nthis shipment (e.g. the external order or shipment ID).\n"
+          },
+          "scanId": {
+            "type": "string",
+            "maxLength": 256,
+            "description": "The ID embedded in your custom label's QR code. If\nnot specified, you will be required to use our built-in labels. If\nspecified, you will not be able to request our built-in label for this\nshipment.\n"
+          }
+        }
+      },
+      "ShpmentMetaFields": {
+        "type": "object",
+        "properties": {
+          "metaField1": {
+            "type": "string",
+            "maxLength": 1024,
+            "description": "Optional metadata field to store arbitrary data\n"
+          },
+          "metaField2": {
+            "type": "string",
+            "maxLength": 1024,
+            "description": "Optional metadata field to store arbitrary data\n"
+          },
+          "metaField3": {
+            "type": "string",
+            "maxLength": 1024,
+            "description": "Optional metadata field to store arbitrary data\n"
+          }
+        }
+      },
+      "ShipmentPartnerFields": {
+        "type": "object",
+        "properties": {
+          "merchantPpid": {
+            "type": "string",
+            "description": "Partner-provided ID of the merchant. This ID can be used when querying for shipments. **Only used by Partner accounts.**"
+          },
+          "merchantName": {
+            "type": "string",
+            "description": "Partner-provided name of the merchant. This will be displayed in place of the merchant name defined in the merchant profile. **Only used by Partner accounts.**"
+          },
+          "merchantPhone": {
+            "type": "string",
+            "description": "Partner-provided phone of the merchant. This will be displayed in place of the merchant phone defined in the merchant profile. **Only used by Partner accounts.**"
+          },
+          "merchantEmail": {
+            "type": "string",
+            "description": "Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. **Only used by Partner accounts.**"
+          }
+        }
+      },
+      "Shipment": {
         "description": "An order to be delivered",
         "type": "object",
         "allOf": [
           {
-            "$ref": "#/components/schemas/DeliveryBase"
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Unique identifier for this shipment.\n"
+              },
+              "serviceType": {
+                "type": "string",
+                "description": "The service type of the shipment",
+                "example": "default"
+              },
+              "locationId": {
+                "type": "string",
+                "description": "The ID of the location that the shipment will be associated with for billing purposes."
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentStatus"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "createdAt": {
+                "$ref": "#/components/schemas/SimplifiedDateISOString"
+              },
+              "updatedAt": {
+                "$ref": "#/components/schemas/SimplifiedDateISOString"
+              },
+              "pickupStartAt": {
+                "$ref": "#/components/schemas/PickupStartAt"
+              },
+              "pickupEndAt": {
+                "$ref": "#/components/schemas/PickupEndAt"
+              },
+              "deliverStartAt": {
+                "$ref": "#/components/schemas/DeliverStartAt"
+              },
+              "deliverEndAt": {
+                "$ref": "#/components/schemas/DeliverEndAt"
+              },
+              "pickupSequence": {
+                "type": "number",
+                "minimum": 0,
+                "description": "If this shipment is part of a batch, then this represents the *estimated* pickup sequence of this shipment depending on courier information,\nand/or if shipments have been removed from the batch.\n"
+              },
+              "pickupSequenceWhenBatched": {
+                "type": "number",
+                "nullable": true,
+                "description": "If this shipment is part of a batch, then this represents the pickup sequence of this shipment at the time the batch was created.\nThis is the same sequence number that appears on the label for this shipment and what couriers will ask for at pickup.\n"
+              },
+              "pickedUpAt": {
+                "$ref": "#/components/schemas/SimplifiedDateISOString"
+              },
+              "deliveredAt": {
+                "$ref": "#/components/schemas/SimplifiedDateISOString"
+              },
+              "rate": {
+                "$ref": "#/components/schemas/ShipmentRate"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentAddressingFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentOrderFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentPickupInstructionsField"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentRecipientFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentGiftFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentCustomLabelFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShpmentMetaFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentPartnerFields"
+          },
+          {
+            "type": "object",
+            "required": [
+              "id",
+              "serviceType",
+              "locationId",
+              "status",
+              "createdAt",
+              "updatedAt",
+              "pickupSequence",
+              "rate",
+              "pickupAddress",
+              "deliveryAddress",
+              "orderId",
+              "description",
+              "numLabels",
+              "deliveryValue",
+              "requirements",
+              "deliveryName",
+              "deliveryEmail"
+            ]
+          }
+        ]
+      },
+      "ShipmentPickupFields": {
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "pickupStartAt": {
+                "$ref": "#/components/schemas/PickupStartAt"
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentPickupInstructionsField"
+          }
+        ]
+      },
+      "ShipmentDTO": {
+        "type": "object",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "locationId": {
+                "type": "string",
+                "description": "The ID of the location that the shipment will be associated with for billing purposes. If not provided, the location will be inferred from the pickup address."
+              },
+              "serviceTypeOrRateId": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "default",
+                      "direct"
+                    ],
+                    "description": "The optional service type to use when creating the shipment.\nIf not provided, the `default` service type will be used.\n"
+                  },
+                  {
+                    "type": "string",
+                    "format": "uuid",
+                    "description": "The optional rate ID to use when creating the shipment. The rate ID must be valid and not expired.\nA rate ID can only be used once in a request to create a shipment. The service type will be inferred from the associated rate.\n\nThe exact same address information must be provided as the rate was calculated with.\n"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentAddressingFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentPickupFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentOrderFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentRecipientFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentGiftFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentCustomLabelFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShpmentMetaFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentPartnerFields"
           },
           {
             "type": "object",
@@ -2134,156 +2745,257 @@
               "deliveryName",
               "deliveryEmail",
               "orderId"
-            ],
-            "properties": {
-              "pickupAddress": {},
-              "deliveryAddress": {},
-              "pickupStartAt": {},
-              "deliveryName": {},
-              "deliveryEmail": {},
-              "orderId": {}
-            }
-          },
-          {
-            "type": "object",
-            "properties": {
-              "locationId": {
-                "type": "string",
-                "description": "The ID of the location that the delivery will be associated with for billing purposes. If not provided, the location will be inferred from the pickup address."
-              },
-              "pickupAddress": {
-                "$ref": "#/components/schemas/AddressDetailsDTO"
-              },
-              "deliveryAddress": {
-                "$ref": "#/components/schemas/AddressDetailsDTO"
-              },
-              "giftSenderName": {
-                "type": "string",
-                "nullable": true,
-                "description": "If this delivery is a gift then use this field to set the gift sender's name to show to the recipient instead of \"deliveryName\".\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n"
-              },
-              "giftRecipientName": {
-                "type": "string",
-                "nullable": true,
-                "description": "If this delivery is a gift then use this field to set the gift recipient's name that is receiving the gift.\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n"
-              },
-              "giftRecipientEmail": {
-                "type": "string",
-                "nullable": true,
-                "format": "email",
-                "description": "If this delivery is a gift then use this field to set the gift recipient's email that is receiving the gift.\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n"
-              },
-              "giftRecipientPhone": {
-                "type": "string",
-                "nullable": true,
-                "description": "If this delivery is a gift then use this field to set the gift recipient's phone number that is receiving the gift, use a comma (,) to separate the phone number from its extension.\n\n***If defining a gift, then all gift fields are required, otherwise set gift fields to null or blank.***\n",
-                "example": "+1234567890,123"
-              },
-              "pickupStartAt": {
-                "$ref": "#/components/schemas/PickupStartAt"
-              },
-              "deliverStartAt": {
-                "$ref": "#/components/schemas/DeliverStartAt"
-              },
-              "deliverEndAt": {
-                "$ref": "#/components/schemas/DeliverEndAt"
-              },
-              "merchantPpid": {
-                "type": "string",
-                "description": "Partner-provided ID of the merchant. This ID can be used when querying for deliveries. Only used by Partner accounts."
-              },
-              "merchantName": {
-                "type": "string",
-                "description": "Partner-provided name of the merchant. This will be displayed in place of the merchant name defined in the merchant profile. Only used by Partner accounts."
-              },
-              "merchantPhone": {
-                "type": "string",
-                "description": "Partner-provided phone of the merchant. This will be displayed in place of the merchant phone defined in the merchant profile. Only used by Partner accounts."
-              },
-              "merchantEmail": {
-                "type": "string",
-                "description": "Partner-provided email of the merchant. This will be displayed in place of the merchant email defined in the merchant profile. Only used by Partner accounts."
-              },
-              "requirements": {
-                "$ref": "#/components/schemas/DeliveryRequirementsDto"
-              },
-              "externalId": {
-                "type": "string",
-                "maxLength": 256,
-                "description": "The ID of the external entity that is associated to\nthis delivery (e.g. the external order or shipment ID).\n"
-              },
-              "scanId": {
-                "type": "string",
-                "maxLength": 256,
-                "description": "The ID embedded in your custom label's QR code. If\nnot specified, you will be required to use our built-in labels. If\nspecified, you will not be able to request our built-in label for this\ndelivery.\n"
-              },
-              "load": {
-                "$ref": "#/components/schemas/DeliveryLoad"
-              }
-            }
+            ]
           }
         ]
       },
-      "DeliveryDTOUpdate": {
-        "description": "The fields that can be updated for a delivery",
+      "ShipmentDTOUpdate": {
         "type": "object",
         "allOf": [
           {
-            "$ref": "#/components/schemas/DeliveryBase"
+            "$ref": "#/components/schemas/ShipmentAddressingFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentPickupFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentOrderFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentRecipientFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentGiftFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentCustomLabelFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShpmentMetaFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentPartnerFields"
+          }
+        ]
+      },
+      "BatchableShipmentDTO": {
+        "type": "object",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/ShipmentDeliveryAddressField"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentOrderFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentRecipientFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentGiftFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentCustomLabelFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShpmentMetaFields"
+          },
+          {
+            "$ref": "#/components/schemas/ShipmentPartnerFields"
           },
           {
             "type": "object",
-            "properties": {
-              "deliveryAddress": {
-                "$ref": "#/components/schemas/AddressDetailsDTO"
-              },
-              "giftSenderName": {
-                "type": "string",
-                "nullable": true,
-                "description": "If this delivery is a gift then use this field to set the gift sender's name to show to the recipient instead of \"deliveryName\".\n\n***If updating to not a gift, then set all gift fields to null or blank.***\n"
-              },
-              "giftRecipientName": {
-                "type": "string",
-                "nullable": true,
-                "description": "If this delivery is a gift then use this field to set the gift recipient's name that is receiving the gift.\n\n***If updating to not a gift, then set all gift fields to null or blank.***\n"
-              },
-              "giftRecipientEmail": {
-                "type": "string",
-                "nullable": true,
-                "format": "email",
-                "description": "If this delivery is a gift then use this field to set the gift recipient's email that is receiving the gift.\n\n***If updating to not a gift, then set all gift fields to null or blank.***\n"
-              },
-              "giftRecipientPhone": {
-                "type": "string",
-                "nullable": true,
-                "description": "If this delivery is a gift then use this field to set the gift recipient's phone number that is receiving the gift, use a comma (,) to separate the phone number from its extension.\n\n***If updating to not a gift, then set all gift fields to null or blank.***\n",
-                "example": "+1234567890,123"
-              },
-              "requirements": {
-                "$ref": "#/components/schemas/DeliveryRequirements"
-              }
-            }
+            "required": [
+              "deliveryAddress",
+              "deliveryName",
+              "deliveryEmail",
+              "orderId"
+            ]
           }
         ]
+      },
+      "BatchingOperationDTO": {
+        "type": "object",
+        "required": [
+          "pickupAddress",
+          "shipments"
+        ],
+        "properties": {
+          "locationId": {
+            "type": "string",
+            "description": "Optionally associate a location, otherwise your default location will be used. This is used for billing purposes. See [Locations](/#tag/Locations) for more information."
+          },
+          "pickupAddress": {
+            "$ref": "#/components/schemas/AddressDetailsDTO"
+          },
+          "pickupInstructions": {
+            "type": "string",
+            "description": "Optional instructions for the courier to pickup the shipment. This will be displayed to the courier in the Courier App."
+          },
+          "shipments": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/BatchableShipmentDTO"
+            },
+            "minItems": 20,
+            "maxItems": 400,
+            "description": "The deliveries to optimize."
+          }
+        }
+      },
+      "Batch": {
+        "type": "object",
+        "required": [
+          "effectiveRate",
+          "orderIds"
+        ],
+        "properties": {
+          "effectiveRate": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ShipmentRate"
+              },
+              {
+                "type": "object",
+                "description": "The effective rate to complete all the orders in the batch"
+              }
+            ]
+          },
+          "orderIds": {
+            "type": "array",
+            "description": "The IDs of the orders within the batch in the order they will be picked up",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "BatchingOperation": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "errors",
+          "batches"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the batching optimization"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "completed",
+              "failed"
+            ]
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "code",
+                "message",
+                "orderId"
+              ],
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "The error code"
+                },
+                "message": {
+                  "type": "string",
+                  "description": "The error message"
+                },
+                "orderId": {
+                  "type": "string",
+                  "description": "The ID of the order this error is associated to"
+                }
+              }
+            }
+          },
+          "batches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Batch"
+            }
+          }
+        }
+      },
+      "BatchingCreateShipmentsOperation": {
+        "type": "object",
+        "required": [
+          "id",
+          "status",
+          "errors",
+          "shipmentIds"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "The ID of the \"create shipments\" operation"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "completed",
+              "failed"
+            ]
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "code",
+                "message",
+                "orderId"
+              ],
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "The error code"
+                },
+                "message": {
+                  "type": "string",
+                  "description": "The error message"
+                },
+                "orderId": {
+                  "type": "string",
+                  "description": "The ID of the order this error is associated to"
+                }
+              }
+            }
+          },
+          "shipmentIds": {
+            "type": "array",
+            "description": "The IDs of the shipments created",
+            "items": {
+              "type": "string",
+              "description": "The ID of the shipment created"
+            }
+          }
+        }
       },
       "WebhookEventName": {
         "type": "string",
         "enum": [
-          "delivery.created",
-          "delivery.updated",
-          "delivery.deleted",
-          "delivery.courier.accepted",
-          "delivery.courier.arrived_at_pickup",
-          "delivery.courier.picked_up",
-          "delivery.courier.arrived_at_delivery",
-          "delivery.courier.delivery_delivered",
-          "delivery.courier.renounced",
-          "delivery.cancelled",
-          "delivery.on_hold",
-          "delivery.picked_up",
-          "delivery.delivered",
-          "delivery.returning",
-          "delivery.returned"
+          "shipment.v2.created",
+          "shipment.v2.updated",
+          "shipment.v2.deleted",
+          "shipment.v2.courier.accepted",
+          "shipment.v2.courier.arrived_at_pickup",
+          "shipment.v2.courier.arrived_at_delivery",
+          "shipment.v2.courier.renounced",
+          "shipment.v2.cancelled",
+          "shipment.v2.on_hold",
+          "shipment.v2.picked_up",
+          "shipment.v2.delivered",
+          "shipment.v2.undeliverable",
+          "shipment.v2.returning",
+          "shipment.v2.returned"
         ]
       },
       "Webhook": {
@@ -2322,6 +3034,37 @@
             "format": "uri"
           }
         }
+      },
+      "AddressDetails": {
+        "description": "Address details for read operations",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/AddressDetailsBase"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "province": {
+                "type": "string",
+                "description": "Full province or state name (e.g., Ontario, British Columbia, California)"
+              },
+              "country": {
+                "type": "string",
+                "description": "Full country name (e.g., Canada, United States)"
+              },
+              "latitude": {
+                "type": "number",
+                "format": "double",
+                "description": "Latitude coordinate of the address"
+              },
+              "longitude": {
+                "type": "number",
+                "format": "double",
+                "description": "Longitude coordinate of the address"
+              }
+            }
+          }
+        ]
       },
       "OperatingHours": {
         "type": "object",
@@ -2629,6 +3372,10 @@
             "description": "Array of surcharges and discounts, where discounts will have a negative amount",
             "items": {
               "type": "object",
+              "required": [
+                "description",
+                "amount"
+              ],
               "properties": {
                 "description": {
                   "type": "string",

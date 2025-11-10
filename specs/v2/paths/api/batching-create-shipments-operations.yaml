@@ -1,0 +1,38 @@
+post:
+  operationId: createBatchingCreateShipmentsOperation
+  tags: [Batching]
+  summary: Create "create shipments" operation
+  x-codeSamples:
+    - $ref: '../../code_samples/batching/createBatchingCreateShipmentsOperation.shell.yaml'
+  description: |
+    Create shipments from a batching optimization. This will create shipments for each batch in the batching optimization.
+
+  parameters:
+    - name: batchingOperationId
+      in: path
+      required: true
+      schema:
+        type: string
+
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                $ref: ../../components/schemas/BatchingCreateShipmentsOperation.yaml
+    '400':
+      $ref: ../../components/responses/400.yaml
+    '401':
+      $ref: ../../components/responses/401.yaml
+    '403':
+      $ref: ../../components/responses/403.yaml
+    '404':
+      $ref: ../../components/responses/404.yaml
+    '422':
+      $ref: ../../components/responses/422.yaml

@@ -1,0 +1,5 @@
+lang: shell
+label: cURL
+source: |
+  curl -X GET "https://trexity.app/api/v2/locations" \
+    -H "Authorization: Bearer YOUR_API_KEY" 

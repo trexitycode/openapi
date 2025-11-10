@@ -1,0 +1,43 @@
+get:
+  operationId: getShipmentStatus
+  tags: [Shipments]
+  summary: Get shipment status
+  x-codeSamples:
+    - $ref: '../../code_samples/shipments/getShipmentStatus.shell.yaml'
+  description: |
+    Retrieve a shipment's status
+
+  parameters:
+    - in: path
+      name: shipmentId
+      required: true
+      schema:
+        type: string
+      description: The id of the delivery (can be externalId or delivery ID)
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            required:
+              - data
+            properties:
+              data:
+                allOf:
+                  - $ref: ../../components/schemas/ShipmentStatus.yaml
+                  - type: object
+                    required:
+                      - status
+
+    '400':
+      $ref: ../../components/responses/400.yaml
+    '401':
+      $ref: ../../components/responses/401.yaml
+    '403':
+      $ref: ../../components/responses/403.yaml
+    '404':
+      $ref: ../../components/responses/404.yaml
+    '500':
+      $ref: ../../components/responses/500.yaml

@@ -1,0 +1,5 @@
+lang: shell
+label: cURL
+source: |
+  curl -X POST "https://trexity.app/api/v2/batching-operations/{BATCHING_OPERATION_ID}/create-shipments-operations" \
+    -H "Authorization: Bearer YOUR_API_KEY" 

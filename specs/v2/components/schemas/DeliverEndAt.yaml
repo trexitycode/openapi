@@ -1,18 +1,6 @@
 description: |
-  Specifies the end of the delivery window (i.e. the latest time that the courier can complete the delivery).
-  The second and millsecond time components of the date will be ignored.
-
-  When specified, this value must match the end of the suggested delivery window indicated by the value of `deliverStartAt`.
-
-  The delivery windows are unique to each of your locations within Trexity because they are determined by the market's pickup windows and each of your location's delivery SLA. A delivery SLA is the maximum amount of time a delivery can take (.e.g. 2 hours). The general formula for computing a delivery window for each pickup window is the following.
-
-  ```
-  deliveryWindowStart = pickupWindowStart
-  deliveryWindowEnd = pickupWindowEnd + deliverySLA
-  ```
-
-  Review the available [pickup windows](https://trexity.zendesk.com/hc/en-us/articles/16940024932627-Pickup-windows).
-  Review your suggested [delivery windows](https://merchant.trexity.com/api).
+  The estimated time the delivery work will end. This will always match one
+  of your suggested [delivery windows](https://merchant.trexity.com/api).
 
   **Data type**
 

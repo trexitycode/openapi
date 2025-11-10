@@ -1,0 +1,10 @@
+type: object
+allOf:
+  - $ref: './partials/ShipmentAddressingFields.yaml'
+  - $ref: './partials/ShipmentPickupFields.yaml'
+  - $ref: './partials/ShipmentOrderFields.yaml'
+  - $ref: './partials/ShipmentRecipientFields.yaml'
+  - $ref: './partials/ShipmentGiftFields.yaml'
+  - $ref: './partials/ShipmentCustomLabelFields.yaml'
+  - $ref: './partials/ShpmentMetaFields.yaml'
+  - $ref: './partials/ShipmentPartnerFields.yaml'

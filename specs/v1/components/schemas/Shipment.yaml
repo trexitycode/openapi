@@ -4,10 +4,12 @@ properties:
   id:
     type: string
     description: Unique identifier of the Shipment in Trexity
-
+  serviceType:
+    type: string
+    description: The service type of the shipment
+    example: default
   currentStatus:
     $ref: ./ShipmentStatus.yaml
-
   pickupAddress:
     type: string
     description: The starting address that the driver must pick up the parcel(s) from.

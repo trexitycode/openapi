@@ -2,6 +2,8 @@ post:
   operationId: findLocation
   tags: [Locations]
   summary: Find location
+  x-codeSamples:
+    - $ref: '../../code_samples/locations/findLocation.shell.yaml'
   description: |
     Find a location by name or address.
 

@@ -1,0 +1,15 @@
+type: object
+required:
+  - effectiveRate
+  - orderIds
+properties:
+  effectiveRate:
+    allOf:
+      - $ref: ./ShipmentRate.yaml
+      - type: object
+        description: The effective rate to complete all the orders in the batch
+  orderIds:
+    type: array
+    description: The IDs of the orders within the batch in the order they will be picked up
+    items:
+      type: string
