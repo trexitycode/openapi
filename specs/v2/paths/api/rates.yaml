@@ -1,11 +1,11 @@
 post:
-  operationId: calculateShipmentRate
+  operationId: calculateShipmentRates
   tags: [Rating]
-  summary: Calculate shipment rate
+  summary: Calculate shipment rates
   x-codeSamples:
-    - $ref: '../../code_samples/rating/calculateShipmentRate.shell.yaml'
+    - $ref: '../../code_samples/rating/calculateShipmentRates.shell.yaml'
   description: |
-    Calculate a rate for a shipment.
+    Calculate the rates available for a shipment.
 
     If no `pickupAddress` is specified then your primary location's address will
     be used as the pickup address.
@@ -54,7 +54,9 @@ post:
               - data
             properties:
               data:
-                $ref: ../../components/schemas/ShipmentRateWithETA.yaml
+                type: array
+                items:
+                  $ref: ../../components/schemas/ShipmentRateWithETA.yaml
 
     '400':
       $ref: '../../components/responses/400.yaml'

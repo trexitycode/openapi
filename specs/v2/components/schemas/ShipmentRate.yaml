@@ -2,6 +2,7 @@ type: object
 required:
   - name
   - description
+  - serviceType
   - currency
   - fees
   - subtotal
@@ -16,6 +17,11 @@ properties:
     type: string
     description: |
       The description of the rate to show to the customer (if applicable)
+  serviceType:
+    type: string
+    example: default
+    description: |
+      The shipment service type associated to the shipment rate
   currency:
     type: string
     enum:
@@ -32,7 +38,7 @@ properties:
       properties:
         type:
           type: string
-          enum: [delivery, fuel, oversized, distance, returnable-features, large-vehicle]
+          enum: [delivery, fuel, oversized, distance, returnable-features, large-vehicle, timewindows-surge]
           description: |
             - `delivery` applied for the base delivery fee
             - `fuel` applied for fuel surcharge
@@ -40,6 +46,7 @@ properties:
             - `distance` applied for long distance deliveries
             - `returnable-features` applied for returnable features such bags, or packaging
             - `large-vehicle` applied for deliveries that require a medium or large vehicle
+            - `timewindows-surge` applied for a surcharge fee based on peak time windows
         amount:
           type: number
           description: The amount in cents of the fee.

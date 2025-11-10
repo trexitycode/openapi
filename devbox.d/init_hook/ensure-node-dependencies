@@ -1,0 +1,83 @@
+#!/usr/bin/env bash
+
+set -e
+
+# Function to calculate checksum based on available command (macOS or Linux)
+calculate_checksum() {
+  local file="$1"
+  if command -v shasum >/dev/null 2>&1; then
+    shasum -a 256 "$file" | cut -d ' ' -f 1
+  elif command -v sha256sum >/dev/null 2>&1; then
+    sha256sum "$file" | cut -d ' ' -f 1
+  else
+    echo "No checksum command found (shasum or sha256sum)" >&2
+    exit 1
+  fi
+}
+
+# Function to get checksum file path for a directory
+get_checksum_file_path() {
+  local dir="$1"
+  local rel_path="${dir#$DEVBOX_PROJECT_ROOT/}"
+  [ "$rel_path" = "$DEVBOX_PROJECT_ROOT" ] && rel_path="."
+  # Checksum file path examples:
+  #  - .devbox/checksums/._package-lock.checksum (root)
+  #  - .devbox/checksums/packages_common_package-lock.checksum (packages/common)
+  #  - .devbox/checksums/packages_admin_package-lock.checksum (packages/admin)
+  echo "$DEVBOX_PROJECT_ROOT/.devbox/checksums/${rel_path//\//_}_package-lock.checksum"
+}
+
+# Function to check if npm ci is needed for a directory
+needs_npm_ci() {
+  local dir="$1"
+  local package_json="$dir/package.json"
+  local package_lock="$dir/package-lock.json"
+
+  echo "Checking if npm ci is needed for $dir..."
+  
+  # Skip if no package.json exists
+  [ ! -f "$package_json" ] && return 1
+  
+  # Do not run npm ci if package-lock.json doesn't exist (this would error)
+  [ ! -f "$package_lock" ] && return 1
+  
+  # Get checksum file path
+  local checksum_file
+  checksum_file=$(get_checksum_file_path "$dir")
+  
+  # Create checksum directory if it doesn't exist
+  mkdir -p "$(dirname "$checksum_file")"
+  
+  # Check if checksum file exists and package-lock.json is not newer
+  if [ -f "$checksum_file" ] && [ ! "$package_lock" -nt "$checksum_file" ]; then
+    return 1
+  fi
+  
+  # Calculate current checksum
+  local current_checksum
+  current_checksum=$(calculate_checksum "$package_lock")
+  
+  # Check if stored checksum matches current checksum
+  if [ -f "$checksum_file" ] && [ "$(cat "$checksum_file")" = "$current_checksum" ]; then
+    return 1
+  fi
+  
+  # needs npm ci
+  return 0
+}
+
+echo "Ensuring node dependencies..."
+
+
+dir="$DEVBOX_PROJECT_ROOT"
+if needs_npm_ci "$dir"; then
+  # Install the workspace
+  echo "Installing dependencies..."
+  cd "$dir"
+  npm ci
+  cd - >/dev/null
+
+  checksum_file=$(get_checksum_file_path "$dir")
+  package_lock="$dir/package-lock.json"
+  calculate_checksum "$package_lock" > "$checksum_file"
+fi

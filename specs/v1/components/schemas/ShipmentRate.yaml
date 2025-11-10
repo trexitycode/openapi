@@ -2,6 +2,19 @@ type: object
 description: |
   **(ADDED IN v1.27)** The rate of a Shipment.
 properties:
+  name:
+    type: string
+    description: |
+      **(ADDED IN v1.31)** The name of the rate to show to the customer (if applicable)
+  description:
+    type: string
+    description: |
+      **(ADDED IN v1.31)** The description of the rate to show to the customer (if applicable)
+  serviceType:
+    type: string
+    description: |
+      **(ADDED IN v1.31)** The shipment service type associated to the shipment rate
+    example: default
   total:
     type: number
     description: The total fee in cents for delivery with taxes.

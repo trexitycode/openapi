@@ -1,0 +1,25 @@
+post:
+  operationId: shipmentReadyForPickup
+  tags: [Shipments]
+  summary: Shipment ready for pickup
+  description: |
+    Marks a shipment as ready for pickup. A shipment marked as ready for pickup will be dispatched to the first available driver.
+
+    Only shipments with the service type `direct` that are in the `draft` status can be marked as ready for pickup.
+  x-codeSamples:
+    - $ref: ../../code_samples/Shell/shipments/shipment-ready-for-pickup.yaml
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: shipmentId
+      required: true
+      schema:
+        type: string
+      description: The id of the shipment that needs to be marked as ready for pickup
+  responses:
+    '204':
+      description: Success
+    '404':
+      description: Shipment not found
