@@ -2051,7 +2051,8 @@
           "currency": {
             "type": "string",
             "enum": [
-              "CAD"
+              "CAD",
+              "USD"
             ]
           },
           "fees": {

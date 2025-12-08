@@ -12,6 +12,14 @@ properties:
     description: |
       **(ADDED IN v1.31)** The delivery service type associated to the delivery rate
     example: default
+  currency:
+    type: string
+    description: |
+      **(ADDED IN v1.32)** The currency of the rate. Before v1.32 the currency was always the local currency
+      of the pickup address. This field makes it explicitly clear the currency of the rate.
+    enum:
+      - CAD
+      - USD
   total:
     type: number
     description: The total fee in cents for delivery with taxes.

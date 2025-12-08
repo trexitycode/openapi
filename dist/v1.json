@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.31",
+    "version": "1.32",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -4581,6 +4581,14 @@
             "description": "**(ADDED IN v1.31)** The delivery service type associated to the delivery rate\n",
             "example": "default"
           },
+          "currency": {
+            "type": "string",
+            "description": "**(ADDED IN v1.32)** The currency of the rate. Before v1.32 the currency was always the local currency\nof the pickup address. This field makes it explicitly clear the currency of the rate.\n",
+            "enum": [
+              "CAD",
+              "USD"
+            ]
+          },
           "total": {
             "type": "number",
             "description": "The total fee in cents for delivery with taxes."
@@ -5020,6 +5028,14 @@
             "type": "string",
             "description": "**(ADDED IN v1.31)** The shipment service type associated to the shipment rate\n",
             "example": "default"
+          },
+          "currency": {
+            "type": "string",
+            "description": "**(ADDED IN v1.32)** The currency of the rate. Before v1.32 the currency was always the local currency\nof the pickup address. This field makes it explicitly clear the currency of the rate.\n",
+            "enum": [
+              "CAD",
+              "USD"
+            ]
           },
           "total": {
             "type": "number",
