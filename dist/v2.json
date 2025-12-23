@@ -2311,11 +2311,10 @@
         "properties": {
           "status": {
             "type": "string",
-            "description": "- `draft`: The shipment is not currently scheduled.\n- `pending`: The shipment is scheduled and waiting for courier assignment.\n- `assigned`: The shipment is assigned to a courier.\n- `in-transit`: The shipment is in transit to the destination address.\n- `delivered`: The shipment has been delivered.\n- `undeliverable`: The shipment was attempted but could not be delivered, and the shipment was returned.\n- `cancelled`: The shipment was cancelled.\n",
+            "description": "- `pending`: The shipment is awaiting pickup or delivery.\n- `pre-transit`: The courier is heading out for pickup.\n- `in-transit`: The courier has picked up the shipment and is heading out for delivery.\n- `delivered`: The shipment has been delivered.\n- `undeliverable`: The shipment was attempted but failed and the shipment was returned to the sender.\n- `cancelled`: The shipment was cancelled.\n",
             "enum": [
-              "draft",
               "pending",
-              "assigned",
+              "pre-transit",
               "in-transit",
               "delivered",
               "undeliverable",

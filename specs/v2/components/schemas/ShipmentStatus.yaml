@@ -3,17 +3,15 @@ properties:
   status:
     type: string
     description: |
-      - `draft`: The shipment is not currently scheduled.
-      - `pending`: The shipment is scheduled and waiting for courier assignment.
-      - `assigned`: The shipment is assigned to a courier.
-      - `in-transit`: The shipment is in transit to the destination address.
+      - `pending`: The shipment is awaiting pickup or delivery.
+      - `pre-transit`: The courier is heading out for pickup.
+      - `in-transit`: The courier has picked up the shipment and is heading out for delivery.
       - `delivered`: The shipment has been delivered.
-      - `undeliverable`: The shipment was attempted but could not be delivered, and the shipment was returned.
+      - `undeliverable`: The shipment was attempted but failed and the shipment was returned to the sender.
       - `cancelled`: The shipment was cancelled.
     enum:
-      - draft
       - pending
-      - assigned
+      - pre-transit
       - in-transit
       - delivered
       - undeliverable

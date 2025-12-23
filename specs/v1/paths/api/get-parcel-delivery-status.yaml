@@ -32,13 +32,15 @@ get:
                       The current delivery status of the parcel.
 
                       - `pending`: The parcel is awaiting pickup or delivery.
-                      - `in-transit`: The parcel is in transit, either out for pickup or out for delivery.
+                      - `pre-transit`: The courier is heading out for pickup. **(ADDED IN v1.33)**
+                      - `in-transit`: The courier has picked up the parcel and is heading out for delivery.
                       - `delivered`: The parcel has been delivered.
                       - `undeliverable`: The delivery was attempted but failed and the parcel was returned to the sender.
                       - `cancelled`: The parcel was cancelled.
                     type: string
                     enum:
                       - pending
+                      - pre-transit
                       - in-transit
                       - delivered
                       - undeliverable

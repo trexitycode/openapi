@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: '1.32'
+  version: '1.33'
   title: Trexity API
   license:
     name: MIT

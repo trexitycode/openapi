@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.32",
+    "version": "1.33",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -3136,10 +3136,11 @@
                       "type": "object",
                       "properties": {
                         "status": {
-                          "description": "The current delivery status of the parcel.\n\n- `pending`: The parcel is awaiting pickup or delivery.\n- `in-transit`: The parcel is in transit, either out for pickup or out for delivery.\n- `delivered`: The parcel has been delivered.\n- `undeliverable`: The delivery was attempted but failed and the parcel was returned to the sender.\n- `cancelled`: The parcel was cancelled.\n",
+                          "description": "The current delivery status of the parcel.\n\n- `pending`: The parcel is awaiting pickup or delivery.\n- `pre-transit`: The courier is heading out for pickup. **(ADDED IN v1.33)**\n- `in-transit`: The courier has picked up the parcel and is heading out for delivery.\n- `delivered`: The parcel has been delivered.\n- `undeliverable`: The delivery was attempted but failed and the parcel was returned to the sender.\n- `cancelled`: The parcel was cancelled.\n",
                           "type": "string",
                           "enum": [
                             "pending",
+                            "pre-transit",
                             "in-transit",
                             "delivered",
                             "undeliverable",
