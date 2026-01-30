@@ -10,6 +10,8 @@ info:
     email: support@trexity.com
     url: 'http://trexity.com'
   description: |
+    # This is a beta version of the API. It is not yet ready for production use.
+
     # Migrating to v2
 
     This version of the API is a major departure from v1. We normalize around the concept of a shipment
