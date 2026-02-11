@@ -1,5 +1,0 @@
-lang: shell
-label: cURL
-source: |
-  curl -X GET "https://trexity.app/api/v2/regions?addressLine1=123%20Fake%20St&city=Ottawa&provinceCode=ON&postalCode=K2G%206F2&countryCode=CA" \
-    -H "Authorization: Bearer YOUR_API_KEY" 

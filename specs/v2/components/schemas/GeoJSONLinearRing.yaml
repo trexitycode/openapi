@@ -1,6 +1,0 @@
-type: array
-description: A closed linear ring, an array of four or more positions where the first and last positions are identical. Represents the boundary of a surface or a hole in a surface.
-minItems: 4
-items:
-  $ref: ./GeoJSONPosition.yaml
-

@@ -1,5 +1,0 @@
-lang: shell
-label: cURL
-source: |
-  curl -X DELETE "https://trexity.app/api/v2/webhooks/{WEBHOOK_ID}" \
-    -H "Authorization: Bearer YOUR_API_KEY" 

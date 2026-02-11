@@ -1,5 +1,0 @@
-lang: shell
-label: cURL
-source: |
-  curl -X POST "https://trexity.app/api/v2/shipments/{SHIPMENT_ID}/cancel" \
-    -H "Authorization: Bearer YOUR_API_KEY" 

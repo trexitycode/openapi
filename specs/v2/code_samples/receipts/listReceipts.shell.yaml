@@ -1,6 +1,0 @@
-lang: shell
-label: cURL
-source: |
-  curl -X GET "https://trexity.app/api/v2/receipts/2024-01" \
-    -H "Authorization: Bearer YOUR_API_KEY" \
-    -H "Accept: application/json" 

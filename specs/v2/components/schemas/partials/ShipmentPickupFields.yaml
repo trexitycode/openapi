@@ -1,6 +1,0 @@
-allOf:
-  - type: object
-    properties:
-      pickupStartAt:
-        $ref: './../PickupStartAt.yaml'
-  - $ref: './ShipmentPickupInstructionsField.yaml'

@@ -1,4 +1,0 @@
-type: object
-properties:
-  deliveryAddress:
-    $ref: ./../AddressDetailsDTO.yaml

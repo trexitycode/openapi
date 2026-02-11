@@ -1,5 +1,0 @@
-type: array
-description: Array of linear rings
-minItems: 1
-items:
-  $ref: GeoJSONLinearRing.yaml

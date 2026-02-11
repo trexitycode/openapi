@@ -1,5 +1,0 @@
-description: Rate Limit Exceeded
-content:
-  application/json:
-    schema:
-      type: object
