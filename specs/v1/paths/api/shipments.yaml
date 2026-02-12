@@ -30,11 +30,11 @@ post:
 
     If no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.
 
-    ### Creating a Same Day shipment
+    **Creating a Same Day shipment**
 
     To create a Same Day shipment, use `default` as the value for the `serviceTypeOrRateId` field when creating the shipment.
 
-    ### Creating a Next Day shipment
+    **Creating a Next Day shipment**
 
     To create a Next Day shipment, use `nextday` as the value for the `serviceTypeOrRateId` field when creating the shipment.
 
@@ -44,7 +44,7 @@ post:
 
     If nothing is provided for the `pickupStartAt` field and the date of the request was on Mar 12, then the shipment will be scheduled for pickup for Mar 13 at 12:00 PM local time.
 
-    ### Creating a Direct shipment
+    **Creating a Direct shipment**
 
     To create a Direct shipment, use `direct` as the value for the `serviceTypeOrRateId` field when creating the shipment.
   x-codeSamples:
