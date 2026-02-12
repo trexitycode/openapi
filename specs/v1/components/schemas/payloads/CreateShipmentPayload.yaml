@@ -11,6 +11,7 @@ properties:
       - type: string
         enum:
           - default
+          - nextday
           - direct
         description: |
           **(ADDED IN v1.31)** The optional service type to use when creating the shipment.
@@ -78,9 +79,9 @@ properties:
       ~~Ignore the target delivery duration for this shipment only~~
   parcels:
     type: array
-    description: The parcels that will be delivered in this shipment
+    description: The parcel that will be delivered in this shipment. This must contain exactly one parcel.
     minItems: 1
-    maxItems: 30
+    maxItems: 1
     items:
       allOf:
         - $ref: ./ParcelPayload.yaml

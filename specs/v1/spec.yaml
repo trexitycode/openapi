@@ -54,8 +54,9 @@ info:
     ## Rating and Service Types
 
     The following service types are available and have different rating rules:
-    - `default` = The default service type known in the product as Everyday. This service type is always available.
-    - `direct` = A direct service type known in the product as Direct. This service type is only available in select markets.
+    - `default` = The default service type known in the product as Same-day.
+    - `nextday` = The next day service type known in the product as Next Day. This service can only be scheduled for pickup the next day or later at 12:00 PM local time. 
+    - `direct` = A direct service type known in the product as Direct. This service can be scheduled for pickup at any time without your operting hours.
     
     ## Parcel Status
 
