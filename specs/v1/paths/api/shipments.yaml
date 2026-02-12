@@ -30,7 +30,7 @@ post:
 
     If no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.
 
-    **Creating a Same Day shipment **
+    **Creating a Same Day shipment**
 
     To create a Same Day shipment, use `default` as the value for the `serviceTypeOrRateId` field when creating the shipment.
 
