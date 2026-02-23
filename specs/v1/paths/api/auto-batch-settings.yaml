@@ -1,0 +1,107 @@
+get:
+  operationId: getAutoBatchSettings
+  tags: [Auto Batching]
+  summary: Get Auto Batch Settings
+  description: |
+    Retrieves the auto batching configuration and all configured time slots for a merchant location.
+
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: locationId
+      required: true
+      schema:
+        type: string
+      description: Merchant location ID
+
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  locationId:
+                    type: string
+                    description: The merchant location ID
+                  settings:
+                    $ref: ../../components/schemas/AutoBatchSettings.yaml
+                  defaultSlot:
+                    type: object
+                    nullable: true
+                    description: The first slot by sort order, or null if no slots are configured
+                    allOf:
+                      - $ref: ../../components/schemas/AutoBatchSlot.yaml
+                  slots:
+                    type: array
+                    items:
+                      $ref: ../../components/schemas/AutoBatchSlot.yaml
+                    description: All configured time slots (including the default slot at index 0), ordered by sortIndex. May be an empty array.
+          examples:
+            Success:
+              value:
+                data:
+                  locationId: 'loc_abc123'
+                  settings:
+                    autoBatchingEnabled: true
+                    batchSchedule: ['monday', 'wednesday', 'friday']
+                    includeBatchPickupTimeShipments: true
+                    includeDraftShipments: false
+                    usePickupTimeStaggering: true
+                    blackoutSchedule:
+                      blackoutDates: []
+                      enabledHolidays: ['christmas']
+                      customHolidays: []
+                  defaultSlot:
+                    id: 'slot_001'
+                    cutoffTime: '10:00'
+                    pickupTime: '10:45'
+                    enabled: true
+                    sortIndex: 0
+                  slots:
+                    - id: 'slot_001'
+                      cutoffTime: '10:00'
+                      pickupTime: '10:45'
+                      enabled: true
+                      sortIndex: 0
+                    - id: 'slot_002'
+                      cutoffTime: '14:00'
+                      pickupTime: '14:45'
+                      enabled: true
+                      sortIndex: 1
+    '400':
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string }
+              code: { type: string, nullable: true }
+              params: { type: object, nullable: true }
+    '401':
+      description: Missing or invalid authentication
+    '404':
+      description: Location not found or does not belong to the authenticated merchant
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+    '500':
+      description: An internal error has occurred and the request cannot be completed.
+      content:
+        application/json:
+          schema:
+            required: [error]
+            properties:
+              error:
+                type: string

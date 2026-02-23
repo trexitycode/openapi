@@ -1,0 +1,20 @@
+description: Blackout and holiday schedule configuration for auto batching
+type: object
+properties:
+  blackoutDates:
+    type: array
+    items:
+      type: string
+    description: Specific dates when batching is disabled
+
+  enabledHolidays:
+    type: array
+    items:
+      type: string
+    description: Recognized holiday identifiers when batching is disabled
+
+  customHolidays:
+    type: array
+    items:
+      type: string
+    description: Custom holiday dates when batching is disabled

@@ -1,0 +1,44 @@
+description: Run status for a single auto batch slot on a given day
+type: object
+properties:
+  autoBatchSlotId:
+    type: string
+    description: The slot ID
+
+  cutoffTime:
+    type: string
+    description: Cutoff time in HH:mm format
+
+  pickupTime:
+    type: string
+    description: Pickup time in HH:mm format
+
+  status:
+    type: string
+    description: |
+      The current status of this slot's run.
+
+      - `disabled`: Auto batching is not enabled for the location, or this specific slot is not enabled.
+      - `waiting`: No run exists yet and the run date is today or in the future.
+      - `skipped`: No run exists and the run date is in the past.
+      - `preparing`: A run record exists but the batch operation has not started yet.
+      - `batching`: A run record exists and the batch operation is currently in progress.
+      - `completed`: A run record exists, has completed, and has no error.
+      - `failed`: A run record exists and has an error.
+    enum:
+      - waiting
+      - preparing
+      - batching
+      - completed
+      - failed
+      - skipped
+      - disabled
+
+  nextRunAt:
+    type: string
+    format: date-time
+    nullable: true
+    description: The next scheduled run datetime for this slot, or null
+
+  recentRun:
+    $ref: ./RecentRun.yaml

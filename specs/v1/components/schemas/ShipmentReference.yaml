@@ -1,0 +1,6 @@
+description: A reference to a shipment by ID
+type: object
+properties:
+  shipmentId:
+    type: string
+    description: The shipment ID

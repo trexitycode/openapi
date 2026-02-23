@@ -1,0 +1,102 @@
+get:
+  operationId: listAutoBatchRunFailedShipments
+  tags: [Auto Batching]
+  summary: List Auto Batch Run Failed Shipments
+  description: |
+    Returns a paginated list of shipment IDs that failed during an auto batch run.
+    These are the original input shipments from batch groups whose execution
+    encountered an error (e.g., routing failure) and could not be successfully batched.
+
+    If the run had no failed shipments (or was skipped), the response is an empty list.
+
+  ##############################################################################
+
+  parameters:
+    - in: path
+      name: locationId
+      required: true
+      schema:
+        type: string
+      description: Merchant location ID
+    - in: path
+      name: runId
+      required: true
+      schema:
+        type: string
+      description: Auto batch run ID
+    - in: query
+      name: page
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+        maximum: 100000
+      description: Page number (1-indexed)
+    - in: query
+      name: pageSize
+      required: false
+      schema:
+        type: integer
+        default: 50
+        minimum: 1
+        maximum: 200
+      description: Number of items per page
+
+  responses:
+    '200':
+      description: Success
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              data:
+                $ref: ../../components/schemas/PaginatedShipmentList.yaml
+          examples:
+            Success:
+              value:
+                data:
+                  data:
+                    - shipmentId: 'shp_xxx999'
+                    - shipmentId: 'shp_yyy888'
+                  total: 2
+                  page: 1
+                  pageSize: 50
+            Empty:
+              value:
+                data:
+                  data: []
+                  total: 0
+                  page: 1
+                  pageSize: 50
+    '400':
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string }
+              code: { type: string, nullable: true }
+              params: { type: object, nullable: true }
+    '401':
+      description: Missing or invalid authentication
+    '404':
+      description: Location or run not found, or does not belong to the authenticated merchant
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+    '500':
+      description: An internal error has occurred and the request cannot be completed.
+      content:
+        application/json:
+          schema:
+            required: [error]
+            properties:
+              error:
+                type: string

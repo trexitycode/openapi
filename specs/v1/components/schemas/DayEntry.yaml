@@ -1,0 +1,29 @@
+description: Auto batch run data for a single day
+type: object
+properties:
+  off:
+    type: boolean
+    description: Whether this day is not in the batch schedule or falls on a blackout date
+
+  runDate:
+    type: string
+    description: The date for this entry in YYYY-MM-DD format
+    example: '2026-02-23'
+
+  weekday:
+    type: string
+    description: Lowercase English weekday name
+    enum:
+      - monday
+      - tuesday
+      - wednesday
+      - thursday
+      - friday
+      - saturday
+      - sunday
+
+  slots:
+    type: array
+    items:
+      $ref: ./SlotRunEntry.yaml
+    description: One entry per configured slot for this location

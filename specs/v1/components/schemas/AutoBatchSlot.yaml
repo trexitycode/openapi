@@ -1,0 +1,28 @@
+description: A configured time slot for auto batching
+type: object
+properties:
+  id:
+    type: string
+    description: Unique slot identifier (UUID)
+
+  cutoffTime:
+    type: string
+    description: >
+      Time in HH:mm format (24-hour). Minutes are always one of 00, 15, 30, 45.
+      This is the deadline by which shipments must exist to be included.
+    example: '10:00'
+
+  pickupTime:
+    type: string
+    description: >
+      Time in HH:mm format (24-hour). Minutes are always one of 00, 15, 30, 45.
+      Must be at least 30 minutes after cutoffTime.
+    example: '10:45'
+
+  enabled:
+    type: boolean
+    description: Whether this slot is currently active
+
+  sortIndex:
+    type: integer
+    description: Zero-based ordering index

@@ -1,0 +1,20 @@
+description: A paginated list of shipment references
+type: object
+properties:
+  data:
+    type: array
+    items:
+      $ref: ./ShipmentReference.yaml
+    description: The page of shipment references
+
+  total:
+    type: integer
+    description: Total count of matching records across all pages
+
+  page:
+    type: integer
+    description: The current page number (1-indexed)
+
+  pageSize:
+    type: integer
+    description: The number of items per page
