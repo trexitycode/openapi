@@ -1,0 +1,68 @@
+description: A configured fulfillment slot
+type: object
+properties:
+  id:
+    type: string
+    description: Unique fulfillment slot identifier (UUID)
+
+  weekday:
+    type: string
+    description: The weekday that the pickup and delivery will take place on
+    enum:
+      - monday
+      - tuesday
+      - wednesday
+      - thursday
+      - friday
+      - saturday
+      - sunday
+
+  ordersPreparedBy:
+    type: string
+    description: >
+      Time by which orders must be prepared, in HH:mm format (24-hour),
+      or the literal value 'just_in_time'.
+    example: '10:45'
+
+  preparationTimeValue:
+    type: integer
+    description: Numeric preparation time value
+
+  preparationTimeUnit:
+    type: string
+    description: Unit of the preparation time
+    enum:
+      - minutes
+      - hours
+      - days
+
+  keepShipmentsAsDrafts:
+    type: boolean
+    description: Whether to keep created shipments as drafts
+
+  enabled:
+    type: boolean
+    description: Whether this slot is currently active
+
+  sortIndex:
+    type: integer
+    description: Zero-based ordering index
+
+  orderCutoffWeekday:
+    type: string
+    description: Weekday of the order cutoff
+    enum:
+      - monday
+      - tuesday
+      - wednesday
+      - thursday
+      - friday
+      - saturday
+      - sunday
+
+  orderCutoffTime:
+    type: string
+    description: >
+      Order cutoff time in HH:mm format (24-hour). This is the deadline
+      by which shipments must exist to be included.
+    example: '10:00'

@@ -3,7 +3,7 @@ get:
   tags: [Auto Batching]
   summary: List Auto Batch Runs
   description: |
-    Lists auto batch run status for every configured slot across a date range — either today (1 day) or a full week (7 days).
+    Lists auto batch run status for every configured fulfillment slot across a date range — either today (1 day) or a full week (7 days).
 
   ##############################################################################
 
@@ -30,6 +30,23 @@ get:
         type: string
         format: date
       description: Required when `range=week`. The Monday (or first day) of the week to query in YYYY-MM-DD format. Ignored when `range=today`.
+    - in: query
+      name: page
+      required: false
+      schema:
+        type: integer
+        default: 1
+        minimum: 1
+        maximum: 100000
+      description: Page number (1-indexed)
+    - in: query
+      name: pageSize
+      required: false
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 200
+      description: Number of items per page
 
   responses:
     '200':
@@ -72,17 +89,20 @@ get:
                       runDate: '2026-02-23'
                       weekday: 'monday'
                       slots:
-                        - autoBatchSlotId: 'slot_001'
-                          cutoffTime: '10:00'
-                          pickupTime: '10:45'
+                        - fulfillmentSlotId: 'slot_001'
+                          weekday: 'monday'
+                          ordersPreparedBy: '10:45'
+                          orderCutoffWeekday: 'monday'
+                          orderCutoffTime: '10:00'
                           status: 'completed'
                           nextRunAt: '2026-02-24T15:00:00.000Z'
-                          runId: 'run_xyz789'
-                          shipmentCount: 5
-                          error: null
-                          hasResults: true
-                          createdAt: '2026-02-23T14:55:00.000Z'
-                          completedAt: '2026-02-23T15:02:00.000Z'
+                          recentRun:
+                            runId: 'run_xyz789'
+                            shipmentCount: 5
+                            error: null
+                            hasResults: true
+                            createdAt: '2026-02-23T14:55:00.000Z'
+                            completedAt: '2026-02-23T15:02:00.000Z'
     '400':
       description: Validation error (range is missing or invalid, or range is week but weekStart is missing)
       content:

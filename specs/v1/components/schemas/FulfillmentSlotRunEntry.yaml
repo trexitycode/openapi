@@ -1,22 +1,38 @@
-description: Run status for a single auto batch slot on a given day
+description: Run status for a single fulfillment slot on a given day
 type: object
 properties:
-  autoBatchSlotId:
+  fulfillmentSlotId:
     type: string
-    description: The slot ID
+    description: The fulfillment slot ID
 
-  cutoffTime:
+  weekday:
     type: string
-    description: Cutoff time in HH:mm format
+    description: The weekday that the pickup and delivery will take place on
+    enum:
+      - monday
+      - tuesday
+      - wednesday
+      - thursday
+      - friday
+      - saturday
+      - sunday
 
-  pickupTime:
+  ordersPreparedBy:
     type: string
-    description: Pickup time in HH:mm format
+    description: Time by which orders must be prepared in HH:mm format, or 'just_in_time'
+
+  orderCutoffWeekday:
+    type: string
+    description: Weekday of the order cutoff
+
+  orderCutoffTime:
+    type: string
+    description: Order cutoff time in HH:mm format
 
   status:
     type: string
     description: |
-      The current status of this slot's run.
+      The current status of this slot's auto batch run.
 
       - `disabled`: Auto batching is not enabled for the location, or this specific slot is not enabled.
       - `waiting`: No run exists yet and the run date is today or in the future.

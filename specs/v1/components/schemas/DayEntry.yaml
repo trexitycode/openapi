@@ -7,12 +7,12 @@ properties:
 
   runDate:
     type: string
-    description: The date for this entry in YYYY-MM-DD format
+    description: The calendar date in YYYY-MM-DD format that the auto batching may run on
     example: '2026-02-23'
 
   weekday:
     type: string
-    description: Lowercase English weekday name
+    description: The weekday that the auto batching may run on
     enum:
       - monday
       - tuesday
@@ -25,5 +25,5 @@ properties:
   slots:
     type: array
     items:
-      $ref: ./SlotRunEntry.yaml
-    description: One entry per configured slot for this location
+      $ref: ./FulfillmentSlotRunEntry.yaml
+    description: One entry per configured fulfillment slot for this location associated with this weekday

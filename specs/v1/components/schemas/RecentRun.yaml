@@ -10,16 +10,21 @@ properties:
 
   shipmentCount:
     type: integer
-    description: Number of shipments included in the run. 0 if no run exists.
+    description: Number of shipments included in the run for batching.
 
   error:
     type: string
     nullable: true
-    description: Error message if the run failed, otherwise null
+    description: |
+      Error message if the run failed, otherwise null. When there is an error use the
+      [List Auto-Batch Run Failed Shipments](/#operation/listAutoBatchRunFailedShipments) endpoint to get the list of shipments that failed to be batched.
+      
 
   hasResults:
     type: boolean
-    description: Whether the run produced any created or failed shipments
+    description: |
+      Whether the run produced any created or failed shipments. When there are results use the
+      [List Auto-Batch Run Created Shipments](/#operation/listAutoBatchRunCreatedShipments) endpoint to get the list of shipments that were successfully batched.
 
   createdAt:
     type: string

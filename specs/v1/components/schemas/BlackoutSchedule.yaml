@@ -4,8 +4,18 @@ properties:
   blackoutDates:
     type: array
     items:
-      type: string
-    description: Specific dates when batching is disabled
+      oneOf:
+        - type: string
+          description: A single blackout date in YYYY-MM-DD format
+        - type: object
+          properties:
+            start:
+              type: string
+              description: Start date of the blackout range in YYYY-MM-DD format
+            end:
+              type: string
+              description: End date of the blackout range in YYYY-MM-DD format
+    description: Specific dates or date ranges when batching is disabled
 
   enabledHolidays:
     type: array
@@ -16,5 +26,18 @@ properties:
   customHolidays:
     type: array
     items:
-      type: string
-    description: Custom holiday dates when batching is disabled
+      type: object
+      properties:
+        id:
+          type: string
+          description: Unique identifier for the custom holiday
+        name:
+          type: string
+          description: Display name of the custom holiday
+        monthDay:
+          type: string
+          description: Month and day of the holiday (e.g. "12-25")
+        enabled:
+          type: boolean
+          description: Whether this custom holiday is active
+    description: Custom holidays when batching is disabled
