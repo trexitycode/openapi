@@ -299,10 +299,10 @@ tags:
     description: |
       Retrieve and manage Locations for a Trexity Merchant.
 
-  - name: Auto Batching
-    description: |
-      Manage auto batch settings, time slots, and batch run history for a merchant location.
-      Auto batching automatically groups shipments into batched shipments at configured time slots.
+  # - name: Auto Batching
+  #   description: |
+  #     Manage auto batch settings, time slots, and batch run history for a merchant location.
+  #     Auto batching automatically groups shipments into batched shipments at configured time slots.
 
   - name: Regions
     description: |
@@ -379,15 +379,15 @@ paths:
     $ref: ./paths/api/merchant-locations.yaml
   /locations/by-query:
     $ref: ./paths/api/merchant-location-by-query.yaml
-  /locations/{locationId}/auto-batch/settings:
-    $ref: ./paths/api/auto-batch-settings.yaml
-  /locations/{locationId}/auto-batch/runs:
-    $ref: ./paths/api/auto-batch-runs.yaml
-  /locations/{locationId}/auto-batch/runs/{runId}:
-    $ref: ./paths/api/auto-batch-run.yaml
-  /locations/{locationId}/auto-batch/runs/{runId}/created-shipments:
-    $ref: ./paths/api/auto-batch-run-created-shipments.yaml
-  /locations/{locationId}/auto-batch/runs/{runId}/failed-shipments:
-    $ref: ./paths/api/auto-batch-run-failed-shipments.yaml
+  # /locations/{locationId}/auto-batch/settings:
+  #   $ref: ./paths/api/auto-batch-settings.yaml
+  # /locations/{locationId}/auto-batch/runs:
+  #   $ref: ./paths/api/auto-batch-runs.yaml
+  # /locations/{locationId}/auto-batch/runs/{runId}:
+  #   $ref: ./paths/api/auto-batch-run.yaml
+  # /locations/{locationId}/auto-batch/runs/{runId}/created-shipments:
+  #   $ref: ./paths/api/auto-batch-run-created-shipments.yaml
+  # /locations/{locationId}/auto-batch/runs/{runId}/failed-shipments:
+  #   $ref: ./paths/api/auto-batch-run-failed-shipments.yaml
   /receipts/{yearMonth}:
     $ref: ./paths/api/get-receipt.yaml
