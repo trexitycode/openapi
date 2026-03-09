@@ -32,7 +32,7 @@ properties:
   status:
     type: string
     description: |
-      The current status of this slot's auto batch run.
+      The status of this slot's auto batch run.
 
       - `disabled`: Auto batching is not enabled for the location, or this specific slot is not enabled.
       - `waiting`: No run exists yet and the run date is today or in the future.
@@ -54,7 +54,7 @@ properties:
     type: string
     format: date-time
     nullable: true
-    description: The next scheduled run datetime for this slot, or null
+    description: The next scheduled auto batch run datetime for this slot, or null
 
   recentRun:
     $ref: ./RecentRun.yaml

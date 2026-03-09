@@ -5,45 +5,50 @@ allOf:
       id:
         type: string
         description: |
-          **(ADDED IN v1.31)** The ID of the rate. This can be used when creating a shipment
+          The ID of the rate. This can be used when creating a shipment
           to use this exact rate. This rate is only valid until it expires and can only be used once
           in a request to create a shipment.
       createdAt:
         type: string
         description: |
-          **(ADDED IN v1.31)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+          Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
 
           The date and time when the rate was created.
       expiresAt:
         type: string
         description: |
-          **(ADDED IN v1.31)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+          Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
 
           The date and time when the rate will expire.
   - { $ref: './Rate.yaml' }
   - type: object
     properties:
       estimateScheduledPostAt:
+        deprecated: true
         description: |
-          **(add in 1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
-
-          Note that ISO date strings are always in UTC time.
-
-          An example: 2020-07-25T10:48:08.987Z
+          **DEPRECATED AS OF v1.34**.
+          Use the `estimatePickupAt` field instead.
         type: string
       estimatePickupAt:
         description: |
-          **(add in 1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+          Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
 
           Note that ISO date strings are always in UTC time.
 
           An example: 2020-07-25T10:48:08.987Z
+
+          When not specifying the rate ID when creating a shipment, this value can be used to schedule a shipment for pickup
+          by setting the `pickupStartAt` field to this value when creating the shipment. However, the longer the time window
+          is from requesting the rate and creating the shipment, the more likely the rate will change and the `estimatePickupAt`
+          value will not be valid.
         type: string
       estimateDeliverAt:
         description: |
-          **(add in 1.10)** Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+          Date time in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
 
           Note that ISO date strings are always in UTC time.
 
           An example: 2020-07-25T10:48:08.987Z
+
+          This is the latest time that the shipment may be delivered by.
         type: string

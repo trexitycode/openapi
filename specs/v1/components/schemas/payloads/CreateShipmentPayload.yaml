@@ -31,13 +31,7 @@ properties:
     deprecated: true
     description: |
       **DEPRECATED AS OF v1.21**.
-      If provided, then an approximate pickup time will be determined based on the pickup windows and the scheduledPostAt time.
-      If a pickup time cannot be determined, then the shipment will be created as a draft and an email will be sent off to
-      the merchant asking them to schedule the shipment for pickup.
-
-      Instead to schedule a shipment for pickup/delivery use one of the following new fields:
-      1) pickup windows (pickupStartAt/pickupEndAt)
-      2) delivery windows (deliverStartAt, deliverEndAt)
+      Use the `pickupStartAt` field instead.
   pickupStartAt:
     $ref: '../PickupStartAt.yaml'
   pickupEndAt:
@@ -73,10 +67,6 @@ properties:
   ignoreTargetDeliveryDuration:
     type: boolean
     deprecated: true
-    description: |
-      **DEPRECATED AS OF v1.18**
-
-      ~~Ignore the target delivery duration for this shipment only~~
   parcels:
     type: array
     description: The parcel that will be delivered in this shipment. This must contain exactly one parcel.

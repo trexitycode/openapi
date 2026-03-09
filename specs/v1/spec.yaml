@@ -54,9 +54,21 @@ info:
     ## Rating and Service Types
 
     The following service types are available and have different rating rules:
-    - `default` = The default service type known in the product as Same-day.
-    - `nextday` = The next day service type known in the product as Next Day. This service can only be scheduled for pickup the next day or later at 12:00 PM local time. 
-    - `direct` = A direct service type known in the product as Direct. This service can be scheduled for pickup at any time without your operting hours.
+    - `default` = The default service type known in the product as Same-day. Can be scheduled for pickup at any time within your merchant location's delivery hours and Trexity's operation hours.
+    - `nextday` = The next day service type known in the product as Next Day. This service can only be scheduled for pickup the next day the or later of the shipment creation date and must be at 12:00 PM local time. 
+    - `direct` = A direct service type known in the product as Direct. This service can be scheduled for pickup at any time within your merchant location's delivery hours and Trexity's operation hours.
+
+    ## Scheduling a Shipment for Pickup
+
+    To schedule a shipment for pickup, ONLY use the `pickupStartAt` field when creating the shipment.
+    If the `pickupStartAt` field is not provided, then the shipment will not be scheduled for pickup and be left as a draft shipment.
+
+    If the `pickupStartAt` field is provided, then the shipment will be scheduled for pickup at the provided date-time, provided it is within your merchant location's delivery hours and Trexity's operation hours.
+
+    ### Cutoff Time
+
+    Trexity does not have a concrete cutoff time for scheduling a shipment for pickup. Trexity uses a dynamic range that looks at the shipment delivery duration, distance, and adds a buffer time to determine a reasonable cutoff time when shipments are scheduled for pickup. However, we recommend **5:00 PM local time** as a cutoff time when scheduling a shipment for pickup
+    to ensure that we can deliver the shipment before 8:00 PM local time.
     
     ## Parcel Status
 
