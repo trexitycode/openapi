@@ -5,6 +5,10 @@ get:
   description: |
     Lists auto batch run status for every configured fulfillment slot across a date range — either today (1 day) or a full week (7 days).
 
+    Use this endpoint to poll for the status of auto batch runs for a given week or today.
+
+    Auto batch runs are only kept for a period of 7 days.
+
   ##############################################################################
 
   parameters:

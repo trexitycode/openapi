@@ -26,6 +26,18 @@ properties:
       Whether the run produced any created or failed shipments. When there are results use the
       [List Auto-Batch Run Created Shipments](/#operation/listAutoBatchRunCreatedShipments) endpoint to get the list of shipments that were successfully batched.
 
+  createdShipmentCount:
+    type: integer
+    description: Number of shipments that were successfully created batch shipments during the run
+
+  scheduledShipmentCount:
+    type: integer
+    description: Number of shipments that were unbatched but were scheduled during the run
+
+  failedShipmentCount:
+    type: integer
+    description: Number of shipments that failed to batch during the run
+
   createdAt:
     type: string
     format: date-time
