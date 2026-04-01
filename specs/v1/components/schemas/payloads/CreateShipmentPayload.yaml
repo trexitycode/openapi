@@ -13,9 +13,17 @@ properties:
           - default
           - nextday
           - direct
+          - draft
         description: |
           **(ADDED IN v1.31)** The optional service type to use when creating the shipment.
-          If not provided, the `default` service type will be used.
+          Allowed values:
+          - `default`
+          - `direct`
+          - `nextday`
+          - `draft` = Creates the shipment as a draft with no service level. The shipment will have no rate and cannot be posted or scheduled until a service type is selected. Useful for ingesting orders that will be batched or assigned a service level later.
+
+          If not provided, the API uses the merchant location's default service type.
+          If that default is set to `draft`, shipments are created as drafts by default.
       - type: string
         format: uuid
         description: |

@@ -24,6 +24,12 @@ post:
     **Creating a Direct shipment**
 
     To create a Direct shipment, use `direct` as the value for the `serviceTypeOrRateId` field when creating the shipment.
+
+    **Creating a Draft shipment**
+
+    To create a Draft shipment, use `draft` as the value for the `serviceTypeOrRateId` field when creating the shipment.
+
+    When `serviceTypeOrRateId` is `draft`, the shipment is created as a draft with no service level selected, no pricing calculated, and no eligibility checks performed. The shipment cannot be scheduled or posted until a real service type is selected.
   x-codeSamples:
     - $ref: ../../code_samples/Shell/shipments/create-shipment.yaml
 
@@ -95,7 +101,10 @@ post:
                     - `missing-profile-details` = The merchant has an incomplete profile
                     - `no-shipment-rate` = A shipment rate failed to be calculated due to delivery or pickup address geofencing error
     '200':
-      description: Success
+      description: |
+        Success.
+
+        When `serviceTypeOrRateId` is `draft`, the created shipment is in draft status. Shipment pricing fields in subsequent shipment responses, including `rate.total`, `rate.totalWithoutTaxes`, and `rate.totalTaxes`, will be `0` until a real service type is selected.
       content:
         application/json:
           schema:
