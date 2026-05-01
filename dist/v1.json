@@ -1830,7 +1830,7 @@
           "Shipments"
         ],
         "summary": "Create a shipment",
-        "description": "Create a new shipment.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n\n**Creating a Same Day shipment**\n\nTo create a Same Day shipment, use `default` as the value for the `serviceTypeOrRateId` field when creating the shipment.\n\n**Creating a Next Day shipment**\n\nTo create a Next Day shipment, use `nextday` as the value for the `serviceTypeOrRateId` field when creating the shipment.\n\nSchedule a Next Day shipment by optionally providing a value for the `pickupStartAt` field. If the pickup date is tomorrow or later then the time will be overridden to 12:00 PM local time and only the date will be preserved. When no pickup time is provided then the shipment will be scheduled for pickup the next day at 12:00 PM local time. Any other value will be rejected.\n\nIf the value for the `pickupStartAt` field was set to Mar 14 at 10:00 AM local time and the date of the request was on Mar 12, then the shipment will be scheduled for pickup on Mar 14 at 12:00 PM local time.\n\nIf nothing is provided for the `pickupStartAt` field and the date of the request was on Mar 12, then the shipment will be scheduled for pickup for Mar 13 at 12:00 PM local time.\n\n**Creating a Direct shipment**\n\nTo create a Direct shipment, use `direct` as the value for the `serviceTypeOrRateId` field when creating the shipment.\n",
+        "description": "Create a new shipment.\n\nIf no `pickupAddress` is specified then the merchant's business address will be used as the pickup address.\n\n**Creating a Same Day shipment**\n\nTo create a Same Day shipment, use `default` as the value for the `serviceTypeOrRateId` field when creating the shipment.\n\n**Creating a Next Day shipment**\n\nTo create a Next Day shipment, use `nextday` as the value for the `serviceTypeOrRateId` field when creating the shipment.\n\nSchedule a Next Day shipment by optionally providing a value for the `pickupStartAt` field. If the pickup date is tomorrow or later then the time will be overridden to 12:00 PM local time and only the date will be preserved. When no pickup time is provided then the shipment will be scheduled for pickup the next day at 12:00 PM local time. Any other value will be rejected.\n\nIf the value for the `pickupStartAt` field was set to Mar 14 at 10:00 AM local time and the date of the request was on Mar 12, then the shipment will be scheduled for pickup on Mar 14 at 12:00 PM local time.\n\nIf nothing is provided for the `pickupStartAt` field and the date of the request was on Mar 12, then the shipment will be scheduled for pickup for Mar 13 at 12:00 PM local time.\n\n**Creating a Direct shipment**\n\nTo create a Direct shipment, use `direct` as the value for the `serviceTypeOrRateId` field when creating the shipment.\n\n**Creating a Draft shipment**\n\nTo create a Draft shipment, use `draft` as the value for the `serviceTypeOrRateId` field when creating the shipment.\n\nWhen `serviceTypeOrRateId` is `draft`, the shipment is created as a draft with no service level selected, no pricing calculated, and no eligibility checks performed. The shipment cannot be scheduled or posted until a real service type is selected.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -1885,7 +1885,7 @@
         },
         "responses": {
           "200": {
-            "description": "Success",
+            "description": "Success.\n\nWhen `serviceTypeOrRateId` is `draft`, the created shipment is in draft status. Shipment pricing fields in subsequent shipment responses, including `rate.total`, `rate.totalWithoutTaxes`, and `rate.totalTaxes`, will be `0` until a real service type is selected.\n",
             "content": {
               "application/json": {
                 "schema": {
@@ -6354,9 +6354,10 @@
                 "enum": [
                   "default",
                   "nextday",
-                  "direct"
+                  "direct",
+                  "draft"
                 ],
-                "description": "**(ADDED IN v1.31)** The optional service type to use when creating the shipment.\nIf not provided, the `default` service type will be used.\n"
+                "description": "**(ADDED IN v1.31)** The optional service type to use when creating the shipment.\nAllowed values:\n- `default`\n- `direct`\n- `nextday`\n- `draft` = Creates the shipment as a draft with no service level. The shipment will have no rate and cannot be posted or scheduled until a service type is selected. Useful for ingesting orders that will be batched or assigned a service level later.\n\nIf not provided, the API uses the merchant location's default service type.\nIf that default is set to `draft`, shipments are created as drafts by default.\n"
               },
               {
                 "type": "string",
