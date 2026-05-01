@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.35",
+    "version": "1.36",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -6012,6 +6012,10 @@
           "secondsFromPickupToDelivery": {
             "type": "number",
             "description": "If a driver has accpeted, the estimated seconds it will take the driver to arrive at the pickup address."
+          },
+          "trackingNumber": {
+            "type": "string",
+            "description": "**(ADDED IN v1.36)** The tracking number of the parcel.\n\nThis is the unique tracking number of the parcel that can be used to cosntruct a user-facing tracking URL.\n\nhttps://tracking.trexity.com?t={trackingNumber}\n"
           }
         }
       },
