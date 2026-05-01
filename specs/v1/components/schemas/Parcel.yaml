@@ -122,3 +122,11 @@ properties:
   secondsFromPickupToDelivery:
     type: number
     description: If a driver has accpeted, the estimated seconds it will take the driver to arrive at the pickup address.
+  trackingNumber:
+    type: string
+    description: |
+      **(ADDED IN v1.36)** The tracking number of the parcel.
+
+      This is the unique tracking number of the parcel that can be used to cosntruct a user-facing tracking URL.
+
+      https://tracking.trexity.com?t={trackingNumber}
