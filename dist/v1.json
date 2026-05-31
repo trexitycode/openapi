@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.36",
+    "version": "1.37",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -6027,6 +6027,12 @@
             "type": "string",
             "description": "Unique identifier of the Shipment in Trexity"
           },
+          "routeIdentifier": {
+            "type": "string",
+            "description": "**(ADDED IN v1.37)**\nTrexity operational route identifier used for label, driver, and support workflows.\nThis value is assigned when route labels are generated. It is sequenced per merchant\nlocation, and local pickup day.\n\nThis field is intended for display and reconciliation only. It is not globally\nunique, may be reused across different merchant locations or pickup dates, and may\nbe null before an identifier has been assigned. Do not use this value as a shipment\nID, delivery ID, lookup key, or source of pickup-time ordering.\n",
+            "nullable": true,
+            "example": "12"
+          },
           "serviceType": {
             "type": "string",
             "description": "The service type of the shipment",
@@ -7112,6 +7118,21 @@
                   "failed",
                   "skipped"
                 ]
+              },
+              "skipReason": {
+                "type": "string",
+                "enum": [
+                  "same-cutoff-run"
+                ],
+                "description": "**(ADDED IN v1.37)**\nPresent when this fulfillment slot did not create its own auto-batch run\nbecause another fulfillment slot with the same order cutoff was selected\nby the scheduler. When set to `same-cutoff-run`, the slot status will be\nskipped and `coveredByRunId` will identify the run that covered this cutoff,\nand `coveredByFulfillmentSlotId` will identify the fulfillment slot that created the run.\n"
+              },
+              "coveredByRunId": {
+                "type": "string",
+                "description": "**(ADDED IN v1.37)**\nID of the auto-batch run that covered this slot's order cutoff. Present\nonly when skipReason is `same-cutoff-run`.\n"
+              },
+              "coveredByFulfillmentSlotId": {
+                "type": "string",
+                "description": "**(ADDED IN v1.37)**\nID of the fulfillment slot that created the auto-batch run for this shared\norder cutoff. Present only when skipReason is `same-cutoff-run`.\n"
               },
               "shipmentCount": {
                 "type": "integer",
