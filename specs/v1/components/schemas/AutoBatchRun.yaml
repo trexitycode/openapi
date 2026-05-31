@@ -54,6 +54,29 @@ properties:
           - completed
           - failed
           - skipped
+      skipReason:
+        type: string
+        enum:
+          - same-cutoff-run
+        description: |
+          **(ADDED IN v1.37)**
+          Present when this fulfillment slot did not create its own auto-batch run
+          because another fulfillment slot with the same order cutoff was selected
+          by the scheduler. When set to `same-cutoff-run`, the slot status will be
+          skipped and `coveredByRunId` will identify the run that covered this cutoff,
+          and `coveredByFulfillmentSlotId` will identify the fulfillment slot that created the run.
+      coveredByRunId:
+        type: string
+        description: |
+          **(ADDED IN v1.37)**
+          ID of the auto-batch run that covered this slot's order cutoff. Present
+          only when skipReason is `same-cutoff-run`.
+      coveredByFulfillmentSlotId:
+        type: string
+        description: |
+          **(ADDED IN v1.37)**
+          ID of the fulfillment slot that created the auto-batch run for this shared
+          order cutoff. Present only when skipReason is `same-cutoff-run`.
       shipmentCount:
         type: integer
         description: Total number of shipments that were included in the run

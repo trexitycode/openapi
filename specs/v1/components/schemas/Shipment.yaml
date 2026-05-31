@@ -4,6 +4,20 @@ properties:
   id:
     type: string
     description: Unique identifier of the Shipment in Trexity
+  routeIdentifier:
+    type: string
+    description: |
+      **(ADDED IN v1.37)**
+      Trexity operational route identifier used for label, driver, and support workflows.
+      This value is assigned when route labels are generated. It is sequenced per merchant
+      location, and local pickup day.
+
+      This field is intended for display and reconciliation only. It is not globally
+      unique, may be reused across different merchant locations or pickup dates, and may
+      be null before an identifier has been assigned. Do not use this value as a shipment
+      ID, delivery ID, lookup key, or source of pickup-time ordering.
+    nullable: true
+    example: '12'
   serviceType:
     type: string
     description: The service type of the shipment
