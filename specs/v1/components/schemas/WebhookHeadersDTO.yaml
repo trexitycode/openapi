@@ -1,0 +1,6 @@
+description: Custom headers to add to a webhook.
+type: object
+required: [headers]
+properties:
+  headers:
+    $ref: ./WebhookHeadersBase.yaml

@@ -1,0 +1,17 @@
+type: object
+maxProperties: 10
+additionalProperties:
+  type: string
+description: |
+  Custom HTTP header names mapped to their string values. A webhook may have no
+  more than 10 custom headers.
+
+  `Authorization` is treated as sensitive: its value is encrypted at rest and
+  masked when read. Sensitive and reserved-name comparisons are
+  case-insensitive.
+
+  The following names are reserved and rejected:
+  `content-type`, `content-length`, `host`, `connection`,
+  `transfer-encoding`, `te`, `trailer`, `upgrade`, `expect`, `keep-alive`,
+  `webhook-id`, `webhook-timestamp`, and `webhook-signature`. Names beginning
+  with `x-trexity-` or `proxy-` are also rejected.

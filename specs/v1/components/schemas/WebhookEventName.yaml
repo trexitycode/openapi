@@ -13,6 +13,9 @@ enum:
   - shipment.cancelled
   - shipment.driver.renounced
   - shipment.on_hold
+  - parcel.created
+  - parcel.updated
+  - parcel.deleted
   - parcel.picked_up
   - parcel.delivered
   - parcel.returning

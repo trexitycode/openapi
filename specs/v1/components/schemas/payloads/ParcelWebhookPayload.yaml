@@ -1,15 +1,30 @@
-description: Webhook payload during a parcel event.
-required: [data, timestamp]
+description: |
+  Webhook payload during a parcel event. Trexity sends complete entity data in
+  `data`, not a thin payload.
+type: object
+additionalProperties: false
+required: [data, timestamp, type]
 properties:
+  type:
+    description: |
+      Event name. This is the same value sent in the deprecated
+      `x-trexity-event-name` header.
+    allOf:
+      - $ref: ../WebhookEventName.yaml
   timestamp:
     description: |
-      **(ADDED IN v1.11)** Date time the event took place in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ
+      ISO-8601 date-time when the event occurred, with millisecond resolution.
+      This value remains stable across delivery retries and should be used for
+      event ordering instead of the deprecated `x-trexity-webhook-order-id`
+      header. Two events occurring in the same millisecond have the same
+      timestamp and are unordered relative to each other.
 
-      Note that ISO date strings are always in UTC time.
-
-      An example: 2020-07-25T10:48:08.987Z
+      ISO date strings are in UTC. Example: `2020-07-25T10:48:08.987Z`.
     type: string
+    format: date-time
   data:
+    type: object
+    required: [shipmentId, deliveryIndex, orderUuid, parcel]
     properties:
       shipmentId:
         type: string

@@ -1,0 +1,83 @@
+parameters:
+  - in: path
+    name: webhookId
+    required: true
+    description: Registered webhook ID.
+    schema:
+      type: string
+
+get:
+  operationId: getWebhookHeaders
+  tags: [Webhooks]
+  summary: Get webhook custom headers
+  description: |
+    Gets the custom headers configured for a webhook. Sensitive values are
+    returned as `********` and are never returned in plaintext.
+  responses:
+    '200':
+      description: Webhook custom headers.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [data]
+            properties:
+              data:
+                $ref: ../../components/schemas/WebhookHeaders.yaml
+    '404':
+      description: Webhook is not found.
+    '500':
+      description: An internal error has occurred and the request cannot be completed.
+
+put:
+  operationId: addWebhookHeaders
+  tags: [Webhooks]
+  summary: Add webhook custom headers
+  description: |
+    Adds custom headers to a webhook. This operation is add-only: attempting to
+    add a header name that already exists returns a `400` response.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/WebhookHeadersDTO.yaml
+  responses:
+    '204':
+      description: Webhook custom headers were added.
+    '400':
+      description: |
+        The request is invalid, a header already exists, a name is reserved, or
+        the webhook would exceed 10 custom headers.
+    '404':
+      description: Webhook is not found.
+    '500':
+      description: An internal error has occurred and the request cannot be completed.
+
+patch:
+  operationId: updateWebhookHeaders
+  tags: [Webhooks]
+  summary: Update or delete webhook custom headers
+  description: |
+    Updates existing custom headers and deletes named headers. Every name in
+    `headers` must already exist; an unknown update name returns a `400`
+    response. A name appearing in both `headers` and `deleteHeaders` also
+    returns `400`. Deletes are idempotent, so deleting an unknown name
+    succeeds.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: ../../components/schemas/WebhookHeadersPatchDTO.yaml
+  responses:
+    '204':
+      description: Webhook custom headers were updated or deleted.
+    '400':
+      description: |
+        The request is invalid, an updated header does not exist, a name appears
+        in both request fields, or a name is reserved.
+    '404':
+      description: Webhook is not found.
+    '500':
+      description: An internal error has occurred and the request cannot be completed.

@@ -1,0 +1,13 @@
+description: Custom headers to update or delete from a webhook.
+type: object
+required: [headers, deleteHeaders]
+properties:
+  headers:
+    $ref: ./WebhookHeadersBase.yaml
+  deleteHeaders:
+    type: array
+    description: |
+      Header names to delete. Deleting a name that does not exist succeeds.
+      A header name cannot appear in both `headers` and `deleteHeaders`.
+    items:
+      type: string

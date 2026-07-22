@@ -200,6 +200,70 @@ tags:
     description: |
       Retrieve and manage webhooks for a Trexity Merchant.
 
+      ## Delivery format
+
+      Trexity sends full payloads containing complete entity data, not thin
+      payloads. Every webhook request body has exactly this envelope:
+
+      ```json
+      {
+        "data": {
+          "...": "complete entity data"
+        },
+        "timestamp": "2026-07-21T18:42:10.123Z",
+        "type": "shipment.created"
+      }
+      ```
+
+      - `type` is the event name and has the same value as the deprecated
+        `x-trexity-event-name` header.
+      - `timestamp` is the ISO-8601 time the event occurred, with millisecond
+        resolution. It is stable across retries and should be used for event
+        ordering. Two events in the same millisecond have the same timestamp
+        and are unordered relative to each other.
+
+      ## Delivery headers
+
+      Every delivery follows the
+      [Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks)
+      and includes:
+
+      - `webhook-id`: a UUID v4 that is stable across all retry attempts for the
+        same delivery. Use it as the idempotency key.
+      - `webhook-timestamp`: the Unix timestamp in seconds for that delivery
+        attempt. It changes on each retry.
+      - `webhook-signature`: one or more space-delimited signatures in
+        `v1,<base64>` format. Parsers must handle multiple signatures.
+
+      The signature is HMAC-SHA256 over
+      `${webhook-id}.${webhook-timestamp}.${raw request body}`, keyed with the
+      raw secret bytes.
+
+      The deprecated `x-trexity-signature`, `x-trexity-event-name`, and
+      `x-trexity-webhook-order-id` headers continue to be sent for backwards
+      compatibility. No removal date has been announced.
+
+      ## Retries and idempotency
+
+      Webhook delivery is at-least-once. A network error or any non-2xx response
+      triggers roughly 10 attempts with jittered backoff, so receivers can see
+      duplicate deliveries.
+
+      Deduplicate on `webhook-id`, which is identical across attempts. The raw
+      payload bytes are also identical; only `webhook-timestamp` and
+      `webhook-signature` change for each retry attempt.
+
+      ## Custom headers
+
+      A webhook may have up to 10 custom headers. Create-time headers are
+      optional, and configured headers are otherwise managed through
+      `/webhooks/{webhookId}/headers`. The list-webhooks response does not
+      include custom header data.
+
+      `Authorization` is sensitive: its value is encrypted at rest and returned
+      as `********` when headers are read. Sensitive and reserved-name checks
+      are case-insensitive.
+
       ## Parcel Events
 
       A Shipment is a container of parcels, each with their own delivery address.
@@ -263,37 +327,85 @@ tags:
 
       ## Verifying Webhook Requests
 
-      All webhook requests have a header that contains a signature signed with the Trexity Merchant's
-      webhook secret as found in their "Trexity API" settings. To verify the signature take the raw
-      request body as text and create a SHA256 HMAC signed with the merchant's webhook secret and covert to hex.
+      Fetch the signing secrets from `GET /webhooks/secret-key`, then pass
+      `standardWebhooksSecretKey` to a
+      [Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks/tree/main/libraries).
+      This value has the format `whsec_<base64>`.
 
-      Example:
+      > **WARNING:** Never pass the legacy `secretKey` to a Standard Webhooks
+      > library. `secretKey` is itself valid base64, so the library silently
+      > derives a different key and every verification fails with no obvious
+      > configuration error. Always use `standardWebhooksSecretKey`.
+
+      Verify the signature over the raw request body bytes before parsing JSON.
+      Re-serializing a parsed body changes its bytes and breaks verification.
+      For example, the official JavaScript library can be used with Express as
+      follows:
+
+      ```js
+      import express from 'express'
+      import { Webhook } from 'standardwebhooks'
+
+      const app = express()
+      const verifier = new Webhook(
+        process.env.TREXITY_STANDARD_WEBHOOK_SECRET
+      )
+
+      app.post(
+        '/trexity/webhooks',
+        express.raw({ type: 'application/json' }),
+        async (req, res) => {
+          let event
+
+          try {
+            event = verifier.verify(req.body, {
+              'webhook-id': req.get('webhook-id'),
+              'webhook-timestamp': req.get('webhook-timestamp'),
+              'webhook-signature': req.get('webhook-signature')
+            })
+          } catch {
+            return res.sendStatus(403)
+          }
+
+          const deliveryId = req.get('webhook-id')
+          // Atomically skip deliveryId if it has already been processed.
+          await processTrexityEvent(event, deliveryId)
+          return res.sendStatus(204)
+        }
+      )
       ```
-      // nodejs
-      const text = await new Promise((resolve, reject) => {
-        const buff = []
-        req.setEncoding('utf8')
-        req.on('data', chunk => (buff.push(chunk)))
-        req.once('end', resolve(buff.join('')))
-        req.once('error', reject)
-      })
 
-      const sig = require('crypto')
-        .createHmac('sha256', process.env.TRX_MERCH_WEBHOOK_SECRET)
-        .update(text)
-        .digest('hex')
+      Standard Webhooks libraries handle space-delimited signature lists and
+      enforce a timestamp-tolerance window. The official JavaScript library
+      rejects timestamps more than five minutes in the past or future. Keep
+      receiver clocks synchronized and do not disable this protection.
 
-      const isValid = req.headers['x-trexity-signature'] === sig
+      ### Legacy verification appendix
 
-      if (!isValid) {
-        res.statusCode = 403
-        res.end('Forbidden', 'utf8')
-        return
-      }
+      New integrations should use Standard Webhooks. For existing integrations,
+      `x-trexity-signature` is a hex HMAC-SHA256 over the raw request body using
+      the legacy `secretKey`. It can be verified as follows:
 
-      const body = JSON.parse(body)
-      // ...
+      ```js
+      import { createHmac, timingSafeEqual } from 'node:crypto'
+
+      const expected = createHmac(
+        'sha256',
+        process.env.TREXITY_LEGACY_WEBHOOK_SECRET
+      ).update(req.body).digest()
+
+      const supplied = Buffer.from(
+        req.get('x-trexity-signature') ?? '',
+        'hex'
+      )
+
+      const isValid =
+        supplied.length === expected.length &&
+        timingSafeEqual(supplied, expected)
       ```
+
+      The legacy header continues to be sent for backwards compatibility, but
+      no removal date has been announced.
 
   - name: Locations
     description: |
@@ -373,8 +485,12 @@ paths:
     $ref: ./paths/api/get-parcel-label.yaml
   /webhooks:
     $ref: ./paths/api/webhooks.yaml
+  /webhooks/secret-key:
+    $ref: ./paths/api/webhook-secret-key.yaml
   /webhooks/{webhookId}:
     $ref: ./paths/api/delete-webhook.yaml
+  /webhooks/{webhookId}/headers:
+    $ref: ./paths/api/webhook-headers.yaml
   /locations:
     $ref: ./paths/api/merchant-locations.yaml
   /locations/by-query:

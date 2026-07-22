@@ -59,7 +59,7 @@
     },
     {
       "name": "Webhooks",
-      "description": "Retrieve and manage webhooks for a Trexity Merchant.\n\n## Parcel Events\n\nA Shipment is a container of parcels, each with their own delivery address.\nHowever, the Shipment has a single pickup address. As activity occurs on a\nparcel the Shipment's `currentStatus` oscilates between `OUT_FOR_DELIVERY`,\n`ARRIVED_AT_DELIVERY` and `DELIVERED`. However, the Shipment alone doesn't\ninform you of what parcel the status is for.\n\nTo listen to parcel events listen to the following webhooks:\n- `parcel.created` The parcel has been created during shipment creation or update\n- `parcel.updated` The parcel has been updated during shipment update\n- `parcel.deleted` The parcel has been deleted during shipment udpate\n- `parcel.picked_up` The driver has scanned and picked up a parcel\n- `parcel.delivered` The driver has scanned and delivered a parcel\n- `parcel.returning` The driver is returning a parcel\n- `parcel.returned` The driver has returned a parcel to pickup address\n\nThe request payload of these webhook events indicate the parcel that is currently\nbeing affected.\n\n## Storing The shipmentId\n\nIf you have the need to update pickup-related information such as the pickup address, POD settings,\nor the pickup instructions, or you are polling the shipment endpoints for the status of the shipment\nthen you will need to store and reference the `shipmentId`. However, the `shipmentId` can change for\na parcel if the parcel is moved, cloned or bundled. You can re-map your orders/parcels by listening to\nthe `shipment.created` webhook.\n\n> You will need to ensure that you provide a value for a parcel's `externalId` field when you crate a shipment.\n> This field is intended to be an identifier that references back to your system.\n\n```js\n// This sample code uses Nodejs with Express\nfunction trexity_shipmentCreated (req, res, next) {\n  const shipmentId = req.body.data.id\n  const parcels = body.parcels\n  const promises = []\n\n  for (const parcel of parcels) {\n    const orderId = parcel.externalId\n\n    // Generally this is where you would update the Trexity shipment ID associated to your order.\n    //\n    // For example update the metadata associated to your order where the orders_metadata table\n    // has at least the following columns: order_id, key, and value, and there is a unique constraint\n    // on the order_id:key column pair. The end result is that the metadata field will be upserted.\n    const promise = executeParameterizedSql(`\n      INSERT INTO orders_metadata (order_id, key, value)\n      VALUES ($1, 'trexity_shipment_id', $2)\n      ON CONFLICT\n      DO UPDATE set value = EXCLUDED.value\n    `, [orderId, shipmentId])\n\n    promises.push(promise)\n  }\n\n  Promise.allSettled(promises)\n    .then(() => res.status(200).json({}))\n}\n```\n\n## Verifying Webhook Requests\n\nAll webhook requests have a header that contains a signature signed with the Trexity Merchant's\nwebhook secret as found in their \"Trexity API\" settings. To verify the signature take the raw\nrequest body as text and create a SHA256 HMAC signed with the merchant's webhook secret and covert to hex.\n\nExample:\n```\n// nodejs\nconst text = await new Promise((resolve, reject) => {\n  const buff = []\n  req.setEncoding('utf8')\n  req.on('data', chunk => (buff.push(chunk)))\n  req.once('end', resolve(buff.join('')))\n  req.once('error', reject)\n})\n\nconst sig = require('crypto')\n  .createHmac('sha256', process.env.TRX_MERCH_WEBHOOK_SECRET)\n  .update(text)\n  .digest('hex')\n\nconst isValid = req.headers['x-trexity-signature'] === sig\n\nif (!isValid) {\n  res.statusCode = 403\n  res.end('Forbidden', 'utf8')\n  return\n}\n\nconst body = JSON.parse(body)\n// ...\n```\n"
+      "description": "Retrieve and manage webhooks for a Trexity Merchant.\n\n## Delivery format\n\nTrexity sends full payloads containing complete entity data, not thin\npayloads. Every webhook request body has exactly this envelope:\n\n```json\n{\n  \"data\": {\n    \"...\": \"complete entity data\"\n  },\n  \"timestamp\": \"2026-07-21T18:42:10.123Z\",\n  \"type\": \"shipment.created\"\n}\n```\n\n- `type` is the event name and has the same value as the deprecated\n  `x-trexity-event-name` header.\n- `timestamp` is the ISO-8601 time the event occurred, with millisecond\n  resolution. It is stable across retries and should be used for event\n  ordering. Two events in the same millisecond have the same timestamp\n  and are unordered relative to each other.\n\n## Delivery headers\n\nEvery delivery follows the\n[Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks)\nand includes:\n\n- `webhook-id`: a UUID v4 that is stable across all retry attempts for the\n  same delivery. Use it as the idempotency key.\n- `webhook-timestamp`: the Unix timestamp in seconds for that delivery\n  attempt. It changes on each retry.\n- `webhook-signature`: one or more space-delimited signatures in\n  `v1,<base64>` format. Parsers must handle multiple signatures.\n\nThe signature is HMAC-SHA256 over\n`${webhook-id}.${webhook-timestamp}.${raw request body}`, keyed with the\nraw secret bytes.\n\nThe deprecated `x-trexity-signature`, `x-trexity-event-name`, and\n`x-trexity-webhook-order-id` headers continue to be sent for backwards\ncompatibility. No removal date has been announced.\n\n## Retries and idempotency\n\nWebhook delivery is at-least-once. A network error or any non-2xx response\ntriggers roughly 10 attempts with jittered backoff, so receivers can see\nduplicate deliveries.\n\nDeduplicate on `webhook-id`, which is identical across attempts. The raw\npayload bytes are also identical; only `webhook-timestamp` and\n`webhook-signature` change for each retry attempt.\n\n## Custom headers\n\nA webhook may have up to 10 custom headers. Create-time headers are\noptional, and configured headers are otherwise managed through\n`/webhooks/{webhookId}/headers`. The list-webhooks response does not\ninclude custom header data.\n\n`Authorization` is sensitive: its value is encrypted at rest and returned\nas `********` when headers are read. Sensitive and reserved-name checks\nare case-insensitive.\n\n## Parcel Events\n\nA Shipment is a container of parcels, each with their own delivery address.\nHowever, the Shipment has a single pickup address. As activity occurs on a\nparcel the Shipment's `currentStatus` oscilates between `OUT_FOR_DELIVERY`,\n`ARRIVED_AT_DELIVERY` and `DELIVERED`. However, the Shipment alone doesn't\ninform you of what parcel the status is for.\n\nTo listen to parcel events listen to the following webhooks:\n- `parcel.created` The parcel has been created during shipment creation or update\n- `parcel.updated` The parcel has been updated during shipment update\n- `parcel.deleted` The parcel has been deleted during shipment udpate\n- `parcel.picked_up` The driver has scanned and picked up a parcel\n- `parcel.delivered` The driver has scanned and delivered a parcel\n- `parcel.returning` The driver is returning a parcel\n- `parcel.returned` The driver has returned a parcel to pickup address\n\nThe request payload of these webhook events indicate the parcel that is currently\nbeing affected.\n\n## Storing The shipmentId\n\nIf you have the need to update pickup-related information such as the pickup address, POD settings,\nor the pickup instructions, or you are polling the shipment endpoints for the status of the shipment\nthen you will need to store and reference the `shipmentId`. However, the `shipmentId` can change for\na parcel if the parcel is moved, cloned or bundled. You can re-map your orders/parcels by listening to\nthe `shipment.created` webhook.\n\n> You will need to ensure that you provide a value for a parcel's `externalId` field when you crate a shipment.\n> This field is intended to be an identifier that references back to your system.\n\n```js\n// This sample code uses Nodejs with Express\nfunction trexity_shipmentCreated (req, res, next) {\n  const shipmentId = req.body.data.id\n  const parcels = body.parcels\n  const promises = []\n\n  for (const parcel of parcels) {\n    const orderId = parcel.externalId\n\n    // Generally this is where you would update the Trexity shipment ID associated to your order.\n    //\n    // For example update the metadata associated to your order where the orders_metadata table\n    // has at least the following columns: order_id, key, and value, and there is a unique constraint\n    // on the order_id:key column pair. The end result is that the metadata field will be upserted.\n    const promise = executeParameterizedSql(`\n      INSERT INTO orders_metadata (order_id, key, value)\n      VALUES ($1, 'trexity_shipment_id', $2)\n      ON CONFLICT\n      DO UPDATE set value = EXCLUDED.value\n    `, [orderId, shipmentId])\n\n    promises.push(promise)\n  }\n\n  Promise.allSettled(promises)\n    .then(() => res.status(200).json({}))\n}\n```\n\n## Verifying Webhook Requests\n\nFetch the signing secrets from `GET /webhooks/secret-key`, then pass\n`standardWebhooksSecretKey` to a\n[Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks/tree/main/libraries).\nThis value has the format `whsec_<base64>`.\n\n> **WARNING:** Never pass the legacy `secretKey` to a Standard Webhooks\n> library. `secretKey` is itself valid base64, so the library silently\n> derives a different key and every verification fails with no obvious\n> configuration error. Always use `standardWebhooksSecretKey`.\n\nVerify the signature over the raw request body bytes before parsing JSON.\nRe-serializing a parsed body changes its bytes and breaks verification.\nFor example, the official JavaScript library can be used with Express as\nfollows:\n\n```js\nimport express from 'express'\nimport { Webhook } from 'standardwebhooks'\n\nconst app = express()\nconst verifier = new Webhook(\n  process.env.TREXITY_STANDARD_WEBHOOK_SECRET\n)\n\napp.post(\n  '/trexity/webhooks',\n  express.raw({ type: 'application/json' }),\n  async (req, res) => {\n    let event\n\n    try {\n      event = verifier.verify(req.body, {\n        'webhook-id': req.get('webhook-id'),\n        'webhook-timestamp': req.get('webhook-timestamp'),\n        'webhook-signature': req.get('webhook-signature')\n      })\n    } catch {\n      return res.sendStatus(403)\n    }\n\n    const deliveryId = req.get('webhook-id')\n    // Atomically skip deliveryId if it has already been processed.\n    await processTrexityEvent(event, deliveryId)\n    return res.sendStatus(204)\n  }\n)\n```\n\nStandard Webhooks libraries handle space-delimited signature lists and\nenforce a timestamp-tolerance window. The official JavaScript library\nrejects timestamps more than five minutes in the past or future. Keep\nreceiver clocks synchronized and do not disable this protection.\n\n### Legacy verification appendix\n\nNew integrations should use Standard Webhooks. For existing integrations,\n`x-trexity-signature` is a hex HMAC-SHA256 over the raw request body using\nthe legacy `secretKey`. It can be verified as follows:\n\n```js\nimport { createHmac, timingSafeEqual } from 'node:crypto'\n\nconst expected = createHmac(\n  'sha256',\n  process.env.TREXITY_LEGACY_WEBHOOK_SECRET\n).update(req.body).digest()\n\nconst supplied = Buffer.from(\n  req.get('x-trexity-signature') ?? '',\n  'hex'\n)\n\nconst isValid =\n  supplied.length === expected.length &&\n  timingSafeEqual(supplied, expected)\n```\n\nThe legacy header continues to be sent for backwards compatibility, but\nno removal date has been announced.\n"
     },
     {
       "name": "Locations",
@@ -3280,7 +3280,7 @@
           "Webhooks"
         ],
         "summary": "List webhooks",
-        "description": "Gets all registered webhooks or registered webhooks for an event.\n",
+        "description": "Gets all registered webhooks or registered webhooks for an event.\n\nCustom header data is not included. Use\n`GET /webhooks/{webhookId}/headers` to retrieve it separately.\n",
         "parameters": [
           {
             "in": "query",
@@ -3371,6 +3371,9 @@
                     "format": "uri",
                     "description": "Secure (https://...) URL to send the webhook request to.",
                     "example": "https://example.com/trexity/webhook-handler"
+                  },
+                  "headers": {
+                    "$ref": "#/components/schemas/WebhookHeadersBase"
                   }
                 }
               }
@@ -3446,6 +3449,15 @@
                 "description": "Occurs when a shipment has been created.",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -3482,6 +3494,15 @@
                 "summary": "shipment.updated",
                 "description": "Occurs when a shipment has had address or parcel information updated.",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -3520,6 +3541,15 @@
                 "description": "Occurs when a shipment has been deleted.",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -3556,6 +3586,15 @@
                 "summary": "shipment.posted",
                 "description": "Occurs when a shipment has been posted to our driver community. This can occur as a result of an explicit \"post\" action\nfrom a user or from the platform posting a shipment based on the shipment's `scheduledPostAt` setting.\n",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -3594,6 +3633,15 @@
                 "description": "Occurs when a shipment has been accepted for delivery by a driver from our driver community.",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -3630,6 +3678,15 @@
                 "summary": "shipment.driver.arrived_at_pickup",
                 "description": "Occurs when a driver has arrived at the pickup address for a parcel within a shipment.",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -3668,6 +3725,15 @@
                 "description": "Occurs when a driver has picked up (e.g. has posession) a parcel within a shipment.",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -3704,6 +3770,15 @@
                 "summary": "shipment.driver.arrived_at_delivery",
                 "description": "Occurs when a driver arrived at a parcel's delivery address.",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -3742,6 +3817,15 @@
                 "description": "Occurs when a driver has delivered a parcel within a shipment.",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -3778,6 +3862,15 @@
                 "summary": "shipment.completed",
                 "description": "Occurs when a shipment has all deliverable parcels delivered and has been successfully paid.",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -3816,6 +3909,15 @@
                 "description": "Occurs when a shipment has been cancelled.",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -3852,6 +3954,15 @@
                 "summary": "shipment.driver.renounced",
                 "description": "Occurs when a shipment has been renounced by a driver after they accepted.",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -3890,6 +4001,15 @@
                 "description": "Occurs when a shipment has been put on hold.\n\nA shipment on hold will be immediately removed from our driver network and not be automatically posted to our driver community.\n\nAdditionally, shipments on hold must be re-posted.\n",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -3926,6 +4046,15 @@
                 "summary": "parcel.created",
                 "description": "Occurs when a parcel has been created during a shipment create or added to a shipment during update.\n",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -3964,6 +4093,15 @@
                 "description": "Occurs when a parcel has been updated during a shipment update.\n",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -4000,6 +4138,15 @@
                 "summary": "parcel.deleted",
                 "description": "Occurs when a parcel has been deleted during a shipment update.\n",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -4038,6 +4185,15 @@
                 "description": "Occurs when a parcel has been scanned and picked up by a driver.\n",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -4074,6 +4230,15 @@
                 "summary": "parcel.delivered",
                 "description": "Occurs when a parcel has been scanned and delivered to the recipient.\n",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -4112,6 +4277,15 @@
                 "description": "Occurs when a parcel is being returned due to the driver not being able to complete the delivery.\nThis can be due to customer not being home, customer not having the delivery PIN, or customer refusing delivery.\n",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -4149,6 +4323,15 @@
                 "description": "Occurs when a parcel has been returned to merchant.\n",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -4178,6 +4361,42 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/webhooks/secret-key": {
+      "get": {
+        "operationId": "getWebhookSecretKey",
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Get webhook signing secrets",
+        "description": "Gets the merchant's legacy and Standard Webhooks signing secrets.\n\n**Always use `standardWebhooksSecretKey` with a Standard Webhooks library.**\nPassing the legacy `secretKey` to one of these libraries silently derives a\ndifferent key and causes every verification to fail.\n",
+        "responses": {
+          "200": {
+            "description": "Webhook signing secrets.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/WebhookSecretKeys"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication."
+          },
+          "500": {
+            "description": "An internal error has occurred and the request cannot be completed."
           }
         }
       }
@@ -4240,6 +4459,117 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/webhooks/{webhookId}/headers": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "webhookId",
+          "required": true,
+          "description": "Registered webhook ID.",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "getWebhookHeaders",
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Get webhook custom headers",
+        "description": "Gets the custom headers configured for a webhook. Sensitive values are\nreturned as `********` and are never returned in plaintext.\n",
+        "responses": {
+          "200": {
+            "description": "Webhook custom headers.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/WebhookHeaders"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Webhook is not found."
+          },
+          "500": {
+            "description": "An internal error has occurred and the request cannot be completed."
+          }
+        }
+      },
+      "put": {
+        "operationId": "addWebhookHeaders",
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Add webhook custom headers",
+        "description": "Adds custom headers to a webhook. This operation is add-only: attempting to\nadd a header name that already exists returns a `400` response.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookHeadersDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Webhook custom headers were added."
+          },
+          "400": {
+            "description": "The request is invalid, a header already exists, a name is reserved, or\nthe webhook would exceed 10 custom headers.\n"
+          },
+          "404": {
+            "description": "Webhook is not found."
+          },
+          "500": {
+            "description": "An internal error has occurred and the request cannot be completed."
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateWebhookHeaders",
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Update or delete webhook custom headers",
+        "description": "Updates existing custom headers and deletes named headers. Every name in\n`headers` must already exist; an unknown update name returns a `400`\nresponse. A name appearing in both `headers` and `deleteHeaders` also\nreturns `400`. Deletes are idempotent, so deleting an unknown name\nsucceeds.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookHeadersPatchDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Webhook custom headers were updated or deleted."
+          },
+          "400": {
+            "description": "The request is invalid, an updated header does not exist, a name appears\nin both request fields, or a name is reserved.\n"
+          },
+          "404": {
+            "description": "Webhook is not found."
+          },
+          "500": {
+            "description": "An internal error has occurred and the request cannot be completed."
           }
         }
       }
@@ -6578,6 +6908,9 @@
           "shipment.cancelled",
           "shipment.driver.renounced",
           "shipment.on_hold",
+          "parcel.created",
+          "parcel.updated",
+          "parcel.deleted",
           "parcel.picked_up",
           "parcel.delivered",
           "parcel.returning",
@@ -6585,7 +6918,8 @@
         ]
       },
       "Webhook": {
-        "description": "A registered webhook",
+        "description": "A registered webhook. Custom header data is not included when webhooks are\nlisted; retrieve it from `GET /webhooks/{webhookId}/headers`.\n",
+        "type": "object",
         "properties": {
           "id": {
             "type": "string"
@@ -6612,16 +6946,36 @@
           }
         }
       },
+      "WebhookHeadersBase": {
+        "type": "object",
+        "maxProperties": 10,
+        "additionalProperties": {
+          "type": "string"
+        },
+        "description": "Custom HTTP header names mapped to their string values. A webhook may have no\nmore than 10 custom headers.\n\n`Authorization` is treated as sensitive: its value is encrypted at rest and\nmasked when read. Sensitive and reserved-name comparisons are\ncase-insensitive.\n\nThe following names are reserved and rejected:\n`content-type`, `content-length`, `host`, `connection`,\n`transfer-encoding`, `te`, `trailer`, `upgrade`, `expect`, `keep-alive`,\n`webhook-id`, `webhook-timestamp`, and `webhook-signature`. Names beginning\nwith `x-trexity-` or `proxy-` are also rejected.\n"
+      },
       "ShipmentWebhookPayload": {
-        "description": "Webhook payload during a shipment event.",
+        "description": "Webhook payload during a shipment event. Trexity sends the complete Shipment\nentity in `data`, not a thin payload.\n",
+        "type": "object",
+        "additionalProperties": false,
         "required": [
           "data",
-          "timestamp"
+          "timestamp",
+          "type"
         ],
         "properties": {
+          "type": {
+            "description": "Event name. This is the same value sent in the deprecated\n`x-trexity-event-name` header.\n",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WebhookEventName"
+              }
+            ]
+          },
           "timestamp": {
-            "description": "**(ADDED IN v1.11)** Date time the event took place in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
-            "type": "string"
+            "description": "ISO-8601 date-time when the event occurred, with millisecond resolution.\nThis value remains stable across delivery retries and should be used for\nevent ordering instead of the deprecated `x-trexity-webhook-order-id`\nheader. Two events occurring in the same millisecond have the same\ntimestamp and are unordered relative to each other.\n\nISO date strings are in UTC. Example: `2020-07-25T10:48:08.987Z`.\n",
+            "type": "string",
+            "format": "date-time"
           },
           "data": {
             "$ref": "#/components/schemas/Shipment"
@@ -6629,17 +6983,36 @@
         }
       },
       "ParcelWebhookPayload": {
-        "description": "Webhook payload during a parcel event.",
+        "description": "Webhook payload during a parcel event. Trexity sends complete entity data in\n`data`, not a thin payload.\n",
+        "type": "object",
+        "additionalProperties": false,
         "required": [
           "data",
-          "timestamp"
+          "timestamp",
+          "type"
         ],
         "properties": {
+          "type": {
+            "description": "Event name. This is the same value sent in the deprecated\n`x-trexity-event-name` header.\n",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WebhookEventName"
+              }
+            ]
+          },
           "timestamp": {
-            "description": "**(ADDED IN v1.11)** Date time the event took place in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
-            "type": "string"
+            "description": "ISO-8601 date-time when the event occurred, with millisecond resolution.\nThis value remains stable across delivery retries and should be used for\nevent ordering instead of the deprecated `x-trexity-webhook-order-id`\nheader. Two events occurring in the same millisecond have the same\ntimestamp and are unordered relative to each other.\n\nISO date strings are in UTC. Example: `2020-07-25T10:48:08.987Z`.\n",
+            "type": "string",
+            "format": "date-time"
           },
           "data": {
+            "type": "object",
+            "required": [
+              "shipmentId",
+              "deliveryIndex",
+              "orderUuid",
+              "parcel"
+            ],
             "properties": {
               "shipmentId": {
                 "type": "string",
@@ -6656,6 +7029,82 @@
               "parcel": {
                 "$ref": "#/components/schemas/Parcel"
               }
+            }
+          }
+        }
+      },
+      "WebhookSecretKeys": {
+        "description": "Webhook signing secrets for a merchant.",
+        "type": "object",
+        "required": [
+          "secretKey",
+          "standardWebhooksSecretKey"
+        ],
+        "properties": {
+          "secretKey": {
+            "type": "string",
+            "description": "Legacy secret used only to verify the deprecated `x-trexity-signature`\nheader.\n"
+          },
+          "standardWebhooksSecretKey": {
+            "type": "string",
+            "description": "Standard Webhooks signing secret in `whsec_<base64>` format. Always pass\nthis value to Standard Webhooks libraries.\n\n**WARNING:** Never pass the legacy `secretKey` to a Standard Webhooks\nlibrary. The legacy value is itself valid base64, so the library silently\nderives a different key and every signature verification fails.\n",
+            "pattern": "^whsec_[A-Za-z0-9+/]+={0,2}$"
+          }
+        }
+      },
+      "WebhookHeaders": {
+        "description": "Custom headers configured for a webhook.",
+        "type": "object",
+        "required": [
+          "headers",
+          "sensitive"
+        ],
+        "properties": {
+          "headers": {
+            "description": "Header names mapped to their configured values. Sensitive values are\nalways returned as `********`, never as plaintext.\n",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WebhookHeadersBase"
+              }
+            ]
+          },
+          "sensitive": {
+            "type": "array",
+            "description": "Header names whose configured values are treated as sensitive.",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "WebhookHeadersDTO": {
+        "description": "Custom headers to add to a webhook.",
+        "type": "object",
+        "required": [
+          "headers"
+        ],
+        "properties": {
+          "headers": {
+            "$ref": "#/components/schemas/WebhookHeadersBase"
+          }
+        }
+      },
+      "WebhookHeadersPatchDTO": {
+        "description": "Custom headers to update or delete from a webhook.",
+        "type": "object",
+        "required": [
+          "headers",
+          "deleteHeaders"
+        ],
+        "properties": {
+          "headers": {
+            "$ref": "#/components/schemas/WebhookHeadersBase"
+          },
+          "deleteHeaders": {
+            "type": "array",
+            "description": "Header names to delete. Deleting a name that does not exist succeeds.\nA header name cannot appear in both `headers` and `deleteHeaders`.\n",
+            "items": {
+              "type": "string"
             }
           }
         }
@@ -7316,10 +7765,42 @@
       }
     },
     "parameters": {
+      "webhook-id": {
+        "name": "webhook-id",
+        "in": "header",
+        "required": true,
+        "description": "Standard Webhooks delivery identifier. This is a UUID v4 that remains stable\nacross every retry attempt for the same delivery. Use this value as the\nidempotency key when deduplicating webhook deliveries.\n",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "webhook-timestamp": {
+        "name": "webhook-timestamp",
+        "in": "header",
+        "required": true,
+        "description": "Unix timestamp in seconds for this delivery attempt. This value changes on\nevery retry and is included in the Standard Webhooks signature.\n",
+        "schema": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "webhook-signature": {
+        "name": "webhook-signature",
+        "in": "header",
+        "required": true,
+        "description": "Standard Webhooks signature in the format `v1,<base64>`. It is an\nHMAC-SHA256 of\n`${webhook-id}.${webhook-timestamp}.${raw request body}`, keyed with the raw\nsecret bytes.\n\nThe header may contain a space-delimited list of signatures. Parsers must\ninspect every `v1` signature rather than assuming only one value is present.\n",
+        "schema": {
+          "type": "string",
+          "example": "v1,ZmFrZS1zaWduYXR1cmU="
+        }
+      },
       "x-trexity-signature": {
         "name": "x-trexity-signature",
         "in": "header",
-        "description": "The SHA256 HMAC signature for the request.",
+        "required": true,
+        "deprecated": true,
+        "description": "**Deprecated.** Legacy hex-encoded HMAC-SHA256 signature of the raw request\nbody, keyed with the legacy `secretKey`.\n\nThis header continues to be sent for backwards compatibility. No removal\ndate has been announced. New integrations should verify `webhook-signature`\ninstead.\n",
         "schema": {
           "type": "string"
         }
@@ -7327,7 +7808,9 @@
       "x-trexity-event-name": {
         "name": "x-trexity-event-name",
         "in": "header",
-        "description": "Webhook event name.",
+        "required": true,
+        "deprecated": true,
+        "description": "**Deprecated.** Webhook event name. The same value is available in the\npayload's `type` property.\n\nThis header continues to be sent for backwards compatibility. No removal\ndate has been announced.\n",
         "schema": {
           "$ref": "#/components/schemas/WebhookEventName"
         }
@@ -7335,7 +7818,9 @@
       "x-trexity-webhook-order-id": {
         "name": "x-trexity-webhook-order-id",
         "in": "header",
-        "description": "The webhook processing sort order. Webhooks may not be delivered in order, but this value can be used to determine processing order.",
+        "required": true,
+        "deprecated": true,
+        "description": "**Deprecated.** This header is superseded by the payload's `timestamp`\nproperty for event ordering.\n\nThis header continues to be sent for backwards compatibility. No removal\ndate has been announced.\n",
         "schema": {
           "type": "integer"
         }
