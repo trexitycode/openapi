@@ -11,8 +11,9 @@ get:
   tags: [Webhooks]
   summary: Get webhook custom headers
   description: |
-    Gets the custom headers configured for a webhook. Sensitive values are
-    returned as `********` and are never returned in plaintext.
+    Gets the custom headers configured for a webhook. Sensitive header values
+    are never returned: those headers are omitted from `headers` and only their
+    names are listed in `sensitive`. The two sets are mutually exclusive.
   responses:
     '200':
       description: Webhook custom headers.

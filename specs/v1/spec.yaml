@@ -224,7 +224,7 @@ tags:
 
       ## Delivery headers
 
-      Every delivery follows the
+      Every webhook delivery follows the
       [Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks)
       and includes:
 
@@ -248,14 +248,20 @@ tags:
       Webhook delivery is at-least-once, so receivers can see duplicate
       deliveries.
 
-      A delivery is retried when the request never completes: a connection or
-      DNS failure, a TLS error, or a receiver that does not respond within 60
-      seconds. Retries run up to 10 attempts, each scheduled 2-5 minutes after
-      the previous failure (randomized, not escalating).
+      A delivery succeeds only when your endpoint returns a `2xx` status within
+      60 seconds. Any other outcome is retried:
 
-      > **IMPORTANT:** A non-2xx response is **not** retried. Once your endpoint
-      > responds, the delivery is treated as complete regardless of the status
-      > code returned. Do not rely on returning `500` to trigger redelivery.
+      - a non-2xx response, such as `429`, `500`, `502`, or `503`
+      - a request that never completes: a connection or DNS failure, a TLS
+        error, or no response within 60 seconds
+
+      Both are treated the same way, because the sender cannot distinguish an
+      endpoint that is down from one that is merely failing. Retries run up to
+      10 attempts, each scheduled 2-5 minutes after the previous failure
+      (randomized, not escalating).
+
+      Returning a non-2xx status is therefore the supported way to ask for a
+      redelivery when your service cannot process an event.
 
       Deduplicate on `webhook-id`, which is identical across attempts. The raw
       payload bytes are also identical; only `webhook-timestamp` and
@@ -270,9 +276,11 @@ tags:
       `/webhooks/{webhookId}/headers`. The list-webhooks response does not
       include custom header data.
 
-      `Authorization` is sensitive: its value is encrypted at rest and returned
-      as `********` when headers are read. Sensitive and reserved-name checks
-      are case-insensitive.
+      `Authorization` is sensitive: its value is encrypted at rest and is never
+      returned when headers are read. Sensitive headers are omitted from
+      `headers` and appear only by name in the `sensitive` list, so the two sets
+      are mutually exclusive. Sensitive and reserved-name checks are
+      case-insensitive.
 
       ## Parcel Events
 

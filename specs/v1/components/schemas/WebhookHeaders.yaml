@@ -1,15 +1,20 @@
-description: Custom headers configured for a webhook.
+description: |
+  Custom headers configured for a webhook. `headers` and `sensitive` are
+  mutually exclusive: a header appears in exactly one of them.
 type: object
 required: [headers, sensitive]
 properties:
   headers:
     description: |
-      Header names mapped to their configured values. Sensitive values are
-      always returned as `********`, never as plaintext.
+      Non-sensitive header names mapped to their configured values. Sensitive
+      headers are omitted entirely — their names are listed in `sensitive`.
     allOf:
       - $ref: ./WebhookHeadersBase.yaml
   sensitive:
     type: array
-    description: Header names whose configured values are treated as sensitive.
+    description: |
+      Names of headers whose values are sensitive. Their values are never
+      returned, so these names do not appear in `headers`. How a sensitive
+      header is presented is left to the client.
     items:
       type: string
