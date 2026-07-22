@@ -24,6 +24,9 @@ get:
             properties:
               data:
                 $ref: ../../components/schemas/WebhookHeaders.yaml
+    '400':
+      description: |
+        The request is invalid, or the webhook belongs to another merchant.
     '404':
       description: Webhook is not found.
     '500':

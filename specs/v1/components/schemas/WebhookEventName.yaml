@@ -9,14 +9,22 @@ enum:
   - shipment.driver.picked_up
   - shipment.driver.arrived_at_delivery
   - shipment.driver.parcel_delivered
+  - shipment.driver.position_updated
   - shipment.completed
   - shipment.cancelled
   - shipment.driver.renounced
   - shipment.on_hold
+  - shipment.orphaned
+  - shipment.resubmitted
+  - shipment.expired
   - parcel.created
   - parcel.updated
   - parcel.deleted
+  - parcel.arrived_at_pickup
   - parcel.picked_up
+  - parcel.arrived_at_delivery
+  - parcel.near_customer
   - parcel.delivered
   - parcel.returning
   - parcel.returned
+  - parcel.timings_updated
