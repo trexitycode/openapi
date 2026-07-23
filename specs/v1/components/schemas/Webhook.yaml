@@ -1,4 +1,7 @@
-description: A registered webhook
+description: |
+  A registered webhook. Custom header data is not included when webhooks are
+  listed; retrieve it from `GET /webhooks/{webhookId}/headers`.
+type: object
 properties:
   id:
     type: string

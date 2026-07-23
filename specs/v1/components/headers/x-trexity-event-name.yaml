@@ -1,5 +1,12 @@
 name: x-trexity-event-name
 in: header
-description: Webhook event name.
+required: true
+deprecated: true
+description: |
+  **Deprecated.** Webhook event name. The same value is available in the
+  payload's `type` property.
+
+  This header continues to be sent for backwards compatibility. No removal
+  date has been announced.
 schema:
   $ref: ../schemas/WebhookEventName.yaml
