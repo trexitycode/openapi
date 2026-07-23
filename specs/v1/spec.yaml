@@ -255,6 +255,9 @@ tags:
       - a request that never completes: a connection or DNS failure, a TLS
         error, or no response within 60 seconds
 
+      > NOTE: We will be tightening the timeout to 15 seconds in the near future, so to
+      > future proof your implementation please assume a 15 second tiemout.
+
       Both are treated the same way, because the sender cannot distinguish an
       endpoint that is down from one that is merely failing. Retries run up to
       10 attempts, each scheduled 2-5 minutes after the previous failure
