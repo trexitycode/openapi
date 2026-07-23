@@ -1,0 +1,19 @@
+name: Idempotency-Key
+in: header
+required: false
+description: |
+  **(ADDED IN v1.38)** An opaque key that enables idempotent handling for this
+  request. The key must be 1-255 printable ASCII characters. UUID v4 values are
+  recommended.
+
+  Keys are unique across all endpoints for the merchant account and are retained
+  for 72 hours. Reusing a key for a different endpoint, path or resource, query,
+  or request body returns HTTP 422 with `code: idempotency-key-mismatch`.
+  Namespace keys derived from business identifiers by operation, for example
+  `order-123:create` and `order-123:cancel`.
+schema:
+  type: string
+  minLength: 1
+  maxLength: 255
+  pattern: '^[\x20-\x7E]+$'
+  example: 123e4567-e89b-42d3-a456-426614174000

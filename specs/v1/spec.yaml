@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: '1.37'
+  version: '1.38'
   title: Trexity API
   license:
     name: MIT
@@ -103,6 +103,42 @@ info:
     We use our sandbox environment as well when developing new features to ensure
     there are no breaking changes. So expect the occasional breaking change when
     using the sandbox environment.
+
+    # Idempotent Requests
+
+    **(ADDED IN v1.38)**
+
+    Supported shipment write endpoints accept an optional `Idempotency-Key`
+    request header to make retries safe. Requests without the header retain their
+    existing behavior.
+
+    The key is an opaque string of 1-255 printable ASCII characters. UUID v4
+    values are recommended. Keys are scoped account-wide, across all endpoints,
+    and retained for 72 hours. Reusing a key for a different endpoint, path or
+    resource, query, or request body returns HTTP 422 with
+    `code: idempotency-key-mismatch`. If deriving keys from a business identifier,
+    namespace them by operation, for example `order-123:create` and
+    `order-123:cancel`.
+
+    A repeated completed request returns the original status code and response
+    body with `Idempotency-Replayed: true`. If a request with the same key is still
+    being processed, the API returns HTTP 409 with
+    `code: idempotency-key-in-progress`; retry after a short backoff. A malformed
+    key (empty, longer than 255 characters, or containing non-printable
+    characters) returns HTTP 400 with `code: idempotency-key-invalid`.
+
+    Idempotency-Key is supported on:
+
+    - `POST /shipments`
+    - `POST /shipments/bulk/{rateId}`
+    - `PATCH /shipments/{shipmentId}`
+    - `PATCH /shipments/{shipmentId}/parcels/{deliveryIndex}`
+    - `POST /shipments/{shipmentId}/cancel`
+    - `POST /shipments/{shipmentId}/ready-for-pickup`
+    - `POST /shipments/{shipmentId}/tracking/{deliveryIndex}`
+
+    Request idempotency is distinct from webhook delivery idempotency, where
+    webhook receivers deduplicate deliveries using `webhook-id`.
 
     # Responses
 
