@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.37",
+    "version": "1.38",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -12,7 +12,7 @@
       "email": "support@trexity.com",
       "url": "http://trexity.com"
     },
-    "description": "# Issues\n\nPlease open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) requests in the [issues](https://github.com/trexitycode/openapi/issues) board.\n\n# Usage Policy\n\n**(ADDED IN v1.7)**\n\nBy using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.\nThe [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same Day, etc.) or displayed as-is from the Rate.\n\nThis allows Trexity to ensure consistent messaging wherever Trexity delivery rates are shown.\n\n## Suspension & Termination\n\nFailure to comply with this Usage Policy may result in suspension of your Trexity merchant account and/or API Keys. Continued failure to comply may result in the termination of your Trexity merchant account.\n\n# Concepts & Workflows\n\n## Concepts\n\n**Shipments** represent a route, has one or more parcels, requirements, and a pickup address.\n\n**Parcels** represent an order, has customer information and a delivery address.\n\n**Service Types** represent a type of service used to rate a shipment.\n\n**Rates** represent a price for completing a shipment.\n\n\n\n## Preferred Workflow\n\nThis workflow is the most common and preferred way to create a shipment for delivery. Just provide a parcel,\nand optionally a pickup time to create a shipment.\n\n1. [Optionally calculate rates](#operation/getRates) by specifying pickup information, customer information and the delivery address\n2. [Create a shipment](#operation/createShipment) specify the parcels, customer information and delivery address, and optionally a rate ID or a shipment service type\n3. [Optionally schedule for pickup](#operation/updateShipment) to set a pickup time of the shipment, or for Direct shipments indicate the shipment is [ready for pickup](#operation/shipmentReadyForPickup)\n4. [Get parcel label](#operation/getParcelLabel) for the parcel then affix to your packaging\n\n## Rating and Service Types\n\nThe following service types are available and have different rating rules:\n- `default` = The default service type known in the product as Same Day. Can be scheduled for pickup at any time within your merchant location's delivery hours and Trexity's operation hours.\n- `nextday` = The next day service type known in the product as Next Day. This service can only be scheduled for pickup the next day the or later of the shipment creation date and must be at 12:00 PM local time. \n- `direct` = A direct service type known in the product as Direct. This service can be scheduled for pickup at any time within your merchant location's delivery hours and Trexity's operation hours.\n\n## Scheduling a Shipment for Pickup\n\nTo schedule a shipment for pickup, ONLY use the `pickupStartAt` field when creating the shipment.\nIf the `pickupStartAt` field is not provided, then the shipment will not be scheduled for pickup and be left as a draft shipment.\n\nIf the `pickupStartAt` field is provided, then the shipment will be scheduled for pickup at the provided date-time, provided it is within your merchant location's delivery hours and Trexity's operation hours.\n\n### Cutoff Time\n\nTrexity does not have a concrete cutoff time for scheduling a shipment for pickup. Trexity uses a dynamic range that looks at the shipment delivery duration, distance, and adds a buffer time to determine a reasonable cutoff time when shipments are scheduled for pickup. However, we recommend **5:00 PM local time** as a cutoff time when scheduling a shipment for pickup\nto ensure that we can deliver the shipment before 8:00 PM local time.\n\n## Parcel Status\n\nFollow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.\n\n## Sandbox Environment\n\nAll API operations have an alternate base URL available in the sandbox environment.\n\nTo use the sandbox environment:\n1. Create an account on the [Sandbox Merchant Portal](https://merchant.beta.trexity.com/signup)\n2. Navigate to the [API Keys page](https://merchant.beta.trexity.com/api/keys) in the Advanced area.\n3. Create a new API Key\n4. Use the new API Key and the sandbox base URL in your API requests\n\n> Use the dropdown in the top right of an API operation page to select the sandbox environment server.\n\n### Credit Cards\n\nWhen signing up for the sandbox environment you can use the  following\ncredit card with any 3-digit CVC and a future expiration date.\n\n```\n4000 0012 4000 0000\n```\n\n### Expectations\n\nThe sandbox environment is intended for development and testing purposes only.\nExpect latency to be higher than the production environment.\n\nWe use our sandbox environment as well when developing new features to ensure\nthere are no breaking changes. So expect the occasional breaking change when\nusing the sandbox environment.\n\n# Responses\n\nAll endpoints will return an object and if there is actual data\nto be returned, it is going to be named `data`, where `data` may\nbe an array or an object.\n\nIf there is an `error` field present on the root JSON object, that\nmeans something went wrong and that error message is all we know about it.\nAdditionally, in some cases, you may inspect the HTTP status codes to\ngather more information.\n\nPlease check our payload/response examples in detail as well as the\ncurl examples that are a part of each section that documents an operation.\n\nExample of a successful response:\n`{ data: ... }`\n\nExample of a response with an error:\n`{ error: 'Some error message', data: null }`\n"
+    "description": "# Issues\n\nPlease open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) requests in the [issues](https://github.com/trexitycode/openapi/issues) board.\n\n# Usage Policy\n\n**(ADDED IN v1.7)**\n\nBy using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.\nThe [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same Day, etc.) or displayed as-is from the Rate.\n\nThis allows Trexity to ensure consistent messaging wherever Trexity delivery rates are shown.\n\n## Suspension & Termination\n\nFailure to comply with this Usage Policy may result in suspension of your Trexity merchant account and/or API Keys. Continued failure to comply may result in the termination of your Trexity merchant account.\n\n# Concepts & Workflows\n\n## Concepts\n\n**Shipments** represent a route, has one or more parcels, requirements, and a pickup address.\n\n**Parcels** represent an order, has customer information and a delivery address.\n\n**Service Types** represent a type of service used to rate a shipment.\n\n**Rates** represent a price for completing a shipment.\n\n\n\n## Preferred Workflow\n\nThis workflow is the most common and preferred way to create a shipment for delivery. Just provide a parcel,\nand optionally a pickup time to create a shipment.\n\n1. [Optionally calculate rates](#operation/getRates) by specifying pickup information, customer information and the delivery address\n2. [Create a shipment](#operation/createShipment) specify the parcels, customer information and delivery address, and optionally a rate ID or a shipment service type\n3. [Optionally schedule for pickup](#operation/updateShipment) to set a pickup time of the shipment, or for Direct shipments indicate the shipment is [ready for pickup](#operation/shipmentReadyForPickup)\n4. [Get parcel label](#operation/getParcelLabel) for the parcel then affix to your packaging\n\n## Rating and Service Types\n\nThe following service types are available and have different rating rules:\n- `default` = The default service type known in the product as Same Day. Can be scheduled for pickup at any time within your merchant location's delivery hours and Trexity's operation hours.\n- `nextday` = The next day service type known in the product as Next Day. This service can only be scheduled for pickup the next day the or later of the shipment creation date and must be at 12:00 PM local time. \n- `direct` = A direct service type known in the product as Direct. This service can be scheduled for pickup at any time within your merchant location's delivery hours and Trexity's operation hours.\n\n## Scheduling a Shipment for Pickup\n\nTo schedule a shipment for pickup, ONLY use the `pickupStartAt` field when creating the shipment.\nIf the `pickupStartAt` field is not provided, then the shipment will not be scheduled for pickup and be left as a draft shipment.\n\nIf the `pickupStartAt` field is provided, then the shipment will be scheduled for pickup at the provided date-time, provided it is within your merchant location's delivery hours and Trexity's operation hours.\n\n### Cutoff Time\n\nTrexity does not have a concrete cutoff time for scheduling a shipment for pickup. Trexity uses a dynamic range that looks at the shipment delivery duration, distance, and adds a buffer time to determine a reasonable cutoff time when shipments are scheduled for pickup. However, we recommend **5:00 PM local time** as a cutoff time when scheduling a shipment for pickup\nto ensure that we can deliver the shipment before 8:00 PM local time.\n\n## Parcel Status\n\nFollow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.\n\n## Sandbox Environment\n\nAll API operations have an alternate base URL available in the sandbox environment.\n\nTo use the sandbox environment:\n1. Create an account on the [Sandbox Merchant Portal](https://merchant.beta.trexity.com/signup)\n2. Navigate to the [API Keys page](https://merchant.beta.trexity.com/api/keys) in the Advanced area.\n3. Create a new API Key\n4. Use the new API Key and the sandbox base URL in your API requests\n\n> Use the dropdown in the top right of an API operation page to select the sandbox environment server.\n\n### Credit Cards\n\nWhen signing up for the sandbox environment you can use the  following\ncredit card with any 3-digit CVC and a future expiration date.\n\n```\n4000 0012 4000 0000\n```\n\n### Expectations\n\nThe sandbox environment is intended for development and testing purposes only.\nExpect latency to be higher than the production environment.\n\nWe use our sandbox environment as well when developing new features to ensure\nthere are no breaking changes. So expect the occasional breaking change when\nusing the sandbox environment.\n\n# Idempotent Requests\n\n**(ADDED IN v1.38)**\n\nSupported shipment write endpoints accept an optional `Idempotency-Key`\nrequest header to make retries safe. Requests without the header retain their\nexisting behavior.\n\nThe key is an opaque string of 1-255 printable ASCII characters. UUID v4\nvalues are recommended. Keys are scoped account-wide, across all endpoints,\nand retained for 72 hours. Reusing a key for a different endpoint, path or\nresource, query, or request body returns HTTP 422 with\n`code: idempotency-key-mismatch`. If deriving keys from a business identifier,\nnamespace them by operation, for example `order-123:create` and\n`order-123:cancel`.\n\nA repeated completed request returns the original status code and response\nbody with `Idempotency-Replayed: true`. If a request with the same key is still\nbeing processed, the API returns HTTP 409 with\n`code: idempotency-key-in-progress`; retry after a short backoff. A malformed\nkey (empty, longer than 255 characters, or containing non-printable\ncharacters) returns HTTP 400 with `code: idempotency-key-invalid`.\n\nIdempotency-Key is supported on:\n\n- `POST /shipments`\n- `POST /shipments/bulk/{rateId}`\n- `PATCH /shipments/{shipmentId}`\n- `PATCH /shipments/{shipmentId}/parcels/{deliveryIndex}`\n- `POST /shipments/{shipmentId}/cancel`\n- `POST /shipments/{shipmentId}/ready-for-pickup`\n- `POST /shipments/{shipmentId}/tracking/{deliveryIndex}`\n\nRequest idempotency is distinct from webhook delivery idempotency, where\nwebhook receivers deduplicate deliveries using `webhook-id`.\n\n# Responses\n\nAll endpoints will return an object and if there is actual data\nto be returned, it is going to be named `data`, where `data` may\nbe an array or an object.\n\nIf there is an `error` field present on the root JSON object, that\nmeans something went wrong and that error message is all we know about it.\nAdditionally, in some cases, you may inspect the HTTP status codes to\ngather more information.\n\nPlease check our payload/response examples in detail as well as the\ncurl examples that are a part of each section that documents an operation.\n\nExample of a successful response:\n`{ data: ... }`\n\nExample of a response with an error:\n`{ error: 'Some error message', data: null }`\n"
   },
   "servers": [
     {
@@ -1837,6 +1837,11 @@
             "source": "curl -X POST {server-url}/shipments\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\\\n  -d '{\n    \"pickupAddress\": \"9 Slack Rd, Nepean ON K2G 0B7, CA\",\n    \"pickupAddressNotes\": \"Unit 1, ring the buzzer.\",\n    \"pickupInstructions\": \"Please be careful, since it may contain fragile things!\",\n    \"requirements\": {},\n    \"parcels\": [\n      {\n        \"deliveryAddress\": \"207 Queen St, Ottawa ON K1P 6E5, CA\",\n        \"deliveryName\": \"Srinivasa Ramanujan\",\n        \"description\": \"Glasses, bifocals\",\n        \"orderId\": \"BFG10K\",\n        \"parcelValue\": 10000\n      }\n    ]\n  }'\n"
           }
         ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idempotency-key"
+          }
+        ],
         "requestBody": {
           "description": "Payload describing your shipment",
           "required": true,
@@ -1886,6 +1891,14 @@
         "responses": {
           "200": {
             "description": "Success",
+            "headers": {
+              "Idempotency-Replayed": {
+                "description": "**(ADDED IN v1.38)** Present with a value of `true` when this is a\nreplay of a completed request.\n",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -1948,7 +1961,67 @@
                     "code": {
                       "type": "string",
                       "nullable": true,
-                      "description": "Unexhaustive list of codes.\n\n- `unauthorized-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `invalid-delivery-address` = When the delivery address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-input` = When there are issues with the input data provided\n- `invalid-shipment-data` = When there are issues with the input data provided and the shipment entity cannot be instantiated\n- `num-labels-too-large` = When numLabels is too large\n- `invalid-scanids` = When the scanId specified is already in use\n- `outside-operating-hours` = When the pickup or delivery time specified is outside the your delivery hours or Trexity's service hours\n- `invalid-scheduled-posting-date` = The scheduling fields are invalid and do not describe a valid pickup window\n- `unauthorized-numlabels` = When total numLabels for the entire shipment is too large\n- `pickup-address-outsidetaxboundary` = The pickup address is outside the merchant's location province\n- `merchant-disabled` = The merchant has been disabled\n- `missing-profile-details` = The merchant has an incomplete profile\n- `no-shipment-rate` = A shipment rate failed to be calculated due to delivery or pickup address geofencing error\n"
+                      "description": "Unexhaustive list of codes.\n\n- `unauthorized-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `invalid-delivery-address` = When the delivery address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-input` = When there are issues with the input data provided\n- `invalid-shipment-data` = When there are issues with the input data provided and the shipment entity cannot be instantiated\n- `num-labels-too-large` = When numLabels is too large\n- `invalid-scanids` = When the scanId specified is already in use\n- `outside-operating-hours` = When the pickup or delivery time specified is outside the your delivery hours or Trexity's service hours\n- `invalid-scheduled-posting-date` = The scheduling fields are invalid and do not describe a valid pickup window\n- `unauthorized-numlabels` = When total numLabels for the entire shipment is too large\n- `pickup-address-outsidetaxboundary` = The pickup address is outside the merchant's location province\n- `merchant-disabled` = The merchant has been disabled\n- `missing-profile-details` = The merchant has an incomplete profile\n- `no-shipment-rate` = A shipment rate failed to be calculated due to delivery or pickup address geofencing error\n- **(ADDED IN v1.38)** `idempotency-key-invalid` = The Idempotency-Key header is empty, longer than 255 characters, or contains non-printable characters\n"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "**(ADDED IN v1.38)** A request with the same Idempotency-Key is still\nbeing processed. Retry after a short backoff. The response code is\n`idempotency-key-in-progress`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-in-progress"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "**(ADDED IN v1.38)** The Idempotency-Key was previously used for a\ndifferent request. The response code is `idempotency-key-mismatch`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-mismatch"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
                     }
                   }
                 }
@@ -2077,11 +2150,22 @@
               "type": "string"
             },
             "description": "The rateId from a [Complex Rate result](/#operation/getComplexRateResult)"
+          },
+          {
+            "$ref": "#/components/parameters/idempotency-key"
           }
         ],
         "responses": {
           "200": {
             "description": "Successfully queued an asynchronous bulk shipment creation request",
+            "headers": {
+              "Idempotency-Replayed": {
+                "description": "**(ADDED IN v1.38)** Present with a value of `true` when this is a\nreplay of a completed request.\n",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -2095,8 +2179,98 @@
               }
             }
           },
+          "400": {
+            "description": "**(ADDED IN v1.38)** The Idempotency-Key header is empty, longer than\n255 characters, or contains non-printable characters. The response code\nis `idempotency-key-invalid`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-invalid"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
           "404": {
             "description": "The specified rateId could not be found"
+          },
+          "409": {
+            "description": "**(ADDED IN v1.38)** A request with the same Idempotency-Key is still\nbeing processed. Retry after a short backoff. The response code is\n`idempotency-key-in-progress`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-in-progress"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "**(ADDED IN v1.38)** The Idempotency-Key was previously used for a\ndifferent request. The response code is `idempotency-key-mismatch`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-mismatch"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2313,6 +2487,9 @@
               "type": "string"
             },
             "description": "The id of the shipment that needs to be updated"
+          },
+          {
+            "$ref": "#/components/parameters/idempotency-key"
           }
         ],
         "requestBody": {
@@ -2331,10 +2508,100 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "Success",
+            "headers": {
+              "Idempotency-Replayed": {
+                "description": "**(ADDED IN v1.38)** Present with a value of `true` when this is a\nreplay of a completed request.\n",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request.\n\n**(ADDED IN v1.38)** A malformed Idempotency-Key returns\n`code: idempotency-key-invalid`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "code": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "`idempotency-key-invalid` indicates the Idempotency-Key is\nempty, longer than 255 characters, or contains non-printable\ncharacters.\n"
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "**(ADDED IN v1.38)** A request with the same Idempotency-Key is still\nbeing processed. Retry after a short backoff. The response code is\n`idempotency-key-in-progress`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-in-progress"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "**(ADDED IN v1.38)** The Idempotency-Key was previously used for a\ndifferent request. The response code is `idempotency-key-mismatch`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-mismatch"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -2462,20 +2729,105 @@
               "type": "string"
             },
             "description": "The id of the shipment that needs to be cancelled"
+          },
+          {
+            "$ref": "#/components/parameters/idempotency-key"
           }
         ],
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "Success",
+            "headers": {
+              "Idempotency-Replayed": {
+                "description": "**(ADDED IN v1.38)** Present with a value of `true` when this is a\nreplay of a completed request.\n",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Invalid shipment ID in path or don't have permission to delete shipment"
+            "description": "Invalid shipment ID in path or don't have permission to delete shipment.\n\n**(ADDED IN v1.38)** A malformed Idempotency-Key returns\n`code: idempotency-key-invalid`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "code": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "`idempotency-key-invalid` indicates the Idempotency-Key is\nempty, longer than 255 characters, or contains non-printable\ncharacters.\n"
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
             "description": "Shipment not found"
           },
+          "409": {
+            "description": "**(ADDED IN v1.38)** A request with the same Idempotency-Key is still\nbeing processed. Retry after a short backoff. The response code is\n`idempotency-key-in-progress`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-in-progress"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
           "422": {
-            "description": "Shipment cannot be cancelled due to the shipment not being in cancellable state"
+            "description": "Shipment cannot be cancelled due to the shipment not being in a\ncancellable state.\n\n**(ADDED IN v1.38)** This status is also returned with\n`code: idempotency-key-mismatch` when the Idempotency-Key was previously\nused for a different request.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "code": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "`idempotency-key-mismatch` indicates the Idempotency-Key was\npreviously used for a different request.\n"
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2503,14 +2855,115 @@
               "type": "string"
             },
             "description": "The id of the shipment that needs to be marked as ready for pickup"
+          },
+          {
+            "$ref": "#/components/parameters/idempotency-key"
           }
         ],
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "Success",
+            "headers": {
+              "Idempotency-Replayed": {
+                "description": "**(ADDED IN v1.38)** Present with a value of `true` when this is a\nreplay of a completed request.\n",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "**(ADDED IN v1.38)** The Idempotency-Key header is empty, longer than\n255 characters, or contains non-printable characters. The response code\nis `idempotency-key-invalid`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-invalid"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
             "description": "Shipment not found"
+          },
+          "409": {
+            "description": "**(ADDED IN v1.38)** A request with the same Idempotency-Key is still\nbeing processed. Retry after a short backoff. The response code is\n`idempotency-key-in-progress`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-in-progress"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "**(ADDED IN v1.38)** The Idempotency-Key was previously used for a\ndifferent request. The response code is `idempotency-key-mismatch`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-mismatch"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2547,6 +3000,9 @@
               "type": "integer"
             },
             "description": "The delivery index of the parcel to be updated"
+          },
+          {
+            "$ref": "#/components/parameters/idempotency-key"
           }
         ],
         "requestBody": {
@@ -2568,10 +3024,100 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "Success",
+            "headers": {
+              "Idempotency-Replayed": {
+                "description": "**(ADDED IN v1.38)** Present with a value of `true` when this is a\nreplay of a completed request.\n",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Invalid payload or permission denied."
+            "description": "Invalid payload or permission denied.\n\n**(ADDED IN v1.38)** A malformed Idempotency-Key returns\n`code: idempotency-key-invalid`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "code": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "`idempotency-key-invalid` indicates the Idempotency-Key is\nempty, longer than 255 characters, or contains non-printable\ncharacters.\n"
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "**(ADDED IN v1.38)** A request with the same Idempotency-Key is still\nbeing processed. Retry after a short backoff. The response code is\n`idempotency-key-in-progress`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-in-progress"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "**(ADDED IN v1.38)** The Idempotency-Key was previously used for a\ndifferent request. The response code is `idempotency-key-mismatch`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-mismatch"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "description": "Unknown server problem"
@@ -2611,6 +3157,9 @@
               "type": "number"
             },
             "description": "The index of the parcel to retrieve a tracking URL for"
+          },
+          {
+            "$ref": "#/components/parameters/idempotency-key"
           }
         ],
         "requestBody": {
@@ -2643,6 +3192,14 @@
         "responses": {
           "200": {
             "description": "Success",
+            "headers": {
+              "Idempotency-Replayed": {
+                "description": "**(ADDED IN v1.38)** Present with a value of `true` when this is a\nreplay of a completed request.\n",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -2661,7 +3218,89 @@
             }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request.\n\n**(ADDED IN v1.38)** A malformed Idempotency-Key returns\n`code: idempotency-key-invalid`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "code": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "`idempotency-key-invalid` indicates the Idempotency-Key is\nempty, longer than 255 characters, or contains non-printable\ncharacters.\n"
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "**(ADDED IN v1.38)** A request with the same Idempotency-Key is still\nbeing processed. Retry after a short backoff. The response code is\n`idempotency-key-in-progress`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-in-progress"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "**(ADDED IN v1.38)** The Idempotency-Key was previously used for a\ndifferent request. The response code is `idempotency-key-mismatch`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-mismatch"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "description": "Unknown server problem"
@@ -7763,20 +8402,20 @@
         }
       }
     },
-    "responses": {
-      "FileResponse": {
-        "description": "Returns the binary content of the file in question.\n\nPlease note that our storage endpoints provide [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) header for caching purposes.\n",
-        "content": {
-          "application/octet-stream": {
-            "schema": {
-              "type": "string",
-              "format": "binary"
-            }
-          }
-        }
-      }
-    },
     "parameters": {
+      "idempotency-key": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "required": false,
+        "description": "**(ADDED IN v1.38)** An opaque key that enables idempotent handling for this\nrequest. The key must be 1-255 printable ASCII characters. UUID v4 values are\nrecommended.\n\nKeys are unique across all endpoints for the merchant account and are retained\nfor 72 hours. Reusing a key for a different endpoint, path or resource, query,\nor request body returns HTTP 422 with `code: idempotency-key-mismatch`.\nNamespace keys derived from business identifiers by operation, for example\n`order-123:create` and `order-123:cancel`.\n",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[\\x20-\\x7E]+$",
+          "example": "123e4567-e89b-42d3-a456-426614174000"
+        }
+      },
       "webhook-id": {
         "name": "webhook-id",
         "in": "header",
@@ -7835,6 +8474,19 @@
         "description": "**Deprecated.** This header is superseded by the payload's `timestamp`\nproperty for event ordering.\n\nThis header continues to be sent for backwards compatibility. No removal\ndate has been announced.\n",
         "schema": {
           "type": "integer"
+        }
+      }
+    },
+    "responses": {
+      "FileResponse": {
+        "description": "Returns the binary content of the file in question.\n\nPlease note that our storage endpoints provide [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) header for caching purposes.\n",
+        "content": {
+          "application/octet-stream": {
+            "schema": {
+              "type": "string",
+              "format": "binary"
+            }
+          }
         }
       }
     }

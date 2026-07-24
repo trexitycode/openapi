@@ -21,12 +21,73 @@ post:
       schema:
         type: string
       description: The id of the shipment that needs to be cancelled
+    - $ref: ../../components/headers/idempotency-key.yaml
   responses:
     '204':
       description: Success
+      headers:
+        Idempotency-Replayed:
+          description: |
+            **(ADDED IN v1.38)** Present with a value of `true` when this is a
+            replay of a completed request.
+          schema:
+            type: boolean
     '400':
-      description: Invalid shipment ID in path or don't have permission to delete shipment
+      description: |
+        Invalid shipment ID in path or don't have permission to delete shipment.
+
+        **(ADDED IN v1.38)** A malformed Idempotency-Key returns
+        `code: idempotency-key-invalid`.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string, nullable: true }
+              code:
+                type: string
+                nullable: true
+                description: |
+                  `idempotency-key-invalid` indicates the Idempotency-Key is
+                  empty, longer than 255 characters, or contains non-printable
+                  characters.
+              params: { type: object, nullable: true }
+    '409':
+      description: |
+        **(ADDED IN v1.38)** A request with the same Idempotency-Key is still
+        being processed. Retry after a short backoff. The response code is
+        `idempotency-key-in-progress`.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error, code, params]
+            properties:
+              error: { type: string }
+              code:
+                type: string
+                enum: [idempotency-key-in-progress]
+              params: { type: object, nullable: true }
     '404':
       description: Shipment not found
     '422':
-      description: Shipment cannot be cancelled due to the shipment not being in cancellable state
+      description: |
+        Shipment cannot be cancelled due to the shipment not being in a
+        cancellable state.
+
+        **(ADDED IN v1.38)** This status is also returned with
+        `code: idempotency-key-mismatch` when the Idempotency-Key was previously
+        used for a different request.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string, nullable: true }
+              code:
+                type: string
+                nullable: true
+                description: |
+                  `idempotency-key-mismatch` indicates the Idempotency-Key was
+                  previously used for a different request.
+              params: { type: object, nullable: true }
