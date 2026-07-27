@@ -12,22 +12,27 @@ description: |
 
   **(CHANGED IN v1.24)** The maximum weight changed from 9072 back to 15876 grams to give
   merchants time to adjust to the new weight limit.
+
+  **(CHANGED IN v1.38)** Maximum package dimensions are approximately
+  20 x 12 x 12 inches (50 x 30 x 30 centimeters), with no individual
+  dimension greater than 50 centimeters. The maximum weight remains 15876
+  grams (~35 lbs).
 properties:
   length:
     type: integer
     minimum: 0
-    maximum: 91
-    description: Length (in centimeters). Maximum is ~3 feet.
+    maximum: 50
+    description: Length (in centimeters). Maximum is 50 cm (~20 in).
   width:
     type: integer
     minimum: 0
-    maximum: 91
-    description: Width (in centimeters). Maximum is ~3 feet.
+    maximum: 50
+    description: Width (in centimeters). Maximum is 50 cm (~20 in).
   height:
     type: integer
     minimum: 0
-    maximum: 91
-    description: Height (in centimeters). Maximum is ~3 feet.
+    maximum: 50
+    description: Height (in centimeters). Maximum is 50 cm (~20 in).
   weight:
     type: integer
     minimum: 0
