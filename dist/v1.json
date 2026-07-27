@@ -6490,25 +6490,25 @@
       },
       "ParcelLoad": {
         "type": "object",
-        "description": "**(ADDED IN v1.9)** Optional dimensions and weight of the parcel. This\nwill inform the driver matching algorithm accordingly.\n\n**(CHANGED IN v1.17)** The maximums have changed from 130 cm length, 80 cm width\nand 80 cm height, to 91 cm for any dimension. The maximum for weight changed from\n30000 grams to 15876.\n\n**(CHANGED IN v1.23)** The maximum weight changed from 15876 to 9072 grams to coincides\nwith our merchant code of conduct policy.\n\n**(CHANGED IN v1.24)** The maximum weight changed from 9072 back to 15876 grams to give\nmerchants time to adjust to the new weight limit.\n",
+        "description": "**(ADDED IN v1.9)** Optional dimensions and weight of the parcel. This\nwill inform the driver matching algorithm accordingly.\n\n**(CHANGED IN v1.17)** The maximums have changed from 130 cm length, 80 cm width\nand 80 cm height, to 91 cm for any dimension. The maximum for weight changed from\n30000 grams to 15876.\n\n**(CHANGED IN v1.23)** The maximum weight changed from 15876 to 9072 grams to coincides\nwith our merchant code of conduct policy.\n\n**(CHANGED IN v1.24)** The maximum weight changed from 9072 back to 15876 grams to give\nmerchants time to adjust to the new weight limit.\n\n**(CHANGED IN v1.38)** Maximum package dimensions are approximately\n20 x 12 x 12 inches (50 x 30 x 30 centimeters), with no individual\ndimension greater than 50 centimeters. The maximum weight remains 15876\ngrams (~35 lbs).\n",
         "properties": {
           "length": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 91,
-            "description": "Length (in centimeters). Maximum is ~3 feet."
+            "maximum": 50,
+            "description": "Length (in centimeters). Maximum is 50 cm (~20 in)."
           },
           "width": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 91,
-            "description": "Width (in centimeters). Maximum is ~3 feet."
+            "maximum": 50,
+            "description": "Width (in centimeters). Maximum is 50 cm (~20 in)."
           },
           "height": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 91,
-            "description": "Height (in centimeters). Maximum is ~3 feet."
+            "maximum": 50,
+            "description": "Height (in centimeters). Maximum is 50 cm (~20 in)."
           },
           "weight": {
             "type": "integer",
