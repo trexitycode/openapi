@@ -1,0 +1,9 @@
+name: webhook-timestamp
+in: header
+required: true
+description: |
+  Unix timestamp in seconds for this delivery attempt. This value changes on
+  every retry and is included in the Standard Webhooks signature.
+schema:
+  type: integer
+  format: int64

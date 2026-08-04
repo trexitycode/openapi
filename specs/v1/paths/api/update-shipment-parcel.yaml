@@ -26,6 +26,7 @@ patch:
       schema:
         type: integer
       description: The delivery index of the parcel to be updated
+    - $ref: ../../components/headers/idempotency-key.yaml
   requestBody:
     description: Payload containing the parcel's data that needs to be updated
     required: true
@@ -42,6 +43,62 @@ patch:
     '500':
       description: Unknown server problem
     '400':
-      description: Invalid payload or permission denied.
+      description: |
+        Invalid payload or permission denied.
+
+        **(ADDED IN v1.38)** A malformed Idempotency-Key returns
+        `code: idempotency-key-invalid`.
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error: { type: string, nullable: true }
+              code:
+                type: string
+                nullable: true
+                description: |
+                  `idempotency-key-invalid` indicates the Idempotency-Key is
+                  empty, longer than 255 characters, or contains non-printable
+                  characters.
+              params: { type: object, nullable: true }
+    '409':
+      description: |
+        **(ADDED IN v1.38)** A request with the same Idempotency-Key is still
+        being processed. Retry after a short backoff. The response code is
+        `idempotency-key-in-progress`.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error, code, params]
+            properties:
+              error: { type: string }
+              code:
+                type: string
+                enum: [idempotency-key-in-progress]
+              params: { type: object, nullable: true }
+    '422':
+      description: |
+        **(ADDED IN v1.38)** The Idempotency-Key was previously used for a
+        different request. The response code is `idempotency-key-mismatch`.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error, code, params]
+            properties:
+              error: { type: string }
+              code:
+                type: string
+                enum: [idempotency-key-mismatch]
+              params: { type: object, nullable: true }
     '204':
       description: Success
+      headers:
+        Idempotency-Replayed:
+          description: |
+            **(ADDED IN v1.38)** Present with a value of `true` when this is a
+            replay of a completed request.
+          schema:
+            type: boolean

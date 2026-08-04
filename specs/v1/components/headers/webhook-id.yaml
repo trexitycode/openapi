@@ -1,0 +1,10 @@
+name: webhook-id
+in: header
+required: true
+description: |
+  Standard Webhooks delivery identifier. This is a UUID v4 that remains stable
+  across every retry attempt for the same delivery. Use this value as the
+  idempotency key when deduplicating webhook deliveries.
+schema:
+  type: string
+  format: uuid

@@ -1,5 +1,12 @@
 name: x-trexity-webhook-order-id
 in: header
-description: The webhook processing sort order. Webhooks may not be delivered in order, but this value can be used to determine processing order.
+required: true
+deprecated: true
+description: |
+  **Deprecated.** This header is superseded by the payload's `timestamp`
+  property for event ordering.
+
+  This header continues to be sent for backwards compatibility. No removal
+  date has been announced.
 schema:
   type: integer

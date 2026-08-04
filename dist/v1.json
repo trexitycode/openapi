@@ -12,7 +12,7 @@
       "email": "support@trexity.com",
       "url": "http://trexity.com"
     },
-    "description": "# Issues\n\nPlease open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) requests in the [issues](https://github.com/trexitycode/openapi/issues) board.\n\n# Usage Policy\n\n**(ADDED IN v1.7)**\n\nBy using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.\nThe [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same Day, etc.) or displayed as-is from the Rate.\n\nThis allows Trexity to ensure consistent messaging wherever Trexity delivery rates are shown.\n\n## Suspension & Termination\n\nFailure to comply with this Usage Policy may result in suspension of your Trexity merchant account and/or API Keys. Continued failure to comply may result in the termination of your Trexity merchant account.\n\n# Concepts & Workflows\n\n## Concepts\n\n**Shipments** represent a route, has one or more parcels, requirements, and a pickup address.\n\n**Parcels** represent an order, has customer information and a delivery address.\n\n**Service Types** represent a type of service used to rate a shipment.\n\n**Rates** represent a price for completing a shipment.\n\n\n\n## Preferred Workflow\n\nThis workflow is the most common and preferred way to create a shipment for delivery. Just provide a parcel,\nand optionally a pickup time to create a shipment.\n\n1. [Optionally calculate rates](#operation/getRates) by specifying pickup information, customer information and the delivery address\n2. [Create a shipment](#operation/createShipment) specify the parcels, customer information and delivery address, and optionally a rate ID or a shipment service type\n3. [Optionally schedule for pickup](#operation/updateShipment) to set a pickup time of the shipment, or for Direct shipments indicate the shipment is [ready for pickup](#operation/shipmentReadyForPickup)\n4. [Get parcel label](#operation/getParcelLabel) for the parcel then affix to your packaging\n\n## Rating and Service Types\n\nThe following service types are available and have different rating rules:\n- `default` = The default service type known in the product as Same Day. Can be scheduled for pickup at any time within your merchant location's delivery hours and Trexity's operation hours.\n- `nextday` = The next day service type known in the product as Next Day. This service can only be scheduled for pickup the next day the or later of the shipment creation date and must be at 12:00 PM local time. \n- `direct` = A direct service type known in the product as Direct. This service can be scheduled for pickup at any time within your merchant location's delivery hours and Trexity's operation hours.\n\n## Scheduling a Shipment for Pickup\n\nTo schedule a shipment for pickup, ONLY use the `pickupStartAt` field when creating the shipment.\nIf the `pickupStartAt` field is not provided, then the shipment will not be scheduled for pickup and be left as a draft shipment.\n\nIf the `pickupStartAt` field is provided, then the shipment will be scheduled for pickup at the provided date-time, provided it is within your merchant location's delivery hours and Trexity's operation hours.\n\n### Cutoff Time\n\nTrexity does not have a concrete cutoff time for scheduling a shipment for pickup. Trexity uses a dynamic range that looks at the shipment delivery duration, distance, and adds a buffer time to determine a reasonable cutoff time when shipments are scheduled for pickup. However, we recommend **5:00 PM local time** as a cutoff time when scheduling a shipment for pickup\nto ensure that we can deliver the shipment before 8:00 PM local time.\n\n## Parcel Status\n\nFollow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.\n\n## Sandbox Environment\n\nAll API operations have an alternate base URL available in the sandbox environment.\n\nTo use the sandbox environment:\n1. Create an account on the [Sandbox Merchant Portal](https://merchant.beta.trexity.com/signup)\n2. Navigate to the [API Keys page](https://merchant.beta.trexity.com/api/keys) in the Advanced area.\n3. Create a new API Key\n4. Use the new API Key and the sandbox base URL in your API requests\n\n> Use the dropdown in the top right of an API operation page to select the sandbox environment server.\n\n### Credit Cards\n\nWhen signing up for the sandbox environment you can use the  following\ncredit card with any 3-digit CVC and a future expiration date.\n\n```\n4000 0012 4000 0000\n```\n\n### Expectations\n\nThe sandbox environment is intended for development and testing purposes only.\nExpect latency to be higher than the production environment.\n\nWe use our sandbox environment as well when developing new features to ensure\nthere are no breaking changes. So expect the occasional breaking change when\nusing the sandbox environment.\n\n# Responses\n\nAll endpoints will return an object and if there is actual data\nto be returned, it is going to be named `data`, where `data` may\nbe an array or an object.\n\nIf there is an `error` field present on the root JSON object, that\nmeans something went wrong and that error message is all we know about it.\nAdditionally, in some cases, you may inspect the HTTP status codes to\ngather more information.\n\nPlease check our payload/response examples in detail as well as the\ncurl examples that are a part of each section that documents an operation.\n\nExample of a successful response:\n`{ data: ... }`\n\nExample of a response with an error:\n`{ error: 'Some error message', data: null }`\n"
+    "description": "# Issues\n\nPlease open [bug reports](https://github.com/trexitycode/openapi/issues/new?template=bug_report.md) or [feature requests](https://github.com/trexitycode/openapi/issues/new?template=feature_request.md) requests in the [issues](https://github.com/trexitycode/openapi/issues) board.\n\n# Usage Policy\n\n**(ADDED IN v1.7)**\n\nBy using this API to provide delivery rates to your users you agree to display the [Rate](#operation/getSimpleRate) `name` without modification.\nThe [Rate](#operation/getSimpleRate) `description` can be replaced with a custom value (e.g. Same Day, etc.) or displayed as-is from the Rate.\n\nThis allows Trexity to ensure consistent messaging wherever Trexity delivery rates are shown.\n\n## Suspension & Termination\n\nFailure to comply with this Usage Policy may result in suspension of your Trexity merchant account and/or API Keys. Continued failure to comply may result in the termination of your Trexity merchant account.\n\n# Concepts & Workflows\n\n## Concepts\n\n**Shipments** represent a route, has one or more parcels, requirements, and a pickup address.\n\n**Parcels** represent an order, has customer information and a delivery address.\n\n**Service Types** represent a type of service used to rate a shipment.\n\n**Rates** represent a price for completing a shipment.\n\n\n\n## Preferred Workflow\n\nThis workflow is the most common and preferred way to create a shipment for delivery. Just provide a parcel,\nand optionally a pickup time to create a shipment.\n\n1. [Optionally calculate rates](#operation/getRates) by specifying pickup information, customer information and the delivery address\n2. [Create a shipment](#operation/createShipment) specify the parcels, customer information and delivery address, and optionally a rate ID or a shipment service type\n3. [Optionally schedule for pickup](#operation/updateShipment) to set a pickup time of the shipment, or for Direct shipments indicate the shipment is [ready for pickup](#operation/shipmentReadyForPickup)\n4. [Get parcel label](#operation/getParcelLabel) for the parcel then affix to your packaging\n\n## Rating and Service Types\n\nThe following service types are available and have different rating rules:\n- `default` = The default service type known in the product as Same Day. Can be scheduled for pickup at any time within your merchant location's delivery hours and Trexity's operation hours.\n- `nextday` = The next day service type known in the product as Next Day. This service can only be scheduled for pickup the next day the or later of the shipment creation date and must be at 12:00 PM local time. \n- `direct` = A direct service type known in the product as Direct. This service can be scheduled for pickup at any time within your merchant location's delivery hours and Trexity's operation hours.\n\n## Scheduling a Shipment for Pickup\n\nTo schedule a shipment for pickup, ONLY use the `pickupStartAt` field when creating the shipment.\nIf the `pickupStartAt` field is not provided, then the shipment will not be scheduled for pickup and be left as a draft shipment.\n\nIf the `pickupStartAt` field is provided, then the shipment will be scheduled for pickup at the provided date-time, provided it is within your merchant location's delivery hours and Trexity's operation hours.\n\n### Cutoff Time\n\nTrexity does not have a concrete cutoff time for scheduling a shipment for pickup. Trexity uses a dynamic range that looks at the shipment delivery duration, distance, and adds a buffer time to determine a reasonable cutoff time when shipments are scheduled for pickup. However, we recommend **5:00 PM local time** as a cutoff time when scheduling a shipment for pickup\nto ensure that we can deliver the shipment before 8:00 PM local time.\n\n## Parcel Status\n\nFollow the [Parcel Events](#section/Parcel-Events) guide to understand what webhooks you will need to listen to.\n\n## Sandbox Environment\n\nAll API operations have an alternate base URL available in the sandbox environment.\n\nTo use the sandbox environment:\n1. Create an account on the [Sandbox Merchant Portal](https://merchant.beta.trexity.com/signup)\n2. Navigate to the [API Keys page](https://merchant.beta.trexity.com/api/keys) in the Advanced area.\n3. Create a new API Key\n4. Use the new API Key and the sandbox base URL in your API requests\n\n> Use the dropdown in the top right of an API operation page to select the sandbox environment server.\n\n### Credit Cards\n\nWhen signing up for the sandbox environment you can use the  following\ncredit card with any 3-digit CVC and a future expiration date.\n\n```\n4000 0012 4000 0000\n```\n\n### Expectations\n\nThe sandbox environment is intended for development and testing purposes only.\nExpect latency to be higher than the production environment.\n\nWe use our sandbox environment as well when developing new features to ensure\nthere are no breaking changes. So expect the occasional breaking change when\nusing the sandbox environment.\n\n# Idempotent Requests\n\n**(ADDED IN v1.38)**\n\nSupported shipment write endpoints accept an optional `Idempotency-Key`\nrequest header to make retries safe. Requests without the header retain their\nexisting behavior.\n\nThe key is an opaque string of 1-255 printable ASCII characters. UUID v4\nvalues are recommended. Keys are scoped account-wide, across all endpoints,\nand retained for 72 hours. Reusing a key for a different endpoint, path or\nresource, query, or request body returns HTTP 422 with\n`code: idempotency-key-mismatch`. If deriving keys from a business identifier,\nnamespace them by operation, for example `order-123:create` and\n`order-123:cancel`.\n\nA repeated completed request returns the original status code and response\nbody with `Idempotency-Replayed: true`. If a request with the same key is still\nbeing processed, the API returns HTTP 409 with\n`code: idempotency-key-in-progress`; retry after a short backoff. A malformed\nkey (empty, longer than 255 characters, or containing non-printable\ncharacters) returns HTTP 400 with `code: idempotency-key-invalid`.\n\nIdempotency-Key is supported on:\n\n- `POST /shipments`\n- `POST /shipments/bulk/{rateId}`\n- `PATCH /shipments/{shipmentId}`\n- `PATCH /shipments/{shipmentId}/parcels/{deliveryIndex}`\n- `POST /shipments/{shipmentId}/cancel`\n- `POST /shipments/{shipmentId}/ready-for-pickup`\n- `POST /shipments/{shipmentId}/tracking/{deliveryIndex}`\n\nRequest idempotency is distinct from webhook delivery idempotency, where\nwebhook receivers deduplicate deliveries using `webhook-id`.\n\n# Responses\n\nAll endpoints will return an object and if there is actual data\nto be returned, it is going to be named `data`, where `data` may\nbe an array or an object.\n\nIf there is an `error` field present on the root JSON object, that\nmeans something went wrong and that error message is all we know about it.\nAdditionally, in some cases, you may inspect the HTTP status codes to\ngather more information.\n\nPlease check our payload/response examples in detail as well as the\ncurl examples that are a part of each section that documents an operation.\n\nExample of a successful response:\n`{ data: ... }`\n\nExample of a response with an error:\n`{ error: 'Some error message', data: null }`\n"
   },
   "servers": [
     {
@@ -59,7 +59,7 @@
     },
     {
       "name": "Webhooks",
-      "description": "Retrieve and manage webhooks for a Trexity Merchant.\n\n## Parcel Events\n\nA Shipment is a container of parcels, each with their own delivery address.\nHowever, the Shipment has a single pickup address. As activity occurs on a\nparcel the Shipment's `currentStatus` oscilates between `OUT_FOR_DELIVERY`,\n`ARRIVED_AT_DELIVERY` and `DELIVERED`. However, the Shipment alone doesn't\ninform you of what parcel the status is for.\n\nTo listen to parcel events listen to the following webhooks:\n- `parcel.created` The parcel has been created during shipment creation or update\n- `parcel.updated` The parcel has been updated during shipment update\n- `parcel.deleted` The parcel has been deleted during shipment udpate\n- `parcel.picked_up` The driver has scanned and picked up a parcel\n- `parcel.delivered` The driver has scanned and delivered a parcel\n- `parcel.returning` The driver is returning a parcel\n- `parcel.returned` The driver has returned a parcel to pickup address\n\nThe request payload of these webhook events indicate the parcel that is currently\nbeing affected.\n\n## Storing The shipmentId\n\nIf you have the need to update pickup-related information such as the pickup address, POD settings,\nor the pickup instructions, or you are polling the shipment endpoints for the status of the shipment\nthen you will need to store and reference the `shipmentId`. However, the `shipmentId` can change for\na parcel if the parcel is moved, cloned or bundled. You can re-map your orders/parcels by listening to\nthe `shipment.created` webhook.\n\n> You will need to ensure that you provide a value for a parcel's `externalId` field when you crate a shipment.\n> This field is intended to be an identifier that references back to your system.\n\n```js\n// This sample code uses Nodejs with Express\nfunction trexity_shipmentCreated (req, res, next) {\n  const shipmentId = req.body.data.id\n  const parcels = body.parcels\n  const promises = []\n\n  for (const parcel of parcels) {\n    const orderId = parcel.externalId\n\n    // Generally this is where you would update the Trexity shipment ID associated to your order.\n    //\n    // For example update the metadata associated to your order where the orders_metadata table\n    // has at least the following columns: order_id, key, and value, and there is a unique constraint\n    // on the order_id:key column pair. The end result is that the metadata field will be upserted.\n    const promise = executeParameterizedSql(`\n      INSERT INTO orders_metadata (order_id, key, value)\n      VALUES ($1, 'trexity_shipment_id', $2)\n      ON CONFLICT\n      DO UPDATE set value = EXCLUDED.value\n    `, [orderId, shipmentId])\n\n    promises.push(promise)\n  }\n\n  Promise.allSettled(promises)\n    .then(() => res.status(200).json({}))\n}\n```\n\n## Verifying Webhook Requests\n\nAll webhook requests have a header that contains a signature signed with the Trexity Merchant's\nwebhook secret as found in their \"Trexity API\" settings. To verify the signature take the raw\nrequest body as text and create a SHA256 HMAC signed with the merchant's webhook secret and covert to hex.\n\nExample:\n```\n// nodejs\nconst text = await new Promise((resolve, reject) => {\n  const buff = []\n  req.setEncoding('utf8')\n  req.on('data', chunk => (buff.push(chunk)))\n  req.once('end', resolve(buff.join('')))\n  req.once('error', reject)\n})\n\nconst sig = require('crypto')\n  .createHmac('sha256', process.env.TRX_MERCH_WEBHOOK_SECRET)\n  .update(text)\n  .digest('hex')\n\nconst isValid = req.headers['x-trexity-signature'] === sig\n\nif (!isValid) {\n  res.statusCode = 403\n  res.end('Forbidden', 'utf8')\n  return\n}\n\nconst body = JSON.parse(body)\n// ...\n```\n"
+      "description": "Retrieve and manage webhooks for a Trexity Merchant.\n\n## Delivery format\n\nTrexity sends full payloads containing complete entity data, not thin\npayloads. Every webhook request body has exactly this envelope:\n\n```json\n{\n  \"data\": {\n    \"...\": \"complete entity data\"\n  },\n  \"timestamp\": \"2026-07-21T18:42:10.123Z\",\n  \"type\": \"shipment.created\"\n}\n```\n\n- `type` is the event name and has the same value as the deprecated\n  `x-trexity-event-name` header.\n- `timestamp` is the ISO-8601 time the event occurred, with millisecond\n  resolution. It is stable across retries and should be used for event\n  ordering. Two events in the same millisecond have the same timestamp\n  and are unordered relative to each other.\n\n## Delivery headers\n\nEvery webhook delivery follows the\n[Standard Webhooks specification](https://github.com/standard-webhooks/standard-webhooks)\nand includes:\n\n- `webhook-id`: a UUID v4 that is stable across all retry attempts for the\n  same delivery. Use it as the idempotency key.\n- `webhook-timestamp`: the Unix timestamp in seconds for that delivery\n  attempt. It changes on each retry.\n- `webhook-signature`: one or more space-delimited signatures in\n  `v1,<base64>` format. Parsers must handle multiple signatures.\n\nThe signature is HMAC-SHA256 over\n`${webhook-id}.${webhook-timestamp}.${raw request body}`, keyed with the\nraw secret bytes.\n\nThe deprecated `x-trexity-signature`, `x-trexity-event-name`, and\n`x-trexity-webhook-order-id` headers continue to be sent for backwards\ncompatibility. No removal date has been announced.\n\n## Retries and idempotency\n\nWebhook delivery is at-least-once, so receivers can see duplicate\ndeliveries.\n\nA delivery succeeds only when your endpoint returns a `2xx` status within\n60 seconds. Any other outcome is retried:\n\n- a non-2xx response, such as `429`, `500`, `502`, or `503`\n- a request that never completes: a connection or DNS failure, a TLS\n  error, or no response within 60 seconds\n\n> NOTE: We will be tightening the timeout to 15 seconds in the near future, so to\n> future proof your implementation please assume a 15 second tiemout.\n\nBoth are treated the same way, because the sender cannot distinguish an\nendpoint that is down from one that is merely failing. Retries run up to\n10 attempts, each scheduled 2-5 minutes after the previous failure\n(randomized, not escalating).\n\nReturning a non-2xx status is therefore the supported way to ask for a\nredelivery when your service cannot process an event.\n\nDeduplicate on `webhook-id`, which is identical across attempts. The raw\npayload bytes are also identical; only `webhook-timestamp` and\n`webhook-signature` change for each retry attempt. Custom headers are\nre-read at each attempt, so header edits take effect on subsequent\nretries.\n\n## Custom headers\n\nA webhook may have up to 10 custom headers. Create-time headers are\noptional, and configured headers are otherwise managed through\n`/webhooks/{webhookId}/headers`. The list-webhooks response does not\ninclude custom header data.\n\n`Authorization` is sensitive: its value is encrypted at rest and is never\nreturned when headers are read. Sensitive headers are omitted from\n`headers` and appear only by name in the `sensitive` list, so the two sets\nare mutually exclusive. Sensitive and reserved-name checks are\ncase-insensitive.\n\n## Parcel Events\n\nA Shipment is a container of parcels, each with their own delivery address.\nHowever, the Shipment has a single pickup address. As activity occurs on a\nparcel the Shipment's `currentStatus` oscilates between `OUT_FOR_DELIVERY`,\n`ARRIVED_AT_DELIVERY` and `DELIVERED`. However, the Shipment alone doesn't\ninform you of what parcel the status is for.\n\nTo listen to parcel events listen to the following webhooks:\n- `parcel.created` The parcel has been created during shipment creation or update\n- `parcel.updated` The parcel has been updated during shipment update\n- `parcel.deleted` The parcel has been deleted during shipment udpate\n- `parcel.picked_up` The driver has scanned and picked up a parcel\n- `parcel.delivered` The driver has scanned and delivered a parcel\n- `parcel.returning` The driver is returning a parcel\n- `parcel.returned` The driver has returned a parcel to pickup address\n\nThe request payload of these webhook events indicate the parcel that is currently\nbeing affected.\n\n## Storing The shipmentId\n\nIf you have the need to update pickup-related information such as the pickup address, POD settings,\nor the pickup instructions, or you are polling the shipment endpoints for the status of the shipment\nthen you will need to store and reference the `shipmentId`. However, the `shipmentId` can change for\na parcel if the parcel is moved, cloned or bundled. You can re-map your orders/parcels by listening to\nthe `shipment.created` webhook.\n\n> You will need to ensure that you provide a value for a parcel's `externalId` field when you crate a shipment.\n> This field is intended to be an identifier that references back to your system.\n\n```js\n// This sample code uses Nodejs with Express\nfunction trexity_shipmentCreated (req, res, next) {\n  const shipmentId = req.body.data.id\n  const parcels = body.parcels\n  const promises = []\n\n  for (const parcel of parcels) {\n    const orderId = parcel.externalId\n\n    // Generally this is where you would update the Trexity shipment ID associated to your order.\n    //\n    // For example update the metadata associated to your order where the orders_metadata table\n    // has at least the following columns: order_id, key, and value, and there is a unique constraint\n    // on the order_id:key column pair. The end result is that the metadata field will be upserted.\n    const promise = executeParameterizedSql(`\n      INSERT INTO orders_metadata (order_id, key, value)\n      VALUES ($1, 'trexity_shipment_id', $2)\n      ON CONFLICT\n      DO UPDATE set value = EXCLUDED.value\n    `, [orderId, shipmentId])\n\n    promises.push(promise)\n  }\n\n  Promise.allSettled(promises)\n    .then(() => res.status(200).json({}))\n}\n```\n\n## Verifying Webhook Requests\n\nFetch the signing secrets from `GET /webhooks/secret-key`, then pass\n`standardWebhooksSecretKey` to a\n[Standard Webhooks library](https://github.com/standard-webhooks/standard-webhooks/tree/main/libraries).\nThis value has the format `whsec_<base64>`.\n\n> **WARNING:** Never pass the legacy `secretKey` to a Standard Webhooks\n> library. `secretKey` is itself valid base64, so the library silently\n> derives a different key and every verification fails with no obvious\n> configuration error. Always use `standardWebhooksSecretKey`.\n\nVerify the signature over the raw request body bytes before parsing JSON.\nRe-serializing a parsed body changes its bytes and breaks verification.\nFor example, the official JavaScript library can be used with Express as\nfollows:\n\n```js\nimport express from 'express'\nimport { Webhook } from 'standardwebhooks'\n\nconst app = express()\nconst verifier = new Webhook(\n  process.env.TREXITY_STANDARD_WEBHOOK_SECRET\n)\n\napp.post(\n  '/trexity/webhooks',\n  express.raw({ type: 'application/json' }),\n  async (req, res) => {\n    let event\n\n    try {\n      event = verifier.verify(req.body, {\n        'webhook-id': req.get('webhook-id'),\n        'webhook-timestamp': req.get('webhook-timestamp'),\n        'webhook-signature': req.get('webhook-signature')\n      })\n    } catch {\n      return res.sendStatus(403)\n    }\n\n    const deliveryId = req.get('webhook-id')\n    // Atomically skip deliveryId if it has already been processed.\n    await processTrexityEvent(event, deliveryId)\n    return res.sendStatus(204)\n  }\n)\n```\n\nStandard Webhooks libraries handle space-delimited signature lists and\nenforce a timestamp-tolerance window. The official JavaScript library\nrejects timestamps more than five minutes in the past or future. Keep\nreceiver clocks synchronized and do not disable this protection.\n\n### Legacy verification appendix\n\nNew integrations should use Standard Webhooks. For existing integrations,\n`x-trexity-signature` is a hex HMAC-SHA256 over the raw request body using\nthe legacy `secretKey`. It can be verified as follows:\n\n```js\nimport { createHmac, timingSafeEqual } from 'node:crypto'\n\nconst expected = createHmac(\n  'sha256',\n  process.env.TREXITY_LEGACY_WEBHOOK_SECRET\n).update(req.body).digest()\n\nconst supplied = Buffer.from(\n  req.get('x-trexity-signature') ?? '',\n  'hex'\n)\n\nconst isValid =\n  supplied.length === expected.length &&\n  timingSafeEqual(supplied, expected)\n```\n\nThe legacy header continues to be sent for backwards compatibility, but\nno removal date has been announced.\n"
     },
     {
       "name": "Locations",
@@ -1837,6 +1837,11 @@
             "source": "curl -X POST {server-url}/shipments\\\n  -H 'Content-Type: application/json'\\\n  -H 'Authorization: Bearer <Trexity API Key>'\\\n  -d '{\n    \"pickupAddress\": \"9 Slack Rd, Nepean ON K2G 0B7, CA\",\n    \"pickupAddressNotes\": \"Unit 1, ring the buzzer.\",\n    \"pickupInstructions\": \"Please be careful, since it may contain fragile things!\",\n    \"requirements\": {},\n    \"parcels\": [\n      {\n        \"deliveryAddress\": \"207 Queen St, Ottawa ON K1P 6E5, CA\",\n        \"deliveryName\": \"Srinivasa Ramanujan\",\n        \"description\": \"Glasses, bifocals\",\n        \"orderId\": \"BFG10K\",\n        \"parcelValue\": 10000\n      }\n    ]\n  }'\n"
           }
         ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/idempotency-key"
+          }
+        ],
         "requestBody": {
           "description": "Payload describing your shipment",
           "required": true,
@@ -1886,6 +1891,14 @@
         "responses": {
           "200": {
             "description": "Success",
+            "headers": {
+              "Idempotency-Replayed": {
+                "description": "**(ADDED IN v1.38)** Present with a value of `true` when this is a\nreplay of a completed request.\n",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -1948,7 +1961,67 @@
                     "code": {
                       "type": "string",
                       "nullable": true,
-                      "description": "Unexhaustive list of codes.\n\n- `unauthorized-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `invalid-delivery-address` = When the delivery address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-input` = When there are issues with the input data provided\n- `invalid-shipment-data` = When there are issues with the input data provided and the shipment entity cannot be instantiated\n- `num-labels-too-large` = When numLabels is too large\n- `invalid-scanids` = When the scanId specified is already in use\n- `outside-operating-hours` = When the pickup or delivery time specified is outside the your delivery hours or Trexity's service hours\n- `invalid-scheduled-posting-date` = The scheduling fields are invalid and do not describe a valid pickup window\n- `unauthorized-numlabels` = When total numLabels for the entire shipment is too large\n- `pickup-address-outsidetaxboundary` = The pickup address is outside the merchant's location province\n- `merchant-disabled` = The merchant has been disabled\n- `missing-profile-details` = The merchant has an incomplete profile\n- `no-shipment-rate` = A shipment rate failed to be calculated due to delivery or pickup address geofencing error\n"
+                      "description": "Unexhaustive list of codes.\n\n- `unauthorized-requirements` = When the requirements specified don't match the requirements granted to the merchant\n- `pickup-address-unserviceable` = When the pickup address cannot be matched to any of the merchant's locations\n- `invalid-pickup-address` = When the pickup address is invalid\n- `invalid-delivery-address` = When the delivery address is invalid\n- `pickup-point-outside-zone` = When the pickup address is outside Trexity's service area\n- `invalid-input` = When there are issues with the input data provided\n- `invalid-shipment-data` = When there are issues with the input data provided and the shipment entity cannot be instantiated\n- `num-labels-too-large` = When numLabels is too large\n- `invalid-scanids` = When the scanId specified is already in use\n- `outside-operating-hours` = When the pickup or delivery time specified is outside the your delivery hours or Trexity's service hours\n- `invalid-scheduled-posting-date` = The scheduling fields are invalid and do not describe a valid pickup window\n- `unauthorized-numlabels` = When total numLabels for the entire shipment is too large\n- `pickup-address-outsidetaxboundary` = The pickup address is outside the merchant's location province\n- `merchant-disabled` = The merchant has been disabled\n- `missing-profile-details` = The merchant has an incomplete profile\n- `no-shipment-rate` = A shipment rate failed to be calculated due to delivery or pickup address geofencing error\n- **(ADDED IN v1.38)** `idempotency-key-invalid` = The Idempotency-Key header is empty, longer than 255 characters, or contains non-printable characters\n"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "**(ADDED IN v1.38)** A request with the same Idempotency-Key is still\nbeing processed. Retry after a short backoff. The response code is\n`idempotency-key-in-progress`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-in-progress"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "**(ADDED IN v1.38)** The Idempotency-Key was previously used for a\ndifferent request. The response code is `idempotency-key-mismatch`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-mismatch"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
                     }
                   }
                 }
@@ -2077,11 +2150,22 @@
               "type": "string"
             },
             "description": "The rateId from a [Complex Rate result](/#operation/getComplexRateResult)"
+          },
+          {
+            "$ref": "#/components/parameters/idempotency-key"
           }
         ],
         "responses": {
           "200": {
             "description": "Successfully queued an asynchronous bulk shipment creation request",
+            "headers": {
+              "Idempotency-Replayed": {
+                "description": "**(ADDED IN v1.38)** Present with a value of `true` when this is a\nreplay of a completed request.\n",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -2095,8 +2179,98 @@
               }
             }
           },
+          "400": {
+            "description": "**(ADDED IN v1.38)** The Idempotency-Key header is empty, longer than\n255 characters, or contains non-printable characters. The response code\nis `idempotency-key-invalid`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-invalid"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
           "404": {
             "description": "The specified rateId could not be found"
+          },
+          "409": {
+            "description": "**(ADDED IN v1.38)** A request with the same Idempotency-Key is still\nbeing processed. Retry after a short backoff. The response code is\n`idempotency-key-in-progress`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-in-progress"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "**(ADDED IN v1.38)** The Idempotency-Key was previously used for a\ndifferent request. The response code is `idempotency-key-mismatch`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-mismatch"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2313,6 +2487,9 @@
               "type": "string"
             },
             "description": "The id of the shipment that needs to be updated"
+          },
+          {
+            "$ref": "#/components/parameters/idempotency-key"
           }
         ],
         "requestBody": {
@@ -2331,10 +2508,100 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "Success",
+            "headers": {
+              "Idempotency-Replayed": {
+                "description": "**(ADDED IN v1.38)** Present with a value of `true` when this is a\nreplay of a completed request.\n",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request.\n\n**(ADDED IN v1.38)** A malformed Idempotency-Key returns\n`code: idempotency-key-invalid`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "code": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "`idempotency-key-invalid` indicates the Idempotency-Key is\nempty, longer than 255 characters, or contains non-printable\ncharacters.\n"
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "**(ADDED IN v1.38)** A request with the same Idempotency-Key is still\nbeing processed. Retry after a short backoff. The response code is\n`idempotency-key-in-progress`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-in-progress"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "**(ADDED IN v1.38)** The Idempotency-Key was previously used for a\ndifferent request. The response code is `idempotency-key-mismatch`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-mismatch"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       },
@@ -2462,20 +2729,105 @@
               "type": "string"
             },
             "description": "The id of the shipment that needs to be cancelled"
+          },
+          {
+            "$ref": "#/components/parameters/idempotency-key"
           }
         ],
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "Success",
+            "headers": {
+              "Idempotency-Replayed": {
+                "description": "**(ADDED IN v1.38)** Present with a value of `true` when this is a\nreplay of a completed request.\n",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Invalid shipment ID in path or don't have permission to delete shipment"
+            "description": "Invalid shipment ID in path or don't have permission to delete shipment.\n\n**(ADDED IN v1.38)** A malformed Idempotency-Key returns\n`code: idempotency-key-invalid`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "code": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "`idempotency-key-invalid` indicates the Idempotency-Key is\nempty, longer than 255 characters, or contains non-printable\ncharacters.\n"
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
             "description": "Shipment not found"
           },
+          "409": {
+            "description": "**(ADDED IN v1.38)** A request with the same Idempotency-Key is still\nbeing processed. Retry after a short backoff. The response code is\n`idempotency-key-in-progress`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-in-progress"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
           "422": {
-            "description": "Shipment cannot be cancelled due to the shipment not being in cancellable state"
+            "description": "Shipment cannot be cancelled due to the shipment not being in a\ncancellable state.\n\n**(ADDED IN v1.38)** This status is also returned with\n`code: idempotency-key-mismatch` when the Idempotency-Key was previously\nused for a different request.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "code": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "`idempotency-key-mismatch` indicates the Idempotency-Key was\npreviously used for a different request.\n"
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2503,14 +2855,115 @@
               "type": "string"
             },
             "description": "The id of the shipment that needs to be marked as ready for pickup"
+          },
+          {
+            "$ref": "#/components/parameters/idempotency-key"
           }
         ],
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "Success",
+            "headers": {
+              "Idempotency-Replayed": {
+                "description": "**(ADDED IN v1.38)** Present with a value of `true` when this is a\nreplay of a completed request.\n",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "**(ADDED IN v1.38)** The Idempotency-Key header is empty, longer than\n255 characters, or contains non-printable characters. The response code\nis `idempotency-key-invalid`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-invalid"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           },
           "404": {
             "description": "Shipment not found"
+          },
+          "409": {
+            "description": "**(ADDED IN v1.38)** A request with the same Idempotency-Key is still\nbeing processed. Retry after a short backoff. The response code is\n`idempotency-key-in-progress`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-in-progress"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "**(ADDED IN v1.38)** The Idempotency-Key was previously used for a\ndifferent request. The response code is `idempotency-key-mismatch`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-mismatch"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -2547,6 +3000,9 @@
               "type": "integer"
             },
             "description": "The delivery index of the parcel to be updated"
+          },
+          {
+            "$ref": "#/components/parameters/idempotency-key"
           }
         ],
         "requestBody": {
@@ -2568,10 +3024,100 @@
         },
         "responses": {
           "204": {
-            "description": "Success"
+            "description": "Success",
+            "headers": {
+              "Idempotency-Replayed": {
+                "description": "**(ADDED IN v1.38)** Present with a value of `true` when this is a\nreplay of a completed request.\n",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
           },
           "400": {
-            "description": "Invalid payload or permission denied."
+            "description": "Invalid payload or permission denied.\n\n**(ADDED IN v1.38)** A malformed Idempotency-Key returns\n`code: idempotency-key-invalid`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "code": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "`idempotency-key-invalid` indicates the Idempotency-Key is\nempty, longer than 255 characters, or contains non-printable\ncharacters.\n"
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "**(ADDED IN v1.38)** A request with the same Idempotency-Key is still\nbeing processed. Retry after a short backoff. The response code is\n`idempotency-key-in-progress`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-in-progress"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "**(ADDED IN v1.38)** The Idempotency-Key was previously used for a\ndifferent request. The response code is `idempotency-key-mismatch`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-mismatch"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "description": "Unknown server problem"
@@ -2611,6 +3157,9 @@
               "type": "number"
             },
             "description": "The index of the parcel to retrieve a tracking URL for"
+          },
+          {
+            "$ref": "#/components/parameters/idempotency-key"
           }
         ],
         "requestBody": {
@@ -2643,6 +3192,14 @@
         "responses": {
           "200": {
             "description": "Success",
+            "headers": {
+              "Idempotency-Replayed": {
+                "description": "**(ADDED IN v1.38)** Present with a value of `true` when this is a\nreplay of a completed request.\n",
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            },
             "content": {
               "application/json": {
                 "schema": {
@@ -2661,7 +3218,89 @@
             }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request.\n\n**(ADDED IN v1.38)** A malformed Idempotency-Key returns\n`code: idempotency-key-invalid`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "code": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "`idempotency-key-invalid` indicates the Idempotency-Key is\nempty, longer than 255 characters, or contains non-printable\ncharacters.\n"
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "**(ADDED IN v1.38)** A request with the same Idempotency-Key is still\nbeing processed. Retry after a short backoff. The response code is\n`idempotency-key-in-progress`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-in-progress"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "**(ADDED IN v1.38)** The Idempotency-Key was previously used for a\ndifferent request. The response code is `idempotency-key-mismatch`.\n",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "error",
+                    "code",
+                    "params"
+                  ],
+                  "properties": {
+                    "error": {
+                      "type": "string"
+                    },
+                    "code": {
+                      "type": "string",
+                      "enum": [
+                        "idempotency-key-mismatch"
+                      ]
+                    },
+                    "params": {
+                      "type": "object",
+                      "nullable": true
+                    }
+                  }
+                }
+              }
+            }
           },
           "500": {
             "description": "Unknown server problem"
@@ -3287,7 +3926,7 @@
           "Webhooks"
         ],
         "summary": "List webhooks",
-        "description": "Gets all registered webhooks or registered webhooks for an event.\n",
+        "description": "Gets all registered webhooks or registered webhooks for an event.\n\nCustom header data is not included. Use\n`GET /webhooks/{webhookId}/headers` to retrieve it separately.\n",
         "parameters": [
           {
             "in": "query",
@@ -3378,6 +4017,9 @@
                     "format": "uri",
                     "description": "Secure (https://...) URL to send the webhook request to.",
                     "example": "https://example.com/trexity/webhook-handler"
+                  },
+                  "headers": {
+                    "$ref": "#/components/schemas/WebhookHeadersBase"
                   }
                 }
               }
@@ -3453,6 +4095,15 @@
                 "description": "Occurs when a shipment has been created.",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -3489,6 +4140,15 @@
                 "summary": "shipment.updated",
                 "description": "Occurs when a shipment has had address or parcel information updated.",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -3527,6 +4187,15 @@
                 "description": "Occurs when a shipment has been deleted.",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -3563,6 +4232,15 @@
                 "summary": "shipment.posted",
                 "description": "Occurs when a shipment has been posted to our driver community. This can occur as a result of an explicit \"post\" action\nfrom a user or from the platform posting a shipment based on the shipment's `scheduledPostAt` setting.\n",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -3601,6 +4279,15 @@
                 "description": "Occurs when a shipment has been accepted for delivery by a driver from our driver community.",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -3637,6 +4324,15 @@
                 "summary": "shipment.driver.arrived_at_pickup",
                 "description": "Occurs when a driver has arrived at the pickup address for a parcel within a shipment.",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -3675,6 +4371,15 @@
                 "description": "Occurs when a driver has picked up (e.g. has posession) a parcel within a shipment.",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -3711,6 +4416,15 @@
                 "summary": "shipment.driver.arrived_at_delivery",
                 "description": "Occurs when a driver arrived at a parcel's delivery address.",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -3749,6 +4463,15 @@
                 "description": "Occurs when a driver has delivered a parcel within a shipment.",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -3785,6 +4508,15 @@
                 "summary": "shipment.completed",
                 "description": "Occurs when a shipment has all deliverable parcels delivered and has been successfully paid.",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -3823,6 +4555,15 @@
                 "description": "Occurs when a shipment has been cancelled.",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -3859,6 +4600,15 @@
                 "summary": "shipment.driver.renounced",
                 "description": "Occurs when a shipment has been renounced by a driver after they accepted.",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -3897,6 +4647,15 @@
                 "description": "Occurs when a shipment has been put on hold.\n\nA shipment on hold will be immediately removed from our driver network and not be automatically posted to our driver community.\n\nAdditionally, shipments on hold must be re-posted.\n",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -3933,6 +4692,15 @@
                 "summary": "parcel.created",
                 "description": "Occurs when a parcel has been created during a shipment create or added to a shipment during update.\n",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -3971,6 +4739,15 @@
                 "description": "Occurs when a parcel has been updated during a shipment update.\n",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -4007,6 +4784,15 @@
                 "summary": "parcel.deleted",
                 "description": "Occurs when a parcel has been deleted during a shipment update.\n",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -4045,6 +4831,15 @@
                 "description": "Occurs when a parcel has been scanned and picked up by a driver.\n",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -4081,6 +4876,15 @@
                 "summary": "parcel.delivered",
                 "description": "Occurs when a parcel has been scanned and delivered to the recipient.\n",
                 "parameters": [
+                  {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
                   {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
@@ -4119,6 +4923,15 @@
                 "description": "Occurs when a parcel is being returned due to the driver not being able to complete the delivery.\nThis can be due to customer not being home, customer not having the delivery PIN, or customer refusing delivery.\n",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -4156,6 +4969,15 @@
                 "description": "Occurs when a parcel has been returned to merchant.\n",
                 "parameters": [
                   {
+                    "$ref": "#/components/parameters/webhook-id"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-timestamp"
+                  },
+                  {
+                    "$ref": "#/components/parameters/webhook-signature"
+                  },
+                  {
                     "$ref": "#/components/parameters/x-trexity-signature"
                   },
                   {
@@ -4185,6 +5007,42 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/webhooks/secret-key": {
+      "get": {
+        "operationId": "getWebhookSecretKey",
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Get webhook signing secrets",
+        "description": "Gets the merchant's legacy and Standard Webhooks signing secrets.\n\n**Always use `standardWebhooksSecretKey` with a Standard Webhooks library.**\nPassing the legacy `secretKey` to one of these libraries silently derives a\ndifferent key and causes every verification to fail.\n",
+        "responses": {
+          "200": {
+            "description": "Webhook signing secrets.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/WebhookSecretKeys"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Missing or invalid authentication."
+          },
+          "500": {
+            "description": "An internal error has occurred and the request cannot be completed."
           }
         }
       }
@@ -4247,6 +5105,120 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/webhooks/{webhookId}/headers": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "webhookId",
+          "required": true,
+          "description": "Registered webhook ID.",
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "get": {
+        "operationId": "getWebhookHeaders",
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Get webhook custom headers",
+        "description": "Gets the custom headers configured for a webhook. Sensitive header values\nare never returned: those headers are omitted from `headers` and only their\nnames are listed in `sensitive`. The two sets are mutually exclusive.\n",
+        "responses": {
+          "200": {
+            "description": "Webhook custom headers.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "required": [
+                    "data"
+                  ],
+                  "properties": {
+                    "data": {
+                      "$ref": "#/components/schemas/WebhookHeaders"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "The request is invalid, or the webhook belongs to another merchant.\n"
+          },
+          "404": {
+            "description": "Webhook is not found."
+          },
+          "500": {
+            "description": "An internal error has occurred and the request cannot be completed."
+          }
+        }
+      },
+      "put": {
+        "operationId": "addWebhookHeaders",
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Add webhook custom headers",
+        "description": "Adds custom headers to a webhook. This operation is add-only: attempting to\nadd a header name that already exists returns a `400` response.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookHeadersDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Webhook custom headers were added."
+          },
+          "400": {
+            "description": "The request is invalid, a header already exists, a name is reserved, or\nthe webhook would exceed 10 custom headers.\n"
+          },
+          "404": {
+            "description": "Webhook is not found."
+          },
+          "500": {
+            "description": "An internal error has occurred and the request cannot be completed."
+          }
+        }
+      },
+      "patch": {
+        "operationId": "updateWebhookHeaders",
+        "tags": [
+          "Webhooks"
+        ],
+        "summary": "Update or delete webhook custom headers",
+        "description": "Updates existing custom headers and deletes named headers. Every name in\n`headers` must already exist; an unknown update name returns a `400`\nresponse. A name appearing in both `headers` and `deleteHeaders` also\nreturns `400`. Deletes are idempotent, so deleting an unknown name\nsucceeds.\n",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookHeadersPatchDTO"
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Webhook custom headers were updated or deleted."
+          },
+          "400": {
+            "description": "The request is invalid, an updated header does not exist, a name appears\nin both request fields, or a name is reserved.\n"
+          },
+          "404": {
+            "description": "Webhook is not found."
+          },
+          "500": {
+            "description": "An internal error has occurred and the request cannot be completed."
           }
         }
       }
@@ -5525,25 +6497,25 @@
       },
       "ParcelLoad": {
         "type": "object",
-        "description": "**(ADDED IN v1.9)** Optional dimensions and weight of the parcel. This\nwill inform the driver matching algorithm accordingly.\n\n**(CHANGED IN v1.17)** The maximums have changed from 130 cm length, 80 cm width\nand 80 cm height, to 91 cm for any dimension. The maximum for weight changed from\n30000 grams to 15876.\n\n**(CHANGED IN v1.23)** The maximum weight changed from 15876 to 9072 grams to coincides\nwith our merchant code of conduct policy.\n\n**(CHANGED IN v1.24)** The maximum weight changed from 9072 back to 15876 grams to give\nmerchants time to adjust to the new weight limit.\n",
+        "description": "**(ADDED IN v1.9)** Optional dimensions and weight of the parcel. This\nwill inform the driver matching algorithm accordingly.\n\n**(CHANGED IN v1.17)** The maximums have changed from 130 cm length, 80 cm width\nand 80 cm height, to 91 cm for any dimension. The maximum for weight changed from\n30000 grams to 15876.\n\n**(CHANGED IN v1.23)** The maximum weight changed from 15876 to 9072 grams to coincides\nwith our merchant code of conduct policy.\n\n**(CHANGED IN v1.24)** The maximum weight changed from 9072 back to 15876 grams to give\nmerchants time to adjust to the new weight limit.\n\n**(CHANGED IN v1.38)** Maximum package dimensions are approximately\n20 x 12 x 12 inches (50 x 30 x 30 centimeters), with no individual\ndimension greater than 50 centimeters. The maximum weight remains 15876\ngrams (~35 lbs).\n",
         "properties": {
           "length": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 91,
-            "description": "Length (in centimeters). Maximum is ~3 feet."
+            "maximum": 50,
+            "description": "Length (in centimeters). Maximum is 50 cm (~20 in)."
           },
           "width": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 91,
-            "description": "Width (in centimeters). Maximum is ~3 feet."
+            "maximum": 50,
+            "description": "Width (in centimeters). Maximum is 50 cm (~20 in)."
           },
           "height": {
             "type": "integer",
             "minimum": 0,
-            "maximum": 91,
-            "description": "Height (in centimeters). Maximum is ~3 feet."
+            "maximum": 50,
+            "description": "Height (in centimeters). Maximum is 50 cm (~20 in)."
           },
           "weight": {
             "type": "integer",
@@ -6581,18 +7553,30 @@
           "shipment.driver.picked_up",
           "shipment.driver.arrived_at_delivery",
           "shipment.driver.parcel_delivered",
+          "shipment.driver.position_updated",
           "shipment.completed",
           "shipment.cancelled",
           "shipment.driver.renounced",
           "shipment.on_hold",
+          "shipment.orphaned",
+          "shipment.resubmitted",
+          "shipment.expired",
+          "parcel.created",
+          "parcel.updated",
+          "parcel.deleted",
+          "parcel.arrived_at_pickup",
           "parcel.picked_up",
+          "parcel.arrived_at_delivery",
+          "parcel.near_customer",
           "parcel.delivered",
           "parcel.returning",
-          "parcel.returned"
+          "parcel.returned",
+          "parcel.timings_updated"
         ]
       },
       "Webhook": {
-        "description": "A registered webhook",
+        "description": "A registered webhook. Custom header data is not included when webhooks are\nlisted; retrieve it from `GET /webhooks/{webhookId}/headers`.\n",
+        "type": "object",
         "properties": {
           "id": {
             "type": "string"
@@ -6619,16 +7603,37 @@
           }
         }
       },
+      "WebhookHeadersBase": {
+        "type": "object",
+        "maxProperties": 10,
+        "additionalProperties": {
+          "type": "string",
+          "maxLength": 1024
+        },
+        "description": "Custom HTTP header names mapped to their string values. A webhook may have no\nmore than 10 custom headers.\n\n`Authorization` is treated as sensitive: its value is encrypted at rest and\nmasked when read. Sensitive and reserved-name comparisons are\ncase-insensitive.\n\nHeader names are case-sensitive identities: `X-Api-Key` and `x-api-key` are\ntwo distinct headers, each consuming one of the 10 slots. Only the sensitive\nand reserved-name checks are case-insensitive. Updating or deleting a header\nmust therefore use the exact stored casing.\n\nHeader names are limited to 128 characters and must be a valid HTTP token\n(RFC 7230). Header values are limited to 1024 characters and may not contain\ncarriage returns or line feeds.\n\nThe following names are reserved and rejected:\n`content-type`, `content-length`, `host`, `connection`,\n`transfer-encoding`, `te`, `trailer`, `upgrade`, `expect`, and `keep-alive`.\nNames beginning with `x-trexity-`, `proxy-`, or `webhook-` are also rejected.\n"
+      },
       "ShipmentWebhookPayload": {
-        "description": "Webhook payload during a shipment event.",
+        "description": "Webhook payload during a shipment event. Trexity sends the complete Shipment\nentity in `data`, not a thin payload.\n",
+        "type": "object",
+        "additionalProperties": false,
         "required": [
           "data",
-          "timestamp"
+          "timestamp",
+          "type"
         ],
         "properties": {
+          "type": {
+            "description": "Event name. This is the same value sent in the deprecated\n`x-trexity-event-name` header.\n",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WebhookEventName"
+              }
+            ]
+          },
           "timestamp": {
-            "description": "**(ADDED IN v1.11)** Date time the event took place in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
-            "type": "string"
+            "description": "ISO-8601 date-time when the event occurred, with millisecond resolution.\nThis value remains stable across delivery retries and should be used for\nevent ordering instead of the deprecated `x-trexity-webhook-order-id`\nheader. Two events occurring in the same millisecond have the same\ntimestamp and are unordered relative to each other.\n\nISO date strings are in UTC. Example: `2020-07-25T10:48:08.987Z`.\n",
+            "type": "string",
+            "format": "date-time"
           },
           "data": {
             "$ref": "#/components/schemas/Shipment"
@@ -6636,17 +7641,36 @@
         }
       },
       "ParcelWebhookPayload": {
-        "description": "Webhook payload during a parcel event.",
+        "description": "Webhook payload during a parcel event. Trexity sends complete entity data in\n`data`, not a thin payload.\n",
+        "type": "object",
+        "additionalProperties": false,
         "required": [
           "data",
-          "timestamp"
+          "timestamp",
+          "type"
         ],
         "properties": {
+          "type": {
+            "description": "Event name. This is the same value sent in the deprecated\n`x-trexity-event-name` header.\n",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WebhookEventName"
+              }
+            ]
+          },
           "timestamp": {
-            "description": "**(ADDED IN v1.11)** Date time the event took place in Simplified ISO8601 format YYYY-MM-DDTHH:mm:ss.sssZ\n\nNote that ISO date strings are always in UTC time.\n\nAn example: 2020-07-25T10:48:08.987Z\n",
-            "type": "string"
+            "description": "ISO-8601 date-time when the event occurred, with millisecond resolution.\nThis value remains stable across delivery retries and should be used for\nevent ordering instead of the deprecated `x-trexity-webhook-order-id`\nheader. Two events occurring in the same millisecond have the same\ntimestamp and are unordered relative to each other.\n\nISO date strings are in UTC. Example: `2020-07-25T10:48:08.987Z`.\n",
+            "type": "string",
+            "format": "date-time"
           },
           "data": {
+            "type": "object",
+            "required": [
+              "shipmentId",
+              "deliveryIndex",
+              "orderUuid",
+              "parcel"
+            ],
             "properties": {
               "shipmentId": {
                 "type": "string",
@@ -6663,6 +7687,82 @@
               "parcel": {
                 "$ref": "#/components/schemas/Parcel"
               }
+            }
+          }
+        }
+      },
+      "WebhookSecretKeys": {
+        "description": "Webhook signing secrets for a merchant.",
+        "type": "object",
+        "required": [
+          "secretKey",
+          "standardWebhooksSecretKey"
+        ],
+        "properties": {
+          "secretKey": {
+            "type": "string",
+            "nullable": true,
+            "deprecated": true,
+            "description": "**Deprecated.** Legacy secret used only to verify the deprecated\n`x-trexity-signature` header. Use `standardWebhooksSecretKey` instead.\n`null` when the merchant has no signing secret configured.\n"
+          },
+          "standardWebhooksSecretKey": {
+            "type": "string",
+            "nullable": true,
+            "description": "Standard Webhooks signing secret in `whsec_<base64>` format. Always pass\nthis value to Standard Webhooks libraries. `null` when the merchant has no\nsigning secret configured.\n\n**WARNING:** Never pass the legacy `secretKey` to a Standard Webhooks\nlibrary. The legacy value is itself valid base64, so the library silently\nderives a different key and every signature verification fails.\n",
+            "pattern": "^whsec_[A-Za-z0-9+/]+={0,2}$"
+          }
+        }
+      },
+      "WebhookHeaders": {
+        "description": "Custom headers configured for a webhook. `headers` and `sensitive` are\nmutually exclusive: a header appears in exactly one of them.\n",
+        "type": "object",
+        "required": [
+          "headers",
+          "sensitive"
+        ],
+        "properties": {
+          "headers": {
+            "description": "Non-sensitive header names mapped to their configured values. Sensitive\nheaders are omitted entirely — their names are listed in `sensitive`.\n",
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/WebhookHeadersBase"
+              }
+            ]
+          },
+          "sensitive": {
+            "type": "array",
+            "description": "Names of headers whose values are sensitive. Their values are never\nreturned, so these names do not appear in `headers`. How a sensitive\nheader is presented is left to the client.\n",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "WebhookHeadersDTO": {
+        "description": "Custom headers to add to a webhook.",
+        "type": "object",
+        "required": [
+          "headers"
+        ],
+        "properties": {
+          "headers": {
+            "$ref": "#/components/schemas/WebhookHeadersBase"
+          }
+        }
+      },
+      "WebhookHeadersPatchDTO": {
+        "description": "Custom headers to update or delete from a webhook. Both properties are\noptional: send `headers` alone to update values, `deleteHeaders` alone to\nremove headers, or both together.\n",
+        "type": "object",
+        "properties": {
+          "headers": {
+            "$ref": "#/components/schemas/WebhookHeadersBase"
+          },
+          "deleteHeaders": {
+            "type": "array",
+            "maxItems": 100,
+            "description": "Header names to delete, matched using the exact stored casing. Deleting a\nname that does not exist succeeds. A header name cannot appear in both\n`headers` and `deleteHeaders`.\n",
+            "items": {
+              "type": "string"
             }
           }
         }
@@ -7309,6 +8409,81 @@
         }
       }
     },
+    "parameters": {
+      "idempotency-key": {
+        "name": "Idempotency-Key",
+        "in": "header",
+        "required": false,
+        "description": "**(ADDED IN v1.38)** An opaque key that enables idempotent handling for this\nrequest. The key must be 1-255 printable ASCII characters. UUID v4 values are\nrecommended.\n\nKeys are unique across all endpoints for the merchant account and are retained\nfor 72 hours. Reusing a key for a different endpoint, path or resource, query,\nor request body returns HTTP 422 with `code: idempotency-key-mismatch`.\nNamespace keys derived from business identifiers by operation, for example\n`order-123:create` and `order-123:cancel`.\n",
+        "schema": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255,
+          "pattern": "^[\\x20-\\x7E]+$",
+          "example": "123e4567-e89b-42d3-a456-426614174000"
+        }
+      },
+      "webhook-id": {
+        "name": "webhook-id",
+        "in": "header",
+        "required": true,
+        "description": "Standard Webhooks delivery identifier. This is a UUID v4 that remains stable\nacross every retry attempt for the same delivery. Use this value as the\nidempotency key when deduplicating webhook deliveries.\n",
+        "schema": {
+          "type": "string",
+          "format": "uuid"
+        }
+      },
+      "webhook-timestamp": {
+        "name": "webhook-timestamp",
+        "in": "header",
+        "required": true,
+        "description": "Unix timestamp in seconds for this delivery attempt. This value changes on\nevery retry and is included in the Standard Webhooks signature.\n",
+        "schema": {
+          "type": "integer",
+          "format": "int64"
+        }
+      },
+      "webhook-signature": {
+        "name": "webhook-signature",
+        "in": "header",
+        "required": true,
+        "description": "Standard Webhooks signature in the format `v1,<base64>`. It is an\nHMAC-SHA256 of\n`${webhook-id}.${webhook-timestamp}.${raw request body}`, keyed with the raw\nsecret bytes.\n\nThe header may contain a space-delimited list of signatures. Parsers must\ninspect every `v1` signature rather than assuming only one value is present.\n",
+        "schema": {
+          "type": "string",
+          "example": "v1,g0I0lYQvVCFHKF4nS4pQBqKGmqOMRPuFhUx3mVsvKzE="
+        }
+      },
+      "x-trexity-signature": {
+        "name": "x-trexity-signature",
+        "in": "header",
+        "required": true,
+        "deprecated": true,
+        "description": "**Deprecated.** Legacy hex-encoded HMAC-SHA256 signature of the raw request\nbody, keyed with the legacy `secretKey`.\n\nThis header continues to be sent for backwards compatibility. No removal\ndate has been announced. New integrations should verify `webhook-signature`\ninstead.\n",
+        "schema": {
+          "type": "string"
+        }
+      },
+      "x-trexity-event-name": {
+        "name": "x-trexity-event-name",
+        "in": "header",
+        "required": true,
+        "deprecated": true,
+        "description": "**Deprecated.** Webhook event name. The same value is available in the\npayload's `type` property.\n\nThis header continues to be sent for backwards compatibility. No removal\ndate has been announced.\n",
+        "schema": {
+          "$ref": "#/components/schemas/WebhookEventName"
+        }
+      },
+      "x-trexity-webhook-order-id": {
+        "name": "x-trexity-webhook-order-id",
+        "in": "header",
+        "required": true,
+        "deprecated": true,
+        "description": "**Deprecated.** This header is superseded by the payload's `timestamp`\nproperty for event ordering.\n\nThis header continues to be sent for backwards compatibility. No removal\ndate has been announced.\n",
+        "schema": {
+          "type": "integer"
+        }
+      }
+    },
     "responses": {
       "FileResponse": {
         "description": "Returns the binary content of the file in question.\n\nPlease note that our storage endpoints provide [ETag](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/ETag) header for caching purposes.\n",
@@ -7319,32 +8494,6 @@
               "format": "binary"
             }
           }
-        }
-      }
-    },
-    "parameters": {
-      "x-trexity-signature": {
-        "name": "x-trexity-signature",
-        "in": "header",
-        "description": "The SHA256 HMAC signature for the request.",
-        "schema": {
-          "type": "string"
-        }
-      },
-      "x-trexity-event-name": {
-        "name": "x-trexity-event-name",
-        "in": "header",
-        "description": "Webhook event name.",
-        "schema": {
-          "$ref": "#/components/schemas/WebhookEventName"
-        }
-      },
-      "x-trexity-webhook-order-id": {
-        "name": "x-trexity-webhook-order-id",
-        "in": "header",
-        "description": "The webhook processing sort order. Webhooks may not be delivered in order, but this value can be used to determine processing order.",
-        "schema": {
-          "type": "integer"
         }
       }
     }

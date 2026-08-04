@@ -20,9 +20,17 @@ post:
       schema:
         type: string
       description: The rateId from a [Complex Rate result](/#operation/getComplexRateResult)
+    - $ref: ../../components/headers/idempotency-key.yaml
   responses:
     '200':
       description: Successfully queued an asynchronous bulk shipment creation request
+      headers:
+        Idempotency-Replayed:
+          description: |
+            **(ADDED IN v1.38)** Present with a value of `true` when this is a
+            replay of a completed request.
+          schema:
+            type: boolean
       content:
         application/json:
           schema:
@@ -30,5 +38,52 @@ post:
             properties:
               data:
                 $ref: ../../components/schemas/responses/CreateBulkShipmentsStatusResponse.yaml
+    '400':
+      description: |
+        **(ADDED IN v1.38)** The Idempotency-Key header is empty, longer than
+        255 characters, or contains non-printable characters. The response code
+        is `idempotency-key-invalid`.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error, code, params]
+            properties:
+              error: { type: string }
+              code:
+                type: string
+                enum: [idempotency-key-invalid]
+              params: { type: object, nullable: true }
+    '409':
+      description: |
+        **(ADDED IN v1.38)** A request with the same Idempotency-Key is still
+        being processed. Retry after a short backoff. The response code is
+        `idempotency-key-in-progress`.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error, code, params]
+            properties:
+              error: { type: string }
+              code:
+                type: string
+                enum: [idempotency-key-in-progress]
+              params: { type: object, nullable: true }
+    '422':
+      description: |
+        **(ADDED IN v1.38)** The Idempotency-Key was previously used for a
+        different request. The response code is `idempotency-key-mismatch`.
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error, code, params]
+            properties:
+              error: { type: string }
+              code:
+                type: string
+                enum: [idempotency-key-mismatch]
+              params: { type: object, nullable: true }
     '404':
       description: The specified rateId could not be found
