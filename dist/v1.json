@@ -3789,6 +3789,13 @@
                             "undeliverable",
                             "cancelled"
                           ]
+                        },
+                        "eta": {
+                          "type": "string",
+                          "format": "date-time",
+                          "nullable": true,
+                          "description": "**(ADDED IN v1.38)** The estimated date-time of the courier's arrival, or null when no ETA is available.\n\nWhat the ETA refers to depends on the `status`:\n\n- `pre-transit`: the estimated arrival of the courier at the pickup address.\n- `in-transit`: the estimated arrival of the courier at the parcel's delivery address.\n\nAn ETA is only computed for the `pre-transit` and `in-transit` statuses. All other statuses will always be null.\nEven for those statuses the ETA is null until it has been computed for the first time.\n\nThe ETA is recomputed periodically and reflects the estimate as of the last computation, so it may be a\ndate-time in the past when the courier is running behind the last computed estimate.\n",
+                          "example": "2026-08-04T18:30:00.000Z"
                         }
                       }
                     }
