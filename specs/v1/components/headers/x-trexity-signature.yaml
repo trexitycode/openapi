@@ -1,5 +1,13 @@
 name: x-trexity-signature
 in: header
-description: The SHA256 HMAC signature for the request.
+required: true
+deprecated: true
+description: |
+  **Deprecated.** Legacy hex-encoded HMAC-SHA256 signature of the raw request
+  body, keyed with the legacy `secretKey`.
+
+  This header continues to be sent for backwards compatibility. No removal
+  date has been announced. New integrations should verify `webhook-signature`
+  instead.
 schema:
   type: string

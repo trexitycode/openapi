@@ -5,6 +5,9 @@ get:
   description: |
     Gets all registered webhooks or registered webhooks for an event.
 
+    Custom header data is not included. Use
+    `GET /webhooks/{webhookId}/headers` to retrieve it separately.
+
   ##############################################################################
 
   parameters:
@@ -69,6 +72,8 @@ post:
               format: uri
               description: Secure (https://...) URL to send the webhook request to.
               example: https://example.com/trexity/webhook-handler
+            headers:
+              $ref: ../../components/schemas/WebhookHeadersBase.yaml
   responses:
     '200':
       description: Successfully register a webhook.
@@ -110,6 +115,9 @@ post:
           summary: shipment.created
           description: Occurs when a shipment has been created.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -130,6 +138,9 @@ post:
           summary: shipment.updated
           description: Occurs when a shipment has had address or parcel information updated.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -150,6 +161,9 @@ post:
           summary: shipment.deleted
           description: Occurs when a shipment has been deleted.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -172,6 +186,9 @@ post:
             Occurs when a shipment has been posted to our driver community. This can occur as a result of an explicit "post" action
             from a user or from the platform posting a shipment based on the shipment's `scheduledPostAt` setting.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -192,6 +209,9 @@ post:
           summary: shipment.driver.accepted
           description: Occurs when a shipment has been accepted for delivery by a driver from our driver community.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -212,6 +232,9 @@ post:
           summary: shipment.driver.arrived_at_pickup
           description: Occurs when a driver has arrived at the pickup address for a parcel within a shipment.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -232,6 +255,9 @@ post:
           summary: shipment.driver.picked_up
           description: Occurs when a driver has picked up (e.g. has posession) a parcel within a shipment.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -252,6 +278,9 @@ post:
           summary: shipment.driver.arrived_at_delivery
           description: Occurs when a driver arrived at a parcel's delivery address.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -272,6 +301,9 @@ post:
           summary: shipment.driver.parcel_delivered
           description: Occurs when a driver has delivered a parcel within a shipment.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -292,6 +324,9 @@ post:
           summary: shipment.completed
           description: Occurs when a shipment has all deliverable parcels delivered and has been successfully paid.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -312,6 +347,9 @@ post:
           summary: shipment.cancelled
           description: Occurs when a shipment has been cancelled.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -332,6 +370,9 @@ post:
           summary: shipment.driver.renounced
           description: Occurs when a shipment has been renounced by a driver after they accepted.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -357,6 +398,9 @@ post:
 
             Additionally, shipments on hold must be re-posted.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -379,6 +423,9 @@ post:
           description: |
             Occurs when a parcel has been created during a shipment create or added to a shipment during update.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -400,6 +447,9 @@ post:
           description: |
             Occurs when a parcel has been updated during a shipment update.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -421,6 +471,9 @@ post:
           description: |
             Occurs when a parcel has been deleted during a shipment update.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -442,6 +495,9 @@ post:
           description: |
             Occurs when a parcel has been scanned and picked up by a driver.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -463,6 +519,9 @@ post:
           description: |
             Occurs when a parcel has been scanned and delivered to the recipient.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -485,6 +544,9 @@ post:
             Occurs when a parcel is being returned due to the driver not being able to complete the delivery.
             This can be due to customer not being home, customer not having the delivery PIN, or customer refusing delivery.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
@@ -506,6 +568,9 @@ post:
           description: |
             Occurs when a parcel has been returned to merchant.
           parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
             - $ref: ../../components/headers/x-trexity-signature.yaml
             - $ref: ../../components/headers/x-trexity-event-name.yaml
             - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml

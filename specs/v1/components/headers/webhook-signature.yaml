@@ -1,0 +1,14 @@
+name: webhook-signature
+in: header
+required: true
+description: |
+  Standard Webhooks signature in the format `v1,<base64>`. It is an
+  HMAC-SHA256 of
+  `${webhook-id}.${webhook-timestamp}.${raw request body}`, keyed with the raw
+  secret bytes.
+
+  The header may contain a space-delimited list of signatures. Parsers must
+  inspect every `v1` signature rather than assuming only one value is present.
+schema:
+  type: string
+  example: v1,g0I0lYQvVCFHKF4nS4pQBqKGmqOMRPuFhUx3mVsvKzE=
