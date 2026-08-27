@@ -20,6 +20,11 @@ description: |
 
   WAITING_FOR_ACCEPTANCE - Shipments that have been posted to the driver network, but waiting for a driver to accept them. When a shipment is posted the owning merchant's credit card is pre-authorized for the full shipment rate.
 
+  **(CHANGED IN v1.39)** In hub-fulfillment markets, the inbound shipment stays
+  `WAITING_FOR_ACCEPTANCE` until the first hub outbound exists, then
+  `OUT_FOR_DELIVERY` until a real terminal (customer or store delivered, or leftover
+  Direct hand-off). Status strings are unchanged; no new enum values.
+
   EN_ROUTE_TO_PICKUP - Shipments where a driver has accepted and the driver is driving to the pickup location.
 
   ARRIVED_AT_PICKUP - Shipments where a driver has arrived at the pickup location.

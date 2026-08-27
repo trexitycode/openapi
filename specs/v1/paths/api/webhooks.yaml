@@ -567,6 +567,9 @@ post:
           summary: parcel.returned
           description: |
             Occurs when a parcel has been returned to merchant.
+
+            **(CHANGED IN v1.39)** In hub fulfillment this is not always a return
+            to the merchant. See Parcel Events for hub vs classic Direct RTS `shipmentId`.
           parameters:
             - $ref: ../../components/headers/webhook-id.yaml
             - $ref: ../../components/headers/webhook-timestamp.yaml

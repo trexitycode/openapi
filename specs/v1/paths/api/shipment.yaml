@@ -121,7 +121,11 @@ get:
   tags: [Shipments]
   summary: Get a shipment
   description: |
-    Gets the details of a shipment
+    Gets the details of a shipment.
+
+    **(CHANGED IN v1.39)** In hub-fulfillment markets, GET by the merchant-created
+    inbound shipment id is the logical shipment through hub outbounds and hub returns.
+    GET by an operational return (`RET…`) id also returns that inbound id.
   x-codeSamples:
     - $ref: ../../code_samples/Shell/shipments/get-shipment.yaml
 
@@ -133,7 +137,11 @@ get:
       required: true
       schema:
         type: string
-      description: The id of the shipment
+      description: |
+        The id of the shipment.
+
+        **(CHANGED IN v1.39)** In hub-fulfillment markets, an operational return
+        (`RET…`) id is an alias for the inbound shipment id.
     - in: query
       name: select
       schema:
