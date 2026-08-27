@@ -170,6 +170,10 @@ get:
   description: |
     List shipments that match the specified filters.
 
+    **(CHANGED IN v1.39)** In hub-fulfillment markets, list omits operational hub
+    outbound (`HUB…`) and hub-return (`RET…`) rows. Do not treat list length as
+    physical-leg count.
+
     ## Filtering By Dates
 
     When filtering by a date range both the `fromDate` and `toDate` query parameters must be provided.

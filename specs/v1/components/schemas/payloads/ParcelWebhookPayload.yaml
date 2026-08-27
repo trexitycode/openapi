@@ -28,7 +28,13 @@ properties:
     properties:
       shipmentId:
         type: string
-        description: The ID of the shipment containing the parcel affected. In the case of a return, this ID will be for the newly created return shipment.
+        description: |
+          The ID of the shipment containing the parcel affected.
+
+          **(CHANGED IN v1.39)** For classic Direct RTS, return events
+          (`parcel.returning` / `parcel.returned` and later courier parcel events)
+          use the newly created return shipment id. In hub-fulfillment markets those
+          same events use the original inbound shipment id, not the physical return id.
       deliveryIndex:
         type: integer
         description: The index of the parcel affected within the shipment.

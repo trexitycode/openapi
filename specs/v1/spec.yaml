@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: '1.38'
+  version: '1.39'
   title: Trexity API
   license:
     name: MIT
@@ -336,10 +336,29 @@ tags:
       - `parcel.picked_up` The driver has scanned and picked up a parcel
       - `parcel.delivered` The driver has scanned and delivered a parcel
       - `parcel.returning` The driver is returning a parcel
-      - `parcel.returned` The driver has returned a parcel to pickup address
+      - `parcel.returned` The driver has returned a parcel to pickup address. **(CHANGED IN v1.39)** In hub fulfillment this is not always a return to the merchant.
 
       The request payload of these webhook events indicate the parcel that is currently
       being affected.
+
+      **(CHANGED IN v1.39)** Hub fulfillment:
+
+      In hub-fulfillment markets, the merchant-created inbound shipment is the public identity
+      for the delivery until a billed leftover Direct is created.
+
+      - GET by inbound id is the logical shipment through hub outbounds and hub returns.
+        GET by an operational return (`RET…`) id also returns that inbound id.
+      - List omits operational hub outbound (`HUB…`) and hub-return (`RET…`) rows.
+        Do not treat list length as physical-leg count.
+      - `currentStatus` is `WAITING_FOR_ACCEPTANCE` until the first hub outbound exists,
+        then `OUT_FOR_DELIVERY` until a real terminal (customer or store delivered, or leftover Direct hand-off).
+        Status strings are unchanged.
+      - `parcel.returning` / `parcel.returned` and later courier parcel events use the inbound
+        `shipmentId`, not the physical return id.
+      - Classic Direct RTS is unchanged: those return events still use the newly created return shipment id.
+      - A leftover billed Direct is a new shipment (`shipment.created`). Keep correlating with
+        `externalId` as documented under Storing The shipmentId.
+      - Breaking for hub merchants only if they stored operational `RET…`/`HUB…` ids or counted hidden list rows.
 
       ## Storing The shipmentId
 
@@ -351,6 +370,9 @@ tags:
 
       > You will need to ensure that you provide a value for a parcel's `externalId` field when you crate a shipment.
       > This field is intended to be an identifier that references back to your system.
+
+      **(CHANGED IN v1.39)** In hub-fulfillment markets, a leftover billed Direct is a new
+      shipment (`shipment.created`). Continue correlating with `externalId` as shown below.
 
       ```js
       // This sample code uses Nodejs with Express
