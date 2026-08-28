@@ -8,6 +8,8 @@ post:
 
     **NOTE** This endpoint will return all available rates for a shipment.
 
+    **(ADDED IN v1.39)** The response may include hub types (`samedaystandard`, `nextday`, `nextdayexpress`) as well as classic Same Day (`default`), depending on the pickup market. Use a returned `serviceType` or rate id when creating the shipment. Classic Same Day (`default`) is being retired on **27 September 2026**.
+
     Returns the estimated distance (in meters), estimated travel duration (in
     seconds), and fee from the pickup address to the delivery address.
 
@@ -74,6 +76,7 @@ post:
                   - `invalid-data-payload` = When there are issues with the input data provided
                   - `num-labels-too-large` = When numLabels is too large
                   - `time-constraint-violation` = When the delivery/pickup time constraints specified cannot be met
+                  - **(ADDED IN v1.39)** `hub-pickup-cutoff-passed` = The cutoff for a requested hub service type and calendar day has passed
     '401':
       description: Unauthorized
     '403':
