@@ -8,7 +8,7 @@ post:
 
     **NOTE** This endpoint will return all available rates for a shipment.
 
-    **(ADDED IN v1.39)** The response may include hub types (`samedaystandard`, `nextday`, `nextdayexpress`) as well as classic Same Day (`default`), depending on the pickup market. Use a returned `serviceType` or rate id when creating the shipment. Classic Same Day (`default`) is being retired on **27 September 2026**.
+    **(ADDED IN v1.39)** The response may include hub types (`samedaystandard`, `nextday`, `nextdayexpress`) as well as classic Same Day (`default`), depending on the pickup market. Use a returned `serviceType` or rate id when creating the shipment. Classic Same Day (`default`) is being retired on **18 October 2026**.
 
     Returns the estimated distance (in meters), estimated travel duration (in
     seconds), and fee from the pickup address to the delivery address.

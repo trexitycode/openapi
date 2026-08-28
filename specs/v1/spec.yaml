@@ -60,7 +60,7 @@ info:
 
     Update does not change `serviceType`. Repeat the existing type if you send it at all. Rate ids cannot be used on update.
 
-    > **Classic Same Day sunset.** `default`, and omitting `serviceTypeOrRateId`, still mean classic Same Day, but that product is being retired. Please send an explicit service type (`samedaystandard`, `nextday`, or `nextdayexpress`) instead. Support for `default` / omitted service type ends on **27 September 2026**. In some markets `default` is already unavailable.
+    > **Classic Same Day sunset.** `default`, and omitting `serviceTypeOrRateId`, still mean classic Same Day, but that product is being retired. Please send an explicit service type (`samedaystandard`, `nextday`, or `nextdayexpress`) instead. Support for `default` / omitted service type ends on **18 October 2026**. In some markets `default` is already unavailable.
 
     ## Preferred Workflow
 
@@ -79,7 +79,7 @@ info:
     - `nextday` = Next Day. `pickupStartAt` is optional. If omitted, the next eligible day is chosen.
     - `nextdayexpress` = Next Day Express. Hub type. Requires `pickupStartAt` (calendar day). Rate copy is a deadline (by 5 PM).
     - `direct` = Direct. Can be scheduled for pickup at a future start time (2 hour window).
-    - `default` = Classic Same Day. Can be scheduled for pickup at an available pickup window. Being retired on **27 September 2026**.
+    - `default` = Classic Same Day. Can be scheduled for pickup at an available pickup window. Being retired on **18 October 2026**.
 
     ## Scheduling a Shipment for Pickup
 

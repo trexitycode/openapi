@@ -27,7 +27,7 @@ properties:
           - `nextday` = Next Day. `pickupStartAt` is optional.
           - `nextdayexpress` = Next Day Express. Requires `pickupStartAt`. Only the calendar day is used.
           - `direct`
-          - `default` = Classic Same Day. Being retired on **27 September 2026**.
+          - `default` = Classic Same Day. Being retired on **18 October 2026**.
           - `draft` = Creates the shipment as a draft with no service level. The shipment will have no rate and cannot be posted or scheduled until a service type is selected. Useful for ingesting orders that will be batched or assigned a service level later.
 
           `sameday` is not accepted.
