@@ -32,6 +32,8 @@ patch:
   summary: Update a shipment
   description: |
     Updates the details of a shipment.
+
+    **(ADDED IN v1.39)** `serviceTypeOrRateId` cannot change the product. Repeat the existing type if you send it. Rate ids are not accepted on update. Hub types may send `pickupStartAt` to select a later calendar day.
   x-codeSamples:
     - $ref: ../../code_samples/Shell/shipments/update-shipment.yaml
 
