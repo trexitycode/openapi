@@ -53,14 +53,12 @@ info:
     - `direct` — Direct.
     - `default` — Classic Same Day.
 
-    `sameday` is not a valid value.
-
     If `samedaystandard` or `nextdayexpress` is requested after that day’s cutoff,
     the request is rejected with `hub-pickup-cutoff-passed`. Book a later day of the same type instead.
 
     Update does not change `serviceType`. Repeat the existing type if you send it at all. Rate ids cannot be used on update.
 
-    > **Classic Same Day sunset.** `default`, and omitting `serviceTypeOrRateId`, still mean classic Same Day, but that product is being retired. Please send an explicit service type (`samedaystandard`, `nextday`, or `nextdayexpress`) instead. Support for `default` / omitted service type ends on **18 October 2026**. In some markets `default` is already unavailable.
+    > **Retirement: January 4, 2027.** `default`, and omitting `serviceTypeOrRateId`, still mean classic Same Day, but that product is being retired. Please send an explicit service type (`samedaystandard`, `nextday`, or `nextdayexpress`) instead. Support for `default` / omitted service type ends on **January 4, 2027**. In some markets `default` is already unavailable.
 
     ## Preferred Workflow
 
@@ -79,7 +77,7 @@ info:
     - `nextday` = Next Day. `pickupStartAt` is optional. If omitted, the next eligible day is chosen.
     - `nextdayexpress` = Next Day Express. Hub type. Requires `pickupStartAt` (calendar day). Rate copy is a deadline (by 5 PM).
     - `direct` = Direct. Can be scheduled for pickup at a future start time (2 hour window).
-    - `default` = Classic Same Day. Can be scheduled for pickup at an available pickup window. Being retired on **18 October 2026**.
+    - `default` = Classic Same Day. Can be scheduled for pickup at an available pickup window. Being retired on **January 4, 2027**.
 
     ## Scheduling a Shipment for Pickup
 

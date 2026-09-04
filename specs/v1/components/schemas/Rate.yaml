@@ -14,7 +14,7 @@ properties:
     description: |
       **(ADDED IN v1.31)** The delivery service type associated to the delivery rate.
 
-      **(ADDED IN v1.39)** Common values include `samedaystandard`, `nextday`, `nextdayexpress`, `direct`, and `default` (classic Same Day). Hub types appear only when they are available in the pickup market. Classic Same Day (`default`) is being retired on **18 October 2026**.
+      **(ADDED IN v1.39)** Common values include `samedaystandard`, `nextday`, `nextdayexpress`, `direct`, and `default` (classic Same Day). Hub types appear only when they are available in the pickup market. Classic Same Day (`default`) is being retired on **January 4, 2027**.
     example: samedaystandard
   currency:
     type: string
