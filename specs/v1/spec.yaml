@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: '1.38'
+  version: '1.39'
   title: Trexity API
   license:
     name: MIT
@@ -39,7 +39,26 @@ info:
 
     **Rates** represent a price for completing a shipment.
 
-    
+    ## Service types
+
+    **(ADDED IN v1.39)** Use `serviceTypeOrRateId` on create to pick a product. Hub types are only
+    returned and accepted in markets where they are available. If a type is not
+    available, the API returns `400` with a “Service type is not available”
+    message. The safest approach is to [calculate rates](#operation/getRates) first and create with a
+    returned `serviceType` or rate id.
+
+    - `samedaystandard` — Same Day Standard. Requires `pickupStartAt`. Only the calendar day is used. Pickup and delivery windows come from that day’s hub wave. Rate descriptions use a **window** (between 5 PM and 8 PM).
+    - `nextday` — Next Day. `pickupStartAt` is optional. If omitted, the next eligible day is chosen automatically.
+    - `nextdayexpress` — Next Day Express. Requires `pickupStartAt`. Only the calendar day is used. Rate descriptions use a **deadline** (by 5 PM).
+    - `direct` — Direct.
+    - `default` — Classic Same Day.
+
+    If `samedaystandard` or `nextdayexpress` is requested after that day’s cutoff,
+    the request is rejected with `hub-pickup-cutoff-passed`. Book a later day of the same type instead.
+
+    Update does not change `serviceType`. Repeat the existing type if you send it at all. Rate ids cannot be used on update.
+
+    > **Retirement: January 4, 2027.** `default`, and omitting `serviceTypeOrRateId`, still mean classic Same Day, but that product is being retired. Please send an explicit service type (`samedaystandard`, `nextday`, or `nextdayexpress`) instead. Support for `default` / omitted service type ends on **January 4, 2027**. In some markets `default` is already unavailable.
 
     ## Preferred Workflow
 
@@ -54,9 +73,11 @@ info:
     ## Rating and Service Types
 
     The following service types are available and have different rating rules:
-    - `default` = The default service type known in the product as Same Day. Can be scheduled for pickup at any time within your merchant location's delivery hours and Trexity's operation hours.
-    - `nextday` = The next day service type known in the product as Next Day. This service can only be scheduled for pickup the next day the or later of the shipment creation date and must be at 12:00 PM local time. 
-    - `direct` = A direct service type known in the product as Direct. This service can be scheduled for pickup at any time within your merchant location's delivery hours and Trexity's operation hours.
+    - `samedaystandard` = Same Day Standard. Hub type. Requires `pickupStartAt` (calendar day). Rate copy is a delivery window (5 PM–8 PM).
+    - `nextday` = Next Day. `pickupStartAt` is optional. If omitted, the next eligible day is chosen.
+    - `nextdayexpress` = Next Day Express. Hub type. Requires `pickupStartAt` (calendar day). Rate copy is a deadline (by 5 PM).
+    - `direct` = Direct. Can be scheduled for pickup at a future start time (2 hour window).
+    - `default` = Classic Same Day. Can be scheduled for pickup at an available pickup window. Being retired on **January 4, 2027**.
 
     ## Scheduling a Shipment for Pickup
 
@@ -67,8 +88,9 @@ info:
 
     ### Cutoff Time
 
-    Trexity does not have a concrete cutoff time for scheduling a shipment for pickup. Trexity uses a dynamic range that looks at the shipment delivery duration, distance, and adds a buffer time to determine a reasonable cutoff time when shipments are scheduled for pickup. However, we recommend **5:00 PM local time** as a cutoff time when scheduling a shipment for pickup
-    to ensure that we can deliver the shipment before 8:00 PM local time.
+    For hub types `samedaystandard` and `nextdayexpress`, booking the current local calendar day is rejected with `hub-pickup-cutoff-passed` after that market’s hub cutoff. Choose a later day of the same type.
+
+    For classic Same Day (`default`) and Direct, Trexity uses a dynamic range that looks at the shipment delivery duration, distance, and adds a buffer time. We recommend **5:00 PM local time** as a practical cutoff when scheduling classic Same Day pickup so the shipment can still be delivered before 8:00 PM local time.
     
     ## Parcel Status
 
