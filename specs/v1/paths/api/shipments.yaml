@@ -25,7 +25,7 @@ post:
 
     **Creating a classic Same Day shipment**
 
-    To create a classic Same Day shipment, use `default` as the value for the `serviceTypeOrRateId` field when creating the shipment. Classic Same Day is being retired on **18 October 2026**. Prefer an explicit hub type. `sameday` is not accepted.
+    To create a classic Same Day shipment, use `default` as the value for the `serviceTypeOrRateId` field when creating the shipment. Classic Same Day is being retired on **January 4, 2027**. Prefer an explicit hub type.
 
     **Creating a Direct shipment**
 
