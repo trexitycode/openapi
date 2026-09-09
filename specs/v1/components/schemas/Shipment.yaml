@@ -20,7 +20,10 @@ properties:
     example: '12'
   serviceType:
     type: string
-    description: The service type of the shipment
+    description: |
+      The service type of the shipment.
+
+      **(ADDED IN v1.39)** Common values include `samedaystandard`, `nextday`, `nextdayexpress`, `direct`, and `default`.
     example: default
   currentStatus:
     $ref: ./ShipmentStatus.yaml

@@ -2,6 +2,14 @@ description: |
   Specifies the start of the pickup window for the shipment (i.e. the earliest time that the driver can arrive to pickup the shipment).
   The second and millsecond time components of the date will be ignored.
 
+  **(ADDED IN v1.39)** For `samedaystandard` and `nextdayexpress`, this field is required and only the calendar day is used. Pickup and delivery clock times come from that day’s hub wave. If that day’s cutoff has passed, the request is rejected with `hub-pickup-cutoff-passed`.
+
+  For `nextday`, this field is optional. When sent, only the calendar day is used the same way. When omitted, the next eligible day is chosen.
+
+  For Direct, any pickup start time in the future is available. It will be implied that the pickup window is 2 hours long from the start time.
+
+  For classic Same Day (`default`), this value must match the start of an available pickup window.
+
   **Data type**
 
   Date time in Simplified ISO8601 format `YYYY-MM-DDTHH:mm:ss.sssZ`

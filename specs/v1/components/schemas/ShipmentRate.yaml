@@ -9,12 +9,16 @@ properties:
   description:
     type: string
     description: |
-      **(ADDED IN v1.31)** The description of the rate to show to the customer (if applicable)
+      **(ADDED IN v1.31)** The description of the rate to show to the customer (if applicable).
+
+      **(ADDED IN v1.39)** Same Day Standard uses window language (between 5 PM and 8 PM). Next Day Express uses deadline language (by 5 PM).
   serviceType:
     type: string
     description: |
-      **(ADDED IN v1.31)** The shipment service type associated to the shipment rate
-    example: default
+      **(ADDED IN v1.31)** The shipment service type associated to the shipment rate.
+
+      **(ADDED IN v1.39)** Common values include `samedaystandard`, `nextday`, `nextdayexpress`, `direct`, and `default` (classic Same Day). Hub types appear only when they are available in the pickup market. Classic Same Day (`default`) is being retired on **January 4, 2027**.
+    example: samedaystandard
   currency:
     type: string
     description: |

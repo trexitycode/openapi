@@ -15,6 +15,10 @@ properties:
     description: |
       **(RENAMED IN v1.16) pickupNotes will still be accepted**
       Special notes or instructions regarding pickup
+  serviceTypeOrRateId:
+    type: string
+    description: |
+      **(ADDED IN v1.39)** Optional. If sent, must match the shipment’s existing service type. Service type cannot be changed on update. Rate ids are not accepted on update.
   requirements:
     $ref: ../ShipmentRequirements.yaml
   ignoreTargetDeliveryDuration:

@@ -12,10 +12,22 @@ properties:
         enum:
           - default
           - nextday
+          - nextdayexpress
+          - samedaystandard
           - direct
         description: |
           **(ADDED IN v1.31)** The optional service type to use when creating the shipment.
-          If not provided, the `default` service type will be used.
+
+          **(ADDED IN v1.39)** Hub types `samedaystandard`, `nextday`, and `nextdayexpress` are available only in enabled hub markets.
+
+          Allowed values:
+          - `samedaystandard` = Same Day Standard. Requires `pickupStartAt`. Only the calendar day is used.
+          - `nextday` = Next Day. `pickupStartAt` is optional.
+          - `nextdayexpress` = Next Day Express. Requires `pickupStartAt`. Only the calendar day is used.
+          - `direct`
+          - `default` = Classic Same Day. Being retired on **January 4, 2027**.
+
+          If not provided, the API uses classic Same Day (`default`) where that product is still available.
       - type: string
         format: uuid
         description: |
