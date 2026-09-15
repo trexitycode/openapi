@@ -415,6 +415,79 @@ post:
               description: Request successfully processed
             '400':
               description: Bad Request
+    shipment.resubmitted:
+      '{$request.body#/url}':
+        post:
+          summary: shipment.resubmitted
+          description: |
+            Occurs when a shipment has been resubmitted to find a driver after being expired.
+          parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
+    shipment.expired:
+      '{$request.body#/url}':
+        post:
+          summary: shipment.expired
+          description: |
+            Occurs when a shipment has expired. An expired shipment could not find a driver to fulfil
+            delivery after several days of looking. This event will never be triggered in practice.
+          parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
+    shipment.driver.position_updated:
+      '{$request.body#/url}':
+        post:
+          summary: shipment.driver.position_updated
+          description: |
+            Occurs when a driver's position has changed while delivering a shipment.
+          parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ShipmentWebhookPayload.yaml
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
 
     parcel.created:
       '{$request.body#/url}':
@@ -488,54 +561,6 @@ post:
               description: Request successfully processed
             '400':
               description: Bad Request
-    parcel.picked_up:
-      '{$request.body#/url}':
-        post:
-          summary: parcel.picked_up
-          description: |
-            Occurs when a parcel has been scanned and picked up by a driver.
-          parameters:
-            - $ref: ../../components/headers/webhook-id.yaml
-            - $ref: ../../components/headers/webhook-timestamp.yaml
-            - $ref: ../../components/headers/webhook-signature.yaml
-            - $ref: ../../components/headers/x-trexity-signature.yaml
-            - $ref: ../../components/headers/x-trexity-event-name.yaml
-            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema:
-                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
-          responses:
-            '200':
-              description: Request successfully processed
-            '400':
-              description: Bad Request
-    parcel.delivered:
-      '{$request.body#/url}':
-        post:
-          summary: parcel.delivered
-          description: |
-            Occurs when a parcel has been scanned and delivered to the recipient.
-          parameters:
-            - $ref: ../../components/headers/webhook-id.yaml
-            - $ref: ../../components/headers/webhook-timestamp.yaml
-            - $ref: ../../components/headers/webhook-signature.yaml
-            - $ref: ../../components/headers/x-trexity-signature.yaml
-            - $ref: ../../components/headers/x-trexity-event-name.yaml
-            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
-          requestBody:
-            required: true
-            content:
-              application/json:
-                schema:
-                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
-          responses:
-            '200':
-              description: Request successfully processed
-            '400':
-              description: Bad Request
     parcel.returning:
       '{$request.body#/url}':
         post:
@@ -585,3 +610,148 @@ post:
               description: Request successfully processed
             '400':
               description: Bad Request
+    parcel.arrived_at_pickup:
+      '{$request.body#/url}':
+        post:
+          summary: parcel.arrived_at_pickup
+          description: |
+            Occurs when a driver has arrived at pickup for a parcel.
+          parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
+    parcel.picked_up:
+      '{$request.body#/url}':
+        post:
+          summary: parcel.picked_up
+          description: |
+            Occurs when a parcel has been scanned and picked up by a driver.
+          parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
+    parcel.arrived_at_delivery:
+      '{$request.body#/url}':
+        post:
+          summary: parcel.arrived_at_delivery
+          description: |
+            Occurs when a parcel has arrived at the delivery address for a parcel.
+          parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
+    parcel.delivered:
+      '{$request.body#/url}':
+        post:
+          summary: parcel.delivered
+          description: |
+            Occurs when a parcel has been scanned and delivered to the recipient.
+          parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
+    parcel.near_customer:
+      '{$request.body#/url}':
+        post:
+          summary: parcel.near_customer
+          description: |
+            Occurs when a driver is close by to the delivery address of a parcel.
+          parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
+    parcel.timings_updated:
+      '{$request.body#/url}':
+        post:
+          summary: parcel.timings_updated
+          description: |
+            Occurs when a driver's ETAs for a parcel have been updated.'
+          parameters:
+            - $ref: ../../components/headers/webhook-id.yaml
+            - $ref: ../../components/headers/webhook-timestamp.yaml
+            - $ref: ../../components/headers/webhook-signature.yaml
+            - $ref: ../../components/headers/x-trexity-signature.yaml
+            - $ref: ../../components/headers/x-trexity-event-name.yaml
+            - $ref: ../../components/headers/x-trexity-webhook-order-id.yaml
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: ../../components/schemas/payloads/ParcelWebhookPayload.yaml
+          responses:
+            '200':
+              description: Request successfully processed
+            '400':
+              description: Bad Request
+
