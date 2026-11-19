@@ -15,7 +15,6 @@ properties:
           - nextdayexpress
           - samedaystandard
           - direct
-          - morningof
           - draft
         description: |
           **(ADDED IN v1.31)** The optional service type to use when creating the shipment.
