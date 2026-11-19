@@ -7664,7 +7664,6 @@
                   "nextdayexpress",
                   "samedaystandard",
                   "direct",
-                  "morningof",
                   "draft"
                 ],
                 "description": "**(ADDED IN v1.31)** The optional service type to use when creating the shipment.\n\n**(ADDED IN v1.39)** Hub types `samedaystandard`, `nextday`, and `nextdayexpress` are available only in enabled hub markets.\n\nAllowed values:\n- `samedaystandard` = Same Day Standard. Requires `pickupStartAt`. Only the calendar day is used.\n- `nextday` = Next Day. `pickupStartAt` is optional.\n- `nextdayexpress` = Next Day Express. Requires `pickupStartAt`. Only the calendar day is used.\n- `direct`\n- `default` = Classic Same Day. Being retired on **January 4, 2027**.\n\nIf not provided, the API uses classic Same Day (`default`) where that product is still available.\n"
