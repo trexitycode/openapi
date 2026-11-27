@@ -10,6 +10,8 @@ post:
 
     **(ADDED IN v1.39)** The response may include hub types (`samedaystandard`, `nextday`, `nextdayexpress`) as well as classic Same Day (`default`), depending on the pickup market. Use a returned `serviceType` or rate id when creating the shipment. Classic Same Day (`default`) is being retired on **January 4, 2027**.
 
+    **(ADDED IN v1.40)** Optional `requiresPersonHandoff`, `requiresSignature`, and `containsAlcohol` fields can be provided to quote PIN verification and signature surcharges (`returnable-features` in `surchargesWithoutTaxes`). When omitted, each flag falls back to the pickup merchant location’s corresponding default setting.
+
     Returns the estimated distance (in meters), estimated travel duration (in
     seconds), and fee from the pickup address to the delivery address.
 

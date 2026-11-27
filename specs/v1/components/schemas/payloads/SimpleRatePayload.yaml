@@ -24,3 +24,15 @@ allOf:
         type: number
         minimum: 0
         description: The order value, if any. Specified in cents.
+      requiresPersonHandoff:
+        type: boolean
+        description: |
+          **(ADDED IN v1.40)** Whether the delivery requires PIN verification on handoff. When omitted, defaults to the pickup merchant location’s `defaultRequiresPersonHandoff` setting.
+      requiresSignature:
+        type: boolean
+        description: |
+          **(ADDED IN v1.40)** Whether the delivery requires a recipient signature. When omitted, defaults to the pickup merchant location’s `defaultRequiresSignature` setting.
+      containsAlcohol:
+        type: boolean
+        description: |
+          **(ADDED IN v1.40)** Whether the parcel contains alcohol and requires legal age verification (which also requires PIN verification on handoff). When omitted, defaults to the pickup merchant location’s `defaultContainsAlcohol` setting.
