@@ -44,13 +44,14 @@ properties:
       properties:
         type:
           type: string
-          enum: [oversized, distance, large-vehicle]
+          enum: [oversized, distance, large-vehicle, returnable-features]
           description: |
             The surcharge type.
 
             - `oversized` applied for a surplus of labels
             - `distance` applied for long distance deliveries
             - `large-vehicle` applied for shipments that require a medium or large vehicle
+            - **(ADDED IN v1.40)** `returnable-features` applied for PIN verification and/or recipient signature proof-of-delivery
         amount:
           type: number
           description: The amount in cents of the surcharge

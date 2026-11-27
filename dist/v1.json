@@ -1,7 +1,7 @@
 {
   "openapi": "3.0.2",
   "info": {
-    "version": "1.39",
+    "version": "1.40",
     "title": "Trexity API",
     "license": {
       "name": "MIT",
@@ -185,7 +185,7 @@
           "Shipping Rates"
         ],
         "summary": "Get rates",
-        "description": "**(ADDED IN v1.31)** Calculate rates for a shipment with a single pickup address and a\nsingle delivery address.\n\n**NOTE** This endpoint will return all available rates for a shipment.\n\n**(ADDED IN v1.39)** The response may include hub types (`samedaystandard`, `nextday`, `nextdayexpress`) as well as classic Same Day (`default`), depending on the pickup market. Use a returned `serviceType` or rate id when creating the shipment. Classic Same Day (`default`) is being retired on **January 4, 2027**.\n\nReturns the estimated distance (in meters), estimated travel duration (in\nseconds), and fee from the pickup address to the delivery address.\n\nIf no `pickupAddress` is specified then the merchant's business address will\nbe used as the pickup address.\n\n**(ADDED IN v1.7)** Review the [Usage Policy](/#section/Usage-Policy).\n\n**(ADDED IN v1.8)** Use this endpoint for shipment rates (single pickup\naddress and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)\nendpoint for multiple delivery addresses.\n\nThe rate response will now include estimates for post, pickup, and delivery time.\nAdditionally, the new properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a\ndelivery window. Otheriwse the next available delivery window (i.e. ASAP) is assumed. Use the estimated values\nin the response when creating the shipment.\n",
+        "description": "**(ADDED IN v1.31)** Calculate rates for a shipment with a single pickup address and a\nsingle delivery address.\n\n**NOTE** This endpoint will return all available rates for a shipment.\n\n**(ADDED IN v1.39)** The response may include hub types (`samedaystandard`, `nextday`, `nextdayexpress`) as well as classic Same Day (`default`), depending on the pickup market. Use a returned `serviceType` or rate id when creating the shipment. Classic Same Day (`default`) is being retired on **January 4, 2027**.\n\n**(ADDED IN v1.40)** Optional `requiresPersonHandoff`, `requiresSignature`, and `containsAlcohol` fields can be provided to quote PIN verification and signature surcharges (`returnable-features` in `surchargesWithoutTaxes`). When omitted, each flag falls back to the pickup merchant location’s corresponding default setting.\n\nReturns the estimated distance (in meters), estimated travel duration (in\nseconds), and fee from the pickup address to the delivery address.\n\nIf no `pickupAddress` is specified then the merchant's business address will\nbe used as the pickup address.\n\n**(ADDED IN v1.7)** Review the [Usage Policy](/#section/Usage-Policy).\n\n**(ADDED IN v1.8)** Use this endpoint for shipment rates (single pickup\naddress and single delivery address), and use the new [Complex Rate](/#operation/createComplexRateRequest)\nendpoint for multiple delivery addresses.\n\nThe rate response will now include estimates for post, pickup, and delivery time.\nAdditionally, the new properties `pickupAfter`, `deliverAfter` and `deliverBefore` can be provided to indicate a\ndelivery window. Otheriwse the next available delivery window (i.e. ASAP) is assumed. Use the estimated values\nin the response when creating the shipment.\n",
         "x-codeSamples": [
           {
             "lang": "Shell",
@@ -6622,6 +6622,18 @@
                 "type": "number",
                 "minimum": 0,
                 "description": "The order value, if any. Specified in cents."
+              },
+              "requiresPersonHandoff": {
+                "type": "boolean",
+                "description": "**(ADDED IN v1.40)** Whether the delivery requires PIN verification on handoff. When omitted, defaults to the pickup merchant location’s `defaultRequiresPersonHandoff` setting.\n"
+              },
+              "requiresSignature": {
+                "type": "boolean",
+                "description": "**(ADDED IN v1.40)** Whether the delivery requires a recipient signature. When omitted, defaults to the pickup merchant location’s `defaultRequiresSignature` setting.\n"
+              },
+              "containsAlcohol": {
+                "type": "boolean",
+                "description": "**(ADDED IN v1.40)** Whether the parcel contains alcohol and requires legal age verification (which also requires PIN verification on handoff). When omitted, defaults to the pickup merchant location’s `defaultContainsAlcohol` setting.\n"
               }
             }
           }
@@ -6679,9 +6691,10 @@
                   "enum": [
                     "oversized",
                     "distance",
-                    "large-vehicle"
+                    "large-vehicle",
+                    "returnable-features"
                   ],
-                  "description": "The surcharge type.\n\n- `oversized` applied for a surplus of labels\n- `distance` applied for long distance deliveries\n- `large-vehicle` applied for shipments that require a medium or large vehicle\n"
+                  "description": "The surcharge type.\n\n- `oversized` applied for a surplus of labels\n- `distance` applied for long distance deliveries\n- `large-vehicle` applied for shipments that require a medium or large vehicle\n- **(ADDED IN v1.40)** `returnable-features` applied for PIN verification and/or recipient signature proof-of-delivery\n"
                 },
                 "amount": {
                   "type": "number",
@@ -7130,9 +7143,10 @@
                   "enum": [
                     "oversized",
                     "distance",
-                    "large-vehicle"
+                    "large-vehicle",
+                    "returnable-features"
                   ],
-                  "description": "The surcharge type.\n\n- `oversized` applied for a surplus of labels\n- `distance` applied for long distance deliveries\n- `large-vehicle` applied for shipments that require a medium or large vehicle\n"
+                  "description": "The surcharge type.\n\n- `oversized` applied for a surplus of labels\n- `distance` applied for long distance deliveries\n- `large-vehicle` applied for shipments that require a medium or large vehicle\n- **(ADDED IN v1.40)** `returnable-features` applied for PIN verification and/or recipient signature proof-of-delivery\n"
                 },
                 "amount": {
                   "type": "number",
